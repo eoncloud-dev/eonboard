@@ -1,0 +1,114 @@
+<div class="portlet">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bell-o"></i>{[{ 'overview.quota_usage' | i18next }]}
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                <tr>
+                    <th width="100">
+                        <i class="fa fa-list"></i> {[{ 'quota.resource' | i18next }]}
+                    </th>
+                    <th class="hidden-xs" width="200">
+                        <i class="fa fa-cubes"></i> {[{ 'quota.limit' | i18next }]}
+                    </th>
+                    <th width="100">
+                        <i class="fa fa-shopping-cart"></i> {[{ 'quota.usage' | i18next }]}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="highlight">
+                        <div class="success">
+                        </div>
+                        <a href="#/instance/">
+                            {[{ 'constant.instance' | i18next }]} </a>
+                    </td>
+                    <td class="hidden-xs">
+                        <span ng-if="contract.quotas.instance > 0">{[{ contract.quotas.instance }]} </span>
+                        <span ng-if="contract.quotas.instance <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-info" ng-if="quota.instance_persent < 0.4">{[{ quota.instance_used }]}</span>
+                        <span class="badge badge-warning" ng-if="quota.instance_persent >= 0.4 && quota.instance_persent < 0.7">{[{ quota.instance_used }]}</span>
+                        <span class="badge badge-danger" ng-if="quota.instance_persent >= 0.7">{[{ quota.instance_used }]}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="highlight">
+                        <div class="success">
+                        </div>
+                        <a href="#/instance/">
+                            {[{ 'constant.vcpu' | i18next }]} </a>
+                    </td>
+                    <td class="hidden-xs">
+                        <span ng-if="contract.quotas.vcpu > 0">{[{ contract.quotas.vcpu }]} </span>
+                        <span ng-if="contract.quotas.vcpu <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                    </td>
+                    <td>
+
+                        <span class="badge badge-info" ng-if="quota.vcpu_persent < 0.4">{[{ quota.vcpu_used }]}</span>
+                        <span class="badge badge-warning" ng-if="quota.vcpu_persent >= 0.4 && quota.vcpu_persent < 0.7">{[{ quota.vcpu_used }]}</span>
+                        <span class="badge badge-danger" ng-if="quota.vcpu_persent >= 0.7">{[{ quota.vcpu_used }]}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="highlight">
+                        <div class="success">
+                        </div>
+                        <a href="#/instance/">
+                            {[{ 'constant.memory' | i18next }]} </a>
+                    </td>
+                    <td class="hidden-xs">
+                        <span ng-if="contract.quotas.memory > 0">{[{ contract.quotas.memory }]} </span>
+                        <span ng-if="contract.quotas.memory <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-info" ng-if="quota.memory_persent < 0.4">{[{ quota.memory_used }]}</span>
+                        <span class="badge badge-warning" ng-if="quota.memory_persent >= 0.4 && quota.memory_persent < 0.7">{[{ quota.memory_used }]}</span>
+                        <span class="badge badge-danger" ng-if="quota.memory_persent >= 0.7">{[{ quota.memory_used }]}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="highlight">
+                        <div class="success">
+                        </div>
+                        <a href="#/volume/">
+                            {[{ 'constant.volume' | i18next }]} </a>
+                    </td>
+                    <td class="hidden-xs">
+                        <span ng-if="contract.quotas.volume > 0">{[{ contract.quotas.volume }]} </span>
+                        <span ng-if="contract.quotas.volume <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-info" ng-if="quota.volume_size_persent < 0.4">{[{ quota.volume_size_used }]}</span>
+                        <span class="badge badge-warning" ng-if="quota.volume_size_persent >= 0.4 && quota.volume_size_persent < 0.7">{[{ quota.volume_size_used }]}</span>
+                        <span class="badge badge-danger" ng-if="quota.volume_size_persent >= 0.7">{[{ quota.volume_size_used }]}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="highlight">
+                        <div class="success">
+                        </div>
+                        <a href="#/floating/">
+                            {[{ 'constant.floating_ip' | i18next }]} </a>
+                    </td>
+                    <td class="hidden-xs">
+                        <span ng-if="contract.quotas.floating_ip > 0">{[{ contract.quotas.floating_ip }]} </span>
+                        <span ng-if="contract.quotas.floating_ip <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-info" ng-if="quota.floating_ip_persent < 0.4">{[{ quota.floating_ip_used }]}</span>
+                        <span class="badge badge-warning" ng-if="quota.floating_ip_persent >= 0.4 && quota.floating_ip_persent < 0.7">{[{ quota.floating_ip_used }]}</span>
+                        <span class="badge badge-danger" ng-if="quota.floating_ip_persent >= 0.7">{[{ quota.floating_ip_used }]}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

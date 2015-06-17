@@ -1,0 +1,86 @@
+<!-- BEGIN HEADER INNER -->
+<div class="page-header-inner">
+	<!-- BEGIN LOGO -->
+	<div class="page-logo">
+		<a href="#/">  
+		<img src="/static/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
+		</a>
+		<div class="menu-toggler sidebar-toggler hide">
+			<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+		</div>
+	</div>
+	<!-- END LOGO -->
+
+    <div class="hor-menu hidden-sm hidden-xs">
+        <ul class="nav navbar-nav">
+            <li class="classic-menu-dropdown active">
+                <a href="#">
+					{[{ 'sidebar.console' | i18next }]}
+                </a>
+            </li>
+            <li class="classic-menu-dropdown">
+                <a href="#">
+					{[{ 'sidebar.consumption' | i18next }]}
+                </a>
+            </li>
+            <li class="classic-menu-dropdown">
+                <a href="#">
+					{[{ 'sidebar.sub_account' | i18next }]}
+                </a>
+            </li>           
+        </ul>
+    </div>
+
+	<!-- BEGIN HEADER SEARCH BOX -->
+	<!-- DOC: Apply "search-form-expanded" right after the "search-form" class to have half expanded search box -->
+	<!-- END HEADER SEARCH BOX -->
+	<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+	<a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+	</a>
+	<!-- END RESPONSIVE MENU TOGGLER -->
+	<!-- BEGIN TOP NAVIGATION MENU -->
+	<div class="top-menu">
+		<ul class="nav navbar-nav pull-right">
+			<li class="dropdown dropdown-user">
+				<a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+				<span class="username username-hide-on-mobile">
+				{[{ "idc" | i18next }]}: {[{ current_user.datacenter }]}</span>
+				</a>
+				<!--ul class="dropdown-menu dropdown-menu-default">
+						<li>
+							<a href="#/profile/dashboard">
+							<i class="icon-user"></i> {[{ "profile" | i18next }]} </a>
+						</li>
+						<li class="divider">
+						</li>
+						<li>
+							<a href="/logout">
+							<i class="icon-key"></i> {[{ "logout" | i18next }]}</a>
+						</li>
+				</ul-->
+			</li>
+
+			<li class="dropdown dropdown-user">
+				<a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+				<span class="username username-hide-on-mobile">
+				{[{ current_user.user }]} <i class="fa fa-user"></i></span>
+				<i class="fa fa-angle-down"></i>
+				</a>
+				<ul class="dropdown-menu dropdown-menu-default">
+						<li>
+							<a href="#/profile/dashboard">
+							<i class="icon-user"></i> {[{ "profile" | i18next }]} </a>
+						</li>
+						<li class="divider">
+						</li>	
+						<li>
+							<a href="/logout">
+							<i class="icon-key"></i> {[{ "logout" | i18next }]}</a>
+						</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<!-- END TOP NAVIGATION MENU -->
+</div>
+<!-- END HEADER INNER -->

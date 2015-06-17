@@ -1,0 +1,117 @@
+<div class="portlet light bg-inverse">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>{[{ 'overview.contract_info' | i18next }]}
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'contract.name' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    {[{ contract.name }]}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'constant.instance' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    <span ng-if="contract.quotas.instance > 0">{[{ contract.quotas.instance }]} </span>
+                                    <span ng-if="contract.quotas.instance <= 0" class="label label-sm label-success">{[{ 'constant.free' | i18next }]} </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'contract.customer' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    {[{ contract.customer }]}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'constant.vcpu' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    <span ng-if="contract.quotas.vcpu > 0">{[{ contract.quotas.vcpu }]} </span>
+                                    <span ng-if="contract.quotas.vcpu <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'contract.start_date' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    {[{ contract.start_date }]}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'constant.floating_ip'|i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    <span ng-if="contract.quotas.floating_ip > 0">{[{ contract.quotas.floating_ip }]} </span>
+                                    <span ng-if="contract.quotas.floating_ip <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+                <!--/row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'contract.end_date' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    <span class="label label-sm label-success">
+										{[{ contract.end_date }]} </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">{[{ 'constant.volume' | i18next }]}:</label>
+                            <div class="col-md-9">
+                                <p class="form-control-static">
+                                    <span ng-if="contract.quotas.volume > 0">{[{ contract.quotas.volume }]} </span>
+                                    <span ng-if="contract.quotas.volume <= 0" class="label label-sm label-info">{[{ 'constant.free' | i18next }]} </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/span-->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

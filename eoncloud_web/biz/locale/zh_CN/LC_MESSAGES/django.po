@@ -1,0 +1,856 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-16 16:07+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: account/forms.py:15
+msgid "email address format error"
+msgstr "电子邮件地址格式不正确"
+
+#: account/models.py:16
+msgid "Mobile"
+msgstr "手机号"
+
+#: account/models.py:17
+msgid "User Type"
+msgstr "用户类型"
+
+#: account/models.py:44
+msgid "Contract name"
+msgstr "合同名称"
+
+#: account/models.py:45
+msgid "Customer name"
+msgstr "客户名称"
+
+#: account/models.py:46
+msgid "Start Date"
+msgstr "开始日期"
+
+#: account/models.py:47
+msgid "End Date"
+msgstr "结束日期"
+
+#: account/models.py:48 account/models.py:70 firewall/models.py:15
+#: firewall/models.py:36 floating/models.py:25 forum/models.py:11
+#: forum/models.py:25 instance/models.py:46 network/models.py:15
+#: network/models.py:54 network/models.py:66 network/models.py:70
+#: network/models.py:84 volume/models.py:17
+msgid "Deleted"
+msgstr "已删除"
+
+#: account/models.py:67
+msgid "Resouce"
+msgstr "资源"
+
+#: account/models.py:68
+msgid "Limit"
+msgstr "配额"
+
+#: account/models.py:69 firewall/models.py:14 firewall/models.py:37
+#: floating/models.py:23 forum/models.py:12 forum/models.py:26
+#: image/models.py:20 instance/models.py:26 instance/models.py:89
+#: network/models.py:16 network/models.py:55 network/models.py:71
+#: volume/models.py:16
+msgid "Create Date"
+msgstr "创建日期"
+
+#: account/settings.py:7
+msgid "Personal"
+msgstr "个人"
+
+#: account/settings.py:8
+msgid "Company"
+msgstr "企业"
+
+#: account/settings.py:12
+msgid "Instance"
+msgstr "云主机"
+
+#: account/settings.py:13
+msgid "CPU"
+msgstr "CPU"
+
+#: account/settings.py:14
+msgid "Memory(MB)"
+msgstr "内存(MB)"
+
+#: account/settings.py:15
+msgid "Volume(GB)"
+msgstr "磁盘(GB)"
+
+#: account/settings.py:16
+msgid "Volume Count"
+msgstr "磁盘数量"
+
+#: account/settings.py:17
+msgid "Floating IP"
+msgstr "公网IP"
+
+#: firewall/models.py:8
+msgid "Firewall Name"
+msgstr "防火墙名称"
+
+#: firewall/models.py:9
+msgid "OS Firewall UUID"
+msgstr "Firewall UUID"
+
+#: firewall/models.py:10
+msgid "Firewall desc"
+msgstr "防火墙描述"
+
+#: firewall/models.py:11 firewall/models.py:33 network/models.py:12
+#: network/models.py:72
+msgid "Default"
+msgstr "默认"
+
+#: firewall/models.py:24
+msgid "OS Firewall Rules UUID"
+msgstr ""
+
+#: firewall/models.py:25
+msgid "Direction"
+msgstr "流向"
+
+#: firewall/models.py:26
+msgid "Ether type"
+msgstr ""
+
+#: firewall/models.py:27
+msgid "Port range min"
+msgstr ""
+
+#: firewall/models.py:28
+msgid "Port range max"
+msgstr ""
+
+#: firewall/models.py:29
+msgid "Protocol"
+msgstr ""
+
+#: firewall/models.py:30
+msgid "remote group id UUID"
+msgstr ""
+
+#: firewall/models.py:31
+msgid "remote ip prefix"
+msgstr ""
+
+#: firewall/settings.py:9
+msgid "Ingress"
+msgstr "下行"
+
+#: firewall/settings.py:10
+msgid "Egress"
+msgstr "上行"
+
+#: firewall/settings.py:17
+msgid "IPv4"
+msgstr "IPv4"
+
+#: firewall/settings.py:18
+msgid "IPv6"
+msgstr "IPv6"
+
+#: firewall/views.py:33
+msgid "Creating firewall"
+msgstr "创建防火墙"
+
+#: firewall/views.py:35 network/views.py:37 volume/views.py:53
+msgid "Data valid error"
+msgstr "数据格式错误"
+
+#: firewall/views.py:38
+msgid "Firewall create error"
+msgstr "创建"
+
+#: firewall/views.py:45
+msgid "Not selected Firewall"
+msgstr "选择防火墙"
+
+#: firewall/views.py:48
+msgid "Firewall not exists"
+msgstr "防火墙不存在"
+
+#: firewall/views.py:50
+msgid "Firewall default can not delete"
+msgstr "默认防火墙允许删除"
+
+#: firewall/views.py:52
+msgid "Firewall used can not delete"
+msgstr "被使用的防火墙不允许删除"
+
+#: firewall/views.py:57
+msgid "Firewall delete success"
+msgstr "防火墙删除成功"
+
+#: firewall/views.py:73
+msgid "no selected security group"
+msgstr "选择安全组"
+
+#: firewall/views.py:80
+msgid "Create firewall rule success"
+msgstr "创建规则成功"
+
+#: firewall/views.py:81
+msgid "Valid firewall rule nopass"
+msgstr "规则格式错误"
+
+#: firewall/views.py:84
+msgid "Create firewall rule error"
+msgstr "创建规则失败"
+
+#: firewall/views.py:91
+msgid "Not selected Firewall rule"
+msgstr "选择规则"
+
+#: firewall/views.py:94
+msgid "Firewall rule not exists"
+msgstr "规则不存在"
+
+#: firewall/views.py:99
+msgid "Firewall rule delete success"
+msgstr "规则删除成功"
+
+#: firewall/views.py:102
+msgid "Firewall rule delete error"
+msgstr "规则删除失败"
+
+#: floating/models.py:12 instance/models.py:44
+msgid "Public IP"
+msgstr "公网IP"
+
+#: floating/models.py:16 instance/models.py:24 network/models.py:11
+#: network/models.py:51 network/models.py:67 volume/models.py:15
+msgid "Status"
+msgstr "状态"
+
+#: floating/models.py:18
+msgid "Bandwidth MB"
+msgstr "带宽 MB"
+
+#: floating/models.py:24
+msgid "Delete Date"
+msgstr "删除日期"
+
+#: floating/settings.py:15 floating/settings.py:27
+msgid "Floating ERROR"
+msgstr "错误"
+
+#: floating/settings.py:16 floating/settings.py:28 floating/settings.py:37
+#: floating/settings.py:44
+msgid "Floating Allocate"
+msgstr "分配中"
+
+#: floating/settings.py:17 floating/settings.py:29
+msgid "Floating Avaiable"
+msgstr "可用"
+
+#: floating/settings.py:18 floating/settings.py:30
+msgid "Floating Binded"
+msgstr "已绑定"
+
+#: floating/settings.py:19 floating/settings.py:31
+msgid "Floating Binding"
+msgstr "绑定中"
+
+#: floating/settings.py:20 floating/settings.py:32 floating/settings.py:45
+msgid "Floating Released"
+msgstr "已释放"
+
+#: floating/settings.py:21 floating/settings.py:33
+msgid "Floating Releasing"
+msgstr "释放中"
+
+#: floating/settings.py:46
+msgid "Floating Associate"
+msgstr "绑定云主机"
+
+#: floating/settings.py:47
+msgid "Floating Disassociate"
+msgstr "解绑云主机"
+
+#: forum/models.py:7
+msgid "title"
+msgstr "标题"
+
+#: forum/models.py:8 forum/models.py:22
+msgid "content"
+msgstr "内容"
+
+#: forum/models.py:13
+msgid "Close Status"
+msgstr ""
+
+#: forum/views.py:25 forum/views.py:26
+msgid "Creating Forum error"
+msgstr "创建工单失败"
+
+#: forum/views.py:42
+msgid "Creating Forum reply success"
+msgstr "回复成功"
+
+#: forum/views.py:43
+msgid "Creating Forum reply error"
+msgstr "回复失败"
+
+#: forum/views.py:54
+msgid "Close forum success"
+msgstr "关闭工单成功"
+
+#: forum/views.py:56
+msgid "No selected forum"
+msgstr "选择工单"
+
+#: forum/views.py:59
+msgid "Close Forum error"
+msgstr "关闭工单失败"
+
+#: idc/models.py:14 instance/models.py:85
+msgid "Name"
+msgstr "名称"
+
+#: idc/models.py:15
+msgid "openstack host"
+msgstr ""
+
+#: idc/models.py:15
+msgid "IP of Compute Center"
+msgstr ""
+
+#: idc/models.py:16
+msgid "default project"
+msgstr "默认项目"
+
+#: idc/models.py:17
+msgid "Project Name of Data Center,recommended: admin"
+msgstr ""
+
+#: idc/models.py:18
+msgid "default project user"
+msgstr "默认用户"
+
+#: idc/models.py:19
+msgid "User who can visit the project"
+msgstr ""
+
+#: idc/models.py:20
+msgid "default user password"
+msgstr "默认密码"
+
+#: idc/models.py:21
+msgid "usually http://host:5000/v2.0"
+msgstr ""
+
+#: idc/models.py:22
+msgid "External Network Name"
+msgstr "外部网络名称"
+
+#: idc/models.py:47
+msgid "Tenant"
+msgstr "项目"
+
+#: idc/models.py:48
+msgid "Tenant UUID"
+msgstr ""
+
+#: idc/models.py:49
+msgid "User"
+msgstr ""
+
+#: idc/models.py:50
+msgid "Password"
+msgstr ""
+
+#: image/models.py:6
+msgid "Windows"
+msgstr ""
+
+#: image/models.py:7
+msgid "Linux"
+msgstr ""
+
+#: image/models.py:12
+msgid "Image Name"
+msgstr "名称"
+
+#: image/models.py:13
+msgid "UUID"
+msgstr "UUID"
+
+#: image/models.py:13
+msgid "Openstack Image UUID"
+msgstr "Openstack 镜像 UUID"
+
+#: image/models.py:14
+msgid "Login Name"
+msgstr "登录用户名"
+
+#: image/models.py:15
+msgid "Image OS Type"
+msgstr "镜像类型"
+
+#: instance/models.py:16
+msgid "Linux Image"
+msgstr "Linux系统"
+
+#: instance/models.py:17
+msgid "Windows Image"
+msgstr "Windows系统"
+
+#: instance/models.py:23
+msgid "Instance Name"
+msgstr ""
+
+#: instance/models.py:27
+msgid "Terminate Date"
+msgstr ""
+
+#: instance/models.py:28 instance/models.py:86
+msgid "Cpu Cores"
+msgstr ""
+
+#: instance/models.py:29
+msgid "Memory"
+msgstr ""
+
+#: instance/models.py:30
+msgid "System Disk"
+msgstr ""
+
+#: instance/models.py:32
+msgid "OS FlavorID"
+msgstr ""
+
+#: instance/models.py:35 network/models.py:83
+msgid "Network"
+msgstr ""
+
+#: instance/models.py:43
+msgid "Private IP"
+msgstr ""
+
+#: instance/models.py:87
+msgid "Memory MB"
+msgstr ""
+
+#: instance/models.py:88
+msgid "Price"
+msgstr ""
+
+#: instance/settings.py:24 instance/settings.py:47
+msgid "Instance Waiting"
+msgstr "等待调度"
+
+#: instance/settings.py:25 instance/settings.py:48
+msgid "Instance Running"
+msgstr "运行中"
+
+#: instance/settings.py:26 instance/settings.py:49
+msgid "Instance Booting"
+msgstr "启动中"
+
+#: instance/settings.py:27 instance/settings.py:50
+msgid "Instance Rebooting"
+msgstr "重启中"
+
+#: instance/settings.py:28 instance/settings.py:51
+msgid "Instance Paused"
+msgstr "暂停中"
+
+#: instance/settings.py:29 instance/settings.py:52 instance/settings.py:80
+#: instance/settings.py:103
+msgid "Instance Power Off"
+msgstr "已关机"
+
+#: instance/settings.py:30 instance/settings.py:53
+msgid "Instance Shutting Down"
+msgstr "正在关机"
+
+#: instance/settings.py:31 instance/settings.py:54
+msgid "Instance Deploying"
+msgstr "部署中"
+
+#: instance/settings.py:32 instance/settings.py:55
+msgid "Instance Deploy Failed"
+msgstr "部署失败"
+
+#: instance/settings.py:33 instance/settings.py:56
+msgid "Instance Locked"
+msgstr "已锁定"
+
+#: instance/settings.py:34 instance/settings.py:57
+msgid "Instance Delete"
+msgstr "已删除"
+
+#: instance/settings.py:35 instance/settings.py:58
+msgid "Instance Error"
+msgstr "错误"
+
+#: instance/settings.py:36 instance/settings.py:59
+msgid "Instance Backuping"
+msgstr "备份中"
+
+#: instance/settings.py:37 instance/settings.py:60
+msgid "Instance Restoring"
+msgstr "恢复中"
+
+#: instance/settings.py:38 instance/settings.py:61
+msgid "Instance Resizing"
+msgstr "调整规格"
+
+#: instance/settings.py:39 instance/settings.py:62
+msgid "Instance Expired"
+msgstr "已过期"
+
+#: instance/settings.py:40 instance/settings.py:63
+msgid "Instance Deleting"
+msgstr "删除中"
+
+#: instance/settings.py:78
+msgid "Instance Active"
+msgstr "开机"
+
+#: instance/settings.py:79
+msgid "Instance Build"
+msgstr "构建"
+
+#: instance/settings.py:81
+msgid "Instance Pause"
+msgstr "暂停"
+
+#: instance/settings.py:82
+msgid "Instance Lock"
+msgstr "锁定"
+
+#: instance/settings.py:83
+msgid "Instance Resize"
+msgstr "调整规则"
+
+#: instance/settings.py:84 instance/settings.py:101
+msgid "Instance Reboot"
+msgstr "重启"
+
+#: instance/settings.py:85
+msgid "Instance Restore"
+msgstr "恢复"
+
+#: instance/settings.py:102
+msgid "Instance Power On"
+msgstr "开机"
+
+#: instance/settings.py:104
+msgid "Instance VNC"
+msgstr "VNC远程桌面"
+
+#: instance/settings.py:105
+msgid "Instance Bind Floating"
+msgstr "绑定公网IP"
+
+#: instance/settings.py:106
+msgid "Instance Unbind Floating"
+msgstr "解绑公网IP"
+
+#: instance/settings.py:107
+msgid "Instance Change Firewall"
+msgstr "修改防火墙"
+
+#: instance/settings.py:108
+msgid "Instance Attach Volume"
+msgstr "挂载磁盘"
+
+#: instance/settings.py:109
+msgid "Instance Detach Volume"
+msgstr "卸载磁盘"
+
+#: instance/settings.py:110
+msgid "Instance Terminate"
+msgstr "删除"
+
+#: network/models.py:9 network/models.py:44
+msgid "Network Name"
+msgstr ""
+
+#: network/models.py:10
+msgid "OS Network UUID"
+msgstr ""
+
+#: network/models.py:46
+msgid "OS Subnet UUID"
+msgstr ""
+
+#: network/models.py:48
+msgid "IPv4 CIDR"
+msgstr ""
+
+#: network/models.py:49
+msgid "IP Version"
+msgstr "IP 版本"
+
+#: network/models.py:63
+msgid "Router Name"
+msgstr "名称"
+
+#: network/models.py:64 network/models.py:65
+msgid "OS Router UUID"
+msgstr "Router UUID"
+
+#: network/models.py:80
+msgid "Port"
+msgstr "端口"
+
+#: network/settings.py:15 network/settings.py:28
+msgid "BUILD"
+msgstr "构建中"
+
+#: network/settings.py:16 network/settings.py:29
+msgid "ACTIVE"
+msgstr "已启动"
+
+#: network/settings.py:17 network/settings.py:30
+msgid "DOWN"
+msgstr "已关闭"
+
+#: network/settings.py:18 network/settings.py:31
+msgid "ERROR"
+msgstr "错误"
+
+#: network/settings.py:19 network/settings.py:32
+msgid "CREATING"
+msgstr "创建中"
+
+#: network/settings.py:20 network/settings.py:33
+msgid "DELETING"
+msgstr "删除中"
+
+#: network/settings.py:21 network/settings.py:34
+msgid "UPDATING"
+msgstr "更新中"
+
+#: network/views.py:35
+msgid "Create network success"
+msgstr "创建私有网络成功"
+
+#: network/views.py:40
+msgid "Create network error"
+msgstr "创建私有网络失败"
+
+#: network/views.py:44
+msgid "The selected network not exist"
+msgstr "私有网络不存在"
+
+#: network/views.py:48
+msgid "Update network success"
+msgstr "更新私有网络成功"
+
+#: network/views.py:58
+msgid "Default network can not be deleted"
+msgstr "默认的私有网络不允许删除"
+
+#: network/views.py:61
+msgid "Was unable to delete the use of the network"
+msgstr "使用中的私有网络不允许删除"
+
+#: network/views.py:65
+msgid "Network deleted success"
+msgstr "私有网络删除成功"
+
+#: network/views.py:67
+msgid "The selected network does not exist"
+msgstr "私有网络不存在"
+
+#: network/views.py:92
+msgid "Default network not allow operation"
+msgstr "默认私有网络不支持此操作"
+
+#: network/views.py:99
+msgid "network exist address , not operation"
+msgstr "子网地址已经存在"
+
+#: network/views.py:118
+msgid "Link router success"
+msgstr "加入路由器成功"
+
+#: network/views.py:121
+msgid "Network not add subnet ,not operation "
+msgstr "请将私有网络先加入路由器"
+
+#: network/views.py:131
+msgid "Leave router success "
+msgstr "离开路由器成功"
+
+#: network/views.py:134
+msgid "Network operation error"
+msgstr "操作异常"
+
+#: network/views.py:182
+msgid "Create router success"
+msgstr "创建路由器成功"
+
+#: network/views.py:184
+msgid "Valid Router fail"
+msgstr "数据提交异常"
+
+#: network/views.py:187
+msgid "Create router fail"
+msgstr "创建路由器失败"
+
+#: network/views.py:191
+msgid "The selected router not exist"
+msgstr "路由器不存在"
+
+#: network/views.py:206
+msgid "Update router success"
+msgstr "路由器更新成功"
+
+#: network/views.py:215
+msgid "Default Router can not be deleted"
+msgstr "默认路由器不允许删除"
+
+#: network/views.py:220
+msgid "Router used can not deleted"
+msgstr "使用中的路由器不允许删除"
+
+#: network/views.py:224
+msgid "Router deleted success"
+msgstr "路由器删除成功"
+
+#: network/views.py:226
+msgid "The selected router does not exist"
+msgstr "路由器不存在"
+
+#: volume/models.py:10
+msgid "Volume name"
+msgstr "名称"
+
+#: volume/models.py:11
+msgid "OS Volume UUID"
+msgstr "OS UUID"
+
+#: volume/models.py:13
+msgid "Volume size"
+msgstr "磁盘容量"
+
+#: volume/models.py:14
+msgid "Volume Type"
+msgstr "磁盘类型"
+
+#: volume/settings.py:21 volume/settings.py:40
+msgid "Volume Creating"
+msgstr "创建中"
+
+#: volume/settings.py:22 volume/settings.py:41
+msgid "Volume Attaching"
+msgstr "挂载中"
+
+#: volume/settings.py:23 volume/settings.py:42
+msgid "Volume Available"
+msgstr "可用"
+
+#: volume/settings.py:24 volume/settings.py:43
+msgid "Volume Backing_up"
+msgstr ""
+
+#: volume/settings.py:25 volume/settings.py:44
+msgid "Volume Deleting"
+msgstr "删除中"
+
+#: volume/settings.py:26 volume/settings.py:45
+msgid "Volume Downloading"
+msgstr "下载中"
+
+#: volume/settings.py:27 volume/settings.py:46
+msgid "Volume Error"
+msgstr "错误"
+
+#: volume/settings.py:28 volume/settings.py:47
+msgid "Volume Error_deleting"
+msgstr "删除失败"
+
+#: volume/settings.py:29 volume/settings.py:48
+msgid "Volume Error_restoring"
+msgstr ""
+
+#: volume/settings.py:30 volume/settings.py:49
+msgid "Volume In Use"
+msgstr "使用中"
+
+#: volume/settings.py:31 volume/settings.py:50
+msgid "Volume Restoring_backup"
+msgstr ""
+
+#: volume/settings.py:32 volume/settings.py:51
+msgid "Volume Unrecognized"
+msgstr "未知"
+
+#: volume/settings.py:33 volume/settings.py:52
+msgid "Volume uploading"
+msgstr "更新中"
+
+#: volume/settings.py:57
+msgid "Volume"
+msgstr "容量型"
+
+#: volume/settings.py:58
+msgid "Performance"
+msgstr "性能型"
+
+#: volume/views.py:51
+msgid "Creating Volume"
+msgstr "创建中"
+
+#: volume/views.py:56
+msgid "Volume create error"
+msgstr "创建磁盘成功"
+
+#: volume/views.py:67
+msgid "Volume update success"
+msgstr "更新磁盘成功"
+
+#: volume/views.py:69
+msgid "No select Volume "
+msgstr "请选择磁盘"
+
+#: volume/views.py:72
+msgid "Volume update error"
+msgstr "更新磁盘失败"
+
+#: volume/views.py:84
+msgid "Unknown volume action"
+msgstr "未知的磁盘操作"
+
+#: volume/views.py:87
+msgid "Volume action error"
+msgstr "操作失败"
+
+#: volume/views.py:101
+msgid "Attaching volume"
+msgstr "挂载中"
+
+#: volume/views.py:107
+msgid "Detaching volume"
+msgstr "卸载中"
+
+#: volume/views.py:112
+#, python-format
+msgid "Volume attached to instance,instance:%(instance)s"
+msgstr "磁盘已挂载到云主机:%(instance)s"
+
+#: volume/views.py:116
+msgid "Deleting Volume"
+msgstr "删除中"

@@ -1,0 +1,42 @@
+<!-- BEGIN PAGE HEADER-->
+<!--div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-dashboard"></i>
+			<a href="#">{[{ 'sidebar.overview' | i18next }]}</a>
+		</li>
+		<li>
+            <i class="fa fa-angle-right"></i>
+			<a href="#">{[{ 'sidebar.overview' | i18next }]}</a>
+		</li>
+	</ul>	
+</div-->
+<h1 class="page-title">
+    {[{ 'sidebar.overview' | i18next }]}
+</h1>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div>
+    <div class="row">
+        <!-- BEGIN MAIN LEFT -->
+        <div class="col-md-8 col-sm-6">
+            <!-- BEGIN quota usage -->
+            <div data-ng-include="'/static/cloud/views/overview_quota_usage.html?t=0.123'">
+            </div>
+            <!-- END quota usage -->
+            <!-- BEGIN contract -->
+            <div data-ng-include="'/static/cloud/views/overview_contract.html'">
+                <!-- END contract -->
+            </div>
+        </div>
+        <!-- END MAIN LEFT -->
+        <!-- BEGIN TIMELINE -->
+        <div class="col-md-4 col-sm-6">
+            <!-- BEGIN TIMELINE CONTENT -->
+            <div data-ng-include="'/static/cloud/views/overview_op_log.html'">
+            </div>
+            <!-- END TIMELINE -->
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>

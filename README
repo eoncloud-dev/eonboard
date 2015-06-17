@@ -1,0 +1,34 @@
+:Document
+
+# env
+
+.venv/bin/pip freeze > requirements.txt
+
+# db
+
+create database cloud_web CHARACTER SET utf8;
+create user cloud_web;
+grant all privileges on cloud_web.* to 'cloud_web'@'%' identified by 'password' with grant option;
+flush privileges;
+
+# django init
+
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py init_flavor
+
+# run celery worker
+
+../.venv/bin/celery -A cloud worker -l info
+
+# run server
+
+../.venv/bin/python manage.py runserver --insecure
+
+
+# i18n by django
+django-admin makemessages --locale=zh_CN
+django-admin compilemessages --locale=zh_CN
+# or
+python ../manage.py makemessages -l zh_CN
+python ../manage.py compilemessages -l zh_CN

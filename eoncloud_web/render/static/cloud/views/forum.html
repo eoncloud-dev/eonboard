@@ -1,0 +1,140 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="VolumeController"-->
+<div>
+    <div class="col-md-12">
+        <div class="note note-success ng-scope">
+            <p>
+                {[{ 'forum.introduction' | i18next }]}
+            </p>
+        </div>
+        <!-- BEGIN INSTANCE  -->
+        <div class="table-container">
+            <div class="portlet box ">
+                <div class="portlet-body" style="background-color: #f8f8f8">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="portlet-body">
+                                <div class="scroller" style="height:500px;">
+                                    <a class="btn btn-primary" href="javascript:void(0);"
+                                       ng-click="create_forum_model();">
+                                        <i class="fa fa-plus"></i>{[{ 'forum.create_new' | i18next }]}
+                                    </a>
+                                    <ul class="nav nav-tabs tabs-left margin-top-10">
+                                        <li ng-class="{'active':current_forum.id == forum.id}"
+                                            ng-repeat="forum in forum_list">
+                                            <a href="javascript:void(0);" ng-click="forums_click(forum)"
+                                               id="forum_id_134"
+                                               aria-expanded="true">
+                                                <p class="pad_t10 font_16"
+                                                   style="word-wrap: break-word; word-break: break-all;">
+                                                    {[{ forum.title}]}</p>
+
+                                                <p>{[{ 'forum.submit_date' | i18next }]}{[{ forum.create_date}]}</p>
+
+                                                <p class="pad_b10">
+                                                    {[{ forum.content}]}
+                                                </p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="tab-content scroller" style="height:500px;">
+                                <div id="ajax_forum_add" class="well"
+                                     ng-if="current_forum !='' && current_forum !=undefined ">
+                                    <div class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
+                                        <p class="font_16">{[{current_forum.title}]}</p>
+
+                                        <div>
+                                            <p class="hei_60 fl col-md-9" style="padding-left:0">
+                                                {[{current_forum.create_date}]}</p>
+
+                                            <p ng-if="!current_forum.status" class="btn btn-primary cursor fl"
+                                               href="javascript:void(0);" ng-click="close_forum(current_forum)">
+                                                <i class="fa fa-remove"></i>{[{ 'forum.close_forum' | i18next }]}
+                                            </p>
+
+                                            <p ng-if="current_forum.status" class="prompt_news bg_5">
+                                                {[{ 'forum.closed_forum' | i18next }]}
+                                            </p>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <p style="word-wrap: break-word; word-break: break-all;">
+                                            {[{current_forum.content}]}</p>
+                                    </div>
+                                    <div ng-repeat="reply in forum_reply_list"
+                                         class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
+                                        <p>
+                                            {[{reply.reply_content}]}
+                                        </p>
+
+                                        <p class="hei_30">{[{reply.create_date}]}</p>
+                                    </div>
+                                    <div ng-if="!current_forum.status">
+                                        <div class="bg_4 margin-top-10 clear">
+                                            <textarea class="form-control" rows="3" maxlength="255"
+                                                      ng-model="$parent.reply_content">
+
+                                            </textarea>
+                                        </div>
+                                        <div class="margin-top-10">
+                                            <a id="reply_a" class="btn yellow" href="javascript:void(0);"
+                                               ng-click="forumReply(current_forum,reply_content)"
+                                               ng-class="{'disabled':reply_content==''}">
+                                                {[{ 'forum.reply' | i18next }]}<i
+                                                    class="fa pad_l5 fa-plus-square-o"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+<!-- create forum dialog -->
+
+<script type="text/ng-template" id="forum_create.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'forum.create_new' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal form-bordered" id="createForumForm">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">{[{ 'forum.title' | i18next }]}<span class="required"
+                                                                                                       aria-required="true"> * </span></label>
+
+                <div class="col-md-8">
+                    <input type="text" class="form-control input-medium fl" type="text" id="title"
+                           ng-model="forum.title" maxlength="40"/>
+                    <!-- <span class="fl hei_30 mar_l10">常见问题?</span> -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">{[{ 'forum.desc' | i18next }]}<span class="required"
+                                                                                                      aria-required="true"> * </span></label>
+
+                <div class="col-md-8">
+                    <textarea type="text" class="form-control" maxlength="100" ng-model="forum.content" id="content"
+                              rows="7" cols="30"></textarea>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button class="btn btn-primary" ng-click="create_forum(forum)">{[{ 'confirm' | i18next }]}</button>
+    </div>
+</script>
+

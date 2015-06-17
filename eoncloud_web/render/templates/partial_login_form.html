@@ -1,0 +1,43 @@
+{% load i18n %}
+<form class="login-form" action="/login/" method="post">
+    {% trans "Email" as username_str %}
+    {% trans "Password" as pwd_str %}
+    {% csrf_token %}
+    <h3 class="form-title">{% trans "Login" %}</h3>
+
+    {% if error %}
+    <div class="alert alert-danger">
+        <button class="close" data-close="alert"></button>
+        <span id="errorMsg">{{ error }}</span>
+        <span id="errorMsg2" style="display:none;"> {% trans "Enter any username and password." %} </span>
+    </div>
+    {% else %}
+    <div class="alert alert-danger display-hide">
+        <button class="close" data-close="alert"></button>
+        <span id="errorMsg"> {% trans "Enter any username and password." %} </span>
+        <span id="errorMsg2" style="display:none;"> {% trans "Enter any username and password." %} </span>
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+        <label class="control-label visible-ie8 visible-ie9">{% trans "Username" %}</label>
+        <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off"
+               placeholder="{{ username_str }}" name="username"/>
+    </div>
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{% trans "Password" %}</label>
+        <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
+               placeholder="{{ pwd_str }}" name="password"/>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success uppercase"><i class="fa fa-key"></i> {% trans "Login" %}</button>
+        <!--a href="/find-password/" class="forget-password">{% trans 'Forgot Password' %}</a-->
+    </div>
+    <div class="create-account">
+        <!--p>
+            <a href="/signup/" class="uppercase">{% trans "Create an account" %}</a>
+        </p-->
+    </div>
+</form>
+

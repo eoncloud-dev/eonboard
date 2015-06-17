@@ -1,0 +1,141 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="InstanceController"-->
+<div>
+    <div class="col-md-12">
+        <div class="note note-success ng-scope">
+            <p>
+                {[{'firewall.page_desc' | i18next}]}
+            </p>
+        </div>
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="firewall_rules_table.reload()">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" ng-click="modal_create_firewall_rule()"
+                       role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'firewall.add_rule' | i18next }]}
+                    </a>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div id="sample_2_wrapper" class="dataTables_wrapper no-footer">
+                    <table ng-table="firewall_rules_table" class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                            <tr ng-repeat="firewall_rule in $data">
+                                <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
+                                    <input type="checkbox" ng-model="checkboxes.items[firewall_rule.id]"/>
+                                </td>
+                                <td data-title="'firewall.direction' | i18next">{[{ firewall_rule.direction }]}</td>
+                                <td data-title="'firewall.ether_type' | i18next">{[{ firewall_rule.ether_type}]}</td>
+                                <td data-title="'firewall.protocol' | i18next">{[{ firewall_rule.protocol}]}</td>
+                                <td data-title="'firewall.port_range' | i18next">
+                                    {[{ firewall_rule.port_range_min }]}--{[{ firewall_rule.port_range_max }]}
+                                </td>
+                                <td data-title="'firewall.actions' | i18next">
+                                    <div class="btn-group">
+                                        <button class="btn btn-default"
+                                           ng-click="delete_action(firewall_rule)">
+                                            <i class="fa fa-remove"></i>
+                                            {[{ 'firewall.delete' | i18next }]}
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+
+<!-- open create firewall-->
+<script type="text/ng-template" id="create_firewall_rule.html">
+    <div class="modal-header ">
+        <a class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()"> </a>
+        <h4 class="modal-title">{[{ 'firewall.add_rule' | i18next }]}</h4>
+    </div>
+    <div class="found-terrace1">
+        <div class="modal-body">
+            <form id="firewallForm" role="form" class="form-horizontal form-bordered">
+                <div class="form-group">
+
+                    <label class="col-md-3 control-label" for="title">{[{'firewall.rule' |i18next}]}<span class="required">* </span></label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-desktop"></i>
+                                </span>
+
+                            <select class="form-control"  ng-model="selected_rule">
+                                <option value="tcp">{[{'firewall.tcp' | i18next}]}</option>
+                                <option value="udp">{[{'firewall.udp' | i18next}]}</option>
+                                <option ng-repeat="rule in default_rules" value="{[{rule}]}">{[{rule.name}]}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="udp-tcp" ng-if="selected_rule =='tcp' || selected_rule =='udp'">
+                    <div class="form-group"  >
+                        <label class="col-md-3 control-label" for="title">{[{'firewall.open_port'|i18next}]}<span class="required">* </span></label>
+                        <div class="col-md-5">
+                            <select class="form-control"  ng-model="firewall_rule.port_range">
+                                <option value="port">port</option>
+                                <option value="range">port range</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="port" ng-if="firewall_rule.port_range == 'port'">
+                        <div class="form-group"  ng-class="{'has-error': firewall_rule_port}">
+                            <label class="col-md-3 control-label" for="title">{[{'firewall.port' |i18next}]}<span class="required">* </span></label>
+                            <div class="col-md-5">
+                                <input name="name" style="width:300px" maxlength="30" type="text" ng-model="firewall_rule.port" class="required form-control" />
+                                <span ng-if="firewall_rule_port"  class="help-block help-block-error">
+                                    {[{ 'firewall.port_regex' | i18next }]}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="port-range" ng-if="firewall_rule.port_range == 'range'">
+                        <div class="form-group"  ng-class="{'has-error': firewall_rule_form}">
+                            <label class="col-md-3 control-label" for="title">{[{'firewall.from_port'|i18next}]}<span class="required">* </span></label>
+                            <div class="col-md-5">
+                                <input name="name" style="width:300px" maxlength="30" type="text" ng-model="firewall_rule.from" class="required form-control" />
+                                <span ng-if="firewall_rule_form"  class="help-block help-block-error">
+                                {[{ 'firewall.port_regex' | i18next }]}
+                            </span>
+                            </div>
+                        </div>
+                        <div class="form-group"  ng-class="{'has-error': firewall_rule_to}">
+                            <label class="col-md-3 control-label" for="title">{[{ 'firewall.to_port' | i18next}]}<span class="required">* </span></label>
+                            <div class="col-md-5">
+                                <input name="name" style="width:300px" maxlength="30" type="text" ng-model="firewall_rule.to" class="required form-control" />
+                                <span ng-if="firewall_rule_to"  class="help-block help-block-error">
+                                {[{ 'firewall.port_regex' | i18next }]}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="clear"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" ng-click="cancel()">{[{ 'firewall.cancel' | i18next }]}</button>
+            <button class="btn btn-primary" ng-click="create(firewall_rule)">{[{ 'firewall.ensure' | i18next }]}</button>
+        </div>
+    </div>
+</script>
+
+
+<!-- BEGIN MAIN JS & CSS -->
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/>
+</script>

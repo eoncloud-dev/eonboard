@@ -1,0 +1,307 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="VolumeController"-->
+<div>
+    <div class="col-md-12">
+        <div class="note note-success ng-scope">
+            <p>
+                {[{ 'volume.desc' | i18next }]}
+            </p>
+        </div>
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet ">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="volume_table.reload()">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" ng-click="modal_create_volume()"
+                       role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'volume.create_new' | i18next }]}
+                    </a>
+                    <a class="btn btn-danger" ng-click="batch_action('delete')"
+                       ng-class="{'disabled-link disabled ': checked_count <= 0}">
+                        <i class="fa fa-trash"></i>
+                        {[{ 'volume.terminate' | i18next }]}
+                    </a>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div id="sample_2_wrapper" class="dataTables_wrapper no-footer">
+
+                    <table ng-table="volume_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                        <tr ng-repeat="volume in $data">
+                            <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
+                                <input type="checkbox" ng-class="{'disabled': status_desc[volume.status][1] == 0}" ng-model="checkboxes.items[volume.id]"/>
+                            </td>
+                            <td width="100" data-title="'volume.name' | i18next">{[{ volume.name}]}</td>
+                            <td width="160" data-title="'volume.status' | i18next">
+                                <span class="" ng-if="status_desc[volume.status][1] == 1">{[{ status_desc[volume.status][0] }]} </span>
+
+                                <div ng-if="status_desc[volume.status][1] == 0"
+                                     class="progress progress-striped active"
+                                     style="width:140px; margin-bottom:0px;">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        <span class="">{[{ status_desc[volume.status][0] }]} </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-title="'volume.resource' | i18next">{[{ volume.instance_info.name }]}</td>
+                            <td data-title="'volume.size' | i18next">{[{ volume.size }]}GB</td>
+                            <td data-title="'create_at' | i18next">{[{ volume.create_date }]}</td>
+                            <td data-title="'actions' | i18next">
+                                <div class="btn-group">
+                                    <button class="btn btn-default"
+                                            type="button" ng-click="modal_update_volume(volume)">
+                                        <i class="fa fa-edit"></i>
+                                        {[{ 'edit' | i18next }]}
+                                    </button>
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
+                                            aria-expanded="false"><i class="fa fa-angle-down"></i></button>
+                                    <ul role="menu" class="dropdown-menu">
+                                        <li ng-class="{'disabled-link': volume.status!=2}">
+                                            <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=2}"
+                                               ng-click="modal_attach_to_instance(volume)">
+                                                <i class="fa fa-hdd-o"></i>
+                                                {[{ 'volume.attach_to_instance' | i18next }]} </a>
+                                        </li>
+                                        <li ng-class="{'disabled-link': volume.status !=9}">
+                                            <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=9}"
+                                               ng-click="modal_detach_from_instance(volume)">
+                                                <i class="fa fa-times"></i>
+                                                {[{ 'volume.detach_from_instance' | i18next }]}</a>
+                                        </li>
+                                        <!--
+                                        <li >
+                                            <a href="javascript:void(0);"  ng-class="{'disabled-link': volume.status==0
+                                            || volume.status==4 || volume.status==6
+                                            || volume.status==7 || volume.status==8
+                                            || volume.status==12}">
+                                                <i class="fa fa-repeat"></i>
+                                                {[{ 'volume.backup' | i18next }]}</a>
+                                        </li>
+                                        -->
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/>
+</script>
+<!-- create volume dialog -->
+
+<script type="text/ng-template" id="create_volume.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'volume.create_new' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" id="volume_submit_form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group" ng-class="{'has-error': has_error}">
+                    <label class="col-md-3 control-label"> {[{ 'volume.name' | i18next }]}
+                        <span class="required" aria-required="true"> * </span>
+                    </label>
+
+                    <div class="col-md-9">
+
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-openid"></i>
+                                </span>
+
+                                <input type="text" class="form-control" name="name"
+                                       ng-model="volume.name" value="" class="required"/>
+                            </div>
+                            <span ng-if="has_error" id="name-error" class="help-block help-block-error">
+                               {[{ 'volume.name_prompt' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label"> {[{ 'volume.size' | i18next }]}
+                        <span class="required" aria-required="true"> *</span>
+                    </label>
+
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            <slider data="volume"></slider>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="quota.volume > 0 || quota.volume_size > 0">
+                    <label class="col-md-3 control-label">{[{ 'constant.quota' | i18next }]}</label>
+
+                    <div class="col-md-7">
+                        <div class="progress" style="margin-bottom: 0px;margin-top: 8px;">
+                            <div class="progress-bar progress-bar-success" role="progressbar"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 ng-style="{'width': resource_persent('volume')}"
+                                 ng-class="{'progress-bar-danger': calcuate_resource_persent('volume')>100 }">
+                                <span>{[{ quota.volume_used + 1 }]}/ {[{ quota.volume }]}</span>
+                            </div>
+                        </div>
+                        <div class="progress" style="margin-bottom: 0px;margin-top: 8px;">
+                            <div class="progress-bar progress-bar-success" role="progressbar"
+                                 aria-valuemin="0" aria-valuemax="100"
+                                 ng-style="{'width': resource_persent('volume_size')}"
+                                 ng-class="{'progress-bar-danger': calcuate_resource_persent('volume_size')>100 }">
+                                <span>{[{ quota.volume_size_used + volume.size }]} GB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'create')" ng-class="{'disabled': check_can_submit()}"> {[{ 'submit' | i18next
+            }]}
+        </button>
+    </div>
+
+</script>
+<!-- create volume dialog -->
+
+<script type="text/ng-template" id="update_volume.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'volume.change_volume' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" id="volume_submit_form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group" ng-class="{'has-error': has_error}">
+                    <label class="col-md-3 control-label"> {[{ 'volume.name' | i18next }]}
+                        <span class="required" aria-required="true"> * </span>
+                    </label>
+
+                    <div class="col-md-9">
+
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-openid"></i>
+                                </span>
+
+                                <input type="text" class="form-control"
+                                       ng-model="volume.name" value="" class="required"/>
+                            </div>
+                            <span ng-if="has_error" id="name-error" class="help-block help-block-error">
+                               {[{ 'volume.name_prompt' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'update')"> {[{ 'submit' | i18next
+            }]}
+        </button>
+    </div>
+</script>
+
+
+<!--滑动条-->
+<script type="text/ng-template" id="slider.html">
+    <div id="slider-range-max"
+         class="slider bg-purple ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+         aria-disabled="false">
+
+    </div>
+    <div class="slider-value">
+        {[{ 'volume.size' | i18next }]}: <span id="slider-range-max-amount">{[{ data.size }]}</span>GB
+    </div>
+</script>
+<!--挂在硬盘到主机-->
+<script type="text/ng-template" id="instance.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'volume.attach_to_instance' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group" ng-class="{'has-error': has_error && selected_instance == false}">
+                    <label class="col-md-3 control-label"> {[{ 'volume.instance' | i18next }]}
+                        <span class="required" aria-required="true"> * </span>
+                    </label>
+
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-desktop"></i>
+                                </span>
+
+                                <select class="form-control" ng-options="v.name  for v in instances track by v.id"
+                                        ng-model="selected_instance">
+                                    <option value="-1" selected>-----</option>
+                                </select>
+                            </div>
+                            <span ng-if="has_error && selected_instance == false" class="help-block help-block-error">
+                                {[{ 'volume.unselect_instance_error' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-click="attach_or_detach(selected_instance,'attach')"> {[{
+            'volume.attach' | i18next }]}
+        </button>
+    </div>
+</script>
+<!--卸载提示-->
+<script type="text/ng-template" id="detach.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'volume.attach_from_instance' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                    </label>
+
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            {[{ operation_tip }]}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-click="attach_or_detach('','detach')"> {[{ 'volume.detach' |
+            i18next }]}
+        </button>
+    </div>
+</script>

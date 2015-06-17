@@ -1,0 +1,285 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="InstanceController"-->
+<div>
+    <div class="col-md-12">
+        <div class="note note-success ng-scope">
+            <p>
+                EonCloud 为您提供一种随时获取的、弹性的计算能力，这种计算能力的体现就是
+                主机（Instance）。主机就是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。通常情况下，您的请求可以在10秒到60秒的时间之内 完成，所以您完全可以动态地、按需使用计算能力。
+            </p>
+        </div>
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="instance_table.reload()">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" ng-click="modal_create_instance()"
+                       role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'instance.create_new' | i18next }]}
+                    </a>
+                    <a class="btn btn-default" ng-click="batch_action('power_on')" ng-class="{disabled: checked_count <= 0}">
+                        <i class="fa fa-play"></i>
+                        {[{ 'instance.start' | i18next }]}
+                    </a>
+                    <a class="btn btn-default"  ng-click="batch_action('power_off')" ng-class="{disabled: checked_count <= 0}">
+                        <i class="fa fa-stop"></i>
+                        {[{ 'instance.poweroff' | i18next }]}
+                    </a>
+                    <a class="btn btn-danger" ng-click="batch_action('terminate')" ng-class="{disabled: checked_count <= 0}">
+                        <i class="fa fa-trash"></i>
+                        {[{ 'instance.terminate' | i18next }]}
+                    </a>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+
+                    <table ng-table="instance_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                        <tr ng-repeat="instance in $data">
+                            <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
+                                <input type="checkbox" ng-model="checkboxes.items[instance.id]"/>
+                            </td>
+                            <td width="100" data-title="'instance.name' | i18next">{[{ instance.name}]}</td>
+                            <td data-title="'instance.image' | i18next">{[{ instance.image_info.name }]}</td>
+                            <td data-title="'instance.flavor' | i18next">{[{ instance.cpu }]}CPU/ {[{ instance.memory
+                                }]}MB/ {[{ instance.sys_disk }]}GB
+                            </td>
+                            <td data-title="'instance.private_ip' | i18next">{[{ instance.private_ip }]}</td>
+                            <td data-title="'instance.public_ip' | i18next">
+                                <a class="btn default btn-xs blue" ng-href="#/floating/" ng-if="instance.floating_info">
+                                    <i class="fa fa-share"></i> {[{ instance.floating_info}]} </a>
+                            </td>
+                            <td width="160" data-title="'instance.status' | i18next">
+                                <span class="" ng-if="status_desc[instance.status][1] == 1">{[{ status_desc[instance.status][0] }]} </span>
+                                <div ng-if="status_desc[instance.status][1] == 0"
+                                     class="progress progress-striped active"
+                                     style="width:140px; margin-bottom:0px;">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        <span class="">{[{ status_desc[instance.status][0] }]} </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-title="'create_at' | i18next">{[{ instance.create_date }]}
+                            </td>
+                            <td data-title="'actions' | i18next">
+                                <div class="btn-group" ng-if="instance.status != 16 && instance.status != 0">
+                                    <button class="btn btn-default" ng-class="{disabled:instance.status != 1 }"
+                                            type="button" ng-click="instance_action(instance, 'reboot')">
+                                        <i class="fa fa-power-off"></i>
+                                        {[{ 'instance.reboot' | i18next }]}
+                                    </button>
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
+                                            aria-expanded="false"><i class="fa fa-angle-down"></i></button>
+                                    <ul role="menu" class="dropdown-menu">
+                                        <li ng-if="instance.status == 5 || instance.status == 11">
+                                            <a href="#" ng-click="instance_action(instance, 'power_on')">
+                                                <i class="fa fa-play"></i>
+                                                {[{ 'instance.power_on' | i18next }]} </a>
+                                        </li>
+                                        <li ng-if="instance.status == 1">
+                                            <a href="#" ng-click="instance_action(instance, 'power_off')">
+                                                <i class="fa fa-stop"></i>
+                                                {[{ 'instance.power_off' | i18next }]} </a>
+                                        </li>
+                                        <li ng-if="instance.status == 1">
+                                            <a href="#" ng-click="instance_action(instance, 'vnc_console')">
+                                                <i class="fa fa-desktop"></i>
+                                                {[{ 'instance.vnc_console' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'bind_floating')">
+                                                <i class="fa fa-cloud-upload"></i>
+                                                {[{ 'instance.bind_floating' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'unbind_floating')">
+                                                <i class="fa fa-cloud-download"></i>
+                                                {[{ 'instance.unbind_floating' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'change_firewall')">
+                                                <i class="fa fa-warning"></i>
+                                                {[{ 'instance.change_firewall' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'attach_volume')">
+                                                <i class="fa fa-hdd-o"></i>
+                                                {[{ 'instance.attach_volume' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'detach_volume')">
+                                                <i class="fa fa-times"></i>
+                                                {[{ 'instance.detach_volume' | i18next }]} </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="" ng-click="instance_action(instance, 'terminate')">
+                                                <i class="fa fa-trash"></i>
+                                                {[{ 'instance.terminate_instance' | i18next }]} </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<!-- BEGIN MAIN JS & CSS -->
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/>
+</script>
+
+<script type="text/ng-template" id="vnc_console.html">
+    <p class='alert alert-info'>
+        {[{ 'instance.vnc_prompt' | i18next }]}
+        <a href="{[{ vnc_console.vnc_url }]}" style="text-decoration: underline" target="_blank">
+        {[{ 'instance.vnc_new_window' | i18next }]}
+        </a>
+        <a href="#" style="text-decoration: underline" ng-click="cancel()">
+                   {[{ 'instance.vnc_window_close' |i18next }]}
+        </a>
+    </p>
+    <iframe ng-src="{[{ vnc_sce_url(vnc_console) }]}" style="width:900px;height:700px;" frameBorder="0"></iframe>
+</script>
+
+<script type="text/ng-template" id="floating.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title" ng-if="is_bind == true">{[{ 'instance.bind_floating' | i18next }]}</h4>
+        <h4 class="modal-title" ng-if="is_bind == false">{[{ 'instance.unbind_floating' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-3 control-label">{[{ 'instance.name' | i18next }]}</label>
+                    <div class="col-md-1 control-label">{[{ instance.name }]}</div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': has_error && selected_ip == false}">
+                    <label class="col-md-3 control-label"> {[{ 'instance.public_ip' | i18next }]}
+                   <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-openid"></i>
+                                </span>
+
+                                <select class="form-control" ng-options="f.ip for f in floating_ips track by f.id" ng-model="selected_ip">
+                                    <option value="-1" selected>-----</option>
+                                </select>
+                            </div>
+                            <span ng-if="has_error && selected_ip == false" id="name-error" class="help-block help-block-error">
+                                {[{ 'instance.unselect_bind_error' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-if="is_bind == true" ng-click="action(selected_ip, 'associate')"> {[{ 'instance.bind' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-if="is_bind == false" ng-click="action(selected_ip, 'disassociate')"> {[{ 'instance.unbind' | i18next }]}</button>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="firewall.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'instance.change_firewall' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-3 control-label">{[{ 'instance.name' | i18next }]}</label>
+                    <div class="col-md-1 control-label">{[{ instance.name }]}</div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': has_error && selected_ip == false}">
+                    <label class="col-md-3 control-label"> {[{ 'instance.firewall' | i18next }]}
+                        <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-openid"></i>
+                                </span>
+
+                                <select class="form-control" ng-options="f.name for f in firewalls track by f.id" ng-model="selected_firewall">
+                                    <option value="-1" selected>-----</option>
+                                </select>
+                            </div>
+                            <span ng-if="has_error && selected_firewall == false" id="name-error" class="help-block help-block-error">
+                                {[{ 'instance.unselect_firewall_error' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary"  ng-click="action(selected_firewall)"> {[{ 'confirm' | i18next }]}</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="volume.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title" ng-if="is_attach == true">{[{ 'instance.attach_volume' | i18next }]}</h4>
+        <h4 class="modal-title" ng-if="is_attach == false">{[{ 'instance.detach_volume' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group" ng-class="{'has-error': has_error && selected_volume == false}">
+                    <label class="col-md-3 control-label"> {[{ 'instance.volume' | i18next }]}
+                   <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-9">
+                        <div class="input-inline input-large">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-hdd-o"></i>
+                                </span>
+
+                                <select class="form-control" ng-options="v.name + '(' + v.size + 'GB)' for v in volumes track by v.id" ng-model="selected_volume">
+                                    <option value="-1" selected>-----</option>
+                                </select>
+                            </div>
+                            <span ng-if="has_error && selected_volume == false"  class="help-block help-block-error">
+                                {[{ 'instance.unselect_volume_error' | i18next }]}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-if="is_attach == true" ng-click="attach(selected_volume)"> {[{ 'instance.attach' | i18next }]}</button>
+        <button type="button" class="btn btn-primary" ng-if="is_attach == false" ng-click="attach(selected_volume)"> {[{ 'instance.detach' | i18next }]}</button>
+    </div>
+</script>
+

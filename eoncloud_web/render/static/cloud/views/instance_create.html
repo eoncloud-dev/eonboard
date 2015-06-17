@@ -1,0 +1,337 @@
+<div class="row">
+    <div class="col-md-8" style="padding-right:0px;">
+        <div class="portlet box blue-chambray" id="form_wizard_1"
+             style="border-left-style: none;border-bottom-style: none;margin-bottom: 0px;">
+            <div class="portlet-title">
+                <div class="caption">
+                    {[{ 'instance.create_instance_title' | i18next }]} <span class="step-title-xx"></span>
+                </div>
+            </div>
+
+            <div class="portlet-body form">
+                <form action="/api/instances/" class="form-horizontal" id="submit_form" method="POST">
+                    <div class="form-wizard">
+                        <div class="form-body">
+                            <ul class="nav nav-pills nav-justified steps">
+                                <li>
+                                    <a href="#tab1" data-toggle="tab" class="step">
+												<span class="number">
+												1 </span>
+												<span class="desc">
+												<i class="fa fa-check"></i> {[{ "instance.image" | i18next }]} </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab2" data-toggle="tab" class="step">
+												<span class="number">
+												2 </span>
+												<span class="desc">
+												<i class="fa fa-check"></i> {[{ "instance.flavor" | i18next }]} </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab3" data-toggle="tab" class="step">
+												<span class="number">
+												3 </span>
+												<span class="desc">
+												<i class="fa fa-check"></i> {[{ "profile" | i18next }]} </span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div id="bar" class="progress progress-striped" role="progressbar">
+                                <div class="progress-bar progress-bar-success">
+                                </div>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <h4 class="block">{[{ 'instance.select_image' | i18next }]}</h4>
+
+                                    <div class="list-group scroller" id="img_div" style="height:300px;">
+                                        <a ng-repeat="image in images_list" href="#" class="list-group-item"
+                                           ng-class="{active: instance_config.select_image == image}"
+                                           ng-click="instance_config.select_image=image;">
+                                            <span ng-if="image.os_type=='Linux'"><i class="fa fa-linux"></i> {[{ image.name }]}</span>
+                                            <span ng-if="image.os_type=='Windows'"><i class="fa fa-windows"></i> {[{ image.name }]}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <div class="clearfix">
+                                        <h4 class="block">CPU</h4>
+
+                                        <button ng-repeat="vcpu in cpu_list" class="btn btn-default" type="button"
+                                                ng-class="{'btn-primary': instance_config.vcpu == vcpu}"
+                                                ng-click="cpu_click(vcpu)">
+                                            {[{ vcpu }]} CPU
+                                        </button>
+                                    </div>
+                                    <div class="clearfix">
+                                        <h4 class="block">{[{ 'instance.memory' | i18next }]}</h4>
+                                        <button ng-repeat="memory in memory_list" class="btn btn-default" type="button"
+                                                ng-class="{'btn-primary': instance_config.memory == memory, 'disabled': instance_config.cpu_memory.indexOf(memory) == -1}"
+                                                ng-click="instance_config.memory = memory;">
+                                            <span ng-if="memory/1024 > 1"> {[{ memory/1024 }]} GB</span>
+                                            <span ng-if="memory/1024 < 1"> {[{ memory }]} MB</span>
+
+                                        </button>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <h4 class="block">{[{ 'instance.os_disk' | i18next }]}</h4>
+
+                                        <div class="note note-info">
+                                            <strong ng-if="instance_config.select_image.os_type == 'Linux'">30GB {[{
+                                                'instance.os_disk_free' | i18next }]}</strong>
+                                            <strong ng-if="instance_config.select_image.os_type == 'Windows'">50GB {[{
+                                                'instance.os_disk_free' | i18next }]}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <h4 class="block">{[{ 'instance.network' | i18next }]}</h4>
+                                        <select class="form-control" ng-if="network_list.length > 0">
+                                            <option ng-repeat="network in network_list">{[{ network.name }]}</option>
+                                        </select>
+
+                                        <div class="note note-warning" ng-if="network_list.length <= 0">
+                                            <strong> {[{ 'instance.default_network_alert' | i18next }]}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'instance.name' | i18next }]} <span
+                                                class="required">
+                                                    * </span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="name"
+                                                   ng-model="instance_config.name" value=""/>
+                                                        <span class="help-block">
+                                                        {[{ 'instance.name_prompt' | i18next }]} </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'count' | i18next }]} <span
+                                                class="required">
+                                                    * </span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="count" value="1" readonly/>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'instance.login_type' | i18next
+                                            }]} <span class="required">
+                                                    * </span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <div class="radio-list">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="login_type"
+                                                           value="password" checked
+                                                           ng-model="instance_config.login_type"> {[{
+                                                    'instance.password' | i18next
+                                                    }]} </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="login_type"
+                                                           value="ssh" disabled ng-model="instance_config.login_type">
+                                                    SSH Key </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'instance.login_name' | i18next }]}
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="login_name" value="root"
+                                                   readonly ng-model="instance_config.select_image.login_name"/>
+                                            <span class="help-block">{[{ 'instance.login_name_prompt' | i18next }]}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'instance.password' | i18next
+                                            }]} <span class="required">
+                                                    * </span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <input id="login_password" type="password" class="form-control"
+                                                   name="password" ng-model="instance_config.password" value=""/>
+                                                        <span class="help-block">{[{ 'instance.password_prompt' | i18next }]}
+                                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">{[{ 'instance.confirm_password' | i18next
+                                            }]} <span class="required">
+                                                    * </span>
+                                        </label>
+
+                                        <div class="col-md-6">
+                                            <input type="password" class="form-control" name="confirm_password"
+                                                   value="" ng-model="instance_config.confirm_password"/>
+                                            <span class="help-block">{[{ 'instance.confirm_password_prompt' | i18next }]} </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions right">
+                            <a href="javascript:;" class="btn btn-danger button-cancel"
+                               style="float:left;margin-left:10px;" ng-click="cancel()">
+                                {[{ 'cancel' | i18next }]} </a>
+                            <!--div class="col-md-offset-3 col-md-9"-->
+                            <a href="javascript:;" class="btn default button-previous">
+                                <i class="m-icon-swapleft"></i> {[{ 'back' | i18next }]} </a>
+                            <a href="javascript:;" class="btn blue button-next">
+                                {[{ 'next' | i18next }]} <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                            <a href="javascript:;" class="btn green button-submit" ng-class="{'disabled': check_can_submit()}">
+                                {[{ 'submit' | i18next }]} <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                            <a href="javascript:;" id="btnCreateInstance" ng-click="submit_click(instance_config)">
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style="padding-left:0px;">
+        <div class="portlet box blue-chambray"
+             style="border-left-style: none;border-bottom-style: none;border-right-style:none; margin-bottom: 0px;">
+            <div class="portlet-title">
+                <div class="caption">
+                </div>
+            </div>
+            <div class="portlet-body from">
+                <form action="#" class="form-horizontal" method="">
+                    <div class="form-wizard">
+                        <div class="form-body">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="">
+                                    <h3 class="block">{[{ 'instance.config_info' | i18next }]} </h3>
+                                    <table class="table table-hover table-striped table-bordered">
+                                        <tr>
+                                            <td>
+                                                {[{ 'instance.image' | i18next }]}
+                                            </td>
+                                            <td>
+                                                {[{ instance_config.select_image.name }]}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {[{ 'instance.cpu' | i18next }]}
+                                            </td>
+                                            <td>
+                                                {[{ instance_config.vcpu }]} {[{ 'instance.cpu_unit' | i18next }]}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {[{ 'instance.memory' | i18next }]}
+                                            </td>
+                                            <td>
+                                                <span ng-if="instance_config.memory/1024 > 1"> {[{ instance_config.memory/1024 }]} GB</span>
+                                                <span ng-if="instance_config.memory/1024 < 1"> {[{ instance_config.memory }]} MB</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {[{ 'instance.network' | i18next }]}
+                                            </td>
+                                            <td>
+                                                <span ng-if="instance_config.network != 0">{[{ instance_config.network.name }]} </span>
+                                                <span ng-if="instance_config.network == 0">{[{ 'instance.default_network_alert' | i18next }]} </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {[{ 'instance.name' | i18next }]}
+                                            </td>
+                                            <td>
+                                                {[{ instance_config.name }]}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {[{ 'count' | i18next }]}
+                                            </td>
+                                            <td>
+                                                {[{ instance_config.instance }]}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="horizontal-form" action="#">
+                    <div class="form-body">
+                        <h3 class="form-section">{[{ 'constant.quota' | i18next }]}</h3>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{[{ 'constant.instance' | i18next }]}({[{ resource_persent_desc('instance') }]})</label>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" role="progressbar"
+                                             aria-valuemin="0" aria-valuemax="100"
+                                             ng-style="{'width': resource_persent('instance')}"
+                                             ng-class="{'progress-bar-danger': calcuate_resource_persent('instance')>100 }"
+                                                >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{[{ 'constant.vcpu' | i18next }]}({[{ resource_persent_desc('vcpu') }]})</label>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" role="progressbar"
+                                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                             ng-style="{'width': resource_persent('vcpu')}"
+                                             ng-class="{'progress-bar-danger': calcuate_resource_persent('vcpu')>100 }"
+                                                >
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">{[{ 'constant.memory' | i18next }]}({[{ resource_persent_desc('memory') }]})</label>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" role="progressbar"
+                                             aria-valuemin="0" aria-valuemax="100"
+                                             ng-style="{'width': resource_persent('memory')}"
+                                             ng-class="{'progress-bar-danger': calcuate_resource_persent('memory')>100 }">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<!-- END PAGE CONTENT-->
+<script type="text/javascript">
+    FormWizard.init();
+    //$("#img_div").slimScroll({});
+</script>

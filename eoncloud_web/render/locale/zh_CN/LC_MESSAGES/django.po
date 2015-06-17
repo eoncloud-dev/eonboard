@@ -1,0 +1,202 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-04 11:53+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/base.html:89 templates/cloud.html:180
+msgid "This field is required."
+msgstr "字段不允许为空。"
+
+#: templates/base.html:90
+msgid "Please fix this field."
+msgstr "字段格式错误。"
+
+#: templates/base.html:91
+msgid "Please enter a valid email address."
+msgstr "请正确的输入email地址。"
+
+#: templates/base.html:92
+msgid "Please enter a valid URL."
+msgstr "请输入正确的URL。"
+
+#: templates/base.html:93
+msgid "Please enter a valid date."
+msgstr "请输入正确的日期格式。"
+
+#: templates/base.html:94
+msgid "Please enter a valid date (ISO)."
+msgstr "请输入ISO格式的日期。"
+
+#: templates/base.html:95
+msgid "Please enter a valid number."
+msgstr "请输入数字。"
+
+#: templates/base.html:96
+msgid "Please enter only digits."
+msgstr "请输入数字。"
+
+#: templates/base.html:97
+msgid "Please enter a valid credit card number."
+msgstr "请输入一个正确的信用卡账号。"
+
+#: templates/base.html:98
+msgid "Please enter the same value again."
+msgstr "两次输入的内容不一致。"
+
+#: templates/base.html:99
+msgid "Please enter a value with a valid extension."
+msgstr "后缀名不支持。"
+
+#: templates/base.html:100
+#, python-brace-format
+msgid "Please enter no more than {0} characters."
+msgstr "请输入最多{0}个字符。"
+
+#: templates/base.html:101
+#, python-brace-format
+msgid "Please enter at least {0} characters."
+msgstr "请输入最少{0}个字符。"
+
+#: templates/base.html:102
+#, python-brace-format
+msgid "Please enter a value between {0} and {1} characters long."
+msgstr "字符长度需要在{0}-{1}之间。"
+
+#: templates/base.html:103
+#, python-brace-format
+msgid "Please enter a value between {0} and {1}."
+msgstr "请输入内容在{0}-{1}之间。"
+
+#: templates/base.html:104
+#, python-brace-format
+msgid "Please enter a value less than or equal to {0}."
+msgstr "请输入的内容小于{0}。"
+
+#: templates/base.html:105
+#, python-brace-format
+msgid "Please enter a value greater than or equal to {0}."
+msgstr "请输入的内容大于{0}。"
+
+#: templates/partial_login_form.html:3 templates/partial_login_form.html:24
+msgid "Username"
+msgstr "用户名"
+
+#: templates/partial_login_form.html:4 templates/partial_login_form.html:29
+#: templates/partial_register_form.html:13
+#: templates/partial_register_form.html:14
+msgid "Password"
+msgstr "密码"
+
+#: templates/partial_login_form.html:6 templates/partial_login_form.html:34
+#: templates/partial_register_form.html:79 templates/signup_success.html:16
+msgid "Login"
+msgstr "登录"
+
+#: templates/partial_login_form.html:12 templates/partial_login_form.html:17
+#: templates/partial_login_form.html:18
+msgid "Enter any username and password."
+msgstr "请输入用户名和密码。"
+
+#: templates/partial_login_form.html:35
+msgid "Forgot Password"
+msgstr "找回密码"
+
+#: templates/partial_login_form.html:39
+msgid "Create an account"
+msgstr "创建用户"
+
+#: templates/partial_register_form.html:5
+#: templates/partial_register_form.html:80
+msgid "Sign Up"
+msgstr "注册"
+
+#: templates/partial_register_form.html:8
+#, fuzzy
+#| msgid "Login Name"
+msgid "Login Mail"
+msgstr "登录名"
+
+#: templates/partial_register_form.html:9
+msgid "Login Name"
+msgstr "登录名"
+
+#: templates/partial_register_form.html:18
+msgid "Repassword"
+msgstr "密码"
+
+#: templates/partial_register_form.html:19
+msgid "Confirm Password"
+msgstr "确认密码"
+
+#: templates/partial_register_form.html:24
+#: templates/partial_register_form.html:25
+msgid "Mobile"
+msgstr "手机号"
+
+#: templates/partial_register_form.html:29
+#: templates/partial_register_form.html:31
+msgid "User Type"
+msgstr "用户类别"
+
+#: templates/partial_register_form.html:39
+msgid "Enter your company details below"
+msgstr "请填写公司基本信息"
+
+#: templates/partial_register_form.html:43
+#: templates/partial_register_form.html:44
+msgid "Company Name"
+msgstr "公司名称"
+
+#: templates/partial_register_form.html:48
+#: templates/partial_register_form.html:49
+msgid "Company Address"
+msgstr "公司地址"
+
+#: templates/partial_register_form.html:53
+msgid "Company MCC"
+msgstr "公司行业"
+
+#: templates/partial_register_form.html:55
+msgid "MCC"
+msgstr "公司行业"
+
+#: templates/partial_register_form.html:63
+#: templates/partial_register_form.html:65
+msgid "Source"
+msgstr "了解途径"
+
+#: templates/partial_register_form.html:73
+msgid "I agree to the"
+msgstr "我已经阅读并同意"
+
+#: templates/partial_register_form.html:73
+msgid "Terms of Service"
+msgstr "服务协议"
+
+#: templates/signup_success.html:13
+msgid "Signup Success"
+msgstr "恭喜，注册成功，点击登录继续操作"
+
+#~ msgid "Email"
+#~ msgstr "电子邮箱"
+
+#~ msgid "Enter your personal details below"
+#~ msgstr "请填写用户基本信息"
+
+#~ msgid "I'm company."
+#~ msgstr "我是企业用户"

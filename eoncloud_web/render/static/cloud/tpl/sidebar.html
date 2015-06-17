@@ -1,0 +1,131 @@
+<div class="page-sidebar navbar-collapse collapse">
+	<!-- BEGIN SIDEBAR MENU -->
+	<!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+	<!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+	<!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+	<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+	<!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+	<!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+	<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200"
+        ng-class="{'page-sidebar-menu-closed': settings.layout.pageSidebarClosed}">
+		<!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
+        <li class="heading">
+            <h3 class="uppercase">{[{ 'sidebar.cloud' | i18next }]}</h3>
+        </li>
+        
+        <li id="overview" class="start active open">
+            <a href="#/overview/">
+                <i class="fa fa-tachometer"></i>
+                <span class="title">
+                    {[{ 'sidebar.overview' | i18next }]}
+                </span>
+            <span class="selected"></span></a>
+        </li>
+        <li id="instance">
+            <a href="#/instance/">
+                <i class="fa fa-desktop"></i>
+                <span class="title">
+                    {[{ 'sidebar.instance' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="image">
+            <a href="#/image/">
+                <i class="fa  fa-circle-o-notch"></i>
+                <span class="title">
+                    {[{ 'sidebar.image' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="volume">
+            <a href="#/volume/">
+                <i class="fa fa-stack-exchange"></i>
+                <span class="title">
+                    {[{ 'sidebar.volume' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <!--li id="snapshot">
+            
+            <a href="javascript:void(0);">
+                <i class="fa fa-sort"></i>
+                <span class="title">备份</span>
+            </a>
+        </li-->
+
+        <li id="network">
+            <a href="#/floating/">
+                <i class="fa  fa-sitemap"></i>
+                <span class="title">
+                    {[{ 'sidebar.floating_ip' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="userFirewall">
+            <a href="#/firewall/">
+                <i class="fa fa-align-justify"></i>
+                <span class="title">
+                    {[{ 'sidebar.firewall' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="privateNetwork">
+            <a href="#/network/">
+                <i class="fa fa-signal"></i>
+                <span class="title">
+                    {[{ 'sidebar.private_network' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="router">
+            <a href="#/router/">
+                <i class="fa fa-rss"></i>
+                <span class="title">
+                    {[{ 'sidebar.router' | i18next }]}
+                </span>
+            </a>
+        </li>
+
+        <!--li>
+            <a href="javascript:;">
+                <i class="fa fa-sliders"></i>
+                <span class="title">负载均衡</span>
+            </a>
+        </li-->
+        <li class="heading">
+            <h3 class="uppercase">
+                {[{ 'sidebar.monitor' | i18next }]}
+            </h3>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <i class="fa fa-bell-o"></i>
+                <span class="title">
+                    {[{ 'sidebar.monitor' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="operaionLog">
+            <a href="#/operationlog/">
+                <i class="fa fa-pencil-square-o"></i>
+                <span class="title">
+                    {[{ 'sidebar.op_log' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li class="heading">
+            <h3 class="uppercase">
+                {[{ 'sidebar.support' | i18next }]}
+            </h3>
+        </li>
+        <li id="forum">
+            <a href="#/forum/">
+                <i class="fa fa-file-text-o"></i>
+                <span class="title">
+                    {[{ 'sidebar.support' | i18next }]}
+                </span>
+            </a>
+        </li>
+    </ul>
+	<!-- END SIDEBAR MENU -->
+</div>	

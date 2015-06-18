@@ -19,3 +19,5 @@ tags
 pep8.txt
 pylint.txt
 reports
+.idea
+*.iml

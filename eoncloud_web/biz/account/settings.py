@@ -16,3 +16,26 @@ QUOTA_ITEM = (
     ("volume", _("Volume Count")),
     ("floating_ip", _("Floating IP")),
 )
+
+RESOURCE_CHOICES = (
+    ("Instance", _("Instance")),
+    ("Volume", _("Volume")),
+    ("Network", _("Volume")),
+    ("Subnet", _("Volume")),
+    ("Router", _("Volume")),
+    ("Floating", _("Volume")),
+)
+
+RESOURCE_ACTION_CHOICES = (
+    ("reboot", _("reboot")),
+    ("power_on", _("power_on")),
+    ("power_off", _("power_off")),
+    ("vnc_console", _("vnc_console")),
+    ("bind_floating", _("bind_floating")),
+    ("unbind_floating", _("unbind_floating")),
+    ("change_firewall", _("change_firewall")),
+    ("attach_volume", _("attach_volume")),
+    ("detach_volume", _("detach_volume")),
+    ("terminate", _("terminate")),
+    ("launch", _("launch")),
+)

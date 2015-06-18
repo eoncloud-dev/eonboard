@@ -99,8 +99,6 @@ rabbitmqctl set_permissions -p eoncloud eoncloud_web ".*" ".*" ".*"
 
 # sudo kill -9 `ps -ef | grep 'celery' | awk '{print $2}'`
 
-$ ~/comlet/src/eoncloud-web/.venv/bin/celery multi start eoncloud_worker -A cloud \
---pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid \
---logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
+$ ../.venv/bin/celery multi start eoncloud_worker -A cloud --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid --logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
 
-$ ~/comlet/src/eoncloud-web/.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid
+$ ../.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid

@@ -8,7 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 
 
-from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM
+from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, \
+            RESOURCE_CHOICES, RESOURCE_ACTION_CHOICES
 
 
 class UserProfile(models.Model): 
@@ -23,19 +24,12 @@ class UserProfile(models.Model):
 
     class Meta:
         db_table = "auth_user_profile"
+        verbose_name = _("UserProfile")
+        verbose_name_plural = _("UserProfile")
 
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
-
-"""
-def create_user_profile(sender, u, created, **kwargs):
-    print "create_user_profile*****************************"
-    if creted:
-            profile, created = UserProfile.objects.get_or_create(user=u)
-
-post_save.connect(create_user_profile, sender=User)
-"""
 
 class Contract(models.Model):
     id = models.AutoField(primary_key=True)
@@ -59,6 +53,8 @@ class Contract(models.Model):
    
     class Meta:
         db_table = "user_contract"
+        verbose_name = _("Contract")
+        verbose_name_plural = _("Contract")
 
 
 class Quota(models.Model):
@@ -71,3 +67,52 @@ class Quota(models.Model):
 
     class Meta:
         db_table = "user_quota"
+        verbose_name = _("Quota")
+        verbose_name_plural = _("Quota")
+
+
+class Operation(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User)
+    udc = models.ForeignKey('idc.UserDataCenter')
+
+    resource = models.CharField(_("Resource"), max_length=128, null=False,
+                choices=RESOURCE_CHOICES)
+    resource_id = models.IntegerField(_("Resource ID"), null=False)
+    resource_name = models.CharField(_("Resource Name"), max_length=128)
+    action = models.CharField(_("Action"), max_length=128, null=False)
+    result = models.IntegerField(_("Result"), default=0)
+    create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
+
+    @classmethod
+    def log(cls, obj, obj_name, action, result):
+        try:
+            Operation.objects.create(
+                user = obj.user,
+                udc = obj.user_data_center,
+                resource = obj.__class__.__name__,
+                resource_id = obj.id,
+                resource_name = obj_name,
+                action = action,
+                result = result
+            )
+        except Exception as e:
+            pass
+
+    def get_resource(self):
+        return _(self.resource)
+
+    def get_desc(self):  
+        desc_format = _("%(resource)s:%(resource_name)s execute %(action)s operation")
+        desc = desc_format % {
+                "resource": _(self.resource),
+                "resource_name": self.resource_name,
+                "action": _(self.action),
+               } 
+        return desc
+
+    class Meta:
+        db_table = "user_operation"
+        ordering = ['-create_date']
+        verbose_name = _("Operation")
+        verbose_name_plural = _("Operation")

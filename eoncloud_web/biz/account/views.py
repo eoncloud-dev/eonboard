@@ -18,8 +18,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Quota
-from biz.account.serializer import ContractSerializer
+from biz.account.models import Contract, Quota, Operation
+from biz.account.serializer import ContractSerializer, OperationSerializer
 from biz.account.utils import get_quota_usage
 
 def signup(request, template_name="signup.html"):
@@ -74,3 +74,20 @@ def contract_view(request):
 def quota_view(request):
     quota = get_quota_usage(request.user, request.session["UDC_ID"])
     return Response(quota)
+
+
+class OperationList(generics.ListCreateAPIView):
+    queryset = Operation.objects.all()
+    serializer_class = OperationSerializer
+    
+    def list(self, request):
+        try:
+            queryset = self.get_queryset().filter(user=request.user,
+                            udc__id=request.session["UDC_ID"])
+            serializer = OperationSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response()
+
+    def create(self, request, *args, **kwargs):
+        raise 

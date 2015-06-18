@@ -9,8 +9,10 @@ from biz.idc.models import UserDataCenter as UDC
 from biz.instance.models import Instance, Flavor
 from biz.instance.serializer import InstanceSerializer, FlavorSerializer
 from biz.instance.utils import instance_action
-from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING
+from biz.instance.settings import INSTANCE_STATES_DICT, \
+                INSTANCE_STATE_RUNNING
 from biz.account.utils import check_quota
+from biz.account.models import Operation
 
 from cloud.instance_task import instance_create_task
 
@@ -46,6 +48,7 @@ def instance_create_view(request):
     serializer = InstanceSerializer(data=request.data, context={"request": request}) 
     if serializer.is_valid():
         ins = serializer.save()
+        Operation.log(ins, obj_name=ins.name, action="launch", result=1)
         instance_create_task.delay(ins, password=request.DATA["password"])
         return Response({"OPERATION_STATUS": 1}, status=status.HTTP_201_CREATED)
     else:

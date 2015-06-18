@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-16 16:07+0800\n"
+"POT-Creation-Date: 2015-06-19 11:26+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,53 +22,94 @@ msgstr ""
 msgid "email address format error"
 msgstr "电子邮件地址格式不正确"
 
-#: account/models.py:16
+#: account/models.py:17
 msgid "Mobile"
 msgstr "手机号"
 
-#: account/models.py:17
+#: account/models.py:18
 msgid "User Type"
 msgstr "用户类型"
 
-#: account/models.py:44
+#: account/models.py:27 account/models.py:28
+msgid "UserProfile"
+msgstr "用户设置"
+
+#: account/models.py:38
 msgid "Contract name"
 msgstr "合同名称"
 
-#: account/models.py:45
+#: account/models.py:39
 msgid "Customer name"
 msgstr "客户名称"
 
-#: account/models.py:46
+#: account/models.py:40
 msgid "Start Date"
 msgstr "开始日期"
 
-#: account/models.py:47
+#: account/models.py:41
 msgid "End Date"
 msgstr "结束日期"
 
-#: account/models.py:48 account/models.py:70 firewall/models.py:15
+#: account/models.py:42 account/models.py:66 firewall/models.py:15
 #: firewall/models.py:36 floating/models.py:25 forum/models.py:11
-#: forum/models.py:25 instance/models.py:46 network/models.py:15
-#: network/models.py:54 network/models.py:66 network/models.py:70
-#: network/models.py:84 volume/models.py:17
+#: forum/models.py:25 instance/models.py:45 network/models.py:15
+#: network/models.py:56 network/models.py:70 network/models.py:74
+#: network/models.py:90 volume/models.py:17
 msgid "Deleted"
 msgstr "已删除"
 
-#: account/models.py:67
+#: account/models.py:56 account/models.py:57
+msgid "Contract"
+msgstr "合同"
+
+#: account/models.py:63
 msgid "Resouce"
 msgstr "资源"
 
-#: account/models.py:68
+#: account/models.py:64
 msgid "Limit"
 msgstr "配额"
 
-#: account/models.py:69 firewall/models.py:14 firewall/models.py:37
-#: floating/models.py:23 forum/models.py:12 forum/models.py:26
-#: image/models.py:20 instance/models.py:26 instance/models.py:89
-#: network/models.py:16 network/models.py:55 network/models.py:71
-#: volume/models.py:16
+#: account/models.py:65 account/models.py:85 firewall/models.py:14
+#: firewall/models.py:37 floating/models.py:23 forum/models.py:12
+#: forum/models.py:26 image/models.py:20 instance/models.py:25
+#: instance/models.py:85 network/models.py:16 network/models.py:57
+#: network/models.py:75 volume/models.py:16
 msgid "Create Date"
 msgstr "创建日期"
+
+#: account/models.py:70 account/models.py:71
+msgid "Quota"
+msgstr "配额"
+
+#: account/models.py:79
+msgid "Resource"
+msgstr "资源"
+
+#: account/models.py:81
+msgid "Resource ID"
+msgstr "资源 ID"
+
+#: account/models.py:82
+msgid "Resource Name"
+msgstr "资源名称"
+
+#: account/models.py:83
+msgid "Action"
+msgstr "操作"
+
+#: account/models.py:84
+msgid "Result"
+msgstr "结果"
+
+#: account/models.py:106
+#, python-format
+msgid "%(resource)s:%(resource_name)s execute %(action)s operation"
+msgstr "%(resource)s:%(resource_name)s 执行了 %(action)s 操作"
+
+#: account/models.py:117 account/models.py:118
+msgid "Operation"
+msgstr "操作日志"
 
 #: account/settings.py:7
 msgid "Personal"
@@ -78,7 +119,8 @@ msgstr "个人"
 msgid "Company"
 msgstr "企业"
 
-#: account/settings.py:12
+#: account/settings.py:12 account/settings.py:21 instance/models.py:52
+#: instance/models.py:53
 msgid "Instance"
 msgstr "云主机"
 
@@ -102,6 +144,56 @@ msgstr "磁盘数量"
 msgid "Floating IP"
 msgstr "公网IP"
 
+#: account/settings.py:22 account/settings.py:23 account/settings.py:24
+#: account/settings.py:25 account/settings.py:26 volume/models.py:29
+#: volume/models.py:30
+msgid "Volume"
+msgstr "磁盘"
+
+#: account/settings.py:30
+msgid "reboot"
+msgstr "重启"
+
+#: account/settings.py:31
+msgid "power_on"
+msgstr "开机"
+
+#: account/settings.py:32
+msgid "power_off"
+msgstr "关机"
+
+#: account/settings.py:33
+msgid "vnc_console"
+msgstr "VNC登录"
+
+#: account/settings.py:34
+msgid "bind_floating"
+msgstr "绑定公网IP"
+
+#: account/settings.py:35
+msgid "unbind_floating"
+msgstr "解绑公网IP"
+
+#: account/settings.py:36
+msgid "change_firewall"
+msgstr "更新防火墙"
+
+#: account/settings.py:37
+msgid "attach_volume"
+msgstr "挂载磁盘"
+
+#: account/settings.py:38
+msgid "detach_volume"
+msgstr "卸载磁盘"
+
+#: account/settings.py:39
+msgid "terminate"
+msgstr "删除"
+
+#: account/settings.py:40
+msgid "launch"
+msgstr "创建"
+
 #: firewall/models.py:8
 msgid "Firewall Name"
 msgstr "防火墙名称"
@@ -115,7 +207,7 @@ msgid "Firewall desc"
 msgstr "防火墙描述"
 
 #: firewall/models.py:11 firewall/models.py:33 network/models.py:12
-#: network/models.py:72
+#: network/models.py:76
 msgid "Default"
 msgstr "默认"
 
@@ -231,12 +323,12 @@ msgstr "规则删除成功"
 msgid "Firewall rule delete error"
 msgstr "规则删除失败"
 
-#: floating/models.py:12 instance/models.py:44
+#: floating/models.py:12 instance/models.py:43
 msgid "Public IP"
 msgstr "公网IP"
 
-#: floating/models.py:16 instance/models.py:24 network/models.py:11
-#: network/models.py:51 network/models.py:67 volume/models.py:15
+#: floating/models.py:16 instance/models.py:23 network/models.py:11
+#: network/models.py:53 network/models.py:71 volume/models.py:15
 msgid "Status"
 msgstr "状态"
 
@@ -248,12 +340,15 @@ msgstr "带宽 MB"
 msgid "Delete Date"
 msgstr "删除日期"
 
+#: floating/models.py:30 floating/models.py:31
+msgid "Floating"
+msgstr "公网IP"
+
 #: floating/settings.py:15 floating/settings.py:27
 msgid "Floating ERROR"
 msgstr "错误"
 
-#: floating/settings.py:16 floating/settings.py:28 floating/settings.py:37
-#: floating/settings.py:44
+#: floating/settings.py:16 floating/settings.py:28
 msgid "Floating Allocate"
 msgstr "分配中"
 
@@ -269,7 +364,7 @@ msgstr "已绑定"
 msgid "Floating Binding"
 msgstr "绑定中"
 
-#: floating/settings.py:20 floating/settings.py:32 floating/settings.py:45
+#: floating/settings.py:20 floating/settings.py:32
 msgid "Floating Released"
 msgstr "已释放"
 
@@ -277,12 +372,20 @@ msgstr "已释放"
 msgid "Floating Releasing"
 msgstr "释放中"
 
+#: floating/settings.py:44
+msgid "allocate"
+msgstr "申请"
+
+#: floating/settings.py:45
+msgid "release"
+msgstr "释放"
+
 #: floating/settings.py:46
-msgid "Floating Associate"
+msgid "associate"
 msgstr "绑定云主机"
 
 #: floating/settings.py:47
-msgid "Floating Disassociate"
+msgid "disassociate"
 msgstr "解绑云主机"
 
 #: forum/models.py:7
@@ -321,7 +424,7 @@ msgstr "选择工单"
 msgid "Close Forum error"
 msgstr "关闭工单失败"
 
-#: idc/models.py:14 instance/models.py:85
+#: idc/models.py:14 instance/models.py:81
 msgid "Name"
 msgstr "名称"
 
@@ -361,21 +464,29 @@ msgstr ""
 msgid "External Network Name"
 msgstr "外部网络名称"
 
-#: idc/models.py:47
+#: idc/models.py:36 idc/models.py:37
+msgid "DataCenter"
+msgstr "数据中心"
+
+#: idc/models.py:49
 msgid "Tenant"
 msgstr "项目"
 
-#: idc/models.py:48
+#: idc/models.py:50
 msgid "Tenant UUID"
 msgstr ""
 
-#: idc/models.py:49
+#: idc/models.py:51
 msgid "User"
 msgstr ""
 
-#: idc/models.py:50
+#: idc/models.py:52
 msgid "Password"
 msgstr ""
+
+#: idc/models.py:60 idc/models.py:61
+msgid "UserDataCenter"
+msgstr "用户数据中心"
 
 #: image/models.py:6
 msgid "Windows"
@@ -405,53 +516,62 @@ msgstr "登录用户名"
 msgid "Image OS Type"
 msgstr "镜像类型"
 
-#: instance/models.py:16
+#: image/models.py:24 image/models.py:25
+msgid "Image"
+msgstr "镜像 "
+
+#: instance/models.py:15
 msgid "Linux Image"
 msgstr "Linux系统"
 
-#: instance/models.py:17
+#: instance/models.py:16
 msgid "Windows Image"
 msgstr "Windows系统"
 
-#: instance/models.py:23
+#: instance/models.py:22
 msgid "Instance Name"
 msgstr ""
 
-#: instance/models.py:27
+#: instance/models.py:26
 msgid "Terminate Date"
 msgstr ""
 
-#: instance/models.py:28 instance/models.py:86
+#: instance/models.py:27 instance/models.py:82
 msgid "Cpu Cores"
 msgstr ""
 
-#: instance/models.py:29
+#: instance/models.py:28
 msgid "Memory"
 msgstr ""
 
-#: instance/models.py:30
+#: instance/models.py:29
 msgid "System Disk"
 msgstr ""
 
-#: instance/models.py:32
+#: instance/models.py:31
 msgid "OS FlavorID"
 msgstr ""
 
-#: instance/models.py:35 network/models.py:83
+#: instance/models.py:34 network/models.py:36 network/models.py:37
+#: network/models.py:89
 msgid "Network"
-msgstr ""
+msgstr "私有网络"
 
-#: instance/models.py:43
+#: instance/models.py:42
 msgid "Private IP"
 msgstr ""
 
-#: instance/models.py:87
+#: instance/models.py:83
 msgid "Memory MB"
 msgstr ""
 
-#: instance/models.py:88
+#: instance/models.py:84
 msgid "Price"
 msgstr ""
+
+#: instance/models.py:90 instance/models.py:91
+msgid "Flavor"
+msgstr "规格"
 
 #: instance/settings.py:24 instance/settings.py:47
 msgid "Instance Waiting"
@@ -582,7 +702,11 @@ msgstr "卸载磁盘"
 msgid "Instance Terminate"
 msgstr "删除"
 
-#: network/models.py:9 network/models.py:44
+#: instance/settings.py:111
+msgid "Instance Launch"
+msgstr "创建云主机"
+
+#: network/models.py:9 network/models.py:46
 msgid "Network Name"
 msgstr ""
 
@@ -590,29 +714,41 @@ msgstr ""
 msgid "OS Network UUID"
 msgstr ""
 
-#: network/models.py:46
+#: network/models.py:48
 msgid "OS Subnet UUID"
 msgstr ""
 
-#: network/models.py:48
+#: network/models.py:50
 msgid "IPv4 CIDR"
 msgstr ""
 
-#: network/models.py:49
+#: network/models.py:51
 msgid "IP Version"
 msgstr "IP 版本"
 
-#: network/models.py:63
+#: network/models.py:61 network/models.py:62
+msgid "Subnet"
+msgstr "子网"
+
+#: network/models.py:67
 msgid "Router Name"
 msgstr "名称"
 
-#: network/models.py:64 network/models.py:65
+#: network/models.py:68 network/models.py:69
 msgid "OS Router UUID"
 msgstr "Router UUID"
 
-#: network/models.py:80
+#: network/models.py:80 network/models.py:81
+msgid "Router"
+msgstr "路由器"
+
+#: network/models.py:86
 msgid "Port"
 msgstr "端口"
+
+#: network/models.py:94 network/models.py:95
+msgid "RouterInterface"
+msgstr "路由器端口"
 
 #: network/settings.py:15 network/settings.py:28
 msgid "BUILD"
@@ -803,7 +939,7 @@ msgid "Volume uploading"
 msgstr "更新中"
 
 #: volume/settings.py:57
-msgid "Volume"
+msgid "Capacity"
 msgstr "容量型"
 
 #: volume/settings.py:58

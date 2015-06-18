@@ -33,6 +33,8 @@ class DataCenter(models.Model):
 
     class Meta:
         db_table = "data_center"
+        verbose_name = _("DataCenter")
+        verbose_name_plural = _("DataCenter")
 
 
 class UserDataCenter(models.Model):
@@ -55,3 +57,5 @@ class UserDataCenter(models.Model):
 
     class Meta:
         db_table = "user_data_center"
+        verbose_name = _("UserDataCenter")
+        verbose_name_plural = _("UserDataCenter")

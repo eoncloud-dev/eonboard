@@ -26,3 +26,5 @@ class Volume(models.Model):
     class Meta:
         db_table = "volume"
         ordering = ['-create_date']
+        verbose_name = _("Volume")
+        verbose_name_plural = _("Volume")

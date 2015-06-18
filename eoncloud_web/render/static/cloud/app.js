@@ -182,6 +182,12 @@ CloudApp.factory('Firewall', ['$resource', function ($resource) {
     return $resource("/api/firewall/:id");
 }]);
 
+/* Setup Operation */
+CloudApp.factory('Operation', ['$resource', function ($resource) {
+    return $resource("/api/operation/:id");
+}]);
+
+
 /* Setup App Main Controller */
 CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function () {
@@ -442,6 +448,24 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             files: [
 
                                 '/static/cloud/controllers/forum_ctl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+            // operation
+            .state("operation", {
+                url: "/operation/",
+                templateUrl: "/static/cloud/views/operation.html",
+                data: {pageTitle: 'Operation'},
+                controller: "OperationController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/operation_ctl.js'
                             ]
                         });
                     }]

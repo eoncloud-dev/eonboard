@@ -239,6 +239,7 @@
     "firewall":"防火墙",
     "private_network":"私有网络",
     "router":"路由器",
+    "topology":"网络拓扑",
     "op_log":"操作日志",
     "monitor":"监控报警",
     "support":"工单支持"

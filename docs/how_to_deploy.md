@@ -61,6 +61,9 @@ root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/pip install -r requirements.
 # migrate db
 root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py migrate
 
+# update db
+# .venv/bin/python manage.py makemigrations app
+
 # create super user
 root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py createsuperuser
 

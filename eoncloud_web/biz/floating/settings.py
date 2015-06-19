@@ -34,15 +34,15 @@ FLOATING_STATUS_DICT = {
 }
 
 FLOATING_ACTION_NEXT_STATE = {
-    "allocate": _("Floating Allocate"),
+    "allocate": FLOATING_AVAILABLE,
     "release": FLOATING_RELEASING,
     "associate": FLOATING_BINDING,
     "disassociate": FLOATING_RELEASING,
 }
 
 ALLOWED_FLOATING_ACTIONS = {
-    "allocate": _("Floating Allocate"),
-    "release": _("Floating Released"),
-    "associate": _("Floating Associate"),
-    "disassociate": _("Floating Disassociate"),
+    "allocate": _("allocate"),
+    "release": _("release"),
+    "associate": _("associate"),
+    "disassociate": _("disassociate"),
 }

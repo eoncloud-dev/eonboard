@@ -27,4 +27,5 @@ class Floating(models.Model):
     class Meta:
         db_table = "floating"
         ordering = ['-create_date']
- 
+        verbose_name = _('Floating')
+        verbose_name_plural = _('Floating') 

@@ -9,7 +9,6 @@ from biz.floating.models import Floating
 from biz.floating.serializer import FloatingSerializer
 from biz.floating.settings import FLOATING_STATUS_DICT, FLOATING_ALLOCATE
 from biz.floating.utils import allocate_floating, floating_action
-
 from biz.account.utils import check_quota
 
 @api_view(["GET"])

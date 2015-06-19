@@ -2,9 +2,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-
+from biz.account.models import Operation
 from biz.network.models import Network
-
 from biz.instance.settings import INSTANCE_STATE_WAITING, INSTANCE_STATES, PROTOCOLs, \
     ACTIONS, IP_VERSIONS, IPV4, IPV6, ACTION_ALLOW
 from biz.floating.models import Floating
@@ -44,17 +43,14 @@ class Instance(models.Model):
     public_ip = models.CharField(_("Public IP"), max_length=255, blank=True, null=True)
 
     deleted = models.BooleanField(_("Deleted"), default=False)
-
-    #attach_point_1 = models.ForeignKey('volume.Volume', null=True, related_name="point1_instance")
-    #attach_point_2 = models.ForeignKey('volume.Volume', null=True, related_name="point2_instance")
-    #attach_point_3 = models.ForeignKey('volume.Volume', null=True, related_name="point3_instance")
-
-    # 每个Instance只能应用一个group
+    
     firewall_group = models.ForeignKey("firewall.Firewall", null=True)
 
     class Meta:
         db_table = "instance"
         ordering = ['-create_date']
+        verbose_name = _("Instance")
+        verbose_name_plural = _("Instance")
 
 
     def __unicode__(self):
@@ -91,3 +87,5 @@ class Flavor(models.Model):
     class Meta:
         db_table = "flavor"
         ordering = ['cpu']
+        verbose_name = _("Flavor")
+        verbose_name_plural = _("Flavor")

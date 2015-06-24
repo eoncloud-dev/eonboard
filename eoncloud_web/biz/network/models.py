@@ -33,6 +33,8 @@ class Network(models.Model):
 
     class Meta:
         db_table = "network"
+        verbose_name = _("Network")
+        verbose_name_plural = _("Network")
 
 
 class Subnet(models.Model):
@@ -56,6 +58,8 @@ class Subnet(models.Model):
 
     class Meta:
         db_table = "subnet"
+        verbose_name = _("Subnet")
+        verbose_name_plural = _("Subnet")
 
 
 class Router(models.Model):
@@ -73,6 +77,8 @@ class Router(models.Model):
 
     class Meta:
         db_table = "router"
+        verbose_name = _("Router")
+        verbose_name_plural = _("Router")
 
 
 class RouterInterface(models.Model):
@@ -85,6 +91,8 @@ class RouterInterface(models.Model):
 
     class Meta:
         db_table = "router_interface"
+        verbose_name = _("RouterInterface")
+        verbose_name_plural = _("RouterInterface")
 
 
 

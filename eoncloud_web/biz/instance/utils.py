@@ -2,7 +2,7 @@
 
 import random
 from django.db.models import Count, Q
-
+from biz.account.models import Operation
 from biz.instance.models import Instance
 from biz.instance.settings import ALLOWED_INSTANCE_ACTIONS, \
                             INSTANCE_ACTION_NEXT_STATE
@@ -30,6 +30,9 @@ def instance_action(user, DATA):
         return {"OPERATION_STATUS": OPERATION_FAILED, "status": "un supported action [%s]" % action}
 
     instance = Instance.objects.get(pk=instance_id, user=user)
+
+
+    Operation.log(instance, obj_name=instance.name, action=action, result=1)
     
     if action == "vnc_console":
         return get_instance_vnc_console(instance)

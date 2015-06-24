@@ -97,6 +97,7 @@ urlpatterns += format_suffix_patterns(
     [
         url(r'^account/contract/$', account_view.contract_view),
         url(r'^account/quota/$', account_view.quota_view),
+        url(r'^operation/$', account_view.OperationList.as_view()),
     ]
 )
 

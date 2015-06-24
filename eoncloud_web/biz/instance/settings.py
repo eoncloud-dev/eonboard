@@ -94,8 +94,8 @@ INSTANCE_ACTIONS_DICT = {
     'RESTORE': 'restore',
     'PAUSE': 'pause',
     'ACTIVE': 'active',
+    'LAUNCH': 'launch',
 }
-
 
 ALLOWED_INSTANCE_ACTIONS = {
     "reboot": _("Instance Reboot"),
@@ -108,6 +108,7 @@ ALLOWED_INSTANCE_ACTIONS = {
     "attach_volume": _("Instance Attach Volume"),
     "detach_volume": _("Instance Detach Volume"),
     "terminate": _("Instance Terminate"),
+    "launch": _("Instance Launch"),
 }
 
 

@@ -38,7 +38,7 @@ CloudApp.config(['$interpolateProvider', function ($interpolateProvider) {
     $interpolateProvider.endSymbol("}]}");
 }]);
 
-CloudApp.config(['$httpProvider', function($httpProvider){
+CloudApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Request-Width'];
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -66,9 +66,9 @@ CloudApp.factory('settings', ['$rootScope', function ($rootScope) {
     return settings;
 }]);
 
-CloudApp.factory("AuthInterceptor", [function($q){
+CloudApp.factory("AuthInterceptor", [function ($q) {
     return {
-        'responseError': function(rejection){
+        'responseError': function (rejection) {
             if (rejection.status == 403 || rejection.status == 401) {
                 window.location.href = "/login/";
                 return $q.reject(rejection);
@@ -78,29 +78,29 @@ CloudApp.factory("AuthInterceptor", [function($q){
     }
 }]);
 
-CloudApp.factory("CommonHttpService", function($http, $q){
+CloudApp.factory("CommonHttpService", function ($http, $q) {
     return {
-        'get': function(api_url){
+        'get': function (api_url) {
             var defer = $q.defer();
             $http({
                 method: 'GET',
                 url: api_url
-            }).success(function(data, status, headers, config){
+            }).success(function (data, status, headers, config) {
                 defer.resolve(data);
-            }).error(function(data, status, headers, config){
+            }).error(function (data, status, headers, config) {
                 defer.reject(data);
             });
             return defer.promise;
         },
-        'post': function(api_url, post_data){
+        'post': function (api_url, post_data) {
             var defer = $q.defer();
             $http({
                 method: 'POST',
                 url: api_url,
                 data: $.param(post_data)
-            }).success(function(data, status, headers,config){
+            }).success(function (data, status, headers, config) {
                 defer.resolve(data);
-            }).error(function(data, status, headers, config){
+            }).error(function (data, status, headers, config) {
                 defer.reject(data);
             });
             return defer.promise;
@@ -133,13 +133,13 @@ CloudApp.factory('ToastrService', function () {
     };
 });
 
-CloudApp.factory("BoxService", function(){
+CloudApp.factory("BoxService", function () {
     return {
-        "alert": function(message){
+        "alert": function (message) {
             bootbox.alert(message);
         },
-        "confirm": function(message){
-            bootbox.confirm(message, function(result) {
+        "confirm": function (message) {
+            bootbox.confirm(message, function (result) {
                 return result;
             });
         }
@@ -229,7 +229,7 @@ CloudApp.controller('FooterController', ['$scope', function ($scope) {
 
 /* Setup Rounting For All Pages */
 CloudApp.config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider,$stateParams) {
+    function ($stateProvider, $urlRouterProvider, $stateParams) {
         $urlRouterProvider.otherwise("/overview/");
 
         $stateProvider
@@ -250,10 +250,10 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    contract:function(CommonHttpService){
+                    contract: function (CommonHttpService) {
                         return CommonHttpService.get("/api/account/contract/");
                     },
-                    quota:function(CommonHttpService){
+                    quota: function (CommonHttpService) {
                         return CommonHttpService.get("/api/account/quota/");
                     }
                 }
@@ -277,7 +277,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    status_desc: function(CommonHttpService){
+                    status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/instances/status/")
                     }
                 }
@@ -320,7 +320,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    status_desc: function(CommonHttpService){
+                    status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/volumes/status/")
                     }
                 }
@@ -343,7 +343,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    status_desc: function(CommonHttpService){
+                    status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/floatings/status/")
                     }
                 }
@@ -384,7 +384,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    firewall_id:function($stateParams){
+                    firewall_id: function ($stateParams) {
                         return $stateParams.firewall_id;
                     }
                 }
@@ -406,7 +406,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    status_desc: function(CommonHttpService){
+                    status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/networks/status/")
                     }
                 }
@@ -429,7 +429,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    status_desc: function(CommonHttpService){
+                    status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/networks/status/")
                     }
                 }
@@ -446,11 +446,12 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                "/static/cloud/controllers/network_ctl.js",
+                                "/static/assets/admin/layout/css/network_topology.css",
+                                "/static/assets/admin/layout/scripts/horizon.js",
                                 "/static/assets/admin/layout/scripts/d3.v3.min.js",
-                               "/static/assets/admin/layout/scripts/hogan-2.0.0.js",
-                               "/static/assets/admin/layout/scripts/horizon.js",
-                                "/static/assets/admin/layout/scripts/horizon.networktopology.js"
+                                "/static/assets/admin/layout/scripts/hogan-2.0.0.js",
+                                "/static/assets/admin/layout/scripts/horizon.networktopology.js",
+                                "/static/cloud/controllers/network_ctl.js"
                             ]
                         });
                     }]
@@ -503,8 +504,8 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
         $rootScope.$state = $state;
         $rootScope.timer_list = [];
 
-        $rootScope.$on("$stateChangeStart", function(e, toState, toParams, fromState, fromParams){
-            while($rootScope.timer_list.length > 0){
+        $rootScope.$on("$stateChangeStart", function (e, toState, toParams, fromState, fromParams) {
+            while ($rootScope.timer_list.length > 0) {
                 var t = $rootScope.timer_list.pop();
                 $interval.cancel(t);
             }

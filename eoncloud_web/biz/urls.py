@@ -40,6 +40,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^networks/status/$', network_view.network_status_view),
         url(r'^networks/delete/$', network_view.delete_action),
         url(r'^networks/router/action$', network_view.network_attach_router_view),
+        url(r'^networks/topology/$', network_view.network_topology_data_view),
     ]
 )
 

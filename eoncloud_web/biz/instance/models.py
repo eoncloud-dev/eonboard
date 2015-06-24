@@ -30,7 +30,7 @@ class Instance(models.Model):
     
     flavor_id = models.CharField(_("OS FlavorID"),null=True, max_length=36)
 
-    image = models.ForeignKey("image.Image", db_column="image_id", null=True, blank=True, default=0)
+    image = models.ForeignKey("image.Image", db_column="image_id", null=True, blank=True)
     network_id = models.IntegerField(_("Network"), null=False, blank=False, default=0)
     
     user = models.ForeignKey('auth.User')

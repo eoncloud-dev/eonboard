@@ -10,7 +10,8 @@ from cloud.network_task import network_create_task, network_delete_task,\
     router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task,\
     router_add_gateway_task, router_remove_gateway_task
 from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE,NETWORK_STATE_UPDATING
-from biz.network.serializer import NetworkSerializer, RouterSerializer
+from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
+from biz.instance.serializer import InstanceSerializer
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 LOG = logging.getLogger(__name__)
@@ -238,3 +239,23 @@ def check_router_is_use(router_id):
     if router_interface_set is None:
         return True
     return False
+
+
+'''
+get network topology data
+get network topology data
+'''
+
+@api_view(['GET'])
+def network_topology_data_view(request, **kwargs):
+    routers = Router.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
+
+    router_interface = RouterInterface.objects.filter(deleted=False)
+    networks =Network.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
+    instances = Instance.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
+    network_data = {}
+    network_data['routers'] = RouterSerializer(routers, many=True).data
+    network_data['networks'] = NetworkSerializer(networks, many=True).data
+    network_data['router_interfaces'] = RouterInterfaceSerializer(router_interface, many=True).data
+    network_data['instances'] = InstanceSerializer(instances, many=True).data
+    return Response(network_data)

@@ -277,3 +277,24 @@ CloudApp.controller('NetworkAttachController',
         }
 
     });
+
+
+
+
+CloudApp.controller('NetworkTopologyController', function($rootScope, $scope,$i18next,$interval,CommonHttpService,ToastrService) {
+    $scope.$on('$viewContentLoaded', function() {
+        Metronic.initAjax();
+    });
+
+    $rootScope.settings.layout.pageBodySolid = true;
+    $rootScope.settings.layout.pageSidebarClosed = false;
+
+
+    CommonHttpService.get("/api/networks/topology").then(function (data) {
+        horizon.network_topology.model = data;
+        horizon.network_topology.init();
+    });
+
+
+
+});

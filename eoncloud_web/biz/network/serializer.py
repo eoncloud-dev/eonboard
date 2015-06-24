@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from biz.idc.models import UserDataCenter
 
-from biz.network.models import Network,Subnet,Router
+from biz.network.models import Network,Subnet,Router, RouterInterface
 
 
 class NetworkSerializer(serializers.ModelSerializer):
@@ -58,3 +58,8 @@ class RouterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Router
+
+
+class RouterInterfaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RouterInterface

@@ -428,6 +428,25 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             })
+            // router
+            .state("topology", {
+                url: "/topology/",
+                templateUrl: "/static/cloud/views/network_topology.html",
+                data: {pageTitle: 'Network topology'},
+                controller: "NetworkTopologyController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+
+                                '/static/cloud/controllers/network_ctl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
             // forum
             .state("forum", {
                 url: "/forum/",

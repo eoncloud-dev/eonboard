@@ -89,6 +89,9 @@ class RouterInterface(models.Model):
     network_id = models.IntegerField(_("Network"), null=True, blank=True)
     deleted = models.BooleanField(_("Deleted"), null=False, blank=False, default=False)
 
+    user = models.ForeignKey('auth.User')
+    user_data_center = models.ForeignKey('idc.UserDataCenter')
+
     class Meta:
         db_table = "router_interface"
         verbose_name = _("RouterInterface")

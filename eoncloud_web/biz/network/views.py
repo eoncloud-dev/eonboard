@@ -250,7 +250,7 @@ get network topology data
 def network_topology_data_view(request, **kwargs):
     routers = Router.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
 
-    router_interface = RouterInterface.objects.filter(deleted=False)
+    router_interface = RouterInterface.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     networks =Network.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
     instances = Instance.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
     network_data = {}

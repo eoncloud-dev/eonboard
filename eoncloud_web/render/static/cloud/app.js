@@ -446,8 +446,11 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-
-                                '/static/cloud/controllers/network_ctl.js'
+                                "/static/cloud/controllers/network_ctl.js",
+                                "/static/assets/admin/layout/scripts/d3.v3.min.js",
+                               "/static/assets/admin/layout/scripts/hogan-2.0.0.js",
+                               "/static/assets/admin/layout/scripts/horizon.js",
+                                "/static/assets/admin/layout/scripts/horizon.networktopology.js"
                             ]
                         });
                     }]

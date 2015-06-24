@@ -61,5 +61,7 @@ class RouterSerializer(serializers.ModelSerializer):
 
 
 class RouterInterfaceSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True, default=None)
+    user_data_center = serializers.PrimaryKeyRelatedField(queryset=UserDataCenter.objects.all(), required=False, allow_null=True, default=None)
     class Meta:
         model = RouterInterface

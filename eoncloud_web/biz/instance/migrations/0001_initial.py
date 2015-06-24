@@ -8,10 +8,10 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('image', '0001_initial'),
-        ('idc', '0001_initial'),
+        ('image', '__first__'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('firewall', '0001_initial'),
+        ('firewall', '__first__'),
+        ('idc', '__first__'),
     ]
 
     operations = [
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('public_ip', models.CharField(max_length=255, null=True, verbose_name='Public IP', blank=True)),
                 ('deleted', models.BooleanField(default=False, verbose_name='Deleted')),
                 ('firewall_group', models.ForeignKey(to='firewall.Firewall', null=True)),
-                ('image', models.ForeignKey(db_column=b'image_id', default=0, blank=True, to='image.Image', null=True)),
+                ('image', models.ForeignKey(db_column=b'image_id', blank=True, to='image.Image', null=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('user_data_center', models.ForeignKey(to='idc.UserDataCenter')),
             ],

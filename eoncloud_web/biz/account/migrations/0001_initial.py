@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('resource', models.CharField(max_length=128, verbose_name='Resouce', choices=[(b'instance', 'Instance'), (b'vcpu', 'CPU'), (b'memory', 'Memory(MB)'), (b'volume_size', 'Volume(GB)'), (b'volume', 'Volume Count'), (b'floating_ip', 'Floating IP')])),
                 ('limit', models.IntegerField(default=0, verbose_name='Limit')),
-                ('create_date', models.DateTimeField(default=datetime.datetime(2015, 6, 19, 17, 15, 47, 897656), verbose_name='Create Date')),
+                ('create_date', models.DateTimeField(default=datetime.datetime(2015, 6, 24, 11, 10, 42, 388511), verbose_name='Create Date')),
                 ('deleted', models.BooleanField(default=False, verbose_name='Deleted')),
                 ('contract', models.ForeignKey(related_name='quotas', to='account.Contract')),
             ],

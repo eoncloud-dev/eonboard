@@ -78,7 +78,7 @@
 <!-- END PAGE SPINNER -->
 
 <!-- BEGIN HEADER -->
-<div data-ng-include="'{{ STATIC_URL }}cloud/tpl/header.html'" data-ng-controller="HeaderController"
+<div data-ng-include="'{{ STATIC_URL }}cloud/layout/header.html'" data-ng-controller="HeaderController"
      class="page-header navbar navbar-fixed-top">
 </div>
 <!-- END HEADER -->
@@ -89,7 +89,7 @@
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-    <div data-ng-include="'{{ STATIC_URL }}cloud/tpl/sidebar.html'" data-ng-controller="SidebarController"
+    <div data-ng-include="'{{ STATIC_URL }}cloud/layout/sidebar.html'" data-ng-controller="SidebarController"
          class="page-sidebar-wrapper">
     </div>
     <!-- END SIDEBAR -->
@@ -118,7 +118,7 @@
 <!-- END CONTAINER -->
 
 <!-- BEGIN FOOTER -->
-<div data-ng-include="'{{ STATIC_URL }}cloud/tpl/footer.html'" data-ng-controller="FooterController"
+<div data-ng-include="'{{ STATIC_URL }}cloud/layout/footer.html'" data-ng-controller="FooterController"
      class="page-footer">
 </div>
 <!-- END FOOTER -->
@@ -188,8 +188,6 @@
         type="text/javascript"></script>
 <!-- BEGIN EONCLOUD -->
 <!-- END EONCLOUD-->
-
-
 
 <script type="text/javascript">
     jQuery.extend(jQuery.validator.messages, {

@@ -67,7 +67,7 @@ class Router(models.Model):
     name = models.CharField(_('Router Name'), null=False, blank=False, max_length=128)
     router_id = models.CharField(_('OS Router UUID'), null=True, blank=True, max_length=128)
     gateway = models.CharField(_('OS Router UUID'), null=True, blank=True, max_length=128)
-    is_gateway = models.BooleanField(_("Deleted"), null=False, blank=False, default=False)
+    is_gateway = models.BooleanField(_("Whether to open the gateway"), null=False, blank=False, default=False)
     status = models.IntegerField(_("Status"), null=False, blank=False, choices=NETWORK_STATES, default=0)
     user = models.ForeignKey('auth.User')
     user_data_center = models.ForeignKey('idc.UserDataCenter')
@@ -86,12 +86,17 @@ class RouterInterface(models.Model):
     os_port_id = models.CharField(_('Port'), null=True, blank=True, max_length=128)
     router = models.ForeignKey('network.Router')
     subnet = models.ForeignKey('network.Subnet')
-    network_id = models.IntegerField(_("Network"), null=False, blank=False)
+    network_id = models.IntegerField(_("Network"), null=True, blank=True)
     deleted = models.BooleanField(_("Deleted"), null=False, blank=False, default=False)
+
+    user = models.ForeignKey('auth.User', null=True, default=None)
+    user_data_center = models.ForeignKey('idc.UserDataCenter', null=True, default=None)
 
     class Meta:
         db_table = "router_interface"
         verbose_name = _("RouterInterface")
         verbose_name_plural = _("RouterInterface")
+
+
 
 

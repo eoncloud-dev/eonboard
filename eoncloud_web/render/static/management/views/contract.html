@@ -1,0 +1,83 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="ImageController"-->
+<div>
+    <div class="col-md-12">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="contract_table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" ng-click="create()"
+                       role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'contract.create' | i18next }]}
+                    </a>
+                    <a class="btn btn-danger" ng-click="batch_action('terminate')" ng-class="{disabled: checked_count <= 0}">
+                        <i class="fa fa-trash"></i>
+                        {[{ 'contract.batch_delete' | i18next }]}
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="contract_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                            <tr ng-repeat="contract in $data">
+                                <td data-title="'contract.name' | i18next">
+                                    <span> {[{ contract.name }]} </span>
+                                </td>
+                                <td data-title="'contract.customer' | i18next">
+                                    <span> {[{ contract.name }]} </span>
+                                </td>
+                                <td data-title="'contract.start_date' | i18next">
+                                    <span> {[{ contract.start_date }]} </span>
+                                </td>
+                                <td data-title="'contract.end_date' | i18next">
+                                    <span> {[{ contract.end_date }]} </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<!-- BEGIN MAIN JS & CSS -->
+
+<script type="text/ng-template" id="create.html">
+    <div class="modal-header">
+       <div id="updateTitle" class="modal-title"> {[{ 'contract.create_contract_title' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="contractFrom" role="form" class="form-horizontal form-bordered">
+            <input type="hidden"  name="id" data-ng-model="contract.id">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                    <input id="name" name="name" type="text" style="width:300px" maxlength="20"  ng-model="contract.name"
+                           class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                    <input id="name" name="customer" type="text" style="width:300px" maxlength="20"  ng-model="contract.customer"
+                           class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="create(contract)"> {[{ 'submit' | i18next }]}</a>
+    </div>
+</script>

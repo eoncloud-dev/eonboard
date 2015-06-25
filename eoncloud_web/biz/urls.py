@@ -18,6 +18,7 @@ urlpatterns = [
         #url(r'^instances/(?P<pk>[0-9]+)/$', instance_view.InstanceDetail.as_view()),
         url(r'^instances/status/$', instance_view.instance_status_view),
         url(r'^instances/create/$', instance_view.instance_create_view),
+        url(r'^instances/summary/$', instance_view.summary),
         url(r'^instances/search/$', instance_view.instance_search_view),
         url(r'^instances/(?P<pk>[0-9]+)/action/$', instance_view.instance_action_view),
         url(r'^flavors/$', instance_view.FlavorList.as_view()),
@@ -95,8 +96,18 @@ urlpatterns += format_suffix_patterns(
 urlpatterns += format_suffix_patterns(
     [
         url(r'^account/contract/$', account_view.contract_view),
+        url(r'^account/summary/$', account_view.summary),
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
+    ]
+)
+
+# image
+urlpatterns += format_suffix_patterns(
+    [
+        url(r'^contracts/$', account_view.ContractList.as_view()),
+        url(r'^contracts/create/$', account_view.create_contract),
+        url(r'^contracts/(?P<pk>[0-9]+)/$', account_view.ContractDetail.as_view()),
     ]
 )
 

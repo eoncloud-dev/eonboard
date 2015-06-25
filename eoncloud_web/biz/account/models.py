@@ -41,7 +41,6 @@ class Contract(models.Model):
     end_date = models.DateTimeField(_("End Date"), null=False)
     deleted = models.BooleanField(_("Deleted"), default=False)
 
-
     def __unicode__(self):
         return self.name
 

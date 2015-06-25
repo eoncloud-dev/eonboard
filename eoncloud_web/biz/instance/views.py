@@ -16,6 +16,7 @@ from biz.account.models import Operation
 
 from cloud.instance_task import instance_create_task
 
+
 class InstanceList(generics.ListCreateAPIView):
     queryset = Instance.objects.all().filter(deleted=False)
     serializer_class = InstanceSerializer
@@ -73,3 +74,7 @@ def instance_search_view(request, **kwargs):
     serializer = InstanceSerializer(instance_set, many=True)
     return Response(serializer.data)
 
+
+@api_view(["GET"])
+def summary(request):
+    return Response({"num": Instance.objects.count()})

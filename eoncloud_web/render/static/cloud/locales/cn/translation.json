@@ -247,7 +247,11 @@
     "topology":"网络拓扑",
     "op_log": "操作日志",
     "monitor": "监控报警",
-    "support": "工单支持"
+    "support": "工单支持",
+    "contract": "合同",
+    "sddc": "软件定义的数据中心",
+    "quota": "配额",
+    "flavor": "规格"
   },
 
   "overview": {
@@ -276,7 +280,13 @@
     "customer": "客户名称",
     "start_date": "合同开始日期",
     "end_date": "合同结束日期",
-    "legal_person": "法人"
+    "legal_person": "法人",
+    "create": "创建",
+    "edit": "编辑",
+    "view": "查看",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "create_contract_title": "创建合同"
   },
 
   "forum": {
@@ -298,5 +308,13 @@
     "resource_name":"资源名称",
     "desc":"操作描述",
     "occur_time":"操作时间"
+  },
+
+  "management": {
+    "overview": {
+      "summary": "概要",
+      "account_num": "用户数量",
+      "instance_num": "云主机数量"
+    }
   }
 }

@@ -1,0 +1,52 @@
+<h1 class="page-title">
+    {[{ 'sidebar.overview' | i18next }]}
+</h1>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div>
+    <div class="row">
+        <!-- BEGIN MAIN LEFT -->
+        <div class="col-md-8 col-sm-6">
+            <!-- BEGIN quota usage -->
+            <div>
+                <div class="portlet">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-bell-o"></i>{[{ 'management.overview.summary' | i18next }]}
+                        </div>
+                    </div>
+                    <!-- BEGIN PORTLET-BODY -->
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-advance table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">
+                                            <i class="fa fa-list"></i> {[{ 'management.overview.instance_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs" width="200">
+                                            <i class="fa fa-cubes"></i> {[{ 'management.overview.account_num' | i18next }]}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight">
+                                            {[{ instanceSummary.num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ accountSummary.num }]}
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- BEGIN PORTLET-BODY -->
+                </div>
+            </div>
+            <!-- END quota usage -->
+        </div>
+        <!-- END MAIN LEFT -->
+    </div>
+</div>
+<!-- END MAIN CONTENT -->

@@ -13,7 +13,12 @@
                 <div class="timeline-badge">
                     <div class="timeline-icon">
                         <i class="font-green-haze"
-                        ng-class="{'icon-rocket': op.resource == 'Instance', 'icon-globe': op.resource == 'Floating'}"
+                        ng-class="{'icon-rocket': op.resource == 'Instance',
+                                    'icon-equalizer': op.resource == 'Network',
+                                    'icon-globe': op.resource == 'Floating',
+                                    'icon-shield ': op.resource == 'Firewall',
+                                    'icon-vector': op.resource == 'FirewallRules',
+                                    'icon-size-fullscreen ': op.resource == 'Router'}"
                         >
                         </i>
                     </div>

@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 
 from biz.firewall.models import Firewall
 from biz.instance.models import Instance
+from biz.account.models import Operation
 from rest_framework.response import Response
 from .settings import SECURITY_GROUP_RULES
 from .serializer import *
@@ -29,6 +30,7 @@ def firewall_create_view(request, **kwargs):
         serializer = FirewallSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             firewall = serializer.save()
+            Operation.log(firewall, obj_name=firewall.name, action="create", result=1)
             security_group_create_task.delay(firewall)
             return Response({"OPERATION_STATUS": 1, "MSG": _('Creating firewall')}, status=status.HTTP_201_CREATED)
         else:
@@ -54,6 +56,7 @@ def firewall_delete_view(request, **kwargs):
         security_group_delete_task.delay(firewall)
         firewall.deleted = True
         firewall.save()
+        Operation.log(firewall, obj_name=firewall.name, action="terminate", result=1)
     return Response({"OPERATION_STATUS": 1, "MSG": _('Firewall delete success')})
 
 
@@ -76,6 +79,7 @@ def firewall_rule_create_view(request):
         serializer = FirewallRulesSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             firewall_rule = serializer.save()
+            Operation.log(firewall_rule, obj_name=firewall_rule.direction + firewall_rule.protocol, action="create", result=1)
             security_group_rule_create_task.delay(firewall_rule)
             return Response({'OPERATION_STATUS': 1, 'MSG': _('Create firewall rule success')})
         return Response({'OPERATION_STATUS': 0, 'MSG': _('Valid firewall rule nopass')})
@@ -96,6 +100,7 @@ def firewall_rule_delete_view(request):
         security_group_rule_delete_task.delay(firewall_rule)
         firewall_rule.deleted = True
         firewall_rule.save()
+        Operation.log(firewall_rule, obj_name=firewall_rule.direction + firewall_rule.protocol, action="terminate", result=1)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Firewall rule delete success')})
     except Exception as e:
         LOG.error("Firewall rule delete error ,msg: %s" % e)
@@ -128,6 +133,7 @@ def instance_change_firewall_view(request, **kwargs):
         server_update_security_groups_task.delay(instance, firewall)
         instance.firewall_group = firewall
         instance.save()
+        Operation.log(instance, obj_name=instance.name, action="change_firewall", result=1)
         return Response({"OPERATION_STATUS": 1, 'MSG': 'Security update firewall success'}, status=status.HTTP_200_OK)
     except Exception as e:
         LOG.error("Server update security group error,msg: %s" % e)

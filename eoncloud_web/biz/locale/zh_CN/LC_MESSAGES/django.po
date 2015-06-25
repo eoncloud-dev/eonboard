@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-19 11:26+0800\n"
+"POT-Creation-Date: 2015-06-25 11:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr "结束日期"
 #: account/models.py:42 account/models.py:66 firewall/models.py:15
 #: firewall/models.py:36 floating/models.py:25 forum/models.py:11
 #: forum/models.py:25 instance/models.py:45 network/models.py:15
-#: network/models.py:56 network/models.py:70 network/models.py:74
-#: network/models.py:90 volume/models.py:17
+#: network/models.py:56 network/models.py:74 network/models.py:90
+#: volume/models.py:17
 msgid "Deleted"
 msgstr "已删除"
 
@@ -144,55 +144,91 @@ msgstr "磁盘数量"
 msgid "Floating IP"
 msgstr "公网IP"
 
-#: account/settings.py:22 account/settings.py:23 account/settings.py:24
-#: account/settings.py:25 account/settings.py:26 volume/models.py:29
+#: account/settings.py:22 account/settings.py:26 volume/models.py:29
 #: volume/models.py:30
 msgid "Volume"
 msgstr "磁盘"
 
-#: account/settings.py:30
+#: account/settings.py:23 instance/models.py:34 network/models.py:36
+#: network/models.py:37 network/models.py:89
+msgid "Network"
+msgstr "私有网络"
+
+#: account/settings.py:24 network/models.py:61 network/models.py:62
+msgid "Subnet"
+msgstr "子网"
+
+#: account/settings.py:25 network/models.py:80 network/models.py:81
+msgid "Router"
+msgstr "路由器"
+
+#: account/settings.py:27
+msgid "Firewall"
+msgstr "防火墙"
+
+#: account/settings.py:28
+msgid "FirewallRules"
+msgstr "防火墙规则"
+
+#: account/settings.py:32
 msgid "reboot"
 msgstr "重启"
 
-#: account/settings.py:31
+#: account/settings.py:33
 msgid "power_on"
 msgstr "开机"
 
-#: account/settings.py:32
+#: account/settings.py:34
 msgid "power_off"
 msgstr "关机"
 
-#: account/settings.py:33
+#: account/settings.py:35
 msgid "vnc_console"
 msgstr "VNC登录"
 
-#: account/settings.py:34
+#: account/settings.py:36
 msgid "bind_floating"
 msgstr "绑定公网IP"
 
-#: account/settings.py:35
+#: account/settings.py:37
 msgid "unbind_floating"
 msgstr "解绑公网IP"
 
-#: account/settings.py:36
+#: account/settings.py:38
 msgid "change_firewall"
 msgstr "更新防火墙"
 
-#: account/settings.py:37
+#: account/settings.py:39
 msgid "attach_volume"
 msgstr "挂载磁盘"
 
-#: account/settings.py:38
+#: account/settings.py:40
 msgid "detach_volume"
 msgstr "卸载磁盘"
 
-#: account/settings.py:39
+#: account/settings.py:41
 msgid "terminate"
 msgstr "删除"
 
-#: account/settings.py:40
+#: account/settings.py:42
 msgid "launch"
 msgstr "创建"
+
+#: account/settings.py:43
+msgid "create"
+msgstr "创建"
+
+#: account/settings.py:44
+msgid "update"
+msgstr "更新"
+
+#: account/settings.py:45
+msgid "attach router"
+msgstr "连接路由器"
+
+#: account/settings.py:46
+msgid "detach router"
+msgstr "离开路由器"
 
 #: firewall/models.py:8
 msgid "Firewall Name"
@@ -259,67 +295,67 @@ msgstr "IPv4"
 msgid "IPv6"
 msgstr "IPv6"
 
-#: firewall/views.py:33
+#: firewall/views.py:35
 msgid "Creating firewall"
 msgstr "创建防火墙"
 
-#: firewall/views.py:35 network/views.py:37 volume/views.py:53
+#: firewall/views.py:37 network/views.py:40 volume/views.py:55
 msgid "Data valid error"
 msgstr "数据格式错误"
 
-#: firewall/views.py:38
+#: firewall/views.py:40
 msgid "Firewall create error"
 msgstr "创建"
 
-#: firewall/views.py:45
+#: firewall/views.py:47
 msgid "Not selected Firewall"
 msgstr "选择防火墙"
 
-#: firewall/views.py:48
+#: firewall/views.py:50
 msgid "Firewall not exists"
 msgstr "防火墙不存在"
 
-#: firewall/views.py:50
+#: firewall/views.py:52
 msgid "Firewall default can not delete"
 msgstr "默认防火墙允许删除"
 
-#: firewall/views.py:52
+#: firewall/views.py:54
 msgid "Firewall used can not delete"
 msgstr "被使用的防火墙不允许删除"
 
-#: firewall/views.py:57
+#: firewall/views.py:60
 msgid "Firewall delete success"
 msgstr "防火墙删除成功"
 
-#: firewall/views.py:73
+#: firewall/views.py:76
 msgid "no selected security group"
 msgstr "选择安全组"
 
-#: firewall/views.py:80
+#: firewall/views.py:84
 msgid "Create firewall rule success"
 msgstr "创建规则成功"
 
-#: firewall/views.py:81
+#: firewall/views.py:85
 msgid "Valid firewall rule nopass"
 msgstr "规则格式错误"
 
-#: firewall/views.py:84
+#: firewall/views.py:88
 msgid "Create firewall rule error"
 msgstr "创建规则失败"
 
-#: firewall/views.py:91
+#: firewall/views.py:95
 msgid "Not selected Firewall rule"
 msgstr "选择规则"
 
-#: firewall/views.py:94
+#: firewall/views.py:98
 msgid "Firewall rule not exists"
 msgstr "规则不存在"
 
-#: firewall/views.py:99
+#: firewall/views.py:104
 msgid "Firewall rule delete success"
 msgstr "规则删除成功"
 
-#: firewall/views.py:102
+#: firewall/views.py:107
 msgid "Firewall rule delete error"
 msgstr "规则删除失败"
 
@@ -552,11 +588,6 @@ msgstr ""
 msgid "OS FlavorID"
 msgstr ""
 
-#: instance/models.py:34 network/models.py:36 network/models.py:37
-#: network/models.py:89
-msgid "Network"
-msgstr "私有网络"
-
 #: instance/models.py:42
 msgid "Private IP"
 msgstr ""
@@ -726,10 +757,6 @@ msgstr ""
 msgid "IP Version"
 msgstr "IP 版本"
 
-#: network/models.py:61 network/models.py:62
-msgid "Subnet"
-msgstr "子网"
-
 #: network/models.py:67
 msgid "Router Name"
 msgstr "名称"
@@ -738,15 +765,15 @@ msgstr "名称"
 msgid "OS Router UUID"
 msgstr "Router UUID"
 
-#: network/models.py:80 network/models.py:81
-msgid "Router"
-msgstr "路由器"
+#: network/models.py:70
+msgid "Whether to open the gateway"
+msgstr ""
 
 #: network/models.py:86
 msgid "Port"
 msgstr "端口"
 
-#: network/models.py:94 network/models.py:95
+#: network/models.py:97 network/models.py:98
 msgid "RouterInterface"
 msgstr "路由器端口"
 
@@ -778,95 +805,95 @@ msgstr "删除中"
 msgid "UPDATING"
 msgstr "更新中"
 
-#: network/views.py:35
+#: network/views.py:38
 msgid "Create network success"
 msgstr "创建私有网络成功"
 
-#: network/views.py:40
+#: network/views.py:43
 msgid "Create network error"
 msgstr "创建私有网络失败"
 
-#: network/views.py:44
+#: network/views.py:47
 msgid "The selected network not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:48
+#: network/views.py:52
 msgid "Update network success"
 msgstr "更新私有网络成功"
 
-#: network/views.py:58
+#: network/views.py:62
 msgid "Default network can not be deleted"
 msgstr "默认的私有网络不允许删除"
 
-#: network/views.py:61
+#: network/views.py:65
 msgid "Was unable to delete the use of the network"
 msgstr "使用中的私有网络不允许删除"
 
-#: network/views.py:65
+#: network/views.py:70
 msgid "Network deleted success"
 msgstr "私有网络删除成功"
 
-#: network/views.py:67
+#: network/views.py:72
 msgid "The selected network does not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:92
+#: network/views.py:97
 msgid "Default network not allow operation"
 msgstr "默认私有网络不支持此操作"
 
-#: network/views.py:99
+#: network/views.py:104
 msgid "network exist address , not operation"
 msgstr "子网地址已经存在"
 
-#: network/views.py:118
+#: network/views.py:124
 msgid "Link router success"
 msgstr "加入路由器成功"
 
-#: network/views.py:121
+#: network/views.py:128
 msgid "Network not add subnet ,not operation "
 msgstr "请将私有网络先加入路由器"
 
-#: network/views.py:131
+#: network/views.py:138
 msgid "Leave router success "
 msgstr "离开路由器成功"
 
-#: network/views.py:134
+#: network/views.py:141
 msgid "Network operation error"
 msgstr "操作异常"
 
-#: network/views.py:182
+#: network/views.py:190
 msgid "Create router success"
 msgstr "创建路由器成功"
 
-#: network/views.py:184
+#: network/views.py:192
 msgid "Valid Router fail"
 msgstr "数据提交异常"
 
-#: network/views.py:187
+#: network/views.py:195
 msgid "Create router fail"
 msgstr "创建路由器失败"
 
-#: network/views.py:191
+#: network/views.py:199
 msgid "The selected router not exist"
 msgstr "路由器不存在"
 
-#: network/views.py:206
+#: network/views.py:215
 msgid "Update router success"
 msgstr "路由器更新成功"
 
-#: network/views.py:215
+#: network/views.py:224
 msgid "Default Router can not be deleted"
 msgstr "默认路由器不允许删除"
 
-#: network/views.py:220
+#: network/views.py:229
 msgid "Router used can not deleted"
 msgstr "使用中的路由器不允许删除"
 
-#: network/views.py:224
+#: network/views.py:234
 msgid "Router deleted success"
 msgstr "路由器删除成功"
 
-#: network/views.py:226
+#: network/views.py:236
 msgid "The selected router does not exist"
 msgstr "路由器不存在"
 
@@ -946,47 +973,47 @@ msgstr "容量型"
 msgid "Performance"
 msgstr "性能型"
 
-#: volume/views.py:51
+#: volume/views.py:53
 msgid "Creating Volume"
 msgstr "创建中"
 
-#: volume/views.py:56
+#: volume/views.py:58
 msgid "Volume create error"
 msgstr "创建磁盘成功"
 
-#: volume/views.py:67
+#: volume/views.py:70
 msgid "Volume update success"
 msgstr "更新磁盘成功"
 
-#: volume/views.py:69
+#: volume/views.py:72
 msgid "No select Volume "
 msgstr "请选择磁盘"
 
-#: volume/views.py:72
+#: volume/views.py:75
 msgid "Volume update error"
 msgstr "更新磁盘失败"
 
-#: volume/views.py:84
+#: volume/views.py:87
 msgid "Unknown volume action"
 msgstr "未知的磁盘操作"
 
-#: volume/views.py:87
+#: volume/views.py:90
 msgid "Volume action error"
 msgstr "操作失败"
 
-#: volume/views.py:101
+#: volume/views.py:105
 msgid "Attaching volume"
 msgstr "挂载中"
 
-#: volume/views.py:107
+#: volume/views.py:112
 msgid "Detaching volume"
 msgstr "卸载中"
 
-#: volume/views.py:112
+#: volume/views.py:117
 #, python-format
 msgid "Volume attached to instance,instance:%(instance)s"
 msgstr "磁盘已挂载到云主机:%(instance)s"
 
-#: volume/views.py:116
+#: volume/views.py:122
 msgid "Deleting Volume"
 msgstr "删除中"

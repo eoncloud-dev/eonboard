@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Volume
 from biz.instance.models import Instance
+from biz.account.models import Operation
 from .serializer import VolumeSerializer
 from .settings import VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING, VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE, VOLUME_STATE_DELETING
 
@@ -48,6 +49,7 @@ def volume_create_view(request, format=None):
         if serializer.is_valid():
             volume = serializer.save()
             volume_create_task.delay(volume)
+            Operation.log(volume, obj_name=volume.name, action="create", result=1)
             return Response({"OPERATION_STATUS": 1, "MSG": _('Creating Volume')}, status=status.HTTP_201_CREATED)
         else:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,6 +64,7 @@ def volume_update_view(request, format=None):
         data = request.data
         if data.get('id') is not None:
             volume = Volume.objects.get(pk=data.get('id'))
+            Operation.log(volume, obj_name=volume.name, action="update", result=1)
             volume.name = data.get('name')
             volume.save()
             return Response({"OPERATION_STATUS": 1, "MSG": _('Volume update success')}, status=status.HTTP_201_CREATED)
@@ -97,12 +100,14 @@ def volume_attach_or_detach(data, volume, action):
         volume.status = VOLUME_STATE_ATTACHING
         instance = Instance.objects.get(pk=data.get('instance_id'))
         volume.save()
+        Operation.log(volume, obj_name=volume.name, action="attach_volume", result=1)
         volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Attaching volume')}, status=status.HTTP_201_CREATED)
     elif 'detach' == action:
         volume.status = VOLUME_STATE_DOWNLOADING
         instance = Instance.objects.get(pk=volume.instance.id)
         volume.save()
+        Operation.log(volume, obj_name=volume.name, action="detach_volume", result=1)
         volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Detaching volume')}, status=status.HTTP_201_CREATED)
 
@@ -112,6 +117,7 @@ def delete_action(volume):
         return Response({"OPERATION_STATUS": 0, "MSG": _('Volume attached to instance,instance:%(instance)s') % {'instance': volume.instance.name}}, status=status.HTTP_200_OK)
     volume.status = VOLUME_STATE_DELETING
     volume.save()
+    Operation.log(volume, obj_name=volume.name, action="terminate", result=1)
     volume_delete_action_task.delay(volume)
     return Response({"OPERATION_STATUS": 1, "MSG": _('Deleting Volume')}, status=status.HTTP_200_OK)
 

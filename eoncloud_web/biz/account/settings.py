@@ -20,10 +20,12 @@ QUOTA_ITEM = (
 RESOURCE_CHOICES = (
     ("Instance", _("Instance")),
     ("Volume", _("Volume")),
-    ("Network", _("Volume")),
-    ("Subnet", _("Volume")),
-    ("Router", _("Volume")),
+    ("Network", _("Network")),
+    ("Subnet", _("Subnet")),
+    ("Router", _("Router")),
     ("Floating", _("Volume")),
+    ("Firewall", _("Firewall")),
+    ("FirewallRules", _("FirewallRules")),
 )
 
 RESOURCE_ACTION_CHOICES = (
@@ -38,4 +40,8 @@ RESOURCE_ACTION_CHOICES = (
     ("detach_volume", _("detach_volume")),
     ("terminate", _("terminate")),
     ("launch", _("launch")),
+    ("create", _("create")),
+    ("update", _("update")),
+    ("attach_router", _("attach router")),
+    ("detach_router", _("detach router")),
 )

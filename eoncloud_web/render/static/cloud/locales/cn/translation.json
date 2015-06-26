@@ -24,6 +24,7 @@
   "op_failed": "操作失败",
   "op_failed_msg": "系统发生了未知错误，请联系管理员。",
   "op_success_msg": "您的操作已经提交成功。",
+  "op_forbid_msg": "您的操作暂时不支持，已禁止执行。",
   "tip_title": "操作提示",
 
   "image": {
@@ -106,7 +107,10 @@
     "confirm_reboot": "请确认重新启动云主机",
     "vnc_new_window": "新窗口打开VNC终端",
     "vnc_window_close": "关闭VNC窗口",
-    "vnc_prompt": "如果VNC终端没有响应，请点击下方灰色的状态栏然后点击键盘。"
+    "vnc_prompt": "如果VNC终端没有响应，请点击下方灰色的状态栏然后点击键盘。",
+    "backup": "备份",
+    "os_volume": "系统盘",
+    "backup_name_error": "请输入正确的备份名称"
   },
 
   "flavor": {
@@ -207,6 +211,7 @@
     "confirm_release": "确认删除所选公网IP",
     "confirm_disassociate": "确认解除当前绑定",
     "create_success_and_waiting": "正在创建公网IP",
+    "op_success_and_waiting": "请求成功，等待操作完成",
     "select_instance_first": "请选择要绑定的云主机"
   },
 
@@ -275,7 +280,8 @@
     "quota": "配额",
     "flavor": "规格",
     "user": "用户",
-    "management": "后台管理"
+	"management": "后台管理",
+    "backup": "备份"
   },
 
   "overview": {
@@ -290,6 +296,7 @@
   },
 
   "constant": {
+    "actions": "操作",
     "vcpu": "CPU",
     "memory": "内存(MB)",
     "volume": "磁盘(GB)",
@@ -360,8 +367,7 @@
       "instance_num": "云主机数量",
       "contract_num": "合同数量",
       "data_center_num": "数据中心数量",
-      "image_num": "镜像数量",
-      "flavor_num": "规格数量"
+      "image_num": "镜像数量"
     }
   },
 
@@ -410,6 +416,26 @@
     "no": "否",
     "deactivate": "禁止",
     "activate": "激活"
+  },
+  
+  "backup": {
+    "backup": "备份",
+    "page_desc": "备份（Backup）用于在块设备级别（block device level）上进行硬盘的备份与恢复， 可以同时对多张硬盘做备份（包括系统盘和数据盘），也可以对主机做在线备份。 一张硬盘可以有多个备份链，每条备份链包括一个全量备份点以及多个增量备份点， 您可以随时从任意一个备份点恢复数据。",
+    "name": "备份名称",
+    "status": "状态",
+    "create_date": "备份时间",
+    "resource": "资源",
+    "size": "容量(GB)",
+    "type": "备份类型",
+    "type_full": "全量备份",
+    "type_increment": "增量备份",
+    "backup_name_error": "备份名称不能为空",
+    "delete": "删除",
+    "restore": "恢复",
+    "detail": "详情",
+    "confirm_delete": "确认删除此备份",
+    "confirm_restore": "确认恢复到此备份",
+    "create_success_and_waiting": "请求发送成功，请等待操作执行完毕"
   }
 
 }

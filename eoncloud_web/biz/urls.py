@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, include, url 
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
@@ -13,6 +13,7 @@ from biz.forum import views as forums_view
 from biz.account import views as account_view
 from biz.idc import views as idc_views
 from biz.overview import views as overview_views
+from biz.backup import views as backup_view
 
 # instance&flavor
 urlpatterns = [
@@ -155,5 +156,15 @@ urlpatterns += format_suffix_patterns(
         url(r'^data-centers/batch-delete/$', idc_views.delete_data_centers),
         url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view()),
         url(r'^user-data-centers/(?P<pk>[0-9]+)/$', idc_views.UserDataCenterDetail.as_view())
+    ]
+)
+
+# backup
+urlpatterns += format_suffix_patterns(
+    [
+        url(r'^backup/$', backup_view.BackupList.as_view()),
+        url(r'^backup/status/$', backup_view.backup_status_view),
+        url(r'^backup/create/$', backup_view.backup_create_view),
+        url(r'^backup/action/$', backup_view.backup_action_view),
     ]
 )

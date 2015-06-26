@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'render',
     'biz.firewall',
     'biz.forum',
+    'biz.backup',
 )
 
 #AUTHENTICATION_BACKENDS = ('biz.cloud_auth.backend.ComputeCenterBackend',) 
@@ -154,6 +155,12 @@ LOG_CONFIG = {
     },
     'loggers': {
         'root': {
+            'handlers': ['default'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': True,
+        },
+
+        'biz': {
             'handlers': ['default'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': True,

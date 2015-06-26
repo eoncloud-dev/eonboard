@@ -52,7 +52,10 @@
                                     </div>
                                 </div>
                             </td>
-                            <td data-title="'volume.resource' | i18next">{[{ volume.instance_info.name }]}</td>
+                            <td data-title="'volume.resource' | i18next">
+                                <a class="btn default blue-stripe btn-xs" ng-href="#/instance/" ng-if="volume.instance_info">
+                                    <i class="fa fa-desktop"></i> {[{ volume.instance_info.name }]} </a>
+                            </td>
                             <td data-title="'volume.size' | i18next">{[{ volume.size }]}GB</td>
                             <td data-title="'create_at' | i18next">{[{ volume.create_date }]}</td>
                             <td data-title="'actions' | i18next">

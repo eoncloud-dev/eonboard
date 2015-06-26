@@ -122,6 +122,9 @@ CloudApp.controller('InstanceController',
                 if (data.OPERATION_STATUS == 1) {
                     $scope.instance_table.reload();
                 }
+                else if (data.OPERATION_STATUS == 2) {
+                    ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                }
                 else {
                     ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
                 }
@@ -166,7 +169,6 @@ CloudApp.controller('InstanceController',
                 templateUrl: 'vnc_console.html',
                 controller: 'InstanceVNCController',
                 backdrop: "static",
-                //windowClass: 'large-Modal',
                 size: 'lg',
                 scope: $scope,
                 resolve: {
@@ -281,6 +283,44 @@ CloudApp.controller('InstanceController',
             instance_volume(ins, "detach");
         };
 
+        var instance_backup = function(ins){
+            var modalInstance = $modal.open({
+                templateUrl: 'backup.html',
+                controller: 'InstanceBackupController',
+                backdrop: "static",
+                resolve: {
+                    instance_table: function () {
+                        return $scope.instance_table;
+                    },
+                    instance: function () {
+                        return ins;
+                    },
+                    volumes: function(CommonHttpService){
+                        var post_data = {
+                            'instance_id': ins.id
+                        };
+                        return CommonHttpService.post("/api/volumes/search/", post_data);
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (result) {
+            }, function (result) {
+            });
+        };
+
+        var instance_restore = function(ins){
+            var modalInstance = $modal.open({
+                templateUrl: 'restore.html',
+                controller: 'InstanceRestoreController',
+                backdrop: "static",
+                resolve: {
+                    instance: function () {
+                        return ins;
+                    }
+                }
+            });
+        };
 
         var action_func = {
             "reboot": instance_reboot,
@@ -292,7 +332,9 @@ CloudApp.controller('InstanceController',
             "change_firewall": instance_change_firewall,
             "attach_volume": instance_attach_volume,
             "detach_volume": instance_detach_volume,
-            "terminate": instance_terminate
+            "terminate": instance_terminate,
+            "backup": instance_backup,
+            "restore": instance_restore
         }
 
         $scope.instance_action = function (ins, action) {
@@ -399,6 +441,9 @@ CloudApp.controller('InstanceChangeFirewallController',
                     if (data.OPERATION_STATUS == 1) {
                         ToastrService.success(data.MSG, $i18next("success"));
                     }
+                    else if (data.OPERATION_STATUS == 2) {
+                        ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                    }
                     else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
                     }
@@ -432,7 +477,9 @@ CloudApp.controller('InstanceVolumeController', function ($rootScope, $scope, $m
             CommonHttpService.post("/api/volumes/action/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
                     ToastrService.success($i18next("volume.update_success"), $i18next("success"));
-                    //volume_table.reload();
+                }
+                else if (data.OPERATION_STATUS == 2) {
+                    ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
                 }
                 else {
                     ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
@@ -537,6 +584,9 @@ CloudApp.controller('InstanceCreateController',
                     ToastrService.success($i18next("instance.create_success_and_waiting"), $i18next("success"));
                     instance_table.reload();
                 }
+                else if (data.OPERATION_STATUS == 2) {
+                    ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                }
                 else {
                     ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
                 }
@@ -581,3 +631,47 @@ CloudApp.controller('InstanceCreateController',
             return false;
         }
     });
+
+CloudApp.controller("InstanceBackupController",
+    function($rootScope, $scope, $state, $filter, $interval, $modalInstance, $i18next, ngTableParams, ToastrService,
+              CommonHttpService, instance_table, instance, volumes){
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+        $scope.instance = instance;
+        $scope.volumes = volumes;
+        $scope.backup_config = {
+            "name": "",
+            "is_full": true,
+            "volumes": {},
+            "has_error": false
+        };
+
+        $scope.action = function (backup_config) {
+            if(backup_config.name == "" || backup_config.name.trim() == "") {
+                backup_config.has_error = true;
+                return false;
+            }
+            else{
+                var post_data = {
+                    "name": backup_config.name.trim(),
+                    "backup_type": backup_config.is_full ? 1 : 2,
+                    "volumes": Object.keys(backup_config.volumes).join(','),
+                    "instance": instance.id
+                };
+                CommonHttpService.post("/api/backup/create/", post_data).then(function(data){
+                    if (data.OPERATION_STATUS == 1) {
+                        ToastrService.success($i18next("backup.create_success_and_waiting"), $i18next("success"));
+                        $state.go("backup");
+                    }
+                    else if (data.OPERATION_STATUS == 2) {
+                        ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                    }
+                    else {
+                        ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
+                    }
+                    $modalInstance.dismiss();
+                });
+            }
+        };
+});

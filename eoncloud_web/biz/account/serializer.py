@@ -9,8 +9,8 @@ from biz.account.models import Contract, Quota, Operation
 
 class ContractSerializer(serializers.ModelSerializer):
     quotas = serializers.ReadOnlyField(source="get_quotas")
-    start_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
-    end_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
+    start_date = serializers.DateTimeField(format="%Y-%m-%d", required=False, allow_null=True)
+    end_date = serializers.DateTimeField(format="%Y-%m-%d", required=False, allow_null=True)
 
     class Meta:
         model = Contract

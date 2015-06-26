@@ -283,13 +283,15 @@
     "legal_person": "法人",
     "user": "用户",
     "user_data_center": "用户数据中心",
-    "date_range": "合同周期",
+    "date_range": "合同有效期",
     "create": "创建",
     "edit": "编辑",
     "view": "查看",
     "delete": "删除",
     "batch_delete": "批量删除",
-    "create_contract_title": "创建合同"
+    "create_contract_title": "创建合同",
+    "select_user": "请选择用户",
+    "select_udc": "请选择数据中心"
   },
 
   "forum": {

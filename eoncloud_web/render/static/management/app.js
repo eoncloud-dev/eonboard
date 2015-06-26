@@ -288,7 +288,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
                                 '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
                                 '/static/assets/admin/layout/scripts/components-pickers.js',
-                                '/static/management/controllers/contract_ctrl.js'
+                                '/static/management/controllers/contract_ctrl.js',
+                                '/static/management/scripts/create_contract.js',
                             ]
                         });
                     }]

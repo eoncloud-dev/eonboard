@@ -34,7 +34,24 @@ CloudApp.controller('ContractController',
             }
         });
 
-        $scope.create = function () {
+        $scope.create = function() {
+            $modal.open({
+//                templateUrl: '/static/management/views/contract_create.html',
+                templateUrl: 'create.html',
+                controller: 'ContractCreateController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    contract_table: function () {
+                        return $scope.contract_table;
+                    },
+                    contract: function(){return {}}
+                }
+            });
+        };
+
+        $scope.edit = function(contract){
+
             $modal.open({
                 templateUrl: 'create.html',
                 controller: 'ContractCreateController',
@@ -43,16 +60,17 @@ CloudApp.controller('ContractController',
                 resolve: {
                     contract_table: function () {
                         return $scope.contract_table;
-                    }
+                    },
+                    contract: function(){return contract}
                 }
             });
         };
     })
     .controller('ContractCreateController',
-        function($rootScope, $scope, $modalInstance, $i18next, contract_table,
+        function($rootScope, $scope, $modalInstance, $i18next, contract, contract_table,
                  User, Contract, UserDataCenter, CommonHttpService, ToastrService){
 
-            var contract = {};
+            contract = angular.copy(contract);
 
             $scope.users = [];
             $scope.udcList = [];
@@ -61,8 +79,11 @@ CloudApp.controller('ContractController',
 
             $scope.contract = contract;
 
-            $modalInstance.opened.then(function(){
-                ComponentsPickers.init();
+            $modalInstance.opened.then(function() {
+                setTimeout(function(){
+                    ComponentsPickers.init();
+                    FormWizard.init();
+                }, 0)
             });
 
             $scope.cancel = function () {
@@ -79,9 +100,25 @@ CloudApp.controller('ContractController',
                 });
             };
 
-            $scope.create = function(contract){
+            $scope.submit = function(contract){
 
-                CommonHttpService.post("/api/contracts/", contract).then(function(data){
+                if(!$("#contractForm").validate().form()){
+                    return;
+                }
+
+                contract = angular.copy(contract);
+
+                contract.start_date += " 00:00:00";
+                contract.end_date += " 23:59:00";
+
+                var url = null;
+                if(contract.id){
+                   url = "/api/contracts/create";
+                } else {
+                   url = "/api/contracts/update";
+                }
+
+                CommonHttpService.post(url, contract).then(function(data){
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         contract_table.reload();
@@ -89,8 +126,7 @@ CloudApp.controller('ContractController',
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }
-
                 });
-            }
+            };
         }
 );

@@ -1,29 +1,58 @@
 <div class="modal-header">
-    <div id="updateTitle" class="modal-title"> {[{ 'contract.create_contract_title' | i18next }]}</div>
-</div>
-<div class="modal-body">
-    <form id="contractFrom" role="form" class="form-horizontal form-bordered">
-        <input type="hidden"  name="id" data-ng-model="contract.id">
-        <div class="form-group">
-            <div class="col-md-8">
-                <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
-                <input id="name" name="name" type="text" style="width:300px" maxlength="20"  ng-model="contract.name"
-                       class="form-control input-medium required">
+       <div id="updateTitle" class="modal-title"> {[{ 'contract.create_contract_title' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="contractFrom" role="form" class="form-horizontal form-bordered">
+            <input type="hidden"  name="id" data-ng-model="contract.id">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                    <input id="name" name="name" type="text" maxlength="20"
+                           data-ng-model="contract.name" class="form-control input-medium required">
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-8">
-                <label class="col-md-3 control-label" for="name">{[{ 'contract.customer' | i18next }]} </label>
-                <input id="name" name="customer" type="text" style="width:300px" maxlength="20"  ng-model="contract.customer"
-                       class="form-control input-medium required">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                    <input id="customer" name="customer" type="text" maxlength="20"
+                           data-ng-model="contract.customer" class="form-control input-medium required">
+                </div>
             </div>
-        </div>
-        <div class="clear"></div>
-    </form>
-</div>
-<div class="modal-footer">
-    <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
-        {[{ 'cancel' | i18next }]}
-    </a>
-    <a class="btn btn-primary" data-ng-click="create(contract)"> {[{ 'submit' | i18next }]}</a>
-</div>
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="user">{[{ 'contract.user' | i18next }]} </label>
+                    <select id="user" name="user" data-ng-model="contract.user"
+                            class="form-control input-medium" data-ng-change="loadUdcList()"
+                            data-ng-options="user.id as user.username for user in users"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="col-md-3 control-label" for="udc">{[{ 'contract.user_data_center' | i18next }]} </label>
+                    <select id="udc" name="udc" data-ng-model="contract.udc" class="form-control input-medium"
+                            data-ng-options="udc.id as udc.tenant_name for udc in udcList"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8">
+                    <label class="control-label col-md-3">{[{ 'contract.date_range' | i18next }]} </label>
+                    <div class="input-group input-large date-picker input-daterange" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" name="start_date">
+                        <span class="input-group-addon"> to </span>
+                        <input type="text" class="form-control" name="end_date">
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="create(contract)"> {[{ 'submit' | i18next }]}</a>
+    </div>
+
+    <script>
+        ComponentsPickers.init();
+    </script>

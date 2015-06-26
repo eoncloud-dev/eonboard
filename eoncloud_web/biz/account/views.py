@@ -120,7 +120,8 @@ def create_contract(request):
             serializer.save()
             return Response({'success': True, "msg": _('Create contract success!')}, status=status.HTTP_201_CREATED)
         else:
-            return Response({"success": False, "msg": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"success": False, "msg": _('Data valid error'), 'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         LOG.error("create contract  error, msg:[%s]" % e)
         return Response({"success": True, "msg": _('Contract create error')})

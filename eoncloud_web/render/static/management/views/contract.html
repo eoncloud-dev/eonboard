@@ -38,6 +38,33 @@
                                 <td data-title="'contract.end_date' | i18next">
                                     <span> {[{ contract.end_date }]} </span>
                                 </td>
+                                <td data-title="'actions' | i18next">
+                                    <div class="btn-group">
+                                        <button class="btn btn-default"
+                                                type="button" ng-click="edit(contract)">
+                                            <i class="fa fa-edit"></i>
+                                            {[{ 'edit' | i18next }]}
+                                        </button>
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                                type="button" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu">
+                                            <li ng-class="{'disabled-link': volume.status!=2}">
+                                                <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=2}"
+                                                   ng-click="modal_attach_to_instance(volume)">
+                                                    <i class="fa fa-hdd-o"></i>
+                                                    {[{ 'volume.attach_to_instance' | i18next }]} </a>
+                                            </li>
+                                            <li ng-class="{'disabled-link': volume.status !=9}">
+                                                <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=9}"
+                                                   ng-click="modal_detach_from_instance(volume)">
+                                                    <i class="fa fa-times"></i>
+                                                    {[{ 'volume.detach_from_instance' | i18next }]}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -55,44 +82,49 @@
        <div id="updateTitle" class="modal-title"> {[{ 'contract.create_contract_title' | i18next }]}</div>
     </div>
     <div class="modal-body">
-        <form id="contractFrom" role="form" class="form-horizontal form-bordered">
+        <form id="contractForm" role="form" class="form-horizontal form-bordered">
             <input type="hidden"  name="id" data-ng-model="contract.id">
             <div class="form-group">
-                <div class="col-md-8">
-                    <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                <div class="col-md-5">
                     <input id="name" name="name" type="text" maxlength="20"
-                           data-ng-model="contract.name" class="form-control input-medium required">
+                       data-ng-model="contract.name" class="form-control input-medium required">
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-8">
-                    <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                <div class="col-md-5">
                     <input id="customer" name="customer" type="text" maxlength="20"
                            data-ng-model="contract.customer" class="form-control input-medium required">
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-8">
-                    <label class="col-md-3 control-label" for="user">{[{ 'contract.user' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="user">{[{ 'contract.user' | i18next }]} </label>
+                <div class="col-md-5">
                     <select id="user" name="user" data-ng-model="contract.user"
                             class="form-control input-medium" data-ng-change="loadUdcList()"
-                            data-ng-options="user.id as user.username for user in users"></select>
+                            data-ng-options="user.id as user.username for user in users">
+                        <option value="">{[{ 'contract.select_user' | i18next }]}</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-8">
-                    <label class="col-md-3 control-label" for="udc">{[{ 'contract.user_data_center' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="udc">{[{ 'contract.user_data_center' | i18next }]} </label>
+                <div class="col-md-5">
                     <select id="udc" name="udc" data-ng-model="contract.udc" class="form-control input-medium"
-                            data-ng-options="udc.id as udc.tenant_name for udc in udcList"></select>
+                            data-ng-options="udc.id as udc.tenant_name for udc in udcList">
+                        <option value="">{[{ 'contract.select_udc' | i18next }]}</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-8">
-                    <label class="control-label col-md-3">Date Range</label>
+                <label class="control-label col-md-3">{[{ 'contract.date_range' | i18next }]} </label>
+                <div class="col-md-5">
                     <div class="input-group input-large date-picker input-daterange" data-date-format="yyyy-mm-dd">
-                        <input type="text" class="form-control" name="start_date">
-                        <span class="input-group-addon"> to </span>
-                        <input type="text" class="form-control" name="end_date">
+                        <input id="start_date" name="start_date" type="text" class="form-control" readonly
+                               data-ng-model="contract.start_date">
+                        <span class="input-group-addon"> ~ </span>
+                        <input type="text" class="form-control" readonly name="end_date" data-ng-model="contract.end_date">
                     </div>
                 </div>
             </div>
@@ -105,11 +137,4 @@
         </a>
         <a class="btn btn-primary" data-ng-click="create(contract)"> {[{ 'submit' | i18next }]}</a>
     </div>
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        console.log('test');
-        ComponentsPickers.init();
-    });
 </script>

@@ -198,6 +198,10 @@ CloudApp.factory('User', ['$resource', function($resource){
    return $resource("/api/users/:id")
 }]);
 
+CloudApp.factory('UserDataCenter', ['$resource', function($resource){
+   return $resource("/api/user-data-centers/:id")
+}]);
+
 /* Setup App Main Controller */
 CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function () {
@@ -281,6 +285,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
+                                '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
+                                '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
+                                '/static/assets/admin/layout/scripts/components-pickers.js',
                                 '/static/management/controllers/contract_ctrl.js'
                             ]
                         });

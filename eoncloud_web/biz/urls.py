@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url 
+from django.conf.urls import patterns, include, url
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
@@ -11,6 +11,7 @@ from biz.floating import views as floating_view
 from biz.firewall import views as firewall_view
 from biz.forum import views as forums_view
 from biz.account import views as account_view
+from biz.idc import views as idc_views
 
 # instance&flavor
 urlpatterns = [
@@ -100,14 +101,16 @@ urlpatterns += format_suffix_patterns(
         url(r'^account/summary/$', account_view.summary),
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
+        url(r'^users/$', account_view.UserList.as_view())
     ]
 )
+
 
 # image
 urlpatterns += format_suffix_patterns(
     [
         url(r'^contracts/$', account_view.ContractList.as_view()),
-        url(r'^contracts/create/$', account_view.create_contract),
+        url(r'^contracts/create$', account_view.create_contract),
         url(r'^contracts/(?P<pk>[0-9]+)/$', account_view.ContractDetail.as_view()),
     ]
 )
@@ -122,4 +125,10 @@ urlpatterns += format_suffix_patterns(
         url(r'^forums/reply/create/$', forums_view.forum_reply_create_view),
         url(r'^forums/reply/$', forums_view.forum_reply_list_view),
     ]
+)
+
+
+# idc
+urlpatterns += format_suffix_patterns(
+    [url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view())]
 )

@@ -18,7 +18,7 @@ from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
 from biz.account.models import Contract, Quota, Operation
-from biz.account.serializer import ContractSerializer, OperationSerializer
+from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer
 from biz.account.utils import get_quota_usage
 
 LOG = logging.getLogger(__name__)
@@ -129,4 +129,8 @@ def create_contract(request):
 class UserList(generics.ListAPIView):
 
     queryset = User.objects.all()
+    serializer_class = UserSerializer
 
+    def list(self, request):
+        serializer = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializer.data)

@@ -50,28 +50,38 @@ CloudApp.controller('ContractController',
     })
     .controller('ContractCreateController',
         function($rootScope, $scope, $modalInstance, $i18next, contract_table,
-                 CommonHttpService, ToastrService){
+                 User, Contract, UserDataCenter, CommonHttpService, ToastrService){
+
+            var contract = {};
+
+            $scope.users = [];
+            $scope.udcList = [];
 
             $scope.has_error=false;
 
-            $scope.contract = {};
+            $scope.contract = contract;
+
+            $modalInstance.opened.then(function(){
+                ComponentsPickers.init();
+            });
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();
             };
 
+            User.query(function(users){
+                $scope.users = users;
+            });
+
+            $scope.loadUdcList = function(){
+                UserDataCenter.query({user: contract.user}, function(udcList){
+                    $scope.udcList = udcList;
+                });
+            };
+
             $scope.create = function(contract){
 
-                var params = {
-                    "id": contract.id,
-                    "name": contract.name,
-                    "customer": contract.customer,
-                    'start_date': contract.start_date,
-                    'end_date': contract.end_date
-                };
-
-                CommonHttpService.post("/api/contracts/create", params).then(function(data){
-
+                CommonHttpService.post("/api/contracts/", contract).then(function(data){
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         contract_table.reload();

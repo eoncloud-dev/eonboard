@@ -202,6 +202,11 @@ CloudApp.factory('UserDataCenter', ['$resource', function($resource){
    return $resource("/api/user-data-centers/:id")
 }]);
 
+
+CloudApp.factory('DataCenter', ['$resource', function($resource){
+  return $resource("/api/data-centers/:id")
+}]);
+
 /* Setup App Main Controller */
 CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function () {
@@ -295,6 +300,27 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     }]
                 }
             })
+
+            // user data center
+            .state("data_center", {
+                url: "/data-center/",
+                templateUrl: template('data_center'),
+                data: {pageTitle: "Data Center"},
+                controller: "DataCenterController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/management/controllers/data_center_ctrl.js',
+                                '/static/management/scripts/data_center_validation.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+
             // instance
             .state("instance", {
                 url: "/instance/",

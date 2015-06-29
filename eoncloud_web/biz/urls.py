@@ -130,11 +130,14 @@ urlpatterns += format_suffix_patterns(
     ]
 )
 
-
 # idc
 urlpatterns += format_suffix_patterns(
     [
+        url(r'^data-centers/$', idc_views.DataCenterList.as_view()),
+        url(r'^data-centers/create/$', idc_views.create_data_center),
+        url(r'^data-centers/update/$', idc_views.update_data_center),
+        url(r'^data-centers/batch-delete/$', idc_views.delete_data_centers),
         url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view()),
-        url(r'^user-data-centers/(?P<pk>[0-9]+)/$', idc_views.UserDataDetail.as_view())
+        url(r'^user-data-centers/(?P<pk>[0-9]+)/$', idc_views.UserDataCenterDetail.as_view())
     ]
 )

@@ -249,7 +249,7 @@
     "monitor": "监控报警",
     "support": "工单支持",
     "contract": "合同",
-    "sddc": "软件定义的数据中心",
+    "data_center": "数据中心",
     "quota": "配额",
     "flavor": "规格"
   },
@@ -323,5 +323,37 @@
       "account_num": "用户数量",
       "instance_num": "云主机数量"
     }
+  },
+
+  "data_center":{
+    "name": "名称",
+    "host": "主机名",
+    "project": "项目名",
+    "user": "用户名",
+    "password": "用户密码",
+    "auth_url": "Auth Url",
+    "ext_net": "外网名称",
+    "title_create": "创建数据中心",
+    "title_update": "更新数据中心",
+    "confirm_delete": "确认删除数据中心?"
+  },
+
+  "udc": {
+    "user": "用户",
+    "data_center": "数据中心",
+    "tenant": "Tenant",
+    "tenant_uuid": "Tenant UUID",
+    "keystone_user": "KeyStone User",
+    "keystone_password": "KeyStone Password"
+  },
+
+  "action": {
+    "create": "创建",
+    "edit": "编辑",
+    "update": "更新",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "submit": "提交"
   }
+
 }

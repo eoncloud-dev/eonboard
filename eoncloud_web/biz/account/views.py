@@ -119,13 +119,17 @@ def create_contract(request):
         serializer = ContractSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
-            return Response({'success': True, "msg": _('Create contract success!')}, status=status.HTTP_201_CREATED)
+            return Response({'success': True,
+                             "msg": _('Contract is created successfully!')},
+                            status=status.HTTP_201_CREATED)
         else:
-            return Response({"success": False, "msg": _('Data valid error'), 'errors': serializer.errors},
+            return Response({"success": False,
+                             "msg": _('Contract data is not valid!'),
+                             'errors': serializer.errors},
                             status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        LOG.error("create contract  error, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Contract create error')})
+        LOG.error("Failed to create contract, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to create contract for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -146,11 +150,12 @@ def update_contract(request):
 
         contract.save()
 
-        return Response({'success': True, "msg": _('Create contract success!')}, status=status.HTTP_201_CREATED)
+        return Response({'success': True, "msg": _('Contract is updated successfully!')},
+                        status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        LOG.error("create contract  error, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Contract create error')})
+        LOG.error("Failed to update contract, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to update contract for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -161,11 +166,11 @@ def delete_contracts(request):
 
         Contract.objects.filter(pk__in=contract_ids).update(deleted=True)
 
-        return Response({'success': True, "msg": _('Delete contracts success!')}, status=status.HTTP_201_CREATED)
+        return Response({'success': True, "msg": _('Contracts have been deleted!')}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        LOG.error("create contract  error, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Contract create error')})
+        LOG.error("Failed to delete contracts, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to delete contracts for unknown reason.')})
 
 
 class UserList(generics.ListAPIView):

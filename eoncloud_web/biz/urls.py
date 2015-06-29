@@ -101,7 +101,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^account/summary/$', account_view.summary),
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
-        url(r'^users/$', account_view.UserList.as_view())
+        url(r'^users/$', account_view.UserList.as_view()),
+        url(r'^users/(?P<pk>[0-9]+)/$', account_view.UserDetail.as_view())
     ]
 )
 
@@ -111,6 +112,8 @@ urlpatterns += format_suffix_patterns(
     [
         url(r'^contracts/$', account_view.ContractList.as_view()),
         url(r'^contracts/create$', account_view.create_contract),
+        url(r'^contracts/update/$', account_view.update_contract),
+        url(r'^contracts/batch-delete/$', account_view.delete_contracts),
         url(r'^contracts/(?P<pk>[0-9]+)/$', account_view.ContractDetail.as_view()),
     ]
 )
@@ -130,5 +133,8 @@ urlpatterns += format_suffix_patterns(
 
 # idc
 urlpatterns += format_suffix_patterns(
-    [url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view())]
+    [
+        url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view()),
+        url(r'^user-data-centers/(?P<pk>[0-9]+)/$', idc_views.UserDataDetail.as_view())
+    ]
 )

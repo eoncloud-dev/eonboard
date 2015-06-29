@@ -7,13 +7,40 @@
 'use strict';
 
 CloudApp.controller('ContractController',
-    function ($rootScope, $scope, $filter, $timeout, $modal, ngTableParams, Contract) {
+    function ($rootScope, $scope, $filter, $timeout,
+              $modal, $i18next, ngTableParams, Contract,
+              CommonHttpService, ToastrService) {
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
 
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
+
+        $scope.checkAllFlag = false;
+        $scope.contracts = [];
+
+        $scope.toggleAll = function(){
+            $scope.checkAllFlag = !$scope.checkAllFlag;
+
+            angular.forEach($scope.contracts, function(contract){
+                contract.deleted = $scope.checkAllFlag;
+            });
+        };
+
+        $scope.not_checked = function(){
+
+            var count = 0;
+
+            angular.forEach($scope.contracts, function(contract){
+
+                if(contract.deleted){
+                    count += 1;
+                }
+            });
+
+            return count == 0;
+        };
 
         $scope.contract_table = new ngTableParams({
             page: 1,
@@ -27,9 +54,9 @@ CloudApp.controller('ContractController',
 
                     params.total(data_list.length);
 
-                    $scope.contacts = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                    $scope.contracts = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
 
-                    $defer.resolve($scope.contacts);
+                    $defer.resolve($scope.contracts);
                 });
             }
         });
@@ -44,8 +71,7 @@ CloudApp.controller('ContractController',
                 resolve: {
                     contract_table: function () {
                         return $scope.contract_table;
-                    },
-                    contract: function(){return {}}
+                    }
                 }
             });
         };
@@ -53,8 +79,8 @@ CloudApp.controller('ContractController',
         $scope.edit = function(contract){
 
             $modal.open({
-                templateUrl: 'create.html',
-                controller: 'ContractCreateController',
+                templateUrl: 'update.html',
+                controller: 'ContractUpdateController',
                 backdrop: "static",
                 size: 'lg',
                 resolve: {
@@ -65,19 +91,62 @@ CloudApp.controller('ContractController',
                 }
             });
         };
+
+        var deleteContracts = function(contractIds){
+
+            CommonHttpService.post("/api/contracts/batch-delete/", {contract_ids: contractIds}).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        $scope.contract_table.reload();
+                        $scope.checkAllFlag = false;
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
+        };
+
+        $scope.batch_delete = function(){
+
+            bootbox.confirm($i18next("contract.confirm_delete"), function (confirmed) {
+
+                if(!confirmed){
+                    return;
+                }
+
+                var contractIds = [];
+
+                angular.forEach($scope.contracts, function(contract){
+
+                    if(contract.deleted){
+                        contractIds.push(contract.id);
+                    }
+                });
+
+                deleteContracts(contractIds);
+            });
+        };
+
+        $scope.delete= function(contract){
+
+            bootbox.confirm($i18next("contract.confirm_delete"), function (confirmed) {
+
+                if(!confirmed){
+                    return;
+                }
+
+                deleteContracts([contract.id]);
+            });
+        };
     })
     .controller('ContractCreateController',
-        function($rootScope, $scope, $modalInstance, $i18next, contract, contract_table,
+        function($rootScope, $scope, $modalInstance, $i18next, contract_table,
                  User, Contract, UserDataCenter, CommonHttpService, ToastrService){
 
-            contract = angular.copy(contract);
+            var contract = $scope.contract = {};
 
             $scope.users = [];
+
             $scope.udcList = [];
-
-            $scope.has_error=false;
-
-            $scope.contract = contract;
 
             $modalInstance.opened.then(function() {
                 setTimeout(function(){
@@ -111,14 +180,58 @@ CloudApp.controller('ContractController',
                 contract.start_date += " 00:00:00";
                 contract.end_date += " 23:59:00";
 
-                var url = null;
-                if(contract.id){
-                   url = "/api/contracts/create";
-                } else {
-                   url = "/api/contracts/update";
+                CommonHttpService.post("/api/contracts/create", contract).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        contract_table.reload();
+                        $modalInstance.dismiss();
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
+            };
+        }
+).controller('ContractUpdateController',
+        function($rootScope, $scope, $modalInstance, $i18next, contract, contract_table,
+                 User, Contract, UserDataCenter, CommonHttpService, ToastrService){
+
+            $scope.contract = contract = angular.copy(contract);
+
+            $scope.user = {};
+
+            $scope.udc = {};
+
+            $modalInstance.opened.then(function() {
+                setTimeout(function(){
+                    ComponentsPickers.init();
+                    FormWizard.init();
+                }, 0)
+            });
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            };
+
+            User.get({id: contract.user}, function(user){
+                $scope.user = user;
+            });
+
+            UserDataCenter.get({id: contract.udc}, function(udc){
+                $scope.udc = udc;
+            });
+
+            $scope.submit = function(contract){
+
+                if(!$("#contractForm").validate().form()){
+                    return;
                 }
 
-                CommonHttpService.post(url, contract).then(function(data){
+                contract = angular.copy(contract);
+
+                contract.start_date += " 00:00:00";
+                contract.end_date += " 23:59:00";
+
+                CommonHttpService.post("/api/contracts/update/", contract).then(function(data){
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         contract_table.reload();

@@ -34,3 +34,10 @@ class UserDataCenterList(generics.ListAPIView):
         serializer = self.serializer_class(queryset, many=True)
 
         return Response(serializer.data)
+
+
+class UserDataDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = UserDataCenter.objects.all()
+
+    serializer_class = UserDataCenterSerializer

@@ -290,8 +290,10 @@
     "delete": "删除",
     "batch_delete": "批量删除",
     "create_contract_title": "创建合同",
+    "update_contract_title": "修改合同",
     "select_user": "请选择用户",
-    "select_udc": "请选择数据中心"
+    "select_udc": "请选择数据中心",
+    "confirm_delete": "确认删除这些合同吗？"
   },
 
   "forum": {

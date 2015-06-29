@@ -1,5 +1,6 @@
 #-*-coding-utf-8-*-
 
+from datetime import datetime
 import logging
 
 from rest_framework import generics
@@ -17,7 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Quota, Operation
+from biz.account.models import Contract, Operation
 from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer
 from biz.account.utils import get_quota_usage
 
@@ -99,7 +100,7 @@ class OperationList(generics.ListCreateAPIView):
 
 
 class ContractList(generics.ListCreateAPIView):
-    queryset = Contract.objects.all()
+    queryset = Contract.objects.filter(deleted=False)
     serializer_class = ContractSerializer
 
     def list(self, request):
@@ -107,7 +108,7 @@ class ContractList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class ContractDetail(generics.RetrieveUpdateDestroyAPIView):
+class ContractDetail(generics.RetrieveAPIView):
     queryset = Contract.objects.all()
     serializer_class = ContractSerializer
 
@@ -124,7 +125,47 @@ def create_contract(request):
                             status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         LOG.error("create contract  error, msg:[%s]" % e)
-        return Response({"success": True, "msg": _('Contract create error')})
+        return Response({"success": False, "msg": _('Contract create error')})
+
+
+@api_view(['POST'])
+def update_contract(request):
+    try:
+
+        pk = request.data['id']
+
+        contract = Contract.objects.get(pk=pk)
+
+        contract.name = request.data['name']
+
+        contract.customer = request.data['customer']
+
+        contract.start_date = datetime.strptime(request.data['start_date'], '%Y-%m-%d %H:%M:%S')
+
+        contract.end_date = datetime.strptime(request.data['end_date'], '%Y-%m-%d %H:%M:%S')
+
+        contract.save()
+
+        return Response({'success': True, "msg": _('Create contract success!')}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        LOG.error("create contract  error, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Contract create error')})
+
+
+@api_view(['POST'])
+def delete_contracts(request):
+    try:
+
+        contract_ids = request.data.getlist('contract_ids[]')
+
+        Contract.objects.filter(pk__in=contract_ids).update(deleted=True)
+
+        return Response({'success': True, "msg": _('Delete contracts success!')}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        LOG.error("create contract  error, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Contract create error')})
 
 
 class UserList(generics.ListAPIView):
@@ -135,3 +176,9 @@ class UserList(generics.ListAPIView):
     def list(self, request):
         serializer = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializer.data)
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 import simplejson
 
 from biz.instance.models import Instance
+from biz.account.models import Operation
 from biz.network.models import Network, Subnet, Router, RouterInterface
 from cloud.network_task import network_create_task, network_delete_task,\
     router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task,\
@@ -32,6 +33,7 @@ def network_create_view(request, **kwargs):
             serializer = NetworkSerializer(data=request.data, context={"request": request})
             if serializer.is_valid():
                 network = serializer.save()
+                Operation.log(obj=network, obj_name=network.name, action='create', result=1)
                 network_create_task.delay(network=network)
                 return Response({"OPERATION_STATUS": 1, "MSG": _("Create network success")})
             else:
@@ -46,6 +48,7 @@ def network_create_view(request, **kwargs):
         network.name = data.get('name')
         network.deleted = False
         network.save()
+        Operation.log(obj=network, obj_name=network.name, action='update', result=1)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Update network success')})
 
 
@@ -62,6 +65,7 @@ def delete_action(request, **kwargs):
             return Response({"OPERATION_STATUS": 0, "MSG": _('Was unable to delete the use of the network')})
         network.deleted = True
         network.save()
+        Operation.log(obj=network, obj_name=network.name, action='terminate', result=1)
         network_delete_task.delay(network)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted success')})
     else:
@@ -114,10 +118,12 @@ def network_attach_router_view(request, **kwargs):
             '''
             router.status = NETWORK_STATE_UPDATING
             router.save()
+            Operation.log(obj=network, obj_name=network.name, action='attach_router', result=1)
             network_link_router_task.delay(router=router, subnet=subnet, router_interface=router_interface)
 
             return Response({"OPERATION_STATUS": 1, "MSG": _('Link router success')})
         elif action == 'detach':
+            Operation.log(obj=network, obj_name=network.name, action='detach_router', result=1)
             if check_is_add_router(network_id):
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Network not add subnet ,not operation ')})
             subnet_set = Subnet.objects.filter(network_id=network_id, deleted=False)
@@ -180,6 +186,7 @@ def router_create_view(request, **kwargs):
             if serializer.is_valid():
                 router = serializer.save()
                 router_create_task.delay(router)
+                Operation.log(obj=router, obj_name=router.name, action='create', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Create router success')})
             else:
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Valid Router fail')})
@@ -192,6 +199,7 @@ def router_create_view(request, **kwargs):
             return Response({"OPERATION_STATUS": 0, "MSG": _('The selected router not exist')})
         router.name = data.get('name')
         router.deleted = False
+        Operation.log(obj=router, obj_name=router.name, action='update', result=1)
         if not router.is_gateway and request.POST.get('is_gateway') == u'true':
             router.is_gateway = True
             router.status = NETWORK_STATE_UPDATING
@@ -221,6 +229,7 @@ def router_delete_view(request, **kwargs):
             return Response({"OPERATION_STATUS": 0, "MSG": _('Router used can not deleted')})
         router.deleted = True
         router.save()
+        Operation.log(obj=router, obj_name=router.name, action='terminate', result=1)
         router_delete_task.delay(router)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Router deleted success')})
     else:

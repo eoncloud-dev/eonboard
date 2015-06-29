@@ -68,10 +68,10 @@ class Instance(models.Model):
 
     @property
     def floating_ip(self):
-        try:
-            floating = Floating.objects.get(instance=self, deleted=0) 
-        except Floating.DoesNotExist:
-            floating = None
+        fs = Floating.objects.filter(instance=self, deleted=0) 
+        floating = None
+        if len(fs) > 0:
+            floating = fs[0]
         
         return floating.ip if floating else None
 

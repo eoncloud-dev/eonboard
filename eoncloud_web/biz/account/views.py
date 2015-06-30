@@ -18,8 +18,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Operation
-from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer
+from biz.account.models import Contract, Operation, Quota
+from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
 from biz.account.utils import get_quota_usage
 
 LOG = logging.getLogger(__name__)
@@ -86,10 +86,9 @@ class OperationList(generics.ListCreateAPIView):
     queryset = Operation.objects.all()
     serializer_class = OperationSerializer
     
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         try:
-            queryset = self.get_queryset().filter(user=request.user,
-                            udc__id=request.session["UDC_ID"])
+            queryset = self.get_queryset().filter(user=request.user, udc__id=request.session["UDC_ID"])
             serializer = OperationSerializer(queryset, many=True)
             return Response(serializer.data)
         except Exception as e:
@@ -103,7 +102,7 @@ class ContractList(generics.ListCreateAPIView):
     queryset = Contract.objects.filter(deleted=False)
     serializer_class = ContractSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         serializer = ContractSerializer(self.get_queryset(), many=True)
         return Response(serializer.data)
 
@@ -187,3 +186,46 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class QuotaList(generics.ListAPIView):
+
+    queryset = Quota.objects
+
+    serializer_class = QuotaSerializer
+
+    def list(self, request, *args, **kwargs):
+
+        queryset = self.get_queryset()
+
+        if 'contract_id' in request.data:
+
+            queryset = queryset.filter(contract__id=request.data['contract_id'])
+
+        return Response(self.serializer_class(queryset, many=True).data)
+
+
+@api_view(['POST'])
+def create_quotas(request):
+    try:
+
+        contract = Contract.objects.get(pk=request.data['contract_id'])
+
+        quota_ids = request.data.getlist('ids[]')
+        resources = request.data.getlist('resources[]')
+        limits = request.data.getlist('limits[]')
+
+        for index, quota_id in enumerate(quota_ids):
+
+            resource, limit = resources[index], limits[index]
+
+            if quota_id and Quota.objects.filter(contract=contract, pk=quota_id, deleted=False).exists():
+                Quota.objects.filter(pk=quota_id).update(resource=resource, limit=limit)
+            else:
+                Quota.objects.create(resource=resource, limit=limit, contract=contract)
+
+        return Response({'success': True, "msg": _('Quotas have been created successfully!')},
+                        status=status.HTTP_201_CREATED)
+    except Exception as e:
+        LOG.error("Failed to create contract, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to create contract for unknown reason.')})

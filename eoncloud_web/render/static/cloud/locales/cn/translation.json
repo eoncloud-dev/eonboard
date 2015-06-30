@@ -303,6 +303,7 @@
     "update_contract_title": "修改合同",
     "select_user": "请选择用户",
     "select_udc": "请选择数据中心",
+    "manage_quota": "管理配额",
     "confirm_delete": "确认删除这些合同吗？"
   },
 

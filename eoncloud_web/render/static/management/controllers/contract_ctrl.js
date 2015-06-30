@@ -10,6 +10,7 @@ CloudApp.controller('ContractController',
     function ($rootScope, $scope, $filter, $timeout,
               $modal, $i18next, ngTableParams, Contract,
               CommonHttpService, ToastrService) {
+
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
@@ -137,6 +138,18 @@ CloudApp.controller('ContractController',
                 deleteContracts([contract.id]);
             });
         };
+
+        $scope.manage_quota = function(contract){
+            $modal.open({
+                templateUrl: 'manage-quota.html',
+                controller: 'ManageQuotaController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    contract: function(){return contract}
+                }
+            });
+        };
     })
     .controller('ContractCreateController',
         function($rootScope, $scope, $modalInstance, $i18next, contract_table,
@@ -144,6 +157,7 @@ CloudApp.controller('ContractController',
                  CommonHttpService, ToastrService, ResourceTool){
 
             var contract = $scope.contract = {};
+
 
             $scope.users = [];
 
@@ -267,4 +281,69 @@ CloudApp.controller('ContractController',
               }
             }
         }]
-    );
+    ).controller("ManageQuotaController", function(
+        $rootScope, $scope, $modalInstance, $i18next, contract, Quota,
+        CommonHttpService, ToastrService, ResourceTool){
+
+        $scope.contract = contract;
+
+        $scope.quota_options = [["instance", "Instance"], ["vcpu", "VCPU"]];
+
+        var quotas = $scope.quotas = Quota.query({contract_id: contract.id}, function(quotas){
+
+            $scope.quota_options = $scope.quota_options.filter(function(option){
+
+                for(var i = 0; i < quotas.length; i++){
+                    var quota = quotas[i];
+
+                    if(quota.resource == option[0]) {
+                        return false
+                    }
+                }
+
+                return true;
+            });
+        });
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+
+        $scope.add_quota = function(resource_type){
+
+            quotas.push({
+                resource: resource_type,
+                limit: 0
+            });
+
+            $scope.quota_options = $scope.quota_options.filter(function(option){
+                return option[0] != resource_type;
+            });
+        };
+
+        $scope.submit = function(){
+
+            var params = {
+                contract_id: contract.id,
+                ids: [],
+                resources: [],
+                limits: []
+            };
+
+            angular.forEach($scope.quotas, function(quota){
+                params.ids.push(quota.id);
+                params.resources.push(quota.resource);
+                params.limits.push(quota.limit);
+            });
+
+            CommonHttpService.post("/api/quotas/batch-create/", params).then(function(data){
+                if (data.success) {
+                    ToastrService.success(data.msg, $i18next("success"));
+                    contract_table.reload();
+                    $modalInstance.dismiss();
+                } else {
+                    ToastrService.error(data.msg, $i18next("op_failed"));
+                }
+            });
+        };
+    });

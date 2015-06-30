@@ -210,6 +210,11 @@ CloudApp.factory('Contract', ['$resource', function($resource){
     return $resource("/api/contracts/:id");
 }]);
 
+
+CloudApp.factory('Quota', ['$resource', function($resource){
+    return $resource("/api/quotas/:id") ;
+}]);
+
 /* Setup instance */
 CloudApp.factory('Instance', ['$resource', function ($resource) {
     return $resource("/api/instances/:id");

@@ -1,6 +1,3 @@
-<!-- BEGIN PAGE HEADER-->
-<!-- END PAGE HEADER-->
-<!-- BEGIN MAIN CONTENT ng-controller="ImageController"-->
 <div>
     <div class="col-md-12">
         <div class="portlet">
@@ -24,7 +21,7 @@
                     <table ng-table="contract_table"
                            class="table table-striped table-bordered table-advance table-hover">
                         <tbody>
-                            <tr ng-repeat="contract in $data">
+                            <tr data-ng-repeat="contract in $data">
                                 <td width="30" style="text-align: left" header="'checkbox-header.html'">
                                     <input type="checkbox" data-ng-model="contract.deleted"/>
                                 </td>
@@ -60,6 +57,12 @@
                                                     <i class="fa fa-hdd-o"></i>
                                                     {[{ 'contract.delete' | i18next }]} </a>
                                             </li>
+                                            <li>
+                                                <a href="javascript:void(0);"  ng-click="manage_quota(contract)">
+                                                    <i class="fa fa-hdd-o"></i>
+                                                    {[{ 'contract.manage_quota' | i18next }]} </a>
+                                            </li>
+                                        </ul>
                                         </ul>
                                     </div>
                                 </td>
@@ -72,9 +75,8 @@
     </div>
 </div>
 <!-- END MAIN CONTENT -->
-<!-- BEGIN MAIN JS & CSS -->
-<!-- BEGIN MAIN JS & CSS -->
 
+<!-- BEGIN TEMPLATE CREATE-->
 <script type="text/ng-template" id="create.html">
     <div class="modal-header">
        <div id="updateTitle" class="modal-title"> {[{ 'contract.create_contract_title' | i18next }]}</div>
@@ -136,8 +138,9 @@
         <a class="btn btn-primary" data-ng-click="submit(contract)"> {[{ 'submit' | i18next }]}</a>
     </div>
 </script>
+<!-- END TEMPLATE CREATE-->
 
-
+<!-- BEGIN TEMPLATE UPDATE -->
 <script type="text/ng-template" id="update.html">
     <div class="modal-header">
        <div id="updateTitle" class="modal-title"> {[{ 'contract.update_contract_title' | i18next }]}</div>
@@ -195,7 +198,60 @@
         <a class="btn btn-primary" data-ng-click="submit(contract)"> {[{ 'submit' | i18next }]}</a>
     </div>
 </script>
+<!-- END TEMPLATE UPDATE -->
 
+<!-- BEGIN TEMPLATE CHECKBOX-HEADER -->
 <script type="text/ng-template" id="checkbox-header.html">
     <input type="checkbox"  data-ng-model="checkAllFlag" data-ng-change="toggleAll()"/>
 </script>
+<!-- END TEMPLATE CHECKBOX-HEADER -->
+
+
+<!-- BEGIN TEMPLATE MANAGE-QUOTA -->
+<script type="text/ng-template" id="manage-quota.html">
+    <div class="modal-header">
+       <div id="updateTitle" class="modal-title"> {[{ 'contract.manage_quota' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="quotaForm" role="form" class="form-horizontal form-bordered">
+            <input type="hidden"  name="id" data-ng-model="contract.id">
+            <div class="form-group" data-ng-show="quota_options.length > 0">
+                <div class="col-md-3">
+                    <div class="btn-group pull-right">
+                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                type="button" aria-expanded="false">
+                                添加配额<i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li ng-repeat="option in quota_options">
+                                <a href="javascript:void(0);" ng-click="add_quota(option[0])">
+                                    <i class="fa fa-hdd-o"></i>
+                                    {[{ option[1] }]}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" data-ng-repeat="quota in quotas">
+                <label class="col-md-3 control-label" for="name">{[{ quota.resource }]} </label>
+                <div class="col-md-5">
+                    <input type="hidden" name="id[]" ng-model="quota.id"/>
+                    <input type="hidden" name="resource[]" ng-model="quota.resource"/>
+                    <input name="limit[]" type="text" maxlength="20"
+                       data-ng-model="quota.limit" class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="submit()"> {[{ 'submit' | i18next }]}</a>
+    </div>
+</script>
+<!-- END TEMPLATE MANAGE-QUOTA -->
+
+<!-- END TEMPLATE -->

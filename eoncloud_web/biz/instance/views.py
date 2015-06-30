@@ -1,20 +1,24 @@
 #coding=utf-8
 
+import logging
+
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from biz.idc.models import UserDataCenter as UDC
+from django.utils.translation import ugettext_lazy as _
+
 from biz.instance.models import Instance, Flavor
 from biz.instance.serializer import InstanceSerializer, FlavorSerializer
 from biz.instance.utils import instance_action
-from biz.instance.settings import INSTANCE_STATES_DICT, \
-                INSTANCE_STATE_RUNNING
+from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING
 from biz.account.utils import check_quota
 from biz.account.models import Operation
 
 from cloud.instance_task import instance_create_task
+
+LOG = logging.getLogger(__name__)
 
 
 class InstanceList(generics.ListCreateAPIView):
@@ -41,6 +45,54 @@ class FlavorList(generics.ListCreateAPIView):
 class FlavorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Flavor.objects.all()
     serializer_class = FlavorSerializer
+
+
+@api_view(["POST"])
+def create_flavor(request):
+    try:
+        serializer = FlavorSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': True, "msg": _('Flavor is created successfully!')},
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response({"success": False, "msg": _('Flavor data is not valid!'),
+                             'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        LOG.error("Failed to create flavor, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to create flavor for unknown reason.')})
+
+
+@api_view(["POST"])
+def update_flavor(request):
+    try:
+
+        flavor = Flavor.objects.get(pk=request.data['id'])
+
+        serializer = FlavorSerializer(instance=flavor, data=request.data, context={"request": request})
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': True, "msg": _('Flavor is updated successfully!')},
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response({"success": False, "msg": _('Flavor data is not valid!'),
+                             'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        LOG.error("Failed to create flavor, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to update flavor for unknown reason.')})
+
+
+@api_view(["POST"])
+def delete_flavors(request):
+
+    ids = request.data.getlist('ids[]')
+
+    Flavor.objects.filter(pk__in=ids).delete()
+
+    return Response({'success': True, "msg": _('Flavors have been deleted!')}, status=status.HTTP_201_CREATED)
 
 
 @check_quota(["instance", "vcpu", "memory"])

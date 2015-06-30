@@ -140,7 +140,8 @@ CloudApp.controller('ContractController',
     })
     .controller('ContractCreateController',
         function($rootScope, $scope, $modalInstance, $i18next, contract_table,
-                 User, Contract, UserDataCenter, CommonHttpService, ToastrService){
+                 User, Contract, UserDataCenter, ContractForm,
+                 CommonHttpService, ToastrService, ResourceTool){
 
             var contract = $scope.contract = {};
 
@@ -149,10 +150,7 @@ CloudApp.controller('ContractController',
             $scope.udcList = [];
 
             $modalInstance.opened.then(function() {
-                setTimeout(function(){
-                    ComponentsPickers.init();
-                    FormWizard.init();
-                }, 0)
+                setTimeout(ContractForm.init, 0)
             });
 
             $scope.cancel = function () {
@@ -175,7 +173,7 @@ CloudApp.controller('ContractController',
                     return;
                 }
 
-                contract = angular.copy(contract);
+                contract = ResourceTool.copy_only_data(contract);
 
                 contract.start_date += " 00:00:00";
                 contract.end_date += " 23:59:00";
@@ -191,9 +189,11 @@ CloudApp.controller('ContractController',
                 });
             };
         }
-).controller('ContractUpdateController',
-        function($rootScope, $scope, $modalInstance, $i18next, contract, contract_table,
-                 User, Contract, UserDataCenter, CommonHttpService, ToastrService){
+    ).controller('ContractUpdateController',
+        function($rootScope, $scope, $modalInstance, $i18next,
+                 contract, contract_table,
+                 User, Contract, UserDataCenter, ContractForm,
+                 CommonHttpService, ToastrService, ResourceTool){
 
             $scope.contract = contract = angular.copy(contract);
 
@@ -202,10 +202,7 @@ CloudApp.controller('ContractController',
             $scope.udc = {};
 
             $modalInstance.opened.then(function() {
-                setTimeout(function(){
-                    ComponentsPickers.init();
-                    FormWizard.init();
-                }, 0)
+                setTimeout(ContractForm.init, 0)
             });
 
             $scope.cancel = function () {
@@ -226,7 +223,7 @@ CloudApp.controller('ContractController',
                     return;
                 }
 
-                contract = angular.copy(contract);
+                contract = ResourceTool.copy_only_data(contract);
 
                 contract.start_date += " 00:00:00";
                 contract.end_date += " 23:59:00";
@@ -242,4 +239,32 @@ CloudApp.controller('ContractController',
                 });
             };
         }
-);
+    ).factory('ContractForm', ['ValidationTool', function (ValidationTool) {
+        return {
+            init: function(){
+
+                var config = {
+                    rules: {
+                        name: {
+                            minlength: 6,
+                            maxlength: 128,
+                            required: true
+                        },
+                        customer: {
+                            minlength: 2,
+                            maxlength: 128,
+                            required: true
+                        },
+                        user: 'required',
+                        udc: 'required',
+                        start_date: 'required',
+                        end_date: 'required'
+                    }
+                };
+
+                ValidationTool.init('#contractForm', config);
+                ComponentsPickers.init();
+              }
+            }
+        }]
+    );

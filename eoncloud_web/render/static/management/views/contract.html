@@ -34,11 +34,14 @@
                                 <td data-title="'contract.customer' | i18next">
                                     <span> {[{ contract.name }]} </span>
                                 </td>
-                                <td data-title="'contract.start_date' | i18next">
-                                    <span> {[{ contract.start_date }]} </span>
+                                <td data-title="'contract.user' | i18next">
+                                    <span> {[{ contract.username }]} </span>
                                 </td>
-                                <td data-title="'contract.end_date' | i18next">
-                                    <span> {[{ contract.end_date }]} </span>
+                                <td data-title="'udc.tenant' | i18next">
+                                    <span> {[{ contract.tenant_name }]} </span>
+                                </td>
+                                <td data-title="'contract.date_range' | i18next">
+                                    <span> {[{ contract.start_date }]} ~ {[{ contract.end_date }]} </span>
                                 </td>
                                 <td data-title="'actions' | i18next">
                                     <div class="btn-group">
@@ -119,7 +122,7 @@
                         <input id="start_date" name="start_date" type="text" class="form-control" readonly
                                data-ng-model="contract.start_date">
                         <span class="input-group-addon"> ~ </span>
-                        <input type="text" class="form-control" readonly name="end_date" data-ng-model="contract.end_date">
+                        <input type="text" id="end_date" name="end_date" class="form-control" readonly data-ng-model="contract.end_date">
                     </div>
                 </div>
             </div>
@@ -177,7 +180,8 @@
                         <input id="start_date" name="start_date" type="text" class="form-control" readonly
                                data-ng-model="contract.start_date">
                         <span class="input-group-addon"> ~ </span>
-                        <input type="text" class="form-control" readonly name="end_date" data-ng-model="contract.end_date">
+                        <input type="text" name="end_date" class="form-control"
+                               readonly data-ng-model="contract.end_date">
                     </div>
                 </div>
             </div>

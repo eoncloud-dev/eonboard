@@ -12,6 +12,9 @@ class ContractSerializer(serializers.ModelSerializer):
     start_date = serializers.DateTimeField(format="%Y-%m-%d", required=False, allow_null=True)
     end_date = serializers.DateTimeField(format="%Y-%m-%d", required=False, allow_null=True)
 
+    username = serializers.ReadOnlyField(source="user.username")
+    tenant_name = serializers.ReadOnlyField(source="udc.tenant_name")
+
     class Meta:
         model = Contract
 

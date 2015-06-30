@@ -23,6 +23,9 @@ urlpatterns = [
         url(r'^instances/search/$', instance_view.instance_search_view),
         url(r'^instances/(?P<pk>[0-9]+)/action/$', instance_view.instance_action_view),
         url(r'^flavors/$', instance_view.FlavorList.as_view()),
+        url(r'^flavors/create/$', instance_view.create_flavor),
+        url(r'^flavors/update/$', instance_view.update_flavor),
+        url(r'^flavors/batch-delete/$', instance_view.delete_flavors),
         url(r'^flavors/(?P<pk>[0-9]+)/$', instance_view.FlavorDetail.as_view()),
     ]
 

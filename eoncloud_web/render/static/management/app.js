@@ -111,6 +111,24 @@ CloudApp.factory("CommonHttpService", function($http, $q){
     };
 });
 
+CloudApp.factory('ResourceTool', function(){
+  return {
+    'copy_only_data': function(data){
+
+      var result = {};
+
+      for(var attr in data){
+        if(attr.startsWith('$') || attr == 'toJSON'){
+          continue;
+        }
+        result[attr] = data[attr];
+      }
+
+      return result;
+    }
+  }
+});
+
 CloudApp.factory('ToastrService', function () {
     toastr.options = {
         "closeButton": true,
@@ -147,6 +165,38 @@ CloudApp.factory("BoxService", function(){
             });
         }
     };
+});
+
+CloudApp.factory('ValidationTool', function(){
+
+    var defaultConfig = {
+        doNotHideMessage: true,
+        errorElement: 'span',
+        errorClass: 'help-block',
+        focusInvalid: false,
+        errorPlacement: function (error, element) {
+            error.insertAfter(element);
+        },
+
+        highlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+        }
+    };
+
+    return {
+        init: function(selector, config){
+            for(var attr in defaultConfig){
+                if(config[attr] === undefined){
+                    config[attr] = defaultConfig[attr];
+                }
+            }
+            $(selector).validate(config);
+        }
+    }
 });
 
 
@@ -293,15 +343,14 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
                                 '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
                                 '/static/assets/admin/layout/scripts/components-pickers.js',
-                                '/static/management/controllers/contract_ctrl.js',
-                                '/static/management/scripts/create_contract.js',
+                                '/static/management/controllers/contract_ctrl.js'
                             ]
                         });
                     }]
                 }
             })
 
-            // user data center
+            // data center
             .state("data_center", {
                 url: "/data-center/",
                 templateUrl: template('data_center'),
@@ -313,8 +362,26 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/management/controllers/data_center_ctrl.js',
-                                '/static/management/scripts/data_center_validation.js'
+                                '/static/management/controllers/data_center_ctrl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+
+            // data center
+            .state("flavor", {
+                url: "/flavor/",
+                templateUrl: template('flavor'),
+                data: {pageTitle: "Flavor"},
+                controller: "FlavorController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/management/controllers/flavor_ctrl.js'
                             ]
                         });
                     }]

@@ -99,6 +99,16 @@
     "vnc_prompt": "如果VNC终端没有响应，请点击下方灰色的状态栏然后点击键盘。"
   },
 
+  "flavor": {
+    "name": "名称",
+    "cpu": "CPU",
+    "memory": "内存(MB)",
+    "price": "价格",
+    "create_date": "生成日期",
+    "title_create": "创建新规格",
+    "confirm_delete": "确认要删除这些规格吗?"
+  },
+
   "volume": {
     "name": "名称",
     "size": "容量(GB)",

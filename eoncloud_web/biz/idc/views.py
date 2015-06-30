@@ -87,8 +87,7 @@ def update_data_center(request):
         host = request.data['host']
 
         if DataCenter.objects.filter(host=host).exclude(pk=pk).exists():
-            return Response({"success": False,
-                             "msg": _('该地址已被其他数据中心使用')},
+            return Response({"success": False, "msg": _('This host has been used by other data center.')},
                             status=status.HTTP_400_BAD_REQUEST)
 
         data_center = DataCenter.objects.get(pk=pk)
@@ -117,6 +116,5 @@ def delete_data_centers(request):
         return Response({'success': True, "msg": _('Data centers have been deleted!')}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        print e
         LOG.error("Failed to delete data centers, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to delete data centers for unknown reason.')})

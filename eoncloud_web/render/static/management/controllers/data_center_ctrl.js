@@ -98,7 +98,7 @@ CloudApp.controller('DataCenterController',
 
         $scope.batch_delete = function(){
 
-            bootbox.confirm($i18next("contract.confirm_delete"), function (confirmed) {
+            bootbox.confirm($i18next("data_center.confirm_delete"), function (confirmed) {
 
                 if(!confirmed){
                     return;
@@ -129,18 +129,15 @@ CloudApp.controller('DataCenterController',
             });
         };
     })
-
     .controller('DataCenterCreateController',
         function($rootScope, $scope, $modalInstance,
-                 data_center_table, data_center,
+                 data_center_table, data_center, DataCenterForm,
                  $i18next, CommonHttpService, ToastrService){
 
             $scope.data_center = data_center;
 
             $modalInstance.opened.then(function() {
-                setTimeout(function(){
-                    FormWizard.init();
-                }, 0)
+                setTimeout(DataCenterForm.init, 0)
             });
 
             $scope.cancel = function () {
@@ -174,4 +171,54 @@ CloudApp.controller('DataCenterController',
                 });
             };
         }
+    ).factory('DataCenterForm', ['ValidationTool', function(ValidationTool) {
+        return {
+            init: function(){
+
+                jQuery.validator.addMethod('ip', function(value, element){
+                    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value);
+                }, '请输入正确的IP地址');
+
+                var config = {
+                    rules: {
+                        name: {
+                            minlength: 2,
+                            maxlength: 128,
+                            required: true
+                        },
+                        host: {
+                            required: true,
+                            ip: true
+                        },
+                        project: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 128
+                        },
+                        user: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 128
+                        },
+                        password: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 50
+                        },
+                        auth_url: {
+                            required: true,
+                            url: true
+                        },
+                        ext_net: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 128
+                        }
+                    }};
+
+                console.log('validation tool');
+                ValidationTool.init('#dataCenterForm', config);
+              }
+            }
+        }]
     );

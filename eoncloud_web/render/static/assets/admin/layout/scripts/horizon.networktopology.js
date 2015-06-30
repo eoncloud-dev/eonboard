@@ -238,6 +238,7 @@ horizon.network_topology = {
       return d.name;
     });
 
+    var svg_height = 760;
 
     svg.attr('width',network_num * element_properties.network_width);
     $('#topoTop').css('width',network_num * element_properties.network_width);
@@ -264,6 +265,31 @@ horizon.network_topology = {
       return -50;
     });
 
+    network.select(".network-rect").attr('height',function(d){
+        if(d.devices.length>5){
+          if(svg_height +(d.devices.length-4)*80 >=svg_height){
+            svg_height = svg_height +(d.devices.length-4)*80;
+          }
+            return 500 + (d.devices.length-4)*80;
+        }else{
+          return 500;
+        }
+    });
+    network.select(".network_container_normal .pointsBottom").attr('transform',function(d){
+      if(d.devices.length>5){
+        return 'translate(0,' +(100 + (d.devices.length-4)*80)+')';
+      }else{
+        return 'translate(0,100)';
+      }
+    });
+    network.select(".network_container_normal .network-cidr").attr('x',function(d){
+      if(d.devices.length>5){
+        return 495 + (d.devices.length-4)*80;
+      }else{
+        return 495;
+      }
+    });
+    svg.attr('height',svg_height);
     //¥¶¿Ìnetwork node
     router.select('.network_container_normal .network-line').attr('y2',function(d){
       if(d.id==0){
@@ -279,7 +305,7 @@ horizon.network_topology = {
     });
     device.attr('id',function(d){return 'device_'+ d.id});
     device.attr('transform',function(d,i){
-      return 'translate(' + element_properties.device_x + ',' + 100  + ')';
+      return 'translate(' + element_properties.device_x  + ',' + 80 * (i+1)  + ')';
     });
 
     device.select(".texts .name").text(function(d){

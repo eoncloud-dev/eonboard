@@ -350,7 +350,7 @@ CloudApp.directive("slider", [function () {
             $(el).find("#slider-range-max").slider({
                 isRTL: false,
                 range: "max",
-                min: 5,
+                min: 10,
                 step: 10,
                 max: 1000,
                 value: 1,

@@ -234,15 +234,14 @@ CloudApp.controller('NetworkCreateController',
 CloudApp.controller('NetworkAttachController',
     function($rootScope, $scope, $filter, $modalInstance,network_table,CommonHttpService,ToastrService,$i18next) {
         $scope.has_error = false;
+        $scope.address_error=false;
         $scope.router_selected = false;
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
         $scope.$watch('cidr.three',function(value){
             var reg = /^(^[0-9]$)|(^[1-9]\d$)|(^1\d{2}$)|(^2[0-4]\d$)|(^25[0-5]$)$/g
-            if($.trim($scope.cidr.three)==''){
-                $scope.cidr.three = 0;
-            }
+
             $scope.cidr.three = $scope.cidr.three.replace(/[^\d]/g,'');
             if($scope.cidr.three!=''){
                 if($scope.cidr.three.match(reg)==null){
@@ -253,6 +252,10 @@ CloudApp.controller('NetworkAttachController',
 
 
         $scope.submit_click = function(router_selected,action){
+            if($.trim($scope.cidr.three)==''){
+                $scope.address_error = true;
+                return false;
+            }
             var address = $scope.cidr.first+"."+$scope.cidr.two+"."+$scope.cidr.three+"."+$scope.cidr.four+"/24";
             if(!router_selected){
                 $scope.has_error = true;

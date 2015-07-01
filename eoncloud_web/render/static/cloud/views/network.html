@@ -133,7 +133,7 @@
     <div class="modal-body">
         <form  role="form" class="form-horizontal form-bordered">
             <!-- <div class="me">总价格:¥0.05每小时 × 1 =  ¥0.05每小时 (合¥36.00每月)</div> -->
-            <div class="form-group" ng-class="{'has-error': has_error}">
+            <div class="form-group" ng-class="{'has-error': has_error && !router_selected}">
                 <!-- <input type="hidden"  maxlength="20" name="id" ng-model="network_create.id">-->
                 <label class="col-md-3 control-label" for="title">路由器</label>
                 <div class="col-md-8">
@@ -142,17 +142,17 @@
                             <option value="" selected>请选择</option>
                         </select>
                     </div>
-                    <span ng-if="has_error" id="name-error" class="help-block help-block-error">
+                    <span ng-if="has_error && !router_selected" id="name-error" class="help-block help-block-error">
                                {[{ 'network.select_router' | i18next }]}
                             </span>
 
                 </div>
             </div>
-            <div class="form-group" ng-class="{'has-error': has_error}">
+            <div class="form-group" ng-class="{'has-error': address_error && cidr.three ==''}">
                 <!-- <input type="hidden"  maxlength="20" name="id" ng-model="network_create.id">-->
                 <label class="col-md-3 control-label" for="title">网络地址</label>
                 <div class="col-md-8">
-                    <div class="">
+                    <div class="input-group">
                         <div class="address" style="display: flex;">
                             <input class="disabled form-control first" style="width:60px;" type="text" ng-model="cidr.first" value="192" disabled="">
                             <span class="dot " style="margin-left: 5px;margin-right: 5px;">.</span>
@@ -164,7 +164,11 @@
                             <span class="ip" style="line-height: 32px;">/<span class="five">24</span></span>
                         </div>
                     </div>
+                    <span ng-if="address_error && cidr.three ==''" id="name-error" class="help-block help-block-error">
+                               {[{ 'network.address_error' | i18next }]}
+                            </span>
                 </div>
+
             </div>
         </form>
         <div class="clear"></div>

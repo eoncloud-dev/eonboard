@@ -154,6 +154,7 @@
     "confirm_detach": "确认断开路由器连接",
     "name_prompt": "请填写私有网络名称",
     "select_router": "请选择路由器",
+    "address_error":"请正确填写网络地址",
     "edit": "修改",
     "operation": "操作",
     "delete": "删除",

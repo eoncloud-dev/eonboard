@@ -76,7 +76,7 @@ def volume_create_task(volume, **kwargs):
         elif st == "CREATING":
             pass
         count += 1
-        if count > settings.MAX_COUNT_SYNC:
+        if count > settings.MAX_COUNT_SYNC * 2:
             break
 
 

@@ -10,10 +10,10 @@
         </div>
         <!-- BEGIN INSTANCE  -->
         <div class="portlet box">
-            <div class="portlet-body">
+            <div class="portlet-body" style="margin: 0 auto;">
 
-                <div id="" class="" style="">
-                    <div id="topologyCanvasContainer" style="padding:10px 14px;overflow-x:auto;">
+                <div id="network_topology" class="" style="width: {[{svg_width}]}px;margin: 0 auto;">
+                    <div id="topologyCanvasContainer" style="padding:10px 14px;">
                         <div id="topoTop" style="width: {[{svg_width}]}px;">
                             <div class="internetCloud">
 
@@ -23,7 +23,7 @@
                         </div>
                         <style type="text/css">
                             svg.routerSvg .router_small .frame{
-                                fill: #218ccc;
+                                fill: #1caf9a;
                                 stroke: #fff;
                                 stroke-width: 3;
                             }
@@ -153,21 +153,21 @@
                         </svg>
                         <svg id="topology_tml" display="none">
                             <g class="router_container_normal">
-                                <line x1="60" y1="0" x2="60" y2="0" stroke="#218ccc" stroke-width="3" class="router-line"></line>
+                                <line x1="60" y1="0" x2="60" y2="0" stroke="#1caf9a" stroke-width="3" class="router-line"></line>
                                 <text x="0" y="-65" class="router-gateway" transform="rotate(90 0 0)">qqqqqqqqqq</text>
-                                <rect rx="20" ry="20" width="124" height="100" style="fill: rgb(31, 119, 180);" class="router-rect">
+                                <rect rx="20" ry="20" width="124" height="100" style="fill: rgb(28, 175, 154);" class="router-rect">
                                 </rect>
                                 <image x="35" y="5" width="55" xlink:href="/static/assets/admin/layout/img/router.png"
                                        height="55" preserveAspectRatio="none"/>
                                 <text x="35" y="80" class="router-text">router-20</text>
                             </g>
                             <g class="router_line_normal">
-                                <line x1="230" y1="100" x2="230" y2="120" stroke="#218ccc" stroke-width="3" class="router-line router-line-h"></line>
-                                <line x1="0" y1="120" x2="460" y2="120" stroke="#218ccc" stroke-width="3" class="router-line router-line-v"></line>
+                                <line x1="230" y1="100" x2="230" y2="120" stroke="#1caf9a" stroke-width="3" class="router-line router-line-h"></line>
+                                <line x1="0" y1="120" x2="460" y2="120" stroke="#1caf9a" stroke-width="3" class="router-line router-line-v"></line>
                             </g>
                             <g class="network_container_normal">
-                                <line x1="10" y1="0" x2="10" y2="-50" stroke="#218ccc" stroke-width="3" class="network-line"></line>
-                                <rect rx="0" ry="0" width="20" height="500" style="fill: rgb(31, 119, 180);" class="network-rect"></rect>
+                                <line x1="10" y1="0" x2="10" y2="-50" stroke="#96AEBE" stroke-width="3" class="network-line"></line>
+                                <rect rx="0" ry="0" width="20" height="500" style="fill: rgb(150,174,190);" class="network-rect"></rect>
                                 <g class="pointsTop">
                                     <rect x="4" y="10" fill="#fff" width="4" height="4"></rect>
                                     <rect x="4" y="20" fill="#fff" width="4" height="4"></rect>
@@ -217,10 +217,10 @@
                                 <text x="250" y="-4" class="network-name" transform="rotate(90 0 0)" pointer-events="none">vnet0</text>
                                 <text x="495" y="-20" class="network-cidr" transform="rotate(90 0 0)">10.1.1.0/24</text>
                             </g>
-                            <g class="instance_normal device_body">
+                            <g class="instance_normal device_body" >
                                 <g class="ports" pointer-events="none" transform="translate(0,25)">
                                     <g class="port"  >
-                                        <line class="port_line" stroke-width="6" stroke="#1f77b4" x1="0" y1="0" y2="0" x2="-82"></line>
+                                        <line class="port_line" stroke-width="6" stroke="#96AEBE" x1="0" y1="0" y2="0" x2="-82"></line>
                                         <text class="port_text left" x="-6" y="-4">10.1.1.9</text>
                                     </g>
                                 </g>

@@ -112,7 +112,9 @@ def network_attach_router_view(request, **kwargs):
                                            user=network.user,
                                            user_data_center=network.user_data_center)
             router_interface = RouterInterface.objects.create(network_id=network_id, router=router,
-                                                              subnet=subnet, deleted=False)
+                                                              subnet=subnet, deleted=False,
+                                                              user=network.user,
+                                                              user_data_center=network.user_data_center)
             '''
             update router status to updating
             '''

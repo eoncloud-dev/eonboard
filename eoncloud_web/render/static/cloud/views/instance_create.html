@@ -107,7 +107,9 @@
 
                                         <div class="col-md-6">
                                             <input type="text" class="form-control" name="name"
-                                                   ng-model="instance_config.name" value=""/>
+                                                   ng-model="instance_config.name" value=""
+                                                   onpaste="return false;" ondragenter="return false;"
+                                                   oncontextmenu="return false;" style="ime-mode:disabled" />
                                                         <span class="help-block">
                                                         {[{ 'instance.name_prompt' | i18next }]} </span>
                                         </div>

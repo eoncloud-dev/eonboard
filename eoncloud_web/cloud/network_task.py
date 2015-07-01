@@ -4,6 +4,8 @@ import datetime
 import logging
 import time
 
+from django.conf import settings
+
 from celery import app
 from cloud_utils import create_rc_by_network,\
                         create_rc_by_subnet, create_rc_by_router,\
@@ -16,7 +18,6 @@ from biz.floating.settings import FLOATING_AVAILABLE, FLOATING_RELEASED, \
 from biz.network.settings import NETWORK_STATE_ACTIVE,\
     NETWORK_STATE_ERROR, NETWORK_STATE_UPDATING
 from biz.instance.models import Instance
-from biz.floating.models import Floating
 
 from api import neutron
 from api import network
@@ -43,13 +44,13 @@ def create_default_private_network(instance):
     if len(network) > 0:
         return network[0]
 
-    network = Network.objects.create(name="default",
+    network = Network.objects.create(name=settings.DEFAULT_NETWORK_NAME,
                         status=0,
                         is_default=True,
                         user=instance.user,
                         user_data_center=instance.user_data_center)
 
-    subnet = Subnet.objects.create(name="subnet-00",
+    subnet = Subnet.objects.create(name=settings.DEFAULT_SUBNET_NAME,
                             network=network,
                             address="172.30.0.0/24",
                             ip_version=4,
@@ -58,15 +59,19 @@ def create_default_private_network(instance):
                             user_data_center=instance.user_data_center)
 
   
-    router = Router.objects.create(name="router-00",
+    router = Router.objects.create(name=settings.DEFAULT_ROUTER_NAME,
                                 status=0,
                                 is_default=True,
+                                is_gateway=True,
                                 user=instance.user,
                                 user_data_center=instance.user_data_center)
 
     router_interface = RouterInterface.objects.create(network_id=network.id,
                                                       router=router,
-                                                      subnet=subnet, deleted=False)
+                                                      subnet=subnet,
+                                                      user=instance.user,
+                                                      user_data_center=instance.user_data_center,
+                                                      deleted=False)
     nt = network_create_task(network)
     sub = subnet_create_task(subnet) 
     rt = router_create_task(router)
@@ -426,8 +431,8 @@ def edit_default_security_group(user, udc):
         LOG.error("default security group not found.instance:[%s], project:[%s]" \
                  % (instance.id, instance.user_data_center.tenant_name))
         return
-    firewall = Firewall.objects.create(name="default",
-                        desc="default security group",
+    firewall = Firewall.objects.create(name=settings.DEFAULT_FIREWALL_NAME,
+                        desc=settings.DEFAULT_FIREWALL_NAME,
                         is_default=True,
                         firewall_id=default_sec_group.id,
                         user=user,

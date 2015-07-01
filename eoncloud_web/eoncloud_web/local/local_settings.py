@@ -49,3 +49,9 @@ QUOTA_ITEMS = {
     "volume": 0,
     "volume_size": 0,
 }
+
+DEFAULT_NETWORK_NAME = u"默认网络"
+DEFAULT_SUBNET_NAME = u"默认子网"
+DEFAULT_ROUTER_NAME = u"默认路由"
+DEFAULT_FIREWALL_NAME = u"默认防火墙"
+OS_NAME_PREFIX = u"eon"

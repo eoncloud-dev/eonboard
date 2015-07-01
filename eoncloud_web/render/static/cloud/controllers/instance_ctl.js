@@ -341,14 +341,14 @@ CloudApp.controller('InstanceFloatingController',
         $scope.floating_ips = [];
         if (type == "bind") {
             for (var i = 0; i < floating_ips.length; i++) {
-                if (floating_ips[0].status == 10) {
+                if (floating_ips[i].status == 10 && floating_ips[i].instance == null) {
                     $scope.floating_ips.push(floating_ips[i]);
                 }
             }
         }
         else {
             for (var i = 0; i < floating_ips.length; i++) {
-                if (floating_ips[0].status == 20 && floating_ips[i].instance == instance.id) {
+                if (floating_ips[i].status == 20 && floating_ips[i].instance == instance.id) {
                     $scope.floating_ips.push(floating_ips[i]);
                 }
             }

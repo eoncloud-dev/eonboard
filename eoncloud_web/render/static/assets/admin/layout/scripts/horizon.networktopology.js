@@ -196,7 +196,6 @@ horizon.network_topology = {
     router
         .attr('id',function(d){return 'router_'+ d.id;})
         .attr('transform',function(d,i){
-        console.log(network_num)
           var width =0;
           width =network_num * element_properties.network_width +(i)*10
           network_num  = network_num+(d.networks.length >0 ?d.networks.length:1)
@@ -208,19 +207,25 @@ horizon.network_topology = {
       return 'translate(' + width + ',' + 0 + ')';
     });
     router.select('.router_line_normal .router-line-h').attr('x1',function(d){
-      var network_length = d.networks.length >0 ?d.networks.length:1
-      var width = network_length * element_properties.network_width/2
+      var network_length = d.networks.length >0 ?d.networks.length:1;
+      var width = network_length * element_properties.network_width/2;
       return width;
     }).attr('x2',function(d){
-      var network_length = d.networks.length >0 ?d.networks.length:1
-      var width = network_length * element_properties.network_width/2
+      var network_length = d.networks.length >0 ?d.networks.length:1;
+      var width = network_length * element_properties.network_width/2;
       return width;
     });
+    router.select('.router_line_normal .router-line-h').attr('y2',function(d){
+      var height = d.networks.length >0 ?120:100;
+      return height;
+    });
+
     router.select('.router_line_normal .router-line-v').attr('x2',function(d){
-      var network_length = d.networks.length >0 ?d.networks.length:1
-      var width = network_length * element_properties.network_width
+      var network_length = d.networks.length >0 ?d.networks.length:0;
+      var width = network_length * element_properties.network_width;
       return width;
     });
+
     router.select('.router_container_normal .router-line').attr('y2',function(d){
       if(d.is_gateway){
         return -90;
@@ -233,9 +238,11 @@ horizon.network_topology = {
       return d.name;
     });
 
+    var svg_height = 760;
 
     svg.attr('width',network_num * element_properties.network_width);
     $('#topoTop').css('width',network_num * element_properties.network_width);
+    $('#network_topology').css('width',network_num * element_properties.network_width);
     //Ω‚ŒˆÕ¯¬Á
     var network = router.selectAll('g.network').data(function(d){
      return d.networks
@@ -250,11 +257,47 @@ horizon.network_topology = {
         });
     network.select(".network-name").text(function(d){
       return d.name;
-    })
+    });
     network.select(".network-cidr").text(function(d){
-      console.log(d)
       return d.address;
-    })
+    });
+    network.select("#router.network-line").attr('y2',function(d){
+      return -50;
+    });
+
+    network.select(".network-rect").attr('height',function(d){
+        if(d.devices.length>5){
+          if(svg_height +(d.devices.length-4)*80 >=svg_height){
+            svg_height = svg_height +(d.devices.length-4)*80;
+          }
+            return 500 + (d.devices.length-4)*80;
+        }else{
+          return 500;
+        }
+    });
+    network.select(".network_container_normal .pointsBottom").attr('transform',function(d){
+      if(d.devices.length>5){
+        return 'translate(0,' +(100 + (d.devices.length-4)*80)+')';
+      }else{
+        return 'translate(0,100)';
+      }
+    });
+    network.select(".network_container_normal .network-cidr").attr('x',function(d){
+      if(d.devices.length>5){
+        return 495 + (d.devices.length-4)*80;
+      }else{
+        return 495;
+      }
+    });
+    svg.attr('height',svg_height);
+    //¥¶¿Ìnetwork node
+    router.select('.network_container_normal .network-line').attr('y2',function(d){
+      if(d.id==0){
+        return 0;
+      }else{
+        return -50;
+      }
+    });
 
     var device = network.selectAll('g.device').data(function(d){return d.devices});
     var device_enter = device.enter().append('g').attr('class','device').each(function(d,i){
@@ -262,7 +305,7 @@ horizon.network_topology = {
     });
     device.attr('id',function(d){return 'device_'+ d.id});
     device.attr('transform',function(d,i){
-      return 'translate(' + element_properties.device_x + ',' + 100  + ')';
+      return 'translate(' + element_properties.device_x  + ',' + 80 * (i+1)  + ')';
     });
 
     device.select(".texts .name").text(function(d){

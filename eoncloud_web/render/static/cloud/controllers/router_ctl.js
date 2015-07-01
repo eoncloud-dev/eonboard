@@ -166,6 +166,7 @@ CloudApp.controller('RouterCreateController',
         $scope.submit_click = function(router){
             if(typeof(router.name) =='undefined' || router.name==''){
                 $scope.has_error=true;
+                return ;
             }
             var post_data = {
                 "id":router.id,

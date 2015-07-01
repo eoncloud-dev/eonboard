@@ -30,7 +30,8 @@ urlpatterns = [
 urlpatterns += patterns('',
     url(r'^$', views.login, name="index"),
     url(r'^cloud/$', views.cloud, name="cloud"),
-    
+    url(r'^management/$', views.management, name="management"),
+
     # account
     url(r'^login/$', views.login, name='login'),
     url(r'^signup/$', 'biz.account.views.signup', name='signup'),

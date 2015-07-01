@@ -31,5 +31,8 @@ class InstanceSerializer(serializers.ModelSerializer):
 
 
 class FlavorSerializer(serializers.ModelSerializer):
+
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True, read_only=True)
+
     class Meta:
         model = Flavor

@@ -99,6 +99,16 @@
     "vnc_prompt": "如果VNC终端没有响应，请点击下方灰色的状态栏然后点击键盘。"
   },
 
+  "flavor": {
+    "name": "名称",
+    "cpu": "CPU",
+    "memory": "内存(MB)",
+    "price": "价格",
+    "create_date": "生成日期",
+    "title_create": "创建新规格",
+    "confirm_delete": "确认要删除这些规格吗?"
+  },
+
   "volume": {
     "name": "名称",
     "size": "容量(GB)",
@@ -248,7 +258,11 @@
     "topology":"网络拓扑",
     "op_log": "操作日志",
     "monitor": "监控报警",
-    "support": "工单支持"
+    "support": "工单支持",
+    "contract": "合同",
+    "data_center": "数据中心",
+    "quota": "配额",
+    "flavor": "规格"
   },
 
   "overview": {
@@ -277,7 +291,23 @@
     "customer": "客户名称",
     "start_date": "合同开始日期",
     "end_date": "合同结束日期",
-    "legal_person": "法人"
+    "legal_person": "法人",
+    "user": "用户",
+    "user_data_center": "用户数据中心",
+    "date_range": "合同有效期",
+    "create": "创建",
+    "edit": "编辑",
+    "view": "查看",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "create_contract_title": "创建合同",
+    "update_contract_title": "修改合同",
+    "select_user": "请选择用户",
+    "select_udc": "请选择数据中心",
+    "manage_quota": "管理配额",
+    "add_quota": "添加资源",
+    "confirm_delete": "确认删除这些合同吗？",
+    "confirm_delete_quota": "确认要删除这种资源吗？"
   },
 
   "forum": {
@@ -299,5 +329,50 @@
     "resource_name":"资源名称",
     "desc":"操作描述",
     "occur_time":"操作时间"
+  },
+
+  "management": {
+    "overview": {
+      "summary": "概要",
+      "account_num": "用户数量",
+      "flavor_num": "规格数量",
+      "instance_num": "云主机数量",
+      "contract_num": "合同数量",
+      "data_center_num": "数据中心数量",
+      "image_num": "镜像数量"
+    }
+  },
+
+  "data_center":{
+    "name": "名称",
+    "host": "主机名",
+    "project": "项目名",
+    "user": "用户名",
+    "password": "用户密码",
+    "auth_url": "Auth Url",
+    "ext_net": "外网名称",
+    "title_create": "创建数据中心",
+    "title_update": "更新数据中心",
+    "confirm_delete": "确认删除数据中心?",
+    "host_is_used": "该地址已被使用！"
+  },
+
+  "udc": {
+    "user": "用户",
+    "data_center": "数据中心",
+    "tenant": "Tenant",
+    "tenant_uuid": "Tenant UUID",
+    "keystone_user": "KeyStone User",
+    "keystone_password": "KeyStone Password"
+  },
+
+  "action": {
+    "create": "创建",
+    "edit": "编辑",
+    "update": "更新",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "submit": "提交"
   }
+
 }

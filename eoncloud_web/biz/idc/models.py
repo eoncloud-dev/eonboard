@@ -50,7 +50,6 @@ class UserDataCenter(models.Model):
     tenant_uuid = models.CharField(_("Tenant UUID"), max_length=64)
     keystone_user = models.CharField(_("User"), max_length=255)
     keystone_password = models.CharField(_("Password"), max_length=255)
-    
 
     def __unicode__(self):
         return "%s-%s" % (self.data_center.name, self.user.username)

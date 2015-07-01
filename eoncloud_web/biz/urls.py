@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url 
+from django.conf.urls import patterns, include, url
 from rest_framework.urlpatterns import format_suffix_patterns
 
 
@@ -11,9 +11,12 @@ from biz.floating import views as floating_view
 from biz.firewall import views as firewall_view
 from biz.forum import views as forums_view
 from biz.account import views as account_view
+from biz.idc import views as idc_views
+from biz.overview import views as overview_views
 
 # instance&flavor
 urlpatterns = [
+        url(r'^management-summary/$', overview_views.summary),
         url(r'^instances/$', instance_view.InstanceList.as_view()),
         #url(r'^instances/(?P<pk>[0-9]+)/$', instance_view.InstanceDetail.as_view()),
         url(r'^instances/status/$', instance_view.instance_status_view),
@@ -21,6 +24,9 @@ urlpatterns = [
         url(r'^instances/search/$', instance_view.instance_search_view),
         url(r'^instances/(?P<pk>[0-9]+)/action/$', instance_view.instance_action_view),
         url(r'^flavors/$', instance_view.FlavorList.as_view()),
+        url(r'^flavors/create/$', instance_view.create_flavor),
+        url(r'^flavors/update/$', instance_view.update_flavor),
+        url(r'^flavors/batch-delete/$', instance_view.delete_flavors),
         url(r'^flavors/(?P<pk>[0-9]+)/$', instance_view.FlavorDetail.as_view()),
     ]
 
@@ -98,6 +104,26 @@ urlpatterns += format_suffix_patterns(
         url(r'^account/contract/$', account_view.contract_view),
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
+        url(r'^users/$', account_view.UserList.as_view()),
+        url(r'^users/(?P<pk>[0-9]+)/$', account_view.UserDetail.as_view()),
+        url(r'^quotas/$', account_view.QuotaList.as_view()),
+        url(r'^quotas/(?P<pk>[0-9]+)/$', account_view.QuotaDetail.as_view()),
+        url(r'^quotas/batch-create/$', account_view.create_quotas),
+        url(r'^quotas/create/$', account_view.create_quota),
+        url(r'^quotas/delete/$', account_view.delete_quota),
+        url(r'^quota-resource-options/$', account_view.resource_options),
+    ]
+)
+
+
+# image
+urlpatterns += format_suffix_patterns(
+    [
+        url(r'^contracts/$', account_view.ContractList.as_view()),
+        url(r'^contracts/create$', account_view.create_contract),
+        url(r'^contracts/update/$', account_view.update_contract),
+        url(r'^contracts/batch-delete/$', account_view.delete_contracts),
+        url(r'^contracts/(?P<pk>[0-9]+)/$', account_view.ContractDetail.as_view()),
     ]
 )
 
@@ -110,5 +136,18 @@ urlpatterns += format_suffix_patterns(
         url(r'^forums/close/$', forums_view.forum_close_forum_view),
         url(r'^forums/reply/create/$', forums_view.forum_reply_create_view),
         url(r'^forums/reply/$', forums_view.forum_reply_list_view),
+    ]
+)
+
+# idc
+urlpatterns += format_suffix_patterns(
+    [
+        url(r'^data-centers/$', idc_views.DataCenterList.as_view()),
+        url(r'^data-centers/is-host-unique/$', idc_views.is_host_unique),
+        url(r'^data-centers/create/$', idc_views.create_data_center),
+        url(r'^data-centers/update/$', idc_views.update_data_center),
+        url(r'^data-centers/batch-delete/$', idc_views.delete_data_centers),
+        url(r'^user-data-centers/$', idc_views.UserDataCenterList.as_view()),
+        url(r'^user-data-centers/(?P<pk>[0-9]+)/$', idc_views.UserDataCenterDetail.as_view())
     ]
 )

@@ -65,7 +65,6 @@ class Instance(models.Model):
         
         return network
         
-
     @property
     def floating_ip(self):
         fs = Floating.objects.filter(instance=self, deleted=0) 

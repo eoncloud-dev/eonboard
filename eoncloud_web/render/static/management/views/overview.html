@@ -1,0 +1,76 @@
+<h1 class="page-title">
+    {[{ 'sidebar.overview' | i18next }]}
+</h1>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div>
+    <div class="row">
+        <!-- BEGIN MAIN LEFT -->
+        <div class="col-md-8 col-sm-6">
+            <!-- BEGIN quota usage -->
+            <div>
+                <div class="portlet">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-bell-o"></i>{[{ 'management.overview.summary' | i18next }]}
+                        </div>
+                    </div>
+                    <!-- BEGIN PORTLET-BODY -->
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-advance table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <i class="fa fa-desktop"></i> {[{ 'management.overview.instance_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-adjust"></i> {[{ 'management.overview.flavor_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-users"></i> {[{ 'management.overview.account_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-file-word-o"></i> {[{ 'management.overview.contract_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-circle-o-notch"></i> {[{ 'management.overview.image_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-circle-o-notch"></i> {[{ 'management.overview.data_center_num' | i18next }]}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight">
+                                            {[{ summary.instance_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.flavor_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.user_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.contract_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.image_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.data_center_num }]}
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- BEGIN PORTLET-BODY -->
+                </div>
+            </div>
+            <!-- END quota usage -->
+        </div>
+        <!-- END MAIN LEFT -->
+    </div>
+</div>
+<!-- END MAIN CONTENT -->

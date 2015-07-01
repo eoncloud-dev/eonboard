@@ -54,12 +54,12 @@
                                         <ul role="menu" class="dropdown-menu">
                                             <li>
                                                 <a href="javascript:void(0);"  ng-click="delete(contract)">
-                                                    <i class="fa fa-hdd-o"></i>
+                                                    <i class="fa fa-trash"></i>
                                                     {[{ 'contract.delete' | i18next }]} </a>
                                             </li>
                                             <li>
                                                 <a href="javascript:void(0);"  ng-click="manage_quota(contract)">
-                                                    <i class="fa fa-hdd-o"></i>
+                                                    <i class="fa fa-cubes"></i>
                                                     {[{ 'contract.manage_quota' | i18next }]} </a>
                                             </li>
                                         </ul>
@@ -215,17 +215,16 @@
     <div class="modal-body">
         <form id="quotaForm" role="form" class="form-horizontal form-bordered">
             <input type="hidden"  name="id" data-ng-model="contract.id">
-            <div class="form-group" data-ng-show="quota_options.length > 0">
+            <div class="form-group" data-ng-show="resource_options.length > 0">
                 <div class="col-md-3">
                     <div class="btn-group pull-right">
                         <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
                                 type="button" aria-expanded="false">
-                                添加配额<i class="fa fa-angle-down"></i>
+                                {[{ 'contract.add_quota' | i18next }]} <i class="fa fa-angle-down"></i>
                         </button>
                         <ul role="menu" class="dropdown-menu">
-                            <li ng-repeat="option in quota_options">
+                            <li ng-repeat="option in resource_options">
                                 <a href="javascript:void(0);" ng-click="add_quota(option[0])">
-                                    <i class="fa fa-hdd-o"></i>
                                     {[{ option[1] }]}
                                 </a>
                             </li>
@@ -234,12 +233,20 @@
                 </div>
             </div>
             <div class="form-group" data-ng-repeat="quota in quotas">
-                <label class="col-md-3 control-label" for="name">{[{ quota.resource }]} </label>
-                <div class="col-md-5">
+                <label class="col-md-3 control-label" for="limit-{[{ $index }]}">{[{ resourceLabel(quota.resource) }]} </label>
+                <div class="col-md-2">
                     <input type="hidden" name="id[]" ng-model="quota.id"/>
                     <input type="hidden" name="resource[]" ng-model="quota.resource"/>
-                    <input name="limit[]" type="text" maxlength="20"
-                       data-ng-model="quota.limit" class="form-control input-medium required">
+                    <input id="limit-{[{ $index }]}" name="limit[]" type="text" maxlength="20"
+                       data-ng-model="quota.limit" class="form-control input-small required" style="display: inline-block;">
+                </div>
+                <div class="col-md-1" style="padding-top: 8px; margin-left: 10px;">
+                    <a href="javascript:void(0);" ng-click="save(quota)">
+                        <i class="fa fa-save"></i>
+                    </a>
+                    <a href="javascript:void(0);" ng-click="remove(quota)">
+                        <i class="fa fa-trash"></i>
+                    </a>
                 </div>
             </div>
             <div class="clear"></div>
@@ -249,7 +256,6 @@
         <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
             {[{ 'cancel' | i18next }]}
         </a>
-        <a class="btn btn-primary" data-ng-click="submit()"> {[{ 'submit' | i18next }]}</a>
     </div>
 </script>
 <!-- END TEMPLATE MANAGE-QUOTA -->

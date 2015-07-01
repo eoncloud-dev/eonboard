@@ -18,7 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Operation, Quota
+from biz.account.models import Contract, Operation, Quota, QUOTA_ITEM
 from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
 from biz.account.utils import get_quota_usage
 
@@ -205,6 +205,18 @@ class QuotaList(generics.ListAPIView):
         return Response(self.serializer_class(queryset, many=True).data)
 
 
+class QuotaDetail(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Quota.objects.all()
+
+    serializer_class = QuotaSerializer
+
+
+@api_view(['GET'])
+def resource_options(request):
+    return Response(QUOTA_ITEM)
+
+
 @api_view(['POST'])
 def create_quotas(request):
     try:
@@ -224,8 +236,54 @@ def create_quotas(request):
             else:
                 Quota.objects.create(resource=resource, limit=limit, contract=contract)
 
-        return Response({'success': True, "msg": _('Quotas have been created successfully!')},
+        return Response({'success': True,
+                         "msg": _('Quotas have been saved successfully!')},
                         status=status.HTTP_201_CREATED)
     except Exception as e:
-        LOG.error("Failed to create contract, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to create contract for unknown reason.')})
+        LOG.error("Failed to save quotas, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to save quotas for unknown reason.')})
+
+
+@api_view(['POST'])
+def create_quota(request):
+    try:
+
+        contract = Contract.objects.get(pk=request.data['contract'])
+
+        resource, limit = request.data['resource'], request.data['limit']
+
+        pk = request.data['id'] if 'id' in request.data else None
+
+        if pk and Quota.objects.filter(pk=pk).exists():
+
+            quota = Quota.objects.get(pk=pk)
+
+            quota.limit = limit
+
+            quota.save()
+
+        else:
+            quota = Quota.objects.create(resource=resource, limit=limit, contract=contract)
+
+        return Response({'success': True,
+                         "msg": _('Quota have been saved successfully!'),
+                         "quota": QuotaSerializer(quota).data},
+                        status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print e
+        LOG.error("Failed to save quota, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to save quota for unknown reason.')})
+
+
+@api_view(['POST'])
+def delete_quota(request):
+    try:
+
+        Quota.objects.filter(pk=request.data['id']).update(deleted=True)
+
+        return Response({'success': True,
+                         "msg": _('Quota have been deleted successfully!')},
+                        status=status.HTTP_201_CREATED)
+    except Exception as e:
+        LOG.error("Failed to create quota, msg:[%s]" % e)
+        return Response({"success": False, "msg": _('Failed to create quota for unknown reason.')})

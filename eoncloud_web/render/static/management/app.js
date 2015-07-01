@@ -195,6 +195,8 @@ CloudApp.factory('ValidationTool', function(){
                 }
             }
             $(selector).validate(config);
+
+            return $(selector);
         }
     }
 });
@@ -212,7 +214,7 @@ CloudApp.factory('Contract', ['$resource', function($resource){
 
 
 CloudApp.factory('Quota', ['$resource', function($resource){
-    return $resource("/api/quotas/:id") ;
+    return $resource("/api/quotas/:id", {id: '@id'}) ;
 }]);
 
 /* Setup instance */

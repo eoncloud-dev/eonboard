@@ -304,7 +304,9 @@
     "select_user": "请选择用户",
     "select_udc": "请选择数据中心",
     "manage_quota": "管理配额",
-    "confirm_delete": "确认删除这些合同吗？"
+    "add_quota": "添加资源",
+    "confirm_delete": "确认删除这些合同吗？",
+    "confirm_delete_quota": "确认要删除这种资源吗？"
   },
 
   "forum": {

@@ -46,6 +46,7 @@
                             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
                                 <input type="checkbox" ng-model="checkboxes.items[instance.id]"/>
                             </td>
+                            <td width="50" data-title="'ID'">{[{ instance.id}]}</td>
                             <td width="100" data-title="'instance.name' | i18next">{[{ instance.name}]}</td>
                             <td data-title="'instance.image' | i18next">{[{ instance.image_info.name }]}</td>
                             <td data-title="'instance.flavor' | i18next">{[{ instance.cpu }]}CPU/ {[{ instance.memory

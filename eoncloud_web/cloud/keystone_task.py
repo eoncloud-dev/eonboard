@@ -1,5 +1,6 @@
 #-*-coding=utf-8-*-
 
+import datetime
 import logging
 import time
 import traceback
@@ -9,6 +10,7 @@ from django.conf import settings
 
 from celery import app
 from api import keystone
+from biz.account.models import Contract
 from biz.idc.models import UserDataCenter
 from cloud.cloud_utils import create_rc_by_dc, create_rc_by_udc
 from cloud.network_task import edit_default_security_group
@@ -19,12 +21,20 @@ LOG = logging.getLogger("cloud.tasks")
 def link_user_to_dc_task(user, datacenter, **kwargs):
     LOG.info("New user: Start action [%s]" % user.username)
     rc = create_rc_by_dc(datacenter)
-    tenant_name = "cloudapi-%s" % user.id
-    keystone_user = "cloudapi-%s" % user.id
+    tenant_name = "%s-%04d" % (settings.OS_NAME_PREFIX, user.id)
+    try:
+        keystone_user = "%s-%04d-%s" % (settings.OS_NAME_PREFIX,
+                                    user.id, user.username.split('@')[0])
+    except:
+        keystone_user = "%s-%04d-MOCK" % (settings.OS_NAME_PREFIX,
+                                        user.id)
     pwd = "cloud!@#%s" % random.randrange(100000, 999999)
-    t = keystone.tenant_create(rc, name=tenant_name)
+    t = keystone.tenant_create(rc,
+                               name=tenant_name,
+                               description=user.username)
     LOG.info("New user: create tanant [%s][tid:%s]" % (user.username, t.id))
-    u = keystone.user_create(rc, name=keystone_user,
+    u = keystone.user_create(rc,
+                            name=keystone_user,
                             email=user.email,
                             password=pwd,
                             project=t.id)
@@ -50,5 +60,17 @@ def link_user_to_dc_task(user, datacenter, **kwargs):
     except Exception as ex:
         LOG.exception(ex)
 
+    try:
+        Contract.objects.create(
+            user = user,
+            udc = udc,
+            name = user.username,
+            customer = user.username,
+            start_date = datetime.datetime.now(),
+            end_date = datetime.datetime.now(),
+            deleted = False
+        )
+    except Exception as ex:
+        LOG.exception(ex)
     return u
 

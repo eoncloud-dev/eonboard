@@ -33,7 +33,7 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 class Contract(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User)
     udc = models.ForeignKey('idc.UserDataCenter')
     name = models.CharField(_("Contract name"), max_length=128, null=False)
     customer = models.CharField(_("Customer name"), max_length=128, null=False)

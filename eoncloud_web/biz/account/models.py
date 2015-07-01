@@ -5,11 +5,12 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import post_save
 
 
 from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, \
             RESOURCE_CHOICES, RESOURCE_ACTION_CHOICES
+
+from biz.account.mixins import LivingDeadModel
 
 
 class UserProfile(models.Model): 
@@ -31,7 +32,39 @@ class UserProfile(models.Model):
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 
-class Contract(models.Model):
+class NormalUserManager(models.Manager):
+    def get_queryset(self):
+        return super(NormalUserManager, self).get_queryset().filter(is_superuser=False)
+
+
+class SuperUserManager(models.Manager):
+    def get_queryset(self):
+        return super(SuperUserManager, self).get_queryset().filter(is_superuser=True)
+
+
+class UserProxy(User):
+
+    class Meta:
+        proxy = True
+
+    normal_users = NormalUserManager()
+
+    super_users = SuperUserManager()
+
+
+class LivingManager(models.Manager):
+
+    def get_queryset(self):
+        return super(LivingManager, self).get_queryset().filter(deleted=False)
+
+
+class DeletedManager(models.Manager):
+
+    def get_queryset(self):
+        return super(DeletedManager, self).get_queryset().filter(deleted=True)
+
+
+class Contract(LivingDeadModel):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     udc = models.ForeignKey('idc.UserDataCenter')
@@ -56,7 +89,7 @@ class Contract(models.Model):
         verbose_name_plural = _("Contract")
 
 
-class Quota(models.Model):
+class Quota(LivingDeadModel):
     id = models.AutoField(primary_key=True)
     contract = models.ForeignKey(Contract, related_name="quotas")
     resource = models.CharField(_("Resouce"), max_length=128, choices=QUOTA_ITEM, null=False)

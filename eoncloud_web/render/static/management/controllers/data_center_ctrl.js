@@ -171,7 +171,7 @@ CloudApp.controller('DataCenterController',
                 });
             };
         }
-    ).factory('DataCenterForm', ['ValidationTool', function(ValidationTool) {
+    ).factory('DataCenterForm', ['ValidationTool', '$i18next', function(ValidationTool, $i18next) {
         return {
             init: function(){
 
@@ -188,7 +188,8 @@ CloudApp.controller('DataCenterController',
                         },
                         host: {
                             required: true,
-                            ip: true
+                            ip: true,
+                            remote: "/api/data-centers/is-host-unique"
                         },
                         project: {
                             required: true,
@@ -214,9 +215,14 @@ CloudApp.controller('DataCenterController',
                             minlength: 2,
                             maxlength: 128
                         }
-                    }};
+                    },
+                    messages: {
+                        host: {
+                            remote: $i18next('data_center.host_is_used')
+                        }
+                    }
+                };
 
-                console.log('validation tool');
                 ValidationTool.init('#dataCenterForm', config);
               }
             }

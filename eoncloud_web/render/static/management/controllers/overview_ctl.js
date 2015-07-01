@@ -1,7 +1,7 @@
 'use strict';
 
 CloudApp.controller('OverviewController',
-    function ($rootScope, $scope, instanceSummary, accountSummary) {
+    function ($rootScope, $scope, summary) {
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
@@ -9,9 +9,6 @@ CloudApp.controller('OverviewController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
-
-        $scope.instanceSummary = instanceSummary;
-
-        $scope.accountSummary =  accountSummary;
+        $scope.summary =  summary;
 
     });

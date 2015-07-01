@@ -27,6 +27,7 @@ CloudApp.controller('ContractController',
             angular.forEach($scope.contracts, function(contract){
                 contract.deleted = $scope.checkAllFlag;
             });
+
         };
 
         $scope.not_checked = function(){
@@ -64,7 +65,6 @@ CloudApp.controller('ContractController',
 
         $scope.create = function() {
             $modal.open({
-//                templateUrl: '/static/management/views/contract_create.html',
                 templateUrl: 'create.html',
                 controller: 'ContractCreateController',
                 backdrop: "static",
@@ -98,8 +98,8 @@ CloudApp.controller('ContractController',
             CommonHttpService.post("/api/contracts/batch-delete/", {contract_ids: contractIds}).then(function(data){
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
-                        $scope.contract_table.reload();
                         $scope.checkAllFlag = false;
+                        $scope.contract_table.reload();
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }

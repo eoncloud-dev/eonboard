@@ -12,14 +12,15 @@ from biz.firewall import views as firewall_view
 from biz.forum import views as forums_view
 from biz.account import views as account_view
 from biz.idc import views as idc_views
+from biz.overview import views as overview_views
 
 # instance&flavor
 urlpatterns = [
+        url(r'^management-summary/$', overview_views.summary),
         url(r'^instances/$', instance_view.InstanceList.as_view()),
         #url(r'^instances/(?P<pk>[0-9]+)/$', instance_view.InstanceDetail.as_view()),
         url(r'^instances/status/$', instance_view.instance_status_view),
         url(r'^instances/create/$', instance_view.instance_create_view),
-        url(r'^instances/summary/$', instance_view.summary),
         url(r'^instances/search/$', instance_view.instance_search_view),
         url(r'^instances/(?P<pk>[0-9]+)/action/$', instance_view.instance_action_view),
         url(r'^flavors/$', instance_view.FlavorList.as_view()),
@@ -101,7 +102,6 @@ urlpatterns += format_suffix_patterns(
 urlpatterns += format_suffix_patterns(
     [
         url(r'^account/contract/$', account_view.contract_view),
-        url(r'^account/summary/$', account_view.summary),
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
         url(r'^users/$', account_view.UserList.as_view()),
@@ -143,6 +143,7 @@ urlpatterns += format_suffix_patterns(
 urlpatterns += format_suffix_patterns(
     [
         url(r'^data-centers/$', idc_views.DataCenterList.as_view()),
+        url(r'^data-centers/is-host-unique/$', idc_views.is_host_unique),
         url(r'^data-centers/create/$', idc_views.create_data_center),
         url(r'^data-centers/update/$', idc_views.update_data_center),
         url(r'^data-centers/batch-delete/$', idc_views.delete_data_centers),

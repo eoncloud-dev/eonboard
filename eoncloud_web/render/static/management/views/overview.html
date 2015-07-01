@@ -21,21 +21,45 @@
                             <table class="table table-striped table-bordered table-advance table-hover">
                                 <thead>
                                     <tr>
-                                        <th width="100">
-                                            <i class="fa fa-list"></i> {[{ 'management.overview.instance_num' | i18next }]}
+                                        <th>
+                                            <i class="fa fa-desktop"></i> {[{ 'management.overview.instance_num' | i18next }]}
                                         </th>
-                                        <th class="hidden-xs" width="200">
-                                            <i class="fa fa-cubes"></i> {[{ 'management.overview.account_num' | i18next }]}
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-adjust"></i> {[{ 'management.overview.flavor_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-users"></i> {[{ 'management.overview.account_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-file-word-o"></i> {[{ 'management.overview.contract_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-circle-o-notch"></i> {[{ 'management.overview.image_num' | i18next }]}
+                                        </th>
+                                        <th class="hidden-xs">
+                                            <i class="fa fa-circle-o-notch"></i> {[{ 'management.overview.data_center_num' | i18next }]}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td class="highlight">
-                                            {[{ instanceSummary.num }]}
+                                            {[{ summary.instance_num }]}
                                         </td>
                                         <td class="hidden-xs">
-                                            {[{ accountSummary.num }]}
+                                            {[{ summary.flavor_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.user_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.contract_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.image_num }]}
+                                        </td>
+                                        <td class="hidden-xs">
+                                            {[{ summary.data_center_num }]}
                                         </td>
                                     </tr>
                             </table>

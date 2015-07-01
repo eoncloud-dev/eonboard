@@ -125,8 +125,3 @@ def instance_search_view(request, **kwargs):
                                            user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = InstanceSerializer(instance_set, many=True)
     return Response(serializer.data)
-
-
-@api_view(["GET"])
-def summary(request):
-    return Response({"num": Instance.objects.count()})

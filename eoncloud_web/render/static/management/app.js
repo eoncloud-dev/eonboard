@@ -326,11 +326,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }],
-                    accountSummary: function(CommonHttpService){
-                        return CommonHttpService.get("/api/account/summary");
-                    },
-                    instanceSummary: function(CommonHttpService){
-                        return CommonHttpService.get("/api/instances/summary");
+                    summary: function(CommonHttpService){
+                        return CommonHttpService.get("/api/management-summary/");
                     }
                 }
             })

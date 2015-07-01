@@ -18,7 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Operation, Quota, QUOTA_ITEM
+from biz.account.models import Contract, Operation, Quota, UserProxy, QUOTA_ITEM
 from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
 from biz.account.utils import get_quota_usage
 
@@ -77,11 +77,6 @@ def quota_view(request):
     return Response(quota)
 
 
-@api_view(["GET"])
-def summary(request):
-    return Response({"num": User.objects.count()})
-
-
 class OperationList(generics.ListCreateAPIView):
     queryset = Operation.objects.all()
     serializer_class = OperationSerializer
@@ -99,7 +94,7 @@ class OperationList(generics.ListCreateAPIView):
 
 
 class ContractList(generics.ListCreateAPIView):
-    queryset = Contract.objects.filter(deleted=False)
+    queryset = Contract.living.filter(deleted=False)
     serializer_class = ContractSerializer
 
     def list(self, request, *args, **kwargs):
@@ -108,7 +103,7 @@ class ContractList(generics.ListCreateAPIView):
 
 
 class ContractDetail(generics.RetrieveAPIView):
-    queryset = Contract.objects.all()
+    queryset = Contract.living.all()
     serializer_class = ContractSerializer
 
 
@@ -163,21 +158,24 @@ def delete_contracts(request):
 
         contract_ids = request.data.getlist('contract_ids[]')
 
-        Contract.objects.filter(pk__in=contract_ids).update(deleted=True)
+        Contract.living.filter(pk__in=contract_ids).update(deleted=True)
+
+        Quota.living.filter(contract__pk__in=contract_ids).update(deleted=True)
 
         return Response({'success': True, "msg": _('Contracts have been deleted!')}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
+        print e
         LOG.error("Failed to delete contracts, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to delete contracts for unknown reason.')})
 
 
 class UserList(generics.ListAPIView):
 
-    queryset = User.objects.all()
+    queryset = UserProxy.normal_users
     serializer_class = UserSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         serializer = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializer.data)
 
@@ -190,7 +188,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class QuotaList(generics.ListAPIView):
 
-    queryset = Quota.objects
+    queryset = Quota.living
 
     serializer_class = QuotaSerializer
 
@@ -198,16 +196,16 @@ class QuotaList(generics.ListAPIView):
 
         queryset = self.get_queryset()
 
-        if 'contract_id' in request.data:
+        if 'contract_id' in request.query_params:
 
-            queryset = queryset.filter(contract__id=request.data['contract_id'])
+            queryset = queryset.filter(contract__id=request.query_params['contract_id'])
 
         return Response(self.serializer_class(queryset, many=True).data)
 
 
 class QuotaDetail(generics.RetrieveUpdateDestroyAPIView):
 
-    queryset = Quota.objects.all()
+    queryset = Quota.living
 
     serializer_class = QuotaSerializer
 
@@ -231,7 +229,7 @@ def create_quotas(request):
 
             resource, limit = resources[index], limits[index]
 
-            if quota_id and Quota.objects.filter(contract=contract, pk=quota_id, deleted=False).exists():
+            if quota_id and Quota.living.filter(contract=contract, pk=quota_id).exists():
                 Quota.objects.filter(pk=quota_id).update(resource=resource, limit=limit)
             else:
                 Quota.objects.create(resource=resource, limit=limit, contract=contract)
@@ -279,7 +277,7 @@ def create_quota(request):
 def delete_quota(request):
     try:
 
-        Quota.objects.filter(pk=request.data['id']).update(deleted=True)
+        Quota.living.filter(pk=request.data['id']).update(deleted=True)
 
         return Response({'success': True,
                          "msg": _('Quota have been deleted successfully!')},

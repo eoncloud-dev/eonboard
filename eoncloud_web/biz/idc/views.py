@@ -118,3 +118,11 @@ def delete_data_centers(request):
     except Exception as e:
         LOG.error("Failed to delete data centers, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to delete data centers for unknown reason.')})
+
+
+@api_view(['GET'])
+def is_host_unique(request):
+
+    host = request.query_params['host']
+
+    return Response(not DataCenter.objects.filter(host=host).exists())

@@ -30,7 +30,8 @@ def flavor_create(instance=None):
     rc = create_rc_by_instance(instance)
     try:
         flavor = nova.flavor_create(rc,
-                                 name="flavor-%08d" % instance.id,
+                                 name="flavor-%04d%04d" % (
+                                     instance.user.id, instance.id),
                                  memory=instance.memory,
                                  vcpu=instance.cpu,
                                  disk=instance.sys_disk,
@@ -53,12 +54,13 @@ def flavor_delete(instance):
 
 
 def instance_create(instance, password):
-    user_data_format = "#cloud-config\npassword: %s\nchpasswd: { expire: False }\nsh_pwauth: True\n"
+    user_data_format = "#cloud-config\npassword: %s\nchpasswd: { expire: False }\nssh_pwauth: True\n"
     user_data = user_data_format % password
     rc = create_rc_by_instance(instance)
     try:
         if instance.image.os_type ==  LINUX:
-            server = nova.server_create(rc, name="Server-%04d" % instance.id,
+            server = nova.server_create(rc,
+                    name=instance.name,
                     image=instance.image.uuid,
                     flavor=instance.flavor_id,
                     key_name=None,
@@ -68,7 +70,7 @@ def instance_create(instance, password):
                 ) 
         elif instance.image.os_type == WINDOWS:
             server = nova.server_create(rc,
-                    name="Server-%04d" % instance.id,
+                    name=instance.name,
                     image=instance.image.uuid,
                     flavor=instance.flavor_id,
                     key_name=None,
@@ -105,11 +107,14 @@ def instance_get_vnc_console(instance):
 
 def instance_deleted_release_resource(instance):
     # floatings
-    from biz.floating.models import Floating 
+    from biz.floating.models import Floating
+    from biz.floating.settings import FLOATING_AVAILABLE
     floatings = Floating.objects.filter(instance=instance, deleted=0) 
     for f in floatings:
         f.instance = None
+        f.status = FLOATING_AVAILABLE
         f.save()
+
     # volumes
     from biz.volume.models import Volume
     volumes = Volume.objects.filter(instance=instance, deleted=0)
@@ -117,6 +122,8 @@ def instance_deleted_release_resource(instance):
         vol.instance = None
         vol.status = VOLUME_STATE_AVAILABLE
         vol.save()
+
+    # TODO: release backup
 
 @app.task
 def instance_create_task(instance, **kwargs):
@@ -164,7 +171,6 @@ def instance_create_task(instance, **kwargs):
             instance.status = INSTANCE_STATE_RUNNING
             instance.private_ip = srv.addresses["network-%s" % instance.network.id][0].\
                                         get("addr", "---")
-            #instance.public_ip = srv.addresses[settings.PUBLIC_NETWORK_NAME][0]['addr']
             instance.save()
             count = settings.MAX_COUNT_SYNC + 1
         elif st == "ERROR":

@@ -38,6 +38,7 @@
                             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
                                 <input type="checkbox" ng-class="{'disabled': status_desc[volume.status][1] == 0}" ng-model="checkboxes.items[volume.id]"/>
                             </td>
+                            <td width="40" data-title="'ID'">{[{ volume.id}]}</td>
                             <td width="100" data-title="'volume.name' | i18next">{[{ volume.name}]}</td>
                             <td width="160" data-title="'volume.status' | i18next">
                                 <span class="" ng-if="status_desc[volume.status][1] == 1">{[{ status_desc[volume.status][0] }]} </span>
@@ -126,7 +127,10 @@
                                 </span>
 
                                 <input type="text" class="form-control" name="name"
-                                       ng-model="volume.name" value="" class="required"/>
+                                       ng-model="volume.name" value="" class="required"
+                                       onpaste="return false;" ondragenter="return false;"
+                                       oncontextmenu="return false;"
+                                       style="ime-mode:disabled"/>
                             </div>
                             <span ng-if="has_error" id="name-error" class="help-block help-block-error">
                                {[{ 'volume.name_prompt' | i18next }]}

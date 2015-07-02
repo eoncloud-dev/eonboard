@@ -348,9 +348,6 @@ CloudApp.controller('ContractController',
             $scope.resource_options = $scope.resource_options.filter(function(option){
                 return option[0] != resource_type;
             });
-
-            $scope.form = QuotaValidation.init();
-
         };
 
         $scope.remove = function(toDel){
@@ -385,7 +382,7 @@ CloudApp.controller('ContractController',
 
         $scope.save = function(quota){
 
-            if(!$scope.form.validate().valid()){
+            if(!$scope.form.valid()){
                 return;
             }
 
@@ -403,7 +400,7 @@ CloudApp.controller('ContractController',
 
         $scope.submit = function(){
 
-            if(!$scope.form.validate().valid()){
+            if(!$scope.form.valid()){
                 return;
             }
 
@@ -433,18 +430,7 @@ CloudApp.controller('ContractController',
     }).factory('QuotaValidation', ['ValidationTool', function(ValidationTool){
         return {
             init: function(){
-
-            var config = {
-                rules: {
-                    'limit[]': {
-                        required: true,
-                        digits: true,
-                        min: 1
-                    }
-                }
-            };
-
-            return ValidationTool.init('#quotaForm', config);
-          }
+                return ValidationTool.init('#quotaForm', {});
+            }
         }
     }]);

@@ -134,7 +134,7 @@ CloudApp.controller('DataCenterController',
                  data_center_table, data_center, DataCenterForm,
                  $i18next, CommonHttpService, ResourceTool, ToastrService){
 
-            $scope.data_center = data_center;
+            $scope.data_center = ResourceTool.copy_only_data(data_center);
 
             $modalInstance.opened.then(function() {
                 setTimeout(DataCenterForm.init, 0)
@@ -149,8 +149,6 @@ CloudApp.controller('DataCenterController',
                 if(!$("#dataCenterForm").validate().form()){
                     return;
                 }
-
-                data_center = ResourceTool.copy_only_data(data_center);
 
                 var url = '/api/data-centers';
 

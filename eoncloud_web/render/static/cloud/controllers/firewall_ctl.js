@@ -328,6 +328,7 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
                      "protocol":select_data.ip_protocol
                  }
              }
+
              CommonHttpService.post("/api/firewall/firewall_rules/create/", post_data).then(function (data) {
                  if (data.OPERATION_STATUS == 1) {
                      ToastrService.success(data.MSG, $i18next("success"));

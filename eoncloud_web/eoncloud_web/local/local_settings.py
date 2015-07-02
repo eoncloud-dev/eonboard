@@ -7,7 +7,6 @@ DATABASES = {
         'USER': "cloud_web",
         'PASSWORD': "password",
         'HOST': "127.0.0.1",
-        #'HOST': "10.6.14.189",
         'PORT': "3306",
         'TEST_CHARSET': 'utf8',
         'OPTIONS': {
@@ -15,7 +14,8 @@ DATABASES = {
             }
     }
 }
-BROKER_URL = "amqp://guest:guest@127.0.0.1:5672/"
+
+BROKER_URL = "amqp://eoncloud_web:pAssw0rd@127.0.0.1:5672/eoncloud"
 
 # enabled quota check
 QUOTA_CHECK = True

@@ -160,10 +160,7 @@ CloudApp.controller('ContractController',
                  CommonHttpService, ToastrService, ResourceTool){
 
             var contract = $scope.contract = {};
-
-
             $scope.users = [];
-
             $scope.udcList = [];
 
             $modalInstance.opened.then(function() {
@@ -213,9 +210,7 @@ CloudApp.controller('ContractController',
                  CommonHttpService, ToastrService, ResourceTool){
 
             $scope.contract = contract = angular.copy(contract);
-
             $scope.user = {};
-
             $scope.udc = {};
 
             $modalInstance.opened.then(function() {
@@ -256,7 +251,7 @@ CloudApp.controller('ContractController',
                 });
             };
         }
-    ).factory('ContractForm', ['ValidationTool', function (ValidationTool) {
+    ).factory('ContractForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
         return {
             init: function(){
 
@@ -264,12 +259,12 @@ CloudApp.controller('ContractController',
                     rules: {
                         name: {
                             minlength: 6,
-                            maxlength: 128,
+                            maxlength: 64,
                             required: true
                         },
                         customer: {
                             minlength: 2,
-                            maxlength: 128,
+                            maxlength: 64,
                             required: true
                         },
                         user: 'required',
@@ -290,9 +285,7 @@ CloudApp.controller('ContractController',
         CommonHttpService, ToastrService, ResourceTool){
 
         $scope.contract = contract;
-
         $scope.resource_options = angular.copy(resource_options);
-
         $scope.resourceLabel = function(key){
 
             var label = '';

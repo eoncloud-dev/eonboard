@@ -268,7 +268,6 @@ def create_quota(request):
                          "quota": QuotaSerializer(quota).data},
                         status=status.HTTP_201_CREATED)
     except Exception as e:
-        print e
         LOG.error("Failed to save quota, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to save quota for unknown reason.')})
 

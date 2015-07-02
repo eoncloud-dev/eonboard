@@ -281,46 +281,62 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
          });
 
          $scope.create = function(firewall_rule){
-             if((firewall_rule.port_range =='port' && !$scope.firewall_rule_port) ||
-                 (firewall_rule.port_range=='range' && !$scope.firewall_rule_form && !$scope.firewall_rule_port))
-             {
+
+             var post_data ={}
+             if ($scope.selected_rule =='tcp' ||　$scope.selected_rule=='udp'){
+                 if((firewall_rule.port_range =='port' && $.trim(firewall_rule.port)=='')){
+                     $scope.firewall_rule_port = true;
+                     return ;
+
+                 }
                  if(firewall_rule.port_range=='range'){
-                    if(parseInt(firewall_rule.from) > parseInt(firewall_rule.to)){
-                        $scope.firewall_rule_to = true
-                        return
-                    }
-                 }
-                 var post_data ={}
-                 if ($scope.selected_rule =='tcp' ||　$scope.selected_rule=='udp'){
-                     post_data = {
-                         "firewall":$scope.firewall_id,
-                         "direction":firewall_rule.direction ? firewall_rule.direction:'ingress',
-                         "ether_type":'IPv4',
-                         "port_range_min":firewall_rule.port_range=='port'?firewall_rule.port:firewall_rule.from,
-                         "port_range_max":firewall_rule.port_range=='port'?firewall_rule.port:firewall_rule.to,
-                         "protocol":$scope.selected_rule =='udp'? 'udp':'tcp'
+                     if($.trim(firewall_rule.from)==''){
+                         $scope.firewall_rule_form = true;
+                         return ;
                      }
-                 }else{
-                     var select_data = eval("("+$scope.selected_rule+")");
-                     post_data = {
-                         "firewall":$scope.firewall_id,
-                         "direction":'ingress',
-                         "ether_type":'IPv4',
-                         "port_range_min":select_data.from_port,
-                         "port_range_max":select_data.to_port,
-                         "protocol":select_data.ip_protocol
+                     if($.trim(firewall_rule.to)==''){
+                         $scope.firewall_rule_to = true;
+                         return ;
+                     }
+                     if(parseInt(firewall_rule.from)>parseInt(firewall_rule.to)){
+                         $scope.firewall_rule_to = true;
+                         return ;
                      }
                  }
-                 CommonHttpService.post("/api/firewall/firewall_rules/create/", post_data).then(function (data) {
-                     if (data.OPERATION_STATUS == 1) {
-                         ToastrService.success(data.MSG, $i18next("success"));
-                         firewall_rules_table.reload();
+                 if(firewall_rule.port_range=='range'){
+                     if(parseInt(firewall_rule.from) > parseInt(firewall_rule.to)){
+                         $scope.firewall_rule_to = true
+                         return
                      }
-                     else {
-                         ToastrService.error(data.MSG, $i18next("op_failed"));
-                     }
-                     $modalInstance.dismiss();
-                 });
+                 }
+                 post_data = {
+                     "firewall":$scope.firewall_id,
+                     "direction":firewall_rule.direction ? firewall_rule.direction:'ingress',
+                     "ether_type":'IPv4',
+                     "port_range_min":firewall_rule.port_range=='port'?firewall_rule.port:firewall_rule.from,
+                     "port_range_max":firewall_rule.port_range=='port'?firewall_rule.port:firewall_rule.to,
+                     "protocol":$scope.selected_rule =='udp'? 'udp':'tcp'
+                 }
+             }else{
+                 var select_data = eval("("+$scope.selected_rule+")");
+                 post_data = {
+                     "firewall":$scope.firewall_id,
+                     "direction":'ingress',
+                     "ether_type":'IPv4',
+                     "port_range_min":select_data.from_port,
+                     "port_range_max":select_data.to_port,
+                     "protocol":select_data.ip_protocol
+                 }
              }
+             CommonHttpService.post("/api/firewall/firewall_rules/create/", post_data).then(function (data) {
+                 if (data.OPERATION_STATUS == 1) {
+                     ToastrService.success(data.MSG, $i18next("success"));
+                     firewall_rules_table.reload();
+                 }
+                 else {
+                     ToastrService.error(data.MSG, $i18next("op_failed"));
+                 }
+                 $modalInstance.dismiss();
+             });
          }
      });

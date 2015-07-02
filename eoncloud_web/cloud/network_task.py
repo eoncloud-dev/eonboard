@@ -209,6 +209,7 @@ def router_add_gateway_task(router=None):
     ext_fixed_ips = os_router["external_gateway_info"].get("external_fixed_ips", [])
     router.gateway = ext_fixed_ips[0].get("ip_address") if ext_fixed_ips else "---"
     router.status = NETWORK_STATE_ACTIVE
+    router.is_gateway = True
     router.save()
 
     return True
@@ -222,6 +223,7 @@ def router_remove_gateway_task(router=None):
     neutron.router_remove_gateway(rc, router.router_id)
     router.gateway = ''
     router.status = NETWORK_STATE_ACTIVE
+    router.is_gateway = False
     router.save()
 
 

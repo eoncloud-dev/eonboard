@@ -1,107 +1,136 @@
-### step by step deploy
+# eonboard deploy step by step
 
-# 1. os
-root@zhangh-ubuntu:~# cat /etc/lsb-release
-DISTRIB_ID=Ubuntu
-DISTRIB_RELEASE=14.10
-DISTRIB_CODENAME=utopic
-DISTRIB_DESCRIPTION="Ubuntu 14.10"
+## 1. os
+>root@zhangh-ubuntu:~# cat /etc/lsb-release
 
-# cat /etc/apt/source.list
-deb http://mirrors.163.com/ubuntu/ utopic main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ utopic-security main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ utopic-updates main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ utopic-proposed main restricted universe multiverse
-deb http://mirrors.163.com/ubuntu/ utopic-backports main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ utopic main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ utopic-security main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ utopic-updates main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ utopic-proposed main restricted universe multiverse
-deb-src http://mirrors.163.com/ubuntu/ utopic-backports main restricted universe multiverse
+	DISTRIB_ID=Ubuntu
+	DISTRIB_RELEASE=14.10
+	DISTRIB_CODENAME=utopic
+	DISTRIB_DESCRIPTION="Ubuntu 14.10"
 
-# apt-get update && apt-get upgrade
+>cat /etc/apt/source.list
 
-# 2. group and user
+	deb http://mirrors.163.com/ubuntu/ utopic main restricted universe multiverse
+	deb http://mirrors.163.com/ubuntu/ utopic-security main restricted universe multiverse
+	deb http://mirrors.163.com/ubuntu/ utopic-updates main restricted universe multiverse
+	deb http://mirrors.163.com/ubuntu/ utopic-proposed main restricted universe multiverse
+	deb http://mirrors.163.com/ubuntu/ utopic-backports main restricted universe multiverse
+	deb-src http://mirrors.163.com/ubuntu/ utopic main restricted universe multiverse
+	deb-src http://mirrors.163.com/ubuntu/ utopic-security main restricted universe multiverse
+	deb-src http://mirrors.163.com/ubuntu/ utopic-updates main restricted universe multiverse
+	deb-src http://mirrors.163.com/ubuntu/ utopic-proposed main restricted universe multiverse
+	deb-src http://mirrors.163.com/ubuntu/ utopic-backports main restricted universe multiverse
 
-groupadd eoncloud
-useradd eoncloud -g eoncloud -m -d /home/eoncloud
+>apt-get update && apt-get upgrade
 
-#  cat /etc/sudoers.d/eoncloud
-eoncloud ALL=(ALL) NOPASSWD:ALL
+## 2. group and user
 
-# 3. pip virtualenv
-apt-get install python-pip
-pip install virtualenv
+>groupadd eoncloud
 
-# 4. apt-get install apache2 mysql-client python-dev libffi-dev libssl-dev libmysqlclient-dev libapache2-mod-wsgi
+>useradd eoncloud -g eoncloud -m -d /home/eoncloud
 
-# 5. config eoncloud_web
-cp eoncloud_web.tar.gz /var/www/
-tar zxvf eoncloud_web.tar.gz
+  	cat /etc/sudoers.d/eoncloud
+	eoncloud ALL=(ALL) NOPASSWD:ALL
 
-root@zhangh-ubuntu:/var/www/eoncloud_web# pwd
-/var/www/eoncloud_web
+## 3. pip virtualenv
 
-root@zhangh-ubuntu:/var/www/eoncloud_web# tree -L 2
-.
-├── eoncloud_web
-│   ├── biz
-│   ├── cloud
-│   ├── eoncloud_web
-│   ├── manage.py
-│   └── render
-├── README
-└── requirements.txt
+>apt-get install python-pip
 
-root@zhangh-ubuntu:/var/www/eoncloud_web# virtualenv .venv
-root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/pip install -r requirements.txt
+>pip install virtualenv
 
-# create db and user
+## 4. install system dependences
 
-# migrate db
-root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py migrate
+>apt-get install apache2 mysql-client python-dev libffi-dev libssl-dev libmysqlclient-dev libapache2-mod-wsgi
 
-# update db
-# .venv/bin/python manage.py makemigrations app
+    # if is all in one environment
+    apt-get install mysql-server rabbitmq-server
+    
+## 5. config eoncloud_web
+>cp eoncloud_web.tar.gz /var/www/
 
-# create super user
-root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py createsuperuser
+>tar zxvf eoncloud_web.tar.gz
 
-# init flavor
-root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py init_flavor
+	root@zhangh-ubuntu:/var/www/eoncloud_web# pwd
+	/var/www/eoncloud_web
 
-# test it
-root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py runserver 0.0.0.0:8080
+	root@zhangh-ubuntu:/var/www/eoncloud_web# tree -L 2
+	.
+	├── eoncloud_web
+	│   ├── biz
+	│   ├── cloud
+	│   ├── eoncloud_web
+	│   ├── manage.py
+	│   └── render
+	├── README
+	└── requirements.txt
+	
+	root@zhangh-ubuntu:/var/www/eoncloud_web# virtualenv .venv
+	root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/pip install -r requirements.txt
 
-# 6. config apache2
-eoncloud@zhangh-ubuntu:~$ cat /etc/apache2/sites-available/000-default.conf
+### create db and user
 
-<VirtualHost *:80>
-        ServerAdmin zhanghui@eoncloud.com.cn.
+>create database cloud_web CHARACTER SET utf8;
 
-        WSGIScriptAlias / /var/www/eoncloud_web/eoncloud_web/eoncloud.wsgi
-        WSGIDaemonProcess eoncloud user=eoncloud group=eoncloud processes=3 threads=10 python-path=/var/www/eoncloud_web/.venv/lib/python2.7/site-packages
-        WSGIProcessGroup eoncloud
+>create user cloud_web;
+
+>grant all privileges on cloud_web.* to 'cloud_web'@'%' identified by 'password' with grant option;
+
+>flush privileges;
 
 
-        Alias /static/admin /var/www/eoncloud_web/.venv/lib/python2.7/site-packages/django/contrib/admin/static/admin
-        Alias /static /var/www/eoncloud_web/eoncloud_web/render/static
+### migrate db
+>root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py migrate
 
-        ErrorLog ${APACHE_LOG_DIR}/eoncloud_error.log
-        CustomLog ${APACHE_LOG_DIR}/eoncloud_access.log combined
-</VirtualHost>
+	# how migration works
+	.venv/bin/python manage.py makemigrations app
 
-# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+### create super user
+
+>root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py createsuperuser
+
+### init flavor
+
+>root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py init_flavor
+
+### test web is ok
+
+>root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py runserver 0.0.0.0:8080
+
+## 6. config apache2
+>eoncloud@zhangh-ubuntu:~$ cat /etc/apache2/sites-available/000-default.conf
+
+	<VirtualHost *:80>
+	        ServerAdmin zhanghui@eoncloud.com.cn.
+	
+	        WSGIScriptAlias / /var/www/eoncloud_web/eoncloud_web/eoncloud.wsgi
+	        WSGIDaemonProcess eoncloud user=eoncloud group=eoncloud processes=3 threads=10 python-path=/var/www/eoncloud_web/.venv/lib/python2.7/site-packages
+	        WSGIProcessGroup eoncloud
+	
+	
+	        Alias /static/admin /var/www/eoncloud_web/.venv/lib/python2.7/site-packages/django/contrib/admin/static/admin
+	        Alias /static/rest_framework /var/www/eoncloud_web/.venv/lib/python2.7/site-packages/rest_framework/static/rest_framework
+	        Alias /static /var/www/eoncloud_web/eoncloud_web/render/static
+	
+	        ErrorLog ${APACHE_LOG_DIR}/eoncloud_error.log
+	        CustomLog ${APACHE_LOG_DIR}/eoncloud_access.log combined
+	</VirtualHost>
+	
+	# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 
 
-# 7. celery worker
-rabbitmqctl add_user eoncloud_web pAssw0rd
-rabbitmqctl add_vhost eoncloud
-rabbitmqctl set_permissions -p eoncloud eoncloud_web ".*" ".*" ".*"
+## 7. celery worker
+
+>rabbitmqctl add_user eoncloud_web pAssw0rd
+
+>rabbitmqctl add_vhost eoncloud
+
+>rabbitmqctl set_permissions -p eoncloud eoncloud_web ".*" ".*" ".*"
 
 
-# sudo kill -9 `ps -ef | grep 'celery' | awk '{print $2}'`
+	# sudo kill -9 `ps -ef | grep 'celery' | awk '{print $2}'`
 
-$ ../.venv/bin/celery multi start eoncloud_worker -A cloud --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid --logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
+	$ ../.venv/bin/celery multi start eoncloud_worker -A cloud --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid --logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
 
-$ ../.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid
+	$ ../.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid
+	
+## 8. integrity test

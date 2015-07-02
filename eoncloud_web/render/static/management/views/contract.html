@@ -237,8 +237,10 @@
                 <div class="col-md-2">
                     <input type="hidden" name="id[]" ng-model="quota.id"/>
                     <input type="hidden" name="resource[]" ng-model="quota.resource"/>
-                    <input id="limit-{[{ $index }]}" name="limit[]" type="text" maxlength="20"
-                       data-ng-model="quota.limit" class="form-control input-small required" style="display: inline-block;">
+                    <input id="limit-{[{ $index }]}" name="limit-{[{ $index }]}" type="text" maxlength="20"
+                       data-ng-model="quota.limit" class="form-control input-small required"
+                       required digits min="1"
+                       style="display: inline-block;">
                 </div>
                 <div class="col-md-1" style="padding-top: 8px; margin-left: 10px;">
                     <a href="javascript:void(0);" ng-click="save(quota)">
@@ -256,6 +258,7 @@
         <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
             {[{ 'cancel' | i18next }]}
         </a>
+        <a class="btn btn-primary" data-ng-click="submit()"> {[{ 'submit' | i18next }]}</a>
     </div>
 </script>
 <!-- END TEMPLATE MANAGE-QUOTA -->

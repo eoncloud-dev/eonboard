@@ -170,6 +170,7 @@ CloudApp.factory("BoxService", function(){
 CloudApp.factory('ValidationTool', function(){
 
     var defaultConfig = {
+        onkeyup: false,
         doNotHideMessage: true,
         errorElement: 'span',
         errorClass: 'help-block',

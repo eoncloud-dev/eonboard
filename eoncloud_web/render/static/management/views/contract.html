@@ -85,21 +85,30 @@
         <form id="contractForm" role="form" class="form-horizontal form-bordered">
             <input type="hidden"  name="id" data-ng-model="contract.id">
             <div class="form-group">
-                <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="name">
+                    {[{ 'contract.name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
-                    <input id="name" name="name" type="text" maxlength="20"
-                       data-ng-model="contract.name" class="form-control input-medium required">
+                    <input id="name" name="name" data-ng-model="contract.name" maxlength="64"
+                           class="form-control input-medium required">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="customer">
+                    {[{ 'contract.customer' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
-                    <input id="customer" name="customer" type="text" maxlength="20"
-                           data-ng-model="contract.customer" class="form-control input-medium required">
+                    <input id="customer" name="customer" data-ng-model="contract.customer" maxlength="64"
+                           class="form-control input-medium required">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="user">{[{ 'contract.user' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="user">
+                    {[{ 'contract.user' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
                     <select id="user" name="user" data-ng-model="contract.user"
                             class="form-control input-medium" data-ng-change="loadUdcList()"
@@ -109,16 +118,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="udc">{[{ 'contract.user_data_center' | i18next }]} </label>
-                <div class="col-md-5">
+                <label class="col-md-3 control-label" for="udc">
+                    {[{ 'contract.user_data_center' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-4">
                     <select id="udc" name="udc" data-ng-model="contract.udc" class="form-control input-medium"
                             data-ng-options="udc.id as udc.tenant_name for udc in udcList">
                         <option value="">{[{ 'contract.select_udc' | i18next }]}</option>
                     </select>
+                    <span class="help-block"> {[{ 'contract.help.user_data_center' | i18next }]} </span>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-3">{[{ 'contract.date_range' | i18next }]} </label>
+                <label class="control-label col-md-3">
+                    {[{ 'contract.date_range' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
                     <div class="input-group input-large date-picker input-daterange" data-date-format="yyyy-mm-dd">
                         <input id="start_date" name="start_date" type="text" class="form-control" readonly
@@ -126,6 +142,7 @@
                         <span class="input-group-addon"> ~ </span>
                         <input type="text" id="end_date" name="end_date" class="form-control" readonly data-ng-model="contract.end_date">
                     </div>
+                    <span class="help-block"> {[{ 'contract.help.date_range' | i18next }]} </span>
                 </div>
             </div>
             <div class="clear"></div>
@@ -149,16 +166,22 @@
         <form id="contractForm" role="form" class="form-horizontal form-bordered">
             <input type="hidden"  name="id" data-ng-model="contract.id">
             <div class="form-group">
-                <label class="col-md-3 control-label" for="name">{[{ 'contract.name' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="name">
+                    {[{ 'contract.name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
-                    <input id="name" name="name" type="text" maxlength="20"
-                       data-ng-model="contract.name" class="form-control input-medium required">
+                    <input id="name" name="name"  data-ng-model="contract.name"  maxlength="64"
+                           class="form-control input-medium required">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="customer">{[{ 'contract.customer' | i18next }]} </label>
+                <label class="col-md-3 control-label" for="customer">
+                    {[{ 'contract.customer' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
-                    <input id="customer" name="customer" type="text" maxlength="20"
+                    <input id="customer" name="customer" maxlength="64"
                            data-ng-model="contract.customer" class="form-control input-medium required">
                 </div>
             </div>
@@ -177,7 +200,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-3">{[{ 'contract.date_range' | i18next }]} </label>
+                <label class="control-label col-md-3">
+                    {[{ 'contract.date_range' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-5">
                     <div class="input-group input-large date-picker input-daterange" data-date-format="yyyy-mm-dd">
                         <input id="start_date" name="start_date" type="text" class="form-control" readonly

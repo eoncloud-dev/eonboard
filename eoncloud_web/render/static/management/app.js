@@ -173,7 +173,7 @@ CloudApp.factory('ValidationTool', function(){
         onkeyup: false,
         doNotHideMessage: true,
         errorElement: 'span',
-        errorClass: 'help-block',
+        errorClass: 'help-block help-block-error',
         focusInvalid: false,
         errorPlacement: function (error, element) {
             error.insertAfter(element);

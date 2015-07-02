@@ -240,7 +240,7 @@ def router_delete_view(request, **kwargs):
 
 @api_view(['GET'])
 def router_search_view(request, **kwargs):
-    router_set = Router.objects.filter(status=NETWORK_STATE_ACTIVE, deleted=False)
+    router_set = Router.objects.filter(status=NETWORK_STATE_ACTIVE, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = RouterSerializer(router_set, many=True)
     return Response(serializer.data)
 

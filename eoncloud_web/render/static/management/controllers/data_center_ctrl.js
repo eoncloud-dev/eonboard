@@ -132,7 +132,7 @@ CloudApp.controller('DataCenterController',
     .controller('DataCenterCreateController',
         function($rootScope, $scope, $modalInstance,
                  data_center_table, data_center, DataCenterForm,
-                 $i18next, CommonHttpService, ToastrService){
+                 $i18next, CommonHttpService, ResourceTool, ToastrService){
 
             $scope.data_center = data_center;
 
@@ -150,7 +150,7 @@ CloudApp.controller('DataCenterController',
                     return;
                 }
 
-                data_center = angular.copy(data_center);
+                data_center = ResourceTool.copy_only_data(data_center);
 
                 var url = '/api/data-centers';
 
@@ -189,7 +189,13 @@ CloudApp.controller('DataCenterController',
                         host: {
                             required: true,
                             ip: true,
-                            remote: "/api/data-centers/is-host-unique"
+                            remote: {
+                                url: "/api/data-centers/is-host-unique",
+                                data: {
+                                    id: $("#id").val()
+                                },
+                                async: false
+                            }
                         },
                         project: {
                             required: true,

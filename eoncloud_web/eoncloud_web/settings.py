@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'biz.floating',
     'biz.network',
     'biz.volume',
+    'biz.loadbalancers',
     'cloud',
     'render',
     'biz.firewall',

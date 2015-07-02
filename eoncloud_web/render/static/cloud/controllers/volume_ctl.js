@@ -87,7 +87,7 @@ CloudApp.controller('VolumeController', function ($rootScope, $scope, $filter, $
         //云硬盘元数据定义
         $scope.volume = {
             "count": 1,
-            "size": 5
+            "size": 10
         };
         var modalVolume = $modal.open({
             templateUrl: 'create_volume.html',

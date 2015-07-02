@@ -203,12 +203,10 @@ def router_create_view(request, **kwargs):
         router.deleted = False
         Operation.log(obj=router, obj_name=router.name, action='update', result=1)
         if not router.is_gateway and request.POST.get('is_gateway') == u'true':
-            router.is_gateway = True
             router.status = NETWORK_STATE_UPDATING
             router.save()
             router_add_gateway_task.delay(router)
         elif router.is_gateway and request.POST.get('is_gateway') == u'false':
-            router.is_gateway = False
             router.status = NETWORK_STATE_UPDATING
             router.save()
             router_remove_gateway_task.delay(router)
@@ -240,7 +238,7 @@ def router_delete_view(request, **kwargs):
 
 @api_view(['GET'])
 def router_search_view(request, **kwargs):
-    router_set = Router.objects.filter(status=NETWORK_STATE_ACTIVE, deleted=False)
+    router_set = Router.objects.filter(status=NETWORK_STATE_ACTIVE, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = RouterSerializer(router_set, many=True)
     return Response(serializer.data)
 

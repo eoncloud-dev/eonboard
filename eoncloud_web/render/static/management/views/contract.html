@@ -241,40 +241,14 @@
     <div class="modal-body">
         <form id="quotaForm" role="form" class="form-horizontal form-bordered">
             <input type="hidden"  name="id" data-ng-model="contract.id">
-            <div class="form-group" data-ng-show="resource_options.length > 0">
-                <div class="col-md-3">
-                    <div class="btn-group pull-right">
-                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
-                                type="button" aria-expanded="false">
-                                {[{ 'contract.add_quota' | i18next }]} <i class="fa fa-angle-down"></i>
-                        </button>
-                        <ul role="menu" class="dropdown-menu">
-                            <li ng-repeat="option in resource_options">
-                                <a href="javascript:void(0);" ng-click="add_quota(option[0])">
-                                    {[{ option[1] }]}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
             <div class="form-group" data-ng-repeat="quota in quotas">
-                <label class="col-md-3 control-label" for="limit-{[{ $index }]}">{[{ resourceLabel(quota.resource) }]} </label>
-                <div class="col-md-2">
+                <label class="col-md-3 control-label" for="limit-{[{ $index }]}">{[{ quota.resource_label }]} </label>
+                <div class="col-md-4">
                     <input type="hidden" name="id[]" ng-model="quota.id"/>
                     <input type="hidden" name="resource[]" ng-model="quota.resource"/>
                     <input id="limit-{[{ $index }]}" name="limit-{[{ $index }]}" type="text" maxlength="20"
-                       data-ng-model="quota.limit" class="form-control input-small required"
-                       required digits min="1"
+                       data-ng-model="quota.limit" class="form-control input-small required digits"
                        style="display: inline-block;">
-                </div>
-                <div class="col-md-1" style="padding-top: 8px; margin-left: 10px;">
-                    <a href="javascript:void(0);" ng-click="save(quota)">
-                        <i class="fa fa-save"></i>
-                    </a>
-                    <a href="javascript:void(0);" ng-click="remove(quota)">
-                        <i class="fa fa-trash"></i>
-                    </a>
                 </div>
             </div>
             <div class="clear"></div>

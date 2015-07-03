@@ -282,42 +282,27 @@ CloudApp.controller('ContractController',
     ).controller("ManageQuotaController", function(
         $rootScope, $scope, $modalInstance, $i18next,
         contract, resource_options, Quota, QuotaValidation,
-        CommonHttpService, ToastrService, ResourceTool){
+        CommonHttpService, ToastrService){
 
-        $scope.contract = contract;
-        $scope.resource_options = angular.copy(resource_options);
-        $scope.resourceLabel = function(key){
+         Quota.query({contract_id: contract.id}, function(quotas){
 
-            var label = '';
+            var quotaMap = {};
+            $scope.quotas = [];
 
-            for(var i=0; i < resource_options.length; i++){
-
-                var option = resource_options[i];
-
-                if(option[0] == key){
-                    label = option[1];
-                    break;
-                }
-            }
-
-            return label;
-        };
-
-        $scope.quotas = Quota.query({contract_id: contract.id}, function(quotas){
-
-            // filter options that has been created.
-            $scope.resource_options = $scope.resource_options.filter(function(option){
-
-                for(var i = 0; i < quotas.length; i++){
-                    var quota = quotas[i];
-
-                    if(quota.resource == option[0]) {
-                        return false
-                    }
-                }
-
-                return true;
+            angular.forEach(quotas, function(quota){
+                quotaMap[quota.resource] = quota;
             });
+
+            angular.forEach(resource_options, function(option){
+
+                var quota = quotaMap[option[0]] || {limit: 0};
+                quota.resource = option[0];
+                quota.resource_label = option[1];
+
+                $scope.quotas.push(quota);
+
+            });
+
         });
 
         $modalInstance.opened.then(function() {
@@ -328,67 +313,6 @@ CloudApp.controller('ContractController',
 
         $scope.cancel = function () {
             $modalInstance.dismiss();
-        };
-
-        $scope.add_quota = function(resource_type){
-
-            $scope.quotas.push({
-                resource: resource_type,
-                limit: 0,
-                contract: contract.id
-            });
-
-            $scope.resource_options = $scope.resource_options.filter(function(option){
-                return option[0] != resource_type;
-            });
-        };
-
-        $scope.remove = function(toDel){
-
-            var refresh = function(){
-
-                $scope.quotas = $scope.quotas.filter(function(quota){
-                    return quota.resource != toDel.resource;
-                });
-                $scope.resource_options.push([toDel.resource, $scope.resourceLabel(toDel.resource)]);
-            };
-
-            bootbox.confirm($i18next("contract.confirm_delete_quota"), function (confirmed) {
-
-                if(!confirmed){
-                    return;
-                }
-                if(toDel.id == undefined){
-                    $scope.$apply(refresh);
-                } else {
-                    CommonHttpService.post("/api/quotas/delete/", {id: toDel.id}).then(function(data){
-                        if (data.success) {
-                            ToastrService.success(data.msg, $i18next("success"));
-                            refresh();
-                        } else {
-                            ToastrService.error(data.msg, $i18next("op_failed"));
-                        }
-                    });
-                }
-            });
-        };
-
-        $scope.save = function(quota){
-
-            if(!$scope.form.valid()){
-                return;
-            }
-
-            var params = ResourceTool.copy_only_data(quota);
-
-            CommonHttpService.post("/api/quotas/create/", params).then(function(data){
-                if (data.success) {
-                    ToastrService.success(data.msg, $i18next("success"));
-                    angular.copy(data.quota, quota);
-                } else {
-                    ToastrService.error(data.msg, $i18next("op_failed"));
-                }
-            });
         };
 
         $scope.submit = function(){
@@ -413,6 +337,7 @@ CloudApp.controller('ContractController',
             CommonHttpService.post("/api/quotas/batch-create/", params).then(function(data){
                 if (data.success) {
                     ToastrService.success(data.msg, $i18next("success"));
+                    $modalInstance.dismiss();
                 } else {
                     ToastrService.error(data.msg, $i18next("op_failed"));
                 }

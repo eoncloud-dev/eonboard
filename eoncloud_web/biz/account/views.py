@@ -113,6 +113,7 @@ def create_contract(request):
         serializer = ContractSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
+
             return Response({'success': True,
                              "msg": _('Contract is created successfully!')},
                             status=status.HTTP_201_CREATED)

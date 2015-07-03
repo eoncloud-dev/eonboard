@@ -1,0 +1,158 @@
+<div>
+    <div class="col-md-12">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="image_table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" ng-click="create()" role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'action.create' | i18next }]}
+                    </a>
+                    <a class="btn btn-danger" ng-click="batch_delete()" ng-class="{disabled: not_checked()}">
+                        <i class="fa fa-trash"></i>
+                        {[{ 'action.batch_delete' | i18next }]}
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="image_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+
+                    </table>
+                    <table ng-table="image_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                            <tr ng-repeat="image in $data">
+                                <td width="30" header="'checkbox-header.html'">
+                                    <input type="checkbox" data-ng-model="image.checked"/>
+                                </td>
+                                <td data-title="'image.name' | i18next"> {[{ image.name }]} </td>
+                                <td data-title="'image.os_type' | i18next"> {[{ image.os_name }]} </td>
+                                <td data-title="'image.disk_size' | i18next"> {[{ image.disk_size }]} GB </td>
+                                <td data-title="'image.uuid' | i18next">{[{ image.uuid }]}</td>
+                                <td data-title="'image.login_name' | i18next"> {[{ image.login_name }]}</td>
+                                <td data-title="'image.data_center' | i18next"> {[{ image.data_center_name }]}</td>
+                                <td data-title="'image.owner' | i18next"> {[{ image.owner_name }]}</td>
+                                <td data-title="'actions' | i18next">
+                                    <div class="btn-group">
+                                        <button class="btn btn-default"
+                                                type="button" ng-click="edit(image)">
+                                            <i class="fa fa-edit"></i>
+                                            {[{ 'action.edit' | i18next }]}
+                                        </button>
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                                type="button" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu">
+                                            <li>
+                                                <a href="javascript:void(0);"  ng-click="delete(image)">
+                                                    <i class="fa fa-hdd-o"></i>
+                                                    {[{ 'action.delete' | i18next }]} </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<!-- BEGIN MAIN JS & CSS -->
+
+<script type="text/ng-template" id="create.html">
+    <div class="modal-header">
+       <div id="updateTitle" class="modal-title"> {[{ 'image.title_create' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="imageForm" role="form" class="form-horizontal form-bordered">
+            <input type="hidden"  name="id" data-ng-model="image.id">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="name">
+                    {[{ 'image.name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input id="name" name="name" type="text" maxlength="50"
+                       data-ng-model="image.name" class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="uuid">
+                    {[{ 'image.uuid' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input id="uuid" name="uuid" type="text" maxlength="255"
+                           data-ng-model="image.uuid" class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="login_name">
+                    {[{ 'image.login_name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input id="login_name" name="login_name" type="text" maxlength="50"
+                           data-ng-model="image.login_name" class="form-control input-medium required">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="os_type">
+                    {[{ 'image.os_type' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <select id="os_type" name="os_type" data-ng-model="image.os_type"
+                            class="form-control input-medium"
+                            data-ng-options="os.key as os.label for os in os_types">
+                        <option value="">{[{ 'image.select_os_type' | i18next }]}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="data_center">
+                    {[{ 'image.data_center' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <select id="data_center" name="data_center" data-ng-model="image.data_center"
+                            class="form-control input-medium"
+                            data-ng-options="data_center.id as data_center.name for data_center in data_centers">
+                        <option value="">{[{ 'image.select_data_center' | i18next }]}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="user">{[{ 'image.owner' | i18next }]} </label>
+                <div class="col-md-5">
+                    <select id="user" name="user" data-ng-model="image.user"
+                            class="form-control input-medium"
+                            data-ng-options="user.id as user.username for user in users">
+                        <option value="">{[{ 'image.select_owner' | i18next }]}</option>
+                    </select>
+                    <span class="help-block"> {[{ 'image.help.owner' | i18next }]} </span>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="submit(image)"> {[{ 'submit' | i18next }]}</a>
+    </div>
+</script>
+
+<script type="text/ng-template" id="checkbox-header.html">
+    <input type="checkbox"  data-ng-model="checkAllFlag" data-ng-change="toggleAll()"/>
+</script>

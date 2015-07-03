@@ -590,7 +590,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             // operation
             .state("operation", {
                 url: "/operation/",
-                templateUrl: "/static/cloud/views/operation.html",
+                templateUrl: "/static/management/views/operation.html",
                 data: {pageTitle: 'Operation'},
                 controller: "OperationController",
                 resolve: {
@@ -599,7 +599,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/cloud/controllers/operation_ctl.js'
+                                '/static/management/controllers/operation_ctl.js'
                             ]
                         });
                     }]

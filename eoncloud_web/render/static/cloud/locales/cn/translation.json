@@ -332,7 +332,9 @@
     "resource":"资源",
     "resource_name":"资源名称",
     "desc":"操作描述",
-    "occur_time":"操作时间"
+    "occur_time":"操作时间",
+    "operator": "操作者",
+    "data_center": "数据中心"
   },
 
   "management": {

@@ -6,18 +6,17 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-
 from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, \
-            RESOURCE_CHOICES, RESOURCE_ACTION_CHOICES
+    RESOURCE_CHOICES, RESOURCE_ACTION_CHOICES
 
 from biz.account.mixins import LivingDeadModel
 
 
-class UserProfile(models.Model): 
+class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    mobile = models.CharField(_("Mobile"), max_length=26, null=True) 
-    user_type = models.IntegerField(_("User Type"), null=True, default=1,\
-                        choices=USER_TYPE_CHOICES)
+    mobile = models.CharField(_("Mobile"), max_length=26, null=True)
+    user_type = models.IntegerField(_("User Type"), null=True, default=1, \
+                                    choices=USER_TYPE_CHOICES)
     balance = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def __unicode__(self):
@@ -43,7 +42,6 @@ class SuperUserManager(models.Manager):
 
 
 class UserProxy(User):
-
     class Meta:
         proxy = True
 
@@ -53,13 +51,11 @@ class UserProxy(User):
 
 
 class LivingManager(models.Manager):
-
     def get_queryset(self):
         return super(LivingManager, self).get_queryset().filter(deleted=False)
 
 
 class DeletedManager(models.Manager):
-
     def get_queryset(self):
         return super(DeletedManager, self).get_queryset().filter(deleted=True)
 
@@ -82,7 +78,7 @@ class Contract(LivingDeadModel):
         for quota in self.quotas.all():
             d[quota.resource] = quota.limit
         return d
-   
+
     class Meta:
         db_table = "user_contract"
         verbose_name = _("Contract")
@@ -109,7 +105,7 @@ class Operation(models.Model):
     udc = models.ForeignKey('idc.UserDataCenter')
 
     resource = models.CharField(_("Resource"), max_length=128, null=False,
-                choices=RESOURCE_CHOICES)
+                                choices=RESOURCE_CHOICES)
     resource_id = models.IntegerField(_("Resource ID"), null=False)
     resource_name = models.CharField(_("Resource Name"), max_length=128)
     action = models.CharField(_("Action"), max_length=128, null=False)
@@ -117,16 +113,23 @@ class Operation(models.Model):
     create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
 
     @classmethod
-    def log(cls, obj, obj_name, action, result):
+    def log(cls, obj, obj_name, action, result=1, udc=None):
+
+        if udc is None:
+            if hasattr(obj, 'user_data_center'):
+                udc = obj.user_data_center
+            else:
+                raise ValueError('%s has no user data center' % obj_name)
+
         try:
             Operation.objects.create(
-                user = obj.user,
-                udc = obj.user_data_center,
-                resource = obj.__class__.__name__,
-                resource_id = obj.id,
-                resource_name = obj_name,
-                action = action,
-                result = result
+                user=obj.user,
+                udc=udc,
+                resource=obj.__class__.__name__,
+                resource_id=obj.id,
+                resource_name=obj_name,
+                action=action,
+                result=result
             )
         except Exception as e:
             pass
@@ -134,14 +137,22 @@ class Operation(models.Model):
     def get_resource(self):
         return _(self.resource)
 
-    def get_desc(self):  
+    def get_desc(self):
         desc_format = _("%(resource)s:%(resource_name)s execute %(action)s operation")
         desc = desc_format % {
-                "resource": _(self.resource),
-                "resource_name": self.resource_name,
-                "action": _(self.action),
-               } 
+            "resource": _(self.resource),
+            "resource_name": self.resource_name,
+            "action": _(self.action),
+        }
         return desc
+
+    @property
+    def operator(self):
+        return self.user.username
+
+    @property
+    def data_center_name(self):
+        return self.udc.data_center.name
 
     class Meta:
         db_table = "user_operation"

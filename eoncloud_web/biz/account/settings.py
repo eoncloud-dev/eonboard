@@ -17,6 +17,7 @@ QUOTA_ITEM = (
     ("floating_ip", _("Floating IP")),
 )
 
+
 RESOURCE_CHOICES = (
     ("Instance", _("Instance")),
     ("Volume", _("Volume")),
@@ -26,6 +27,7 @@ RESOURCE_CHOICES = (
     ("Floating", _("Volume")),
     ("Firewall", _("Firewall")),
     ("FirewallRules", _("FirewallRules")),
+    ("Contract", _("Contract")),
 )
 
 RESOURCE_ACTION_CHOICES = (

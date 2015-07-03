@@ -77,20 +77,18 @@ def quota_view(request):
     return Response(quota)
 
 
-class OperationList(generics.ListCreateAPIView):
-    queryset = Operation.objects.all()
+class OperationList(generics.ListAPIView):
+    queryset = Operation.objects
     serializer_class = OperationSerializer
     
     def list(self, request, *args, **kwargs):
-        try:
-            queryset = self.get_queryset().filter(user=request.user, udc__id=request.session["UDC_ID"])
-            serializer = OperationSerializer(queryset, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response()
 
-    def create(self, request, *args, **kwargs):
-        raise
+        queryset = self.get_queryset()
+
+        if not request.user.is_superuser:
+            queryset = queryset.filter(user=request.user, udc__id=request.session["UDC_ID"])
+
+        return Response(OperationSerializer(queryset, many=True).data)
 
 
 class ContractList(generics.ListCreateAPIView):
@@ -166,7 +164,6 @@ def delete_contracts(request):
         return Response({'success': True, "msg": _('Contracts have been deleted!')}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
-        print e
         LOG.error("Failed to delete contracts, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to delete contracts for unknown reason.')})
 
@@ -190,7 +187,6 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 class QuotaList(generics.ListAPIView):
 
     queryset = Quota.living
-
     serializer_class = QuotaSerializer
 
     def list(self, request, *args, **kwargs):
@@ -207,7 +203,6 @@ class QuotaList(generics.ListAPIView):
 class QuotaDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Quota.living
-
     serializer_class = QuotaSerializer
 
 
@@ -221,7 +216,6 @@ def create_quotas(request):
     try:
 
         contract = Contract.objects.get(pk=request.data['contract_id'])
-
         quota_ids = request.data.getlist('ids[]')
         resources = request.data.getlist('resources[]')
         limits = request.data.getlist('limits[]')
@@ -234,6 +228,8 @@ def create_quotas(request):
                 Quota.objects.filter(pk=quota_id).update(resource=resource, limit=limit)
             else:
                 Quota.objects.create(resource=resource, limit=limit, contract=contract)
+
+        Operation.log(contract, contract.name + " quota", 'update', udc=contract.udc)
 
         return Response({'success': True,
                          "msg": _('Quotas have been saved successfully!')},
@@ -248,15 +244,12 @@ def create_quota(request):
     try:
 
         contract = Contract.objects.get(pk=request.data['contract'])
-
         resource, limit = request.data['resource'], request.data['limit']
-
         pk = request.data['id'] if 'id' in request.data else None
 
         if pk and Quota.objects.filter(pk=pk).exists():
 
             quota = Quota.objects.get(pk=pk)
-
             quota.limit = limit
 
             quota.save()

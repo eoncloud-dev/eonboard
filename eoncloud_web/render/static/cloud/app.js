@@ -187,6 +187,9 @@ CloudApp.factory('Operation', ['$resource', function ($resource) {
     return $resource("/api/operation/:id");
 }]);
 
+CloudApp.factory('ForumReply', ['$resource', function($resource){
+    return $resource("/api/forum-replies/:id")
+}]);
 
 /* Setup App Main Controller */
 CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, $rootScope) {

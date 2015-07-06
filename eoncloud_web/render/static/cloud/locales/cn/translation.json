@@ -324,7 +324,10 @@
     "closed_forum": "已关闭",
     "reply": "回复",
     "title": "标题",
-    "desc": "描述"
+    "desc": "描述",
+    "poster": "发起人",
+    "replier": "回复人",
+    "reply_date": "回复日期"
   },
 
   "operation": {

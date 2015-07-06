@@ -6,15 +6,20 @@
                     <a class="btn btn-icon-only btn-default" href="#" ng-click="operation_table.reload();">
                         <i class="fa fa-refresh"></i>
                     </a>
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="toggleFilter()">
+                        <i class="fa fa-filter"></i>
+                    </a>
                 </div>
             </div>
             <div class="portlet-body">
                 <div id="" class="dataTables_wrapper no-footer">
                     <table ng-table="operation_table"
-                           class="table table-striped table-bordered table-advance table-hover">
+                           class="table table-striped table-bordered table-advance table-hover"
+                           show-filter="filterEnabled">
                         <tbody>
                         <tr ng-repeat="op in $data">
-                            <td data-title="'operation.resource' | i18next">
+                            <td data-title="'operation.resource' | i18next"
+                                filter="{'resource_i18n': 'text' }">
                                 <span>{[{ op.resource_i18n }]}</span>
                             </td>
                             <td data-title="'operation.resource_name' | i18next">
@@ -23,10 +28,12 @@
                             <td data-title="'operation.desc' | i18next">
                                 <span>{[{ op.desc }]}</span>
                             </td>
-                            <td data-title="'operation.operator' | i18next">
+                            <td data-title="'operation.operator' | i18next"
+                                filter="{'operator': 'text'}">
                                 <span>{[{ op.operator }]}</span>
                             </td>
-                            <td data-title="'operation.data_center' | i18next">
+                            <td data-title="'operation.data_center' | i18next"
+                                filter="{'data_center_name': 'text'}">
                                 <span>{[{ op.data_center_name }]}</span>
                             </td>
                             <td data-title="'operation.occur_time' | i18next">{[{ op.create_date }]}</td>

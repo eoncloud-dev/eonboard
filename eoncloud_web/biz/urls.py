@@ -109,6 +109,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^operation/$', account_view.OperationList.as_view()),
         url(r'^users/$', account_view.UserList.as_view()),
         url(r'^users/(?P<pk>[0-9]+)/$', account_view.UserDetail.as_view()),
+        url(r'^users/deactivate/$', account_view.deactivate_user),
+        url(r'^users/activate/$', account_view.activate_user),
         url(r'^quotas/$', account_view.QuotaList.as_view()),
         url(r'^quotas/(?P<pk>[0-9]+)/$', account_view.QuotaDetail.as_view()),
         url(r'^quotas/batch-create/$', account_view.create_quotas),

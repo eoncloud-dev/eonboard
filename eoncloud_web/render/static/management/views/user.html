@@ -1,0 +1,48 @@
+<div>
+    <div class="col-md-12">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="user_table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="user_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                            <tr ng-repeat="user in $data">
+                                <td data-title="'user.name' | i18next">
+                                    <span> {[{ user.username }]} </span>
+                                </td>
+                                <td data-title="'user.is_active' | i18next">
+                                    <span ng-if="user.is_active">{[{ 'user.yes' | i18next }]}</span>
+                                    <span ng-if="!user.is_active">{[{ 'user.no' | i18next }]}</span>
+                                </td>
+                                <td data-title="'user.date_joined' | i18next">
+                                    <span> {[{ user.date_joined }]} </span>
+                                </td>
+                                <td data-title="'user.last_login' | i18next">
+                                    <span> {[{ user.last_login }]} </span>
+                                </td>
+                                <td data-title="'actions' | i18next">
+                                    <button class="btn btn-default" ng-if="user.is_active"
+                                            type="button" ng-click="deactivate(user)">
+                                        <i class="fa fa-lock"></i> {[{ 'user.deactivate' | i18next }]}
+                                    </button>
+                                    <button class="btn btn-default" ng-if="!user.is_active"
+                                            type="button" ng-click="activate(user)">
+                                        <i class="fa fa-unlock"></i> {[{ 'user.activate' | i18next }]}
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MAIN CONTENT -->

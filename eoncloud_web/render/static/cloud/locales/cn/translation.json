@@ -271,7 +271,8 @@
     "contract": "合同",
     "data_center": "数据中心",
     "quota": "配额",
-    "flavor": "规格"
+    "flavor": "规格",
+    "user": "用户"
   },
 
   "overview": {
@@ -391,6 +392,21 @@
     "delete": "删除",
     "batch_delete": "批量删除",
     "submit": "提交"
+  },
+
+  "user": {
+    "name": "姓名",
+    "email": "邮箱",
+    "is_active": "活跃用户",
+    "is_superuser": "超级用户",
+    "date_joined": "加入时间",
+    "last_login": "最近登录时间",
+    "confirm_deactivate": "确定要禁止这个用户吗？",
+    "confirm_activate": "确定要激活这个用户吗？",
+    "yes": "是",
+    "no": "否",
+    "deactivate": "禁止",
+    "activate": "激活"
   }
 
 }

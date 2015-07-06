@@ -3,11 +3,9 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, \
-    RESOURCE_CHOICES, RESOURCE_ACTION_CHOICES
+from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM
 
 from biz.account.mixins import LivingDeadModel
 
@@ -61,7 +59,6 @@ class DeletedManager(models.Manager):
 
 
 class Contract(LivingDeadModel):
-    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     udc = models.ForeignKey('idc.UserDataCenter')
     name = models.CharField(_("Contract name"), max_length=128, null=False)
@@ -69,6 +66,8 @@ class Contract(LivingDeadModel):
     start_date = models.DateTimeField(_("Start Date"), null=False)
     end_date = models.DateTimeField(_("End Date"), null=False)
     deleted = models.BooleanField(_("Deleted"), default=False)
+    create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
+    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True, auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -86,12 +85,12 @@ class Contract(LivingDeadModel):
 
 
 class Quota(LivingDeadModel):
-    id = models.AutoField(primary_key=True)
     contract = models.ForeignKey(Contract, related_name="quotas")
     resource = models.CharField(_("Resouce"), max_length=128, choices=QUOTA_ITEM, null=False)
     limit = models.IntegerField(_("Limit"), default=0)
-    create_date = models.DateTimeField(_("Create Date"), default=timezone.now())
     deleted = models.BooleanField(_("Deleted"), default=False)
+    create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
+    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True, auto_now=True)
 
     class Meta:
         db_table = "user_quota"
@@ -100,12 +99,10 @@ class Quota(LivingDeadModel):
 
 
 class Operation(models.Model):
-    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     udc = models.ForeignKey('idc.UserDataCenter')
 
-    resource = models.CharField(_("Resource"), max_length=128, null=False,
-                                choices=RESOURCE_CHOICES)
+    resource = models.CharField(_("Resource"), max_length=128, null=False)
     resource_id = models.IntegerField(_("Resource ID"), null=False)
     resource_name = models.CharField(_("Resource Name"), max_length=128)
     action = models.CharField(_("Action"), max_length=128, null=False)
@@ -113,18 +110,12 @@ class Operation(models.Model):
     create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
 
     @classmethod
-    def log(cls, obj, obj_name, action, result=1, udc=None):
-
-        if udc is None:
-            if hasattr(obj, 'user_data_center'):
-                udc = obj.user_data_center
-            else:
-                raise ValueError('%s has no user data center' % obj_name)
+    def log(cls, obj, obj_name, action, result=1, udc=None, user=None):
 
         try:
             Operation.objects.create(
-                user=obj.user,
-                udc=udc,
+                user=user or obj.user,
+                udc=udc or obj.user_data_center,
                 resource=obj.__class__.__name__,
                 resource_id=obj.id,
                 resource_name=obj_name,

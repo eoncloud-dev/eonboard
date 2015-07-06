@@ -136,6 +136,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^forums/close/$', forums_view.forum_close_forum_view),
         url(r'^forums/reply/create/$', forums_view.forum_reply_create_view),
         url(r'^forums/reply/$', forums_view.forum_reply_list_view),
+        url(r'^forum-replies/$', forums_view.forum_reply_list_view),
     ]
 )
 

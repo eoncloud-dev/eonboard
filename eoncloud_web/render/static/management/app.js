@@ -265,6 +265,16 @@ CloudApp.factory('DataCenter', ['$resource', function($resource){
   return $resource("/api/data-centers/:id")
 }]);
 
+
+CloudApp.factory('Forum', ['$resource', function($resource){
+    return $resource("/api/forum/:id")
+}]);
+
+
+CloudApp.factory('ForumReply', ['$resource', function($resource){
+    return $resource("/api/forum-replies/:id")
+}]);
+
 /* Setup App Main Controller */
 CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, $rootScope) {
     $scope.$on('$viewContentLoaded', function () {
@@ -570,9 +580,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             })
             // forum
             .state("forum", {
-                url: "/forum/",
-                templateUrl: "/static/cloud/views/forum.html",
-                data: {pageTitle: 'forum'},
+                url: "/support/",
+                templateUrl: "/static/management/views/forum.html",
+                data: {pageTitle: 'Forum'},
                 controller: "ForumController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -580,8 +590,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-
-                                '/static/cloud/controllers/forum_ctl.js'
+                                '/static/management/controllers/forum_ctrl.js'
                             ]
                         });
                     }]

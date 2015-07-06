@@ -1,6 +1,9 @@
 'use strict';
 
-CloudApp.controller('ForumController', function($window,$rootScope, $scope, $interval,$modal,$i18next,$timeout, CommonHttpService,ToastrService) {
+CloudApp.controller('ForumController',
+    function($window, $rootScope, $scope, $interval,
+             $modal, $i18next, $timeout, ForumReply,
+             CommonHttpService,ToastrService) {
     $scope.$on('$viewContentLoaded', function() {   
         Metronic.initAjax();
         CommonHttpService.get('/api/forums/').then(function(data){
@@ -32,11 +35,10 @@ CloudApp.controller('ForumController', function($window,$rootScope, $scope, $int
         $scope.current_forum = forum
         var post_data = {
             'forum_id':forum.id
-        }
-        CommonHttpService.post("/api/forums/reply/",post_data).then(function (data) {
-            $scope.forum_reply_list = data;
-        });
-    }
+        };
+
+        $scope.forum_reply_list = ForumReply.query({forum_id: forum.id});
+    };
 
     $scope.close_forum = function(forum){
         bootbox.confirm($i18next("forum.confirm_close"), function (confirm) {

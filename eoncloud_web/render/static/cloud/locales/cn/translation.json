@@ -31,7 +31,16 @@
     "uuid": "ID",
     "os_type": "系统类型",
     "disk_size": "系统盘(免费赠送)",
-    "login_name": "登录用户"
+    "login_name": "登录用户",
+    "owner": "拥有者",
+    "data_center": "数据中心",
+    "select_os_type": "请选择操作系统",
+    "select_owner": "请选择拥有者",
+    "select_data_center": "请选择数据中心",
+    "confirm_delete": "确认要删除这些镜像吗？",
+    "help": {
+        "owner": "没有拥有者的镜像将成为公共镜像"
+    }
   },
 
   "instance": {

@@ -35,6 +35,9 @@ urlpatterns += format_suffix_patterns(
     [
         url(r'^images/$', image_view.ImageList.as_view()),
         url(r'^images/(?P<pk>[0-9]+)/$', image_view.ImageDetail.as_view()),
+        url(r'^images/create/$', image_view.create_image),
+        url(r'^images/update/$', image_view.update_image),
+        url(r'^images/batch-delete/$', image_view.delete_images),
     ]
 )
 

@@ -7,6 +7,11 @@ IMAGE_OS_TYPE = (
     (2, _("Linux")),
 )
 
+IMAGE_OS_TYPE_MAP = dict(IMAGE_OS_TYPE)
+
+IMAGE_DISK_SIZE = {1: 50, 2: 30}
+
+
 class Image(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(_("Image Name"), max_length=255)
@@ -18,6 +23,22 @@ class Image(models.Model):
     user = models.ForeignKey('auth.User', null=True, blank=True, default=None)
 
     create_at = models.DateTimeField(_("Create Date"), auto_now_add=True)
+
+    @property
+    def os_name(self):
+        return IMAGE_OS_TYPE_MAP[self.os_type]
+
+    @property
+    def disk_size(self):
+        return IMAGE_DISK_SIZE[self.os_type]
+
+    @property
+    def data_center_name(self):
+        return self.data_center.name
+
+    @property
+    def owner_name(self):
+        return self.user.username if self.user else ''
 
     class Meta:
         db_table = "image"

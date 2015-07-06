@@ -187,6 +187,34 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def perform_destroy(self, instance):
+
+        instance.is_active = False
+        instance.save()
+
+
+@api_view(['POST'])
+def deactivate_user(request):
+    pk = request.data['id']
+
+    user = User.objects.get(pk=pk)
+    user.is_active = False
+    user.save()
+
+    return Response({"success": True, "msg": _('User has been deactivated!')}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def activate_user(request):
+
+    pk = request.data['id']
+
+    user = User.objects.get(pk=pk)
+    user.is_active = True
+    user.save()
+
+    return Response({"success": True, "msg": _('User has been activated!')}, status=status.HTTP_200_OK)
+
 
 class QuotaList(generics.ListAPIView):
 

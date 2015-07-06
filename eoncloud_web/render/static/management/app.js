@@ -253,7 +253,7 @@ CloudApp.factory('Operation', ['$resource', function ($resource) {
 }]);
 
 CloudApp.factory('User', ['$resource', function($resource){
-   return $resource("/api/users/:id")
+   return $resource("/api/users/:id", {id: '@id'})
 }]);
 
 CloudApp.factory('UserDataCenter', ['$resource', function($resource){
@@ -403,31 +403,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             })
 
-            // instance
-            .state("instance", {
-                url: "/instance/",
-                templateUrl: "/static/cloud/views/instance.html",
-                data: {pageTitle: 'Instance'},
-                controller: "InstanceController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-                                '/static/assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js',
-                                '/static/cloud/scripts/create_instance_wizard.js',
-                                '/static/cloud/controllers/instance_ctl.js'
-                            ]
-                        });
-                    }],
-                    status_desc: function(CommonHttpService){
-                        return CommonHttpService.get("/api/instances/status/")
-                    }
-                }
-
-            })
-
             // image
             .state("image", {
                 url: "/image/",
@@ -447,137 +422,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             })
 
-            // volume
-            .state("volume", {
-                url: "/volume/",
-                templateUrl: "/static/cloud/views/volume.html",
-                data: {pageTitle: 'Volume'},
-                controller: "VolumeController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-
-                                '/static/cloud/controllers/volume_ctl.js'
-                            ]
-                        });
-                    }],
-                    status_desc: function(CommonHttpService){
-                        return CommonHttpService.get("/api/volumes/status/")
-                    }
-                }
-            })
-
-            // floating ip
-            .state("floating", {
-                url: "/floating/",
-                templateUrl: "/static/cloud/views/floating.html",
-                data: {pageTitle: 'FloatingIP'},
-                controller: "FloatingController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-
-                                '/static/cloud/controllers/floating_ctl.js'
-                            ]
-                        });
-                    }],
-                    status_desc: function(CommonHttpService){
-                        return CommonHttpService.get("/api/floatings/status/")
-                    }
-                }
-            })
-
-            // firewall
-            .state("firewall", {
-                url: "/firewall/",
-                templateUrl: "/static/cloud/views/firewall.html",
-                data: {pageTitle: 'Firewall'},
-                controller: "FirewallController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-                                '/static/cloud/controllers/firewall_ctl.js'
-                            ]
-                        });
-                    }]
-                }
-            })
-
-            // firewall.addrule
-            .state("firewallrules", {
-                url: "/firewallrules/:firewall_id",
-                templateUrl: "/static/cloud/views/firewall_rules.html",
-                data: {pageTitle: 'Firewall'},
-                controller: "FirewallRulesController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-                                '/static/cloud/controllers/firewall_ctl.js'
-                            ]
-                        });
-                    }],
-                    firewall_id:function($stateParams){
-                        return $stateParams.firewall_id;
-                    }
-                }
-            })
-
-            // network
-            .state("network", {
-                url: "/network/",
-                templateUrl: "/static/cloud/views/network.html",
-                data: {pageTitle: 'Firewall'},
-                controller: "NetworkController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-                                '/static/cloud/controllers/network_ctl.js'
-                            ]
-                        });
-                    }],
-                    status_desc: function(CommonHttpService){
-                        return CommonHttpService.get("/api/networks/status/")
-                    }
-                }
-            })
-
-            // router
-            .state("router", {
-                url: "/router/",
-                templateUrl: "/static/cloud/views/router.html",
-                data: {pageTitle: 'Firewall'},
-                controller: "RouterController",
-                resolve: {
-                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                        return $ocLazyLoad.load({
-                            name: 'CloudApp',
-                            insertBefore: '#ng_load_plugins_before',
-                            files: [
-
-                                '/static/cloud/controllers/router_ctl.js'
-                            ]
-                        });
-                    }],
-                    status_desc: function(CommonHttpService){
-                        return CommonHttpService.get("/api/networks/status/")
-                    }
-                }
-            })
             // forum
             .state("forum", {
                 url: "/support/",
@@ -614,7 +458,25 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     }]
                 }
             })
-        ;
+
+            // user
+            .state("user", {
+                url: "/users/",
+                templateUrl: "/static/management/views/user.html",
+                data: {pageTitle: 'User'},
+                controller: "UserController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/management/controllers/user_ctrl.js'
+                            ]
+                        });
+                    }]
+                }
+            });
     }]);
 
 /* Init global settings and run the app */

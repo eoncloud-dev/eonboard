@@ -44,6 +44,7 @@ RESOURCE_ACTION_CHOICES = (
     ("launch", _("launch")),
     ("create", _("create")),
     ("update", _("update")),
+    ("delete", _("delete")),
     ("attach_router", _("attach router")),
     ("detach_router", _("detach router")),
 )

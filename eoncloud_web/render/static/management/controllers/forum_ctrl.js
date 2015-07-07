@@ -14,15 +14,36 @@ CloudApp.controller('ForumController',
 
     $scope.forum_list = [];
     $scope.forum_reply_list = [];
-    $scope.reply_content = '';
+
+    var replyForm = $scope.replyForm = {
+        content: '',
+        submit:  function(){
+            var post_data = {
+                "reply_content": this.content,
+                "forum": $scope.current_forum.id
+            };
+
+            CommonHttpService.post("/api/forums/reply/create/", post_data).then(function (data) {
+                if (data.OPERATION_STATUS == 1) {
+                    $scope.loadReplies($scope.current_forum);
+                    replyForm.content = '';
+                } else {
+                    ToastrService.error(data.MSG, $i18next("op_failed"));
+                }
+            });
+        }
+    };
 
     var loadForums = function(){
         CommonHttpService.get('/api/forums/').then(function(data){
             $scope.forum_list =  data;
 
-            if($scope.current_forum == undefined){
+            if(data.length > 0){
                 $scope.current_forum = data[0];
-                $scope.load_replies($scope.current_forum);
+                $scope.loadReplies($scope.current_forum);
+            } else {
+                $scope.current_forum = null;
+                $scope.forum_reply_list = [];
             }
         });
     };
@@ -32,43 +53,31 @@ CloudApp.controller('ForumController',
         $interval.cancel(stopLoadForums);
     });
 
-    $scope.load_replies = function(forum){
+    $scope.loadReplies = function(forum){
+
+        if(forum == undefined){
+            return;
+        }
+
         $scope.current_forum = forum;
         $scope.forum_reply_list = ForumReply.query({forum_id: forum.id});
     };
 
     $scope.close_forum = function(forum){
-        bootbox.confirm($i18next("forum.confirm_close"), function (confirm) {
-            if (confirm) {
-                var post_data={
-                    "id":forum.id
-                };
+        bootbox.confirm($i18next("forum.confirm_close"),
+            function(confirmed){
 
-                CommonHttpService.post("/api/forums/close/", post_data).then(function (data) {
+                if (!confirmed) {
+                    return;
+                }
+
+                CommonHttpService.post("/api/forums/close/", {'id': forum.id}).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
                         $scope.current_forum = data.data;
-                        loadForums();
                     } else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
                     }
                 });
-            }
-        });
-    };
-
-    $scope.reply = function(forum, reply_content){
-        var post_data = {
-            "reply_content":reply_content,
-            "forum": forum.id
-        };
-
-        CommonHttpService.post("/api/forums/reply/create/", post_data).then(function (data) {
-            if (data.OPERATION_STATUS == 1) {
-                $scope.load_replies(forum);
-                $scope.reply_content = '';
-            } else {
-                ToastrService.error(data.MSG, $i18next("op_failed"));
-            }
         });
     };
 });

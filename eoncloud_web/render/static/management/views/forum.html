@@ -11,8 +11,7 @@
                                     <ul class="nav nav-tabs tabs-left margin-top-10">
                                         <li ng-class="{'active':current_forum.id == forum.id}"
                                             ng-repeat="forum in forum_list">
-                                            <a href="javascript:void(0);" ng-click="load_replies(forum)"
-                                               id="forum_id_134"
+                                            <a href="javascript:void(0);" ng-click="loadReplies(forum)"
                                                aria-expanded="true">
                                                 <p class="pad_t10 font_16"
                                                    style="word-wrap: break-word; word-break: break-all;">
@@ -33,7 +32,7 @@
                         <div class="col-md-7">
                             <div class="tab-content scroller" style="height:500px;">
                                 <div id="ajax_forum_add" class="well"
-                                     ng-if="current_forum !='' && current_forum !=undefined ">
+                                     ng-if="current_forum">
                                     <div class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
                                         <p class="font_16">{[{current_forum.title}]}</p>
 
@@ -49,7 +48,7 @@
                                                 <i class="fa fa-remove"></i>{[{ 'forum.close_forum' | i18next }]}
                                             </p>
 
-                                            <p ng-if="current_forum.status" class="prompt_news bg_5">
+                                            <p ng-if="current_forum.closed" class="prompt_news bg_5">
                                                 {[{ 'forum.closed_forum' | i18next }]}
                                             </p>
                                         </div>
@@ -69,19 +68,19 @@
                                             {[{ 'forum.reply_date' | i18next }]} {[{reply.create_date}]}
                                         </p>
                                     </div>
-                                    <div ng-if="!current_forum.closed">
+                                    <div data-ng-show="!current_forum.closed">
                                         <div class="bg_4 margin-top-10 clear">
-                                            <textarea class="form-control" rows="3" maxlength="255"
-                                                      ng-model="reply_content">
+                                            <textarea class="form-control" rows="3"
+                                                      maxlength="255" data-ng-model="replyForm.content">
 
                                             </textarea>
                                         </div>
                                         <div class="margin-top-10">
-                                            <a id="reply_a" class="btn yellow" href="javascript:void(0);"
-                                               ng-click="reply(current_forum, reply_content)"
-                                               ng-class="{'disabled':reply_content==''}">
-                                                {[{ 'forum.reply' | i18next }]}<i
-                                                    class="fa pad_l5 fa-plus-square-o"></i>
+                                            <a id="reply_a" class="btn yellow"
+                                               href="javascript:void(0);" ng-click="replyForm.submit()"
+                                               ng-class="{'disabled':replyForm.content==''}">
+                                                {[{ 'forum.reply' | i18next }]}
+                                                <i class="fa pad_l5 fa-plus-square-o"></i>
                                             </a>
                                         </div>
                                     </div>

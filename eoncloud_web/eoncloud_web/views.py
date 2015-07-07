@@ -1,8 +1,5 @@
 #-*-coding=utf-8-*-
 
-
-import json
-
 from django.conf import settings
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
@@ -13,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 
 from biz.idc.models import DataCenter, UserDataCenter as UDC
+from eoncloud_web.decorators import superuser_required
 
 
 def index(request, template_name="index.html"):
@@ -25,7 +23,7 @@ def cloud(request, template_name="cloud.html"):
     }))
 
 
-@login_required
+@superuser_required
 def management(request):
     return render(request, 'management.html')
 

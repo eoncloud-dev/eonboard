@@ -8,7 +8,8 @@
 
 CloudApp.controller('DataCenterController',
     function($rootScope, $scope, $filter, $modal, $i18next,
-             CommonHttpService, ToastrService, ngTableParams, DataCenter){
+             CommonHttpService, ToastrService, ngTableParams,
+            DataCenter, CheckboxGroup){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -17,32 +18,8 @@ CloudApp.controller('DataCenterController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
-        $scope.checkAllFlag = false;
-
         $scope.data_centers = [];
-
-        $scope.toggleAll = function(){
-            $scope.checkAllFlag = !$scope.checkAllFlag;
-
-            angular.forEach($scope.data_centers, function(data_center){
-                data_center.checked = $scope.checkAllFlag;
-            });
-        };
-
-        $scope.not_checked = function(){
-
-            var count = 0;
-
-            angular.forEach($scope.data_centers, function(data_center){
-
-                if(data_center.checked){
-                    count += 1;
-                }
-            });
-
-            return count == 0;
-        };
-
+        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.data_centers);
 
         $scope.data_center_table = new ngTableParams({
                 page: 1,
@@ -53,50 +30,33 @@ CloudApp.controller('DataCenterController',
                     DataCenter.query(function (data) {
 
                         var results = $filter('orderBy')(data, params.orderBy());
-
                         params.total(results.length);
-
                         $scope.data_centers = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
+                        checkboxGroup.syncObjects($scope.data_centers);
                         $defer.resolve($scope.data_centers);
                     });
                 }
             });
 
-        $scope.create = function(data_center) {
+        $scope.edit = $scope.create = function(data_center){
 
-                data_center = data_center || {};
+            data_center = data_center || {};
 
-                $modal.open({
-                    templateUrl: 'create.html',
-                    controller: 'DataCenterCreateController',
-                    backdrop: "static",
-                    size: 'lg',
-                    resolve: {
-                        data_center_table: function () {
-                            return $scope.data_center_table;
-                        },
-                        data_center: function(){return data_center;}
-                    }
-                });
-            };
-
-        $scope.edit = $scope.create;
-
-        var batchDelete = function(ids){
-
-            CommonHttpService.post("/api/data-centers/batch-delete/", {ids: ids}).then(function(data){
-                    if (data.success) {
-                        ToastrService.success(data.msg, $i18next("success"));
-                        $scope.data_center_table.reload();
-                        $scope.checkAllFlag = false;
-                    } else {
-                        ToastrService.error(data.msg, $i18next("op_failed"));
-                    }
-                });
+            $modal.open({
+                templateUrl: 'create.html',
+                controller: 'DataCenterCreateController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    data_center_table: function () {
+                        return $scope.data_center_table;
+                    },
+                    data_center: function(){return data_center;}
+                }
+            });
         };
 
-        $scope.batch_delete = function(){
+        var deleteDataCenters = function(ids){
 
             bootbox.confirm($i18next("data_center.confirm_delete"), function (confirmed) {
 
@@ -104,29 +64,41 @@ CloudApp.controller('DataCenterController',
                     return;
                 }
 
+                if(typeof ids == 'function'){
+                    ids = ids();
+                }
+
+                CommonHttpService.post("/api/data-centers/batch-delete/", {ids: ids})
+                    .then(function(data){
+                        if (data.success) {
+                            ToastrService.success(data.msg, $i18next("success"));
+                            $scope.data_center_table.reload();
+                            checkboxGroup.uncheck();
+                        } else {
+                            ToastrService.error(data.msg, $i18next("op_failed"));
+                        }
+                    });
+            });
+        };
+
+        $scope.batchDelete = function(){
+
+            deleteDataCenters(function(){
                 var ids = [];
 
-                angular.forEach($scope.data_centers, function(data_center){
+                checkboxGroup.forEachChecked(function(data_center){
 
                     if(data_center.checked){
                         ids.push(data_center.id);
                     }
                 });
 
-                batchDelete(ids);
+                return ids;
             });
         };
 
         $scope.delete = function(data_center){
-
-            bootbox.confirm($i18next("data_center.confirm_delete"), function (confirmed) {
-
-                if(!confirmed){
-                    return;
-                }
-
-                batchDelete([data_center.id]);
-            });
+            deleteDataCenters([data_center.id]);
         };
     })
     .controller('DataCenterCreateController',

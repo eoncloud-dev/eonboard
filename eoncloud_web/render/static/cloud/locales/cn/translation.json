@@ -253,6 +253,7 @@
 
   "sidebar": {
     "cloud": "云平台",
+    "cloud_management": "云平台管理",
     "console": "控制台",
     "overview": "概览",
     "consumption": "消费",

@@ -8,7 +8,8 @@
 
 CloudApp.controller('FlavorController',
     function($rootScope, $scope, $filter, $modal, $i18next,
-             CommonHttpService, ToastrService, ngTableParams, Flavor){
+             CommonHttpService, ToastrService, ngTableParams,
+             Flavor, CheckboxGroup){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -17,31 +18,8 @@ CloudApp.controller('FlavorController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
-        $scope.checkAllFlag = false;
-
         $scope.flavors = [];
-
-        $scope.toggleAll = function(){
-            $scope.checkAllFlag = !$scope.checkAllFlag;
-
-            angular.forEach($scope.flavors, function(flavor){
-                flavor.checked = $scope.checkAllFlag;
-            });
-        };
-
-        $scope.not_checked = function(){
-
-            var count = 0;
-
-            angular.forEach($scope.flavors, function(flavor){
-
-                if(flavor.checked){
-                    count += 1;
-                }
-            });
-
-            return count == 0;
-        };
+        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.flavors);
 
         $scope.flavor_table = new ngTableParams({
                 page: 1,
@@ -52,17 +30,15 @@ CloudApp.controller('FlavorController',
                     Flavor.query(function (data) {
 
                         var results = $filter('orderBy')(data, params.orderBy());
-
                         params.total(results.length);
-
                         $scope.flavors = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
+                        checkboxGroup.syncObjects($scope.flavors);
                         $defer.resolve($scope.flavors);
                     });
                 }
             });
 
-        $scope.create = function(flavor) {
+        $scope.edit = $scope.create = function(flavor) {
 
                 flavor = flavor || {};
 
@@ -80,9 +56,7 @@ CloudApp.controller('FlavorController',
                 });
             };
 
-        $scope.edit = $scope.create;
-
-        var batchDelete = function(ids){
+        var deleteFlavors = function(ids){
 
             bootbox.confirm($i18next("flavor.confirm_delete"), function(confirmed){
 
@@ -98,7 +72,7 @@ CloudApp.controller('FlavorController',
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         $scope.flavor_table.reload();
-                        $scope.checkAllFlag = false;
+                        checkboxGroup.uncheck()
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }
@@ -106,13 +80,12 @@ CloudApp.controller('FlavorController',
             });
         };
 
-        $scope.batch_delete = function(){
+        $scope.batchDelete = function(){
 
-            batchDelete(function(){
+            deleteFlavors(function(){
                 var ids = [];
 
-                angular.forEach($scope.flavors, function(flavor){
-
+                checkboxGroup.forEachChecked(function(flavor){
                     if(flavor.checked){
                         ids.push(flavor.id);
                     }
@@ -123,7 +96,7 @@ CloudApp.controller('FlavorController',
         };
 
         $scope.delete = function(flavor){
-            batchDelete([flavor.id]);
+            deleteFlavors([flavor.id]);
         };
     })
 

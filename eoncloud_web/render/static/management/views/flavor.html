@@ -10,7 +10,7 @@
                         <i class="fa fa-plus"></i>
                         {[{ 'action.create' | i18next }]}
                     </a>
-                    <a class="btn btn-danger" ng-click="batch_delete()" ng-class="{disabled: not_checked()}">
+                    <a class="btn btn-danger" ng-click="batchDelete()" ng-class="{disabled: checkboxGroup.noneChecked()}">
                         <i class="fa fa-trash"></i>
                         {[{ 'action.batch_delete' | i18next }]}
                     </a>
@@ -54,7 +54,7 @@
                                         <ul role="menu" class="dropdown-menu">
                                             <li>
                                                 <a href="javascript:void(0);"  ng-click="delete(flavor)">
-                                                    <i class="fa fa-hdd-o"></i>
+                                                    <i class="fa fa-trash"></i>
                                                     {[{ 'action.delete' | i18next }]} </a>
                                             </li>
                                         </ul>
@@ -119,5 +119,5 @@
 </script>
 
 <script type="text/ng-template" id="checkbox-header.html">
-    <input type="checkbox"  data-ng-model="checkAllFlag" data-ng-change="toggleAll()"/>
+    <input type="checkbox"  data-ng-model="checkboxGroup.checked" data-ng-change="checkboxGroup.toggleAll()"/>
 </script>

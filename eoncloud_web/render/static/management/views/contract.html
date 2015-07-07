@@ -10,7 +10,8 @@
                         <i class="fa fa-plus"></i>
                         {[{ 'contract.create' | i18next }]}
                     </a>
-                    <a class="btn btn-danger" ng-click="batch_delete()" ng-class="{disabled: not_checked()}">
+                    <a class="btn btn-danger" ng-click="batchDelete()"
+                       ng-class="{disabled: checkboxGroup.noneChecked()}">
                         <i class="fa fa-trash"></i>
                         {[{ 'contract.batch_delete' | i18next }]}
                     </a>
@@ -23,7 +24,7 @@
                         <tbody>
                             <tr data-ng-repeat="contract in $data">
                                 <td width="30" style="text-align: left" header="'checkbox-header.html'">
-                                    <input type="checkbox" data-ng-model="contract.deleted"/>
+                                    <input type="checkbox" data-ng-model="contract.checked"/>
                                 </td>
                                 <td data-title="'contract.name' | i18next">
                                     <span> {[{ contract.name }]} </span>
@@ -228,7 +229,7 @@
 
 <!-- BEGIN TEMPLATE CHECKBOX-HEADER -->
 <script type="text/ng-template" id="checkbox-header.html">
-    <input type="checkbox"  data-ng-model="checkAllFlag" data-ng-change="toggleAll()"/>
+    <input type="checkbox"  data-ng-model="checkboxGroup.checked" data-ng-change="checkboxGroup.toggleAll()"/>
 </script>
 <!-- END TEMPLATE CHECKBOX-HEADER -->
 

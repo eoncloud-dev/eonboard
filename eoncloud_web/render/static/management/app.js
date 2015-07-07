@@ -202,6 +202,57 @@ CloudApp.factory('ValidationTool', function(){
     }
 });
 
+CloudApp.factory('CheckboxGroup', function(){
+
+    var init = function(objects, flagName){
+
+        flagName = flagName || 'checked';
+
+        var groupChecker = {
+            objects: objects,
+            checkedObjects: [],
+            toggleAll: function(){
+                var self = this;
+                angular.forEach(self.objects, function(obj){
+                    obj[flagName] = self[flagName];
+                });
+            },
+            noneChecked: function(){
+                var count = 0;
+
+                angular.forEach(this.objects, function(obj){
+                    if(obj[flagName]){
+                        count += 1;
+                    }
+                });
+
+                return count == 0;
+            },
+            syncObjects: function(objects){
+                this.objects = objects;
+            },
+            uncheck: function(){
+                this[flagName] = false;
+                this.toggleAll();
+            },
+            forEachChecked: function(func){
+                angular.forEach(this.objects, function(obj){
+                    if(obj[flagName]){
+                       func(obj);
+                    }
+                });
+            }
+        };
+
+        groupChecker[flagName] = false;
+
+        return groupChecker;
+    };
+
+    return {init: init};
+
+});
+
 
 /* Setup image */
 CloudApp.factory('Image', ['$resource', function ($resource) {

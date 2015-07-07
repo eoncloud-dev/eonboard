@@ -9,7 +9,7 @@
 CloudApp.controller('ContractController',
     function ($rootScope, $scope, $filter, $timeout,
               $modal, $i18next, ngTableParams, Contract,
-              CommonHttpService, ToastrService) {
+              CommonHttpService, ToastrService, CheckboxGroup) {
 
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
@@ -18,31 +18,8 @@ CloudApp.controller('ContractController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
-        $scope.checkAllFlag = false;
         $scope.contracts = [];
-
-        $scope.toggleAll = function(){
-            $scope.checkAllFlag = !$scope.checkAllFlag;
-
-            angular.forEach($scope.contracts, function(contract){
-                contract.deleted = $scope.checkAllFlag;
-            });
-
-        };
-
-        $scope.not_checked = function(){
-
-            var count = 0;
-
-            angular.forEach($scope.contracts, function(contract){
-
-                if(contract.deleted){
-                    count += 1;
-                }
-            });
-
-            return count == 0;
-        };
+        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.contracts);
 
         $scope.contract_table = new ngTableParams({
             page: 1,
@@ -57,6 +34,8 @@ CloudApp.controller('ContractController',
                     params.total(data_list.length);
 
                     $scope.contracts = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
+
+                    checkboxGroup.syncObjects($scope.contracts);
 
                     $defer.resolve($scope.contracts);
                 });
@@ -95,48 +74,46 @@ CloudApp.controller('ContractController',
 
         var deleteContracts = function(contractIds){
 
-            CommonHttpService.post("/api/contracts/batch-delete/", {contract_ids: contractIds}).then(function(data){
-                    if (data.success) {
-                        ToastrService.success(data.msg, $i18next("success"));
-                        $scope.checkAllFlag = false;
-                        $scope.contract_table.reload();
-                    } else {
-                        ToastrService.error(data.msg, $i18next("op_failed"));
-                    }
-                });
-        };
-
-        $scope.batch_delete = function(){
-
-            bootbox.confirm($i18next("contract.confirm_delete"), function (confirmed) {
+            bootbox.confirm($i18next("contract.confirm_delete"), function(confirmed){
 
                 if(!confirmed){
                     return;
                 }
 
+                if(typeof contractIds == 'function'){
+                    contractIds = contractIds();
+                }
+
+                CommonHttpService.post("/api/contracts/batch-delete/", {contract_ids: contractIds})
+                    .then(function(data){
+                        if (data.success) {
+                            ToastrService.success(data.msg, $i18next("success"));
+                            checkboxGroup.uncheck();
+                            $scope.contract_table.reload();
+                        } else {
+                            ToastrService.error(data.msg, $i18next("op_failed"));
+                        }
+                    });
+            });
+        };
+
+        $scope.batchDelete = function(){
+            deleteContracts(function(){
                 var contractIds = [];
 
-                angular.forEach($scope.contracts, function(contract){
+                checkboxGroup.forEachChecked(function(contract){
 
-                    if(contract.deleted){
+                    if(contract.checked){
                         contractIds.push(contract.id);
                     }
                 });
 
-                deleteContracts(contractIds);
+                return contractIds;
             });
         };
 
-        $scope.delete= function(contract){
-
-            bootbox.confirm($i18next("contract.confirm_delete"), function (confirmed) {
-
-                if(!confirmed){
-                    return;
-                }
-
+        $scope.delete = function(contract){
                 deleteContracts([contract.id]);
-            });
         };
 
         $scope.manage_quota = function(contract){

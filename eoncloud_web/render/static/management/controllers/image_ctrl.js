@@ -5,8 +5,9 @@
  */
 
 CloudApp.controller('ImageController',
-    function($rootScope, $scope, $filter, $modal, $i18next, Image,
-             CommonHttpService, ToastrService, ngTableParams){
+    function($rootScope, $scope, $filter, $modal, $i18next,
+             CommonHttpService, ToastrService, ngTableParams,
+             Image, CheckboxGroup){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -15,30 +16,8 @@ CloudApp.controller('ImageController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
-        $scope.checkAllFlag = false;
         $scope.images = [];
-
-        $scope.toggleAll = function(){
-            $scope.checkAllFlag = !$scope.checkAllFlag;
-
-            angular.forEach($scope.images, function(image){
-                image.checked = $scope.checkAllFlag;
-            });
-        };
-
-        $scope.not_checked = function(){
-
-            var count = 0;
-
-            angular.forEach($scope.images, function(image){
-
-                if(image.checked){
-                    count += 1;
-                }
-            });
-
-            return count == 0;
-        };
+        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.images);
 
         $scope.image_table = new ngTableParams({
                 page: 1,
@@ -47,19 +26,16 @@ CloudApp.controller('ImageController',
                 counts: [],
                 getData: function ($defer, params) {
                     Image.query(function (data) {
-
                         var results = $filter('orderBy')(data, params.orderBy());
-
                         params.total(results.length);
-
                         $scope.images = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
                         $defer.resolve($scope.images);
+                        checkboxGroup.syncObjects($scope.images);
                     });
                 }
             });
 
-        $scope.create = function(image) {
+        $scope.edit = $scope.create = function(image) {
 
                 image = image || {};
 
@@ -77,9 +53,7 @@ CloudApp.controller('ImageController',
                 });
             };
 
-        $scope.edit = $scope.create;
-
-        var batchDelete = function(ids){
+        var deleteImages = function(ids){
 
             bootbox.confirm($i18next("image.confirm_delete"), function(confirmed){
 
@@ -95,7 +69,7 @@ CloudApp.controller('ImageController',
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         $scope.image_table.reload();
-                        $scope.checkAllFlag = false;
+                        checkboxGroup.uncheck();
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }
@@ -103,13 +77,12 @@ CloudApp.controller('ImageController',
             });
         };
 
-        $scope.batch_delete = function(){
+        $scope.batchDelete = function(){
 
-            batchDelete(function(){
+            deleteImages(function(){
                 var ids = [];
 
-                angular.forEach($scope.images, function(image){
-
+                checkboxGroup.forEachChecked(function(image){
                     if(image.checked){
                         ids.push(image.id);
                     }
@@ -120,7 +93,7 @@ CloudApp.controller('ImageController',
         };
 
         $scope.delete = function(image){
-            batchDelete([image.id]);
+            deleteImages([image.id]);
         };
     })
 

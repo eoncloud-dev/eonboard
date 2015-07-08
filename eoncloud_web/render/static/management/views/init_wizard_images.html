@@ -1,0 +1,60 @@
+<div class="col-md-2"></div>
+<div class="col-md-5">
+    <div class="portlet box">
+        <div class="portlet-body">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">{[{ 'image.name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.uuid' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.login_name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.os_type' | i18next }]}</th>
+                        <th style="width: 20%;">
+                            <a href="javascript:void(0);" data-ng-click="addImage()"
+                               class="btn btn-xs grey-cascade pull-right" >
+                                <i class="fa fa-plus"></i>
+                                {[{ 'action.add' | i18next }]}
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="image in images">
+                        <td class="form-group">
+                            <input name="image_name-{[{$index}]}" style="width: 100%;"
+                                   type="text" data-ng-model="image.name"
+                                   data-rule-required="true"
+                                   data-rule-minlength="2"
+                                   data-rule-maxlength="50">
+                        </td>
+                        <td class="form-group">
+                            <input name="uuid-{[{$index}]}"  type="text"
+                                   style="width: 100%;" data-ng-model="image.uuid"
+                                   data-rule-required="true">
+                        </td>
+                        <td class="form-group">
+                            <input name="login_name-{[{$index}]}" type="text"
+                                   style="width: 100%;" data-ng-model="image.login_name"
+                                   data-rule-required="true">
+                        </td>
+                        <td class="form-group">
+                            <select name="os_type_{[{ $index }]}" data-ng-model="image.os_type"
+                                    data-ng-options="os.key as os.label for os in os_types"
+                                    data-rule-required="true">
+                                <option value="">{[{ 'image.select_os_type' | i18next }]}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);"
+                               class="btn btn-xs grey-cascade pull-right"
+                               data-ng-click="removeImage($index)">
+                                <i class="fa fa-trash"></i>
+                                {[{ 'action.delete' | i18next }]}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

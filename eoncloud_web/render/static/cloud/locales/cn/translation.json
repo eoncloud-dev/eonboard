@@ -282,7 +282,7 @@
     "quota": "配额",
     "flavor": "规格",
     "user": "用户",
-	"management": "后台管理",
+    "management": "后台管理",
     "backup": "备份"
   },
 
@@ -369,7 +369,8 @@
       "instance_num": "云主机数量",
       "contract_num": "合同数量",
       "data_center_num": "数据中心数量",
-      "image_num": "镜像数量"
+      "image_num": "镜像数量",
+      "flavor_num": "规格数量"
     }
   },
 
@@ -398,6 +399,7 @@
 
   "action": {
     "create": "创建",
+    "add": "添加",
     "edit": "编辑",
     "update": "更新",
     "delete": "删除",
@@ -418,6 +420,21 @@
     "no": "否",
     "deactivate": "禁止",
     "activate": "激活"
+  },
+
+  "init_wizard": {
+    "title": "易用云初始化 - 步骤",
+    "data_center": "数据中心",
+    "flavor": "主机规格",
+    "image": "镜像",
+    "init_your_data_center": "请初始化您的数据中心",
+    "init_your_flavor": "请初始化您的主机规格",
+    "init_your_image": "请初始化您的镜像",
+    "confirm_data": "确认初始化参数",
+    "flavor_create_failed": "主机规格初始化失败，您可以在这里继续尝试，也可以在<a href=\"javascript: flavor();\">规格管理</a>界面重新创建。",
+    "image_create_success": "初始化过程结束，页面会自动跳转到管理界面，您也可以点击<a href=\"javascript: window.location.reload();\">这里</a>直接进入管理界面。",
+    "image_create_failed": "镜像初始化失败，您可以在这里继续尝试，也可以在<a href=\"javascript: image();\">镜像管理</a>界面重新创建。",
+    "skip": "跳过"
   },
   
   "backup": {

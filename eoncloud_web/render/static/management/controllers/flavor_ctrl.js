@@ -1,9 +1,7 @@
 /**
- * Created with PyCharm.
  * User: bluven
  * Date: 15-6-29
  * Time: 下午2:11
- * To change this template use File | Settings | File Templates.
  **/
 
 CloudApp.controller('FlavorController',

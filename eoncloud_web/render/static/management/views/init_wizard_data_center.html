@@ -1,0 +1,66 @@
+<div class="form-group">
+    <label class="col-md-3 control-label" for="data_center_name">
+        {[{ 'data_center.name' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="data_center_name" name="data_center_name"
+               type="text" class="form-control input-medium"
+               data-ng-model="data_center.name">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="host">
+        {[{ 'data_center.host' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="host" name="host" type="text"
+               data-ng-model="data_center.host"
+               class="form-control input-medium"
+               data-msg-remote="{[{ 'data_center.host_is_used' | i18next }]}">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="project">
+        {[{ 'data_center.project' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="project" name="project" type="text"
+               data-ng-model="data_center.project" class="form-control input-medium">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="user">
+        {[{ 'data_center.user' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="user" name="user" type="text"
+               data-ng-model="data_center.user" class="form-control input-medium">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="password">
+        {[{ 'data_center.password' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="password" name="password" type="text"
+               data-ng-model="data_center.password" class="form-control input-medium">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="auth_url">
+        {[{ 'data_center.auth_url' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="auth_url" name="auth_url" type="text"
+               data-ng-model="data_center.auth_url" class="form-control input-medium">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label" for="ext_net">
+        {[{ 'data_center.ext_net' | i18next }]}
+    </label>
+    <div class="col-md-5">
+        <input id="ext_net" name="ext_net" type="text"
+               data-ng-model="data_center.ext_net" class="form-control input-medium">
+    </div>
+</div>

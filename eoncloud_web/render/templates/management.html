@@ -10,7 +10,7 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-    <title data-ng-bind="'Eoncloud | ' + $state.current.data.pageTitle"></title>
+    <title data-ng-bind="site_config.BRAND + ' | ' + $state.current.data.pageTitle"></title>
 
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -67,7 +67,9 @@
 
 <body ng-controller="AppController"
       class="page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-on-load"
-      ng-class="{'page-container-bg-solid': settings.layout.pageBodySolid, 'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+      ng-class="{'page-container-bg-solid': settings.layout.pageBodySolid,
+                 'page-sidebar-closed': settings.layout.pageSidebarClosed,
+                 'page-full-width': !inited}">
 
 <!-- BEGIN PAGE SPINNER -->
 <div ng-spinner-bar class="page-spinner-bar">
@@ -87,34 +89,34 @@
 </div>
 
 <!-- BEGIN CONTAINER -->
+{% if inited %}
+<div class="page-container">
+        <!-- BEGIN SIDEBAR -->
+        <div data-ng-include="'{{ STATIC_URL }}management/layout/sidebar.html'" data-ng-controller="SidebarController"
+             class="page-sidebar-wrapper">
+        </div>
+        <!-- END SIDEBAR -->
+
+        <!-- BEGIN CONTENT -->
+        <div class="page-content-wrapper">
+            <div class="page-content">
+                <div ui-view class="fade-in-up"> </div>
+            </div>
+        </div>
+    <!-- END CONTENT -->
+</div>
+{% else %}
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-    <div data-ng-include="'{{ STATIC_URL }}management/layout/sidebar.html'" data-ng-controller="SidebarController"
-         class="page-sidebar-wrapper">
-    </div>
     <!-- END SIDEBAR -->
-
-    <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
-        <div class="page-content">
-            <!-- BEGIN STYLE CUSTOMIZER(optional) -->
-            <!--div data-ng-include="'{{ STATIC_URL }}cloud/tpl/theme-panel.html'" data-ng-controller="ThemePanelController" class="theme-panel hidden-xs hidden-sm">
-            </div-->
-            <!-- END STYLE CUSTOMIZER -->
-
-            <!-- BEGIN ACTUAL CONTENT -->
-            <div ui-view class="fade-in-up">
-            </div>
-            <!-- END ACTUAL CONTENT -->
+        <div class="page-content" style="margin-left:0px;"
+            data-ng-include="'{{ STATIC_URL }}management/views/init_wizard.html'"
+            data-ng-controller="InitWizardController">
         </div>
     </div>
-    <!-- END CONTENT -->
-
-    <!-- BEGIN QUICK SIDEBAR -->
-    <!--a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-close"></i>12313</a-->
-    <!--div data-ng-include="'{{ STATIC_URL }}cloud/tpl/quick-sidebar.html'" data-ng-controller="QuickSidebarController" class="page-quick-sidebar-wrapper"></div-->
-    <!-- END QUICK SIDEBAR -->
 </div>
+{% endif %}
 <!-- END CONTAINER -->
 
 <!-- BEGIN FOOTER -->
@@ -144,6 +146,8 @@
 <script src="{{ STATIC_URL }}assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js"
         type="text/javascript"></script>
+<script src="{{ STATIC_URL }}assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js"
+        type="text/javascript"></script>
 
 <script src="{{ STATIC_URL }}assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
 <!-- END CORE JQUERY PLUGINS -->
@@ -169,23 +173,22 @@
 <script src="{{ STATIC_URL }}assets/global/plugins/bootbox/bootbox.min.js" type="text/javascript"></script>
 <!-- END CORE ANGULARJS PLUGINS -->
 
-<!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
-<script src="{{ STATIC_URL }}management/app.js" type="text/javascript"></script>
-
-<script src="{{ STATIC_URL }}cloud/directives.js" type="text/javascript"></script>
-<!-- END APP LEVEL ANGULARJS SCRIPTS -->
 
 <!-- BEGIN APP LEVEL JQUERY SCRIPTS -->
 <script src="{{ STATIC_URL }}assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
-<!--script src="{{ STATIC_URL }}assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
-<!--script src="{{ STATIC_URL }}assets/admin/layout/scripts/demo.js" type="text/javascript"></script-->
 <!-- END APP LEVEL JQUERY SCRIPTS -->
 <!-- JQUERY UI PLUGINS -->
 <script src="{{ STATIC_URL }}assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js"
         type="text/javascript"></script>
 <script src="{{ STATIC_URL }}assets/global/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"
         type="text/javascript"></script>
+
+<!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
+<script src="{{ STATIC_URL }}management/app.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}cloud/directives.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}management/controllers/init_ctrl.js" type="text/javascript"></script>
+<!-- END APP LEVEL ANGULARJS SCRIPTS -->
 <!-- BEGIN EONCLOUD -->
 <!-- END EONCLOUD-->
 
@@ -210,7 +213,13 @@
         min: jQuery.validator.format("Please enter a value greater than or equal to {0}.")
     });
 
-    bootbox.setDefaults("locale", "zh_CN")
+    jQuery.validator.addMethod('ip',
+            function(value, element){
+                    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value);
+            }, "{% trans 'Please enter a valid IP.' %}");
+
+    bootbox.setDefaults("locale", "zh_CN");
+
 </script>
 <!-- END JAVASCRIPTS -->
 </body>

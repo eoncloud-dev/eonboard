@@ -1,0 +1,136 @@
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="portlet box green-haze" id="cloud-wizard">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-gift"></i> {[{ 'init_wizard.title' | i18next }]} <span class="step-title"> 1 / 3 </span>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                    <!-- BEGIN FORM WIZARD -->
+                    <div class="form-wizard">
+                        <!-- BEGIN FORM BODY -->
+                        <div class="form-body">
+                            <!-- BEGIN NAV BAR -->
+                            <ul class="nav nav-pills nav-justified steps">
+                                <li>
+                                    <a href="#tab1" data-toggle="tab" class="step">
+                                        <span class="number"> 1 </span>
+                                        <span class="desc">
+                                            <i class="fa fa-check"></i> {[{ 'init_wizard.data_center' | i18next }]}
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab2" data-toggle="tab" class="step">
+                                        <span class="number"> 2 </span>
+                                        <span class="desc">
+                                            <i class="fa fa-check"></i> {[{ 'init_wizard.flavor' | i18next }]}
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab3" data-toggle="tab" class="step active">
+                                        <span class="number"> 3 </span>
+                                        <span class="desc">
+                                            <i class="fa fa-check"></i> {[{ 'init_wizard.image' | i18next }]}
+                                        </span>
+                                    </a>
+                                </li>
+                                <!--
+                                <li>
+                                    <a href="#tab4" data-toggle="tab" class="step">
+                                        <span class="number"> 4 </span>
+                                        <span class="desc"> <i class="fa fa-check"></i> {[{ 'confirm' | i18next }]} </span>
+                                    </a>
+                                </li>
+                                -->
+                            </ul>
+                            <!-- END NAV BAR -->
+                            <div id="bar" class="progress progress-striped" role="progressbar">
+                                <div class="progress-bar progress-bar-success"> </div>
+                            </div>
+
+                            <!-- BEGIN TAB CONTENT -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab1">
+                                    <h3 class="block"> {[{ 'init_wizard.init_your_data_center' | i18next }]} </h3>
+                                    <form action="#" class="form-horizontal" id="dataCenterForm" method="POST">
+                                        <div class="row" data-ng-include="'/static/management/views/init_wizard_data_center.html'"> </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane" id="tab2">
+                                    <h3 class="block"> {[{ 'init_wizard.init_your_flavor' | i18next }]} </h3>
+                                    <form action="#" class="form-horizontal" id="flavorForm" method="POST">
+                                        <div class="row" data-ng-include="'/static/management/views/init_wizard_flavors.html'"> </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <h3 class="block"> {[{ 'init_wizard.init_your_image' | i18next }]} </h3>
+                                    <form action="#" class="form-horizontal" id="imageForm" method="POST">
+                                        <div class="row" data-ng-include="'/static/management/views/init_wizard_images.html'"> </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane" id="tab4">
+                                    <h3 class="block">{[{ 'init_wizard.confirm_data' | i18next }]}</h3>
+                                    <div class="row" data-ng-include="'/static/management/views/init_wizard_confirm.html'">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END TAB CONTENT -->
+                        </div>
+                        <!-- END FORM BODY -->
+                        <!-- BEGIN FORM ACTIONS -->
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <a href="javascript:void(0);" class="btn green button-next"
+                                       data-ng-show="step=='data_center'" data-ng-click="createDataCenter()">
+                                        {[{ 'data_center.title_create' | i18next }]}
+                                        <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn default button-next"
+                                       data-ng-show="step=='flavor'" data-ng-click="skip()">
+                                        {[{ 'init_wizard.skip' | i18next }]}
+                                        <i class="fa fa-angle-double-right"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn green button-next"
+                                       data-ng-show="step=='flavor'" data-ng-click="createFlavors()">
+                                        {[{ 'flavor.title_create' | i18next }]}
+                                        <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn green button-next"
+                                       data-ng-show="step=='image'" data-ng-click="createImages()">
+                                       {[{ 'image.title_create' | i18next }]}
+                                        <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END FORM ACTIONS -->
+                    </div>
+                <!-- END FORM WIZARD -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END PAGE CONTENT-->
+
+<script>
+
+    function image(){
+        window.location.href = "/management/#/image/";
+        window.location.reload();
+    }
+
+    function flavor(){
+        window.location.href = "/management/#/flavor/";
+        window.location.reload();
+    }
+
+    $(document).ready(function(){
+        Layout.initContent();
+    });
+</script>
+

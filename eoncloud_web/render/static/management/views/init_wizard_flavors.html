@@ -1,0 +1,63 @@
+<div class="col-md-2"></div>
+<div class="col-md-5">
+    <div class="portlet box">
+        <div class="portlet-body">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">{[{ 'flavor.name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.cpu' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.memory' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.price' | i18next }]}</th>
+                        <th style="width: 20%;">
+                            <a href="javascript:void(0);" data-ng-click="addFlavor()"
+                               class="btn btn-xs grey-cascade pull-right" >
+                                <i class="fa fa-plus"></i>
+                                {[{ 'action.add' | i18next }]}
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="flavor in flavors">
+                        <td class="form-group">
+                            <input name="flavor_name-{[{$index}]}" style="width: 100%;"
+                                   type="text" data-ng-model="flavor.name"
+                                   data-rule-required="true"
+                                   data-rule-minlength="2"
+                                   data-rule-maxlength="64">
+                        </td>
+                        <td class="form-group">
+                            <input name="cpu-{[{$index}]}"  type="text"
+                                   style="width: 100%;" data-ng-model="flavor.cpu"
+                                   data-rule-required="true"
+                                   data-rule-digits="true">
+                        </td>
+                        <td class="form-group">
+                            <input name="memory-{[{$index}]}" type="text"
+                                   style="width: 100%;"
+                                   data-rule-required="true"
+                                   data-rule-digits="true"
+                                   data-ng-model="flavor.memory">
+                        </td>
+                        <td class="form-group">
+                            <input name="price-{[{$index}]}" type="text"
+                                   style="width: 100%;"
+                                   data-rule-required="true"
+                                   data-rule-number="true"
+                                   data-ng-model="flavor.price">
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);"
+                               class="btn btn-xs grey-cascade pull-right"
+                               data-ng-click="removeFlavor($index)">
+                                <i class="fa fa-trash"></i>
+                                {[{ 'action.delete' | i18next }]}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

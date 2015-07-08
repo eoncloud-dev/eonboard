@@ -2,6 +2,7 @@
 
 import logging
 
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from rest_framework.decorators import api_view
 
 from biz.image.models import Image
 from biz.image.serializer import ImageSerializer
+from biz.idc.models import UserDataCenter
 
 LOG = logging.getLogger(__name__)
 
@@ -23,11 +25,11 @@ class ImageList(generics.ListCreateAPIView):
         queryset = self.get_queryset()
 
         if not request.user.is_superuser:
-            queryset = queryset.filter(data_center__pk=request.session["UDC_ID"])
+            udc = UserDataCenter.objects.get(pk=request.session["UDC_ID"])
+            queryset = queryset.filter(data_center=udc.data_center)
+            queryset = queryset.filter(Q(user=None) | Q(user=request.user))
 
-        serializer = ImageSerializer(queryset, many=True)
-
-        return Response(serializer.data)
+        return Response(ImageSerializer(queryset, many=True).data)
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):

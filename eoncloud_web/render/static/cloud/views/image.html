@@ -24,16 +24,14 @@
                         <tbody>
                         <tr ng-repeat="image in $data">
                             <td data-title="'image.name' | i18next">
-                                <span ng-if="image.os_type == 'Linux'">{[{ image.name }]}</span>
-                                <span ng-if="image.os_type == 'Windows'">{[{ image.name }]}</span>
+                                <span>{[{ image.name }]}</span>
                             </td>
                             <td data-title="'image.os_type' | i18next">
-                                <span ng-if="image.os_type == 'Linux'"><i class="fa fa-linux"></i>  Linux </span>
-                                <span ng-if="image.os_type == 'Windows'"><i class="fa fa-windows"></i> Windows </span>
+                                <span ng-if="image.os_name == 'Linux'"><i class="fa fa-linux"></i>  Linux </span>
+                                <span ng-if="image.os_name == 'Windows'"><i class="fa fa-windows"></i> Windows </span>
                             </td>
                             <td data-title="'image.disk_size' | i18next">
-                                <span ng-if="image.os_type == 'Linux'"> 30GB </span>
-                                <span ng-if="image.os_type == 'Windows'"> 50GB</span>
+                                <span> {[{ image.disk_size }]} GB </span>
                             </td>
                             <td data-title="'image.uuid' | i18next">{[{ image.uuid }]}</td>
                             <td data-title="'image.login_name' | i18next"> {[{ image.login_name }]}</td>

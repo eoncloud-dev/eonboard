@@ -355,7 +355,6 @@
     "overview": {
       "summary": "概要",
       "account_num": "用户数量",
-      "flavor_num": "规格数量",
       "instance_num": "云主机数量",
       "contract_num": "合同数量",
       "data_center_num": "数据中心数量",
@@ -365,7 +364,7 @@
 
   "data_center":{
     "name": "名称",
-    "host": "主机名",
+    "host": "管理节点IP",
     "project": "项目名",
     "user": "用户名",
     "password": "用户密码",

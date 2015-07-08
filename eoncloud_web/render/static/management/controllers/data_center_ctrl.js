@@ -108,9 +108,7 @@ CloudApp.controller('DataCenterController',
 
             $scope.data_center = ResourceTool.copy_only_data(data_center);
 
-            $modalInstance.opened.then(function() {
-                setTimeout(DataCenterForm.init, 0)
-            });
+            $modalInstance.rendered.then(DataCenterForm.init);
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();

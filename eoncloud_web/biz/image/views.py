@@ -23,7 +23,6 @@ class ImageList(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
 
         queryset = self.get_queryset()
-
         if not request.user.is_superuser:
             udc = UserDataCenter.objects.get(pk=request.session["UDC_ID"])
             queryset = queryset.filter(data_center=udc.data_center)

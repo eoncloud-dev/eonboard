@@ -182,7 +182,6 @@ LOG_CONFIG = {
 logging.config.dictConfig(LOG_CONFIG)
 
 
-try:
-    from eoncloud_web.local.local_settings import *
-except:
-    pass
+from eoncloud_web.local.local_settings import *
+from eoncloud_web.local.db_settings import *
+from eoncloud_web.local.celery_settings import *

@@ -274,7 +274,8 @@
     "data_center": "数据中心",
     "quota": "配额",
     "flavor": "规格",
-    "user": "用户"
+    "user": "用户",
+    "management": "后台管理"
   },
 
   "overview": {
@@ -359,7 +360,8 @@
       "instance_num": "云主机数量",
       "contract_num": "合同数量",
       "data_center_num": "数据中心数量",
-      "image_num": "镜像数量"
+      "image_num": "镜像数量",
+      "flavor_num": "规格数量"
     }
   },
 

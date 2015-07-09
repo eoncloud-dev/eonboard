@@ -67,9 +67,7 @@ def create_flavor(request):
 @api_view(["POST"])
 def update_flavor(request):
     try:
-
         flavor = Flavor.objects.get(pk=request.data['id'])
-
         serializer = FlavorSerializer(instance=flavor, data=request.data, context={"request": request})
 
         if serializer.is_valid():
@@ -87,11 +85,8 @@ def update_flavor(request):
 
 @api_view(["POST"])
 def delete_flavors(request):
-
     ids = request.data.getlist('ids[]')
-
     Flavor.objects.filter(pk__in=ids).delete()
-
     return Response({'success': True, "msg": _('Flavors have been deleted!')}, status=status.HTTP_201_CREATED)
 
 

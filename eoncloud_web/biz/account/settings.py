@@ -30,6 +30,7 @@ RESOURCE_CHOICES = (
     ("Contract", _("Contract")),
 )
 
+
 RESOURCE_ACTION_CHOICES = (
     ("reboot", _("reboot")),
     ("power_on", _("power_on")),

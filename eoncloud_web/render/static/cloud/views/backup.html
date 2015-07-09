@@ -1,0 +1,161 @@
+<!-- BEGIN PAGE HEADER-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT ng-controller="ImageController"-->
+<div>
+    <div class="col-md-12">
+        <div class="note note-success ng-scope">
+            <p>
+                {[{ 'backup.page_desc' | i18next }]}
+            </p>
+        </div>
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="backup_table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="backup_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                        <tr ng-repeat="b in $data">
+                            <td width="50" data-title="'ID'">{[{ b.id}]}</td>
+                            <td data-title="'backup.name' | i18next">
+                                <a class="btn btn-info btn-xs" ng-href="#/backup/">
+                                    <i class="fa fa-info"></i> {[{ b.name}]} </a>
+                            </td>
+                            <td data-title="'backup.type' | i18next">
+                                <i class="fa" ng-class="{'fa-copy': b.backup_type=='1', 'fa-align-center': b.backup_type == '2'}"></i>
+                                {[{ b.backup_type_desc }]}
+                            </td>
+                            <td data-title="'backup.resource' | i18next">
+                                <a ng-if="instance_backup(b)" class="btn default blue-stripe btn-xs" ng-href="#/instance/">
+                                    <i class="fa fa-desktop"></i> {[{ b.instance_name }]}
+                                </a>
+                                <a ng-if="!instance_backup(b)" class="btn default blue-stripe btn-xs" ng-href="#/volume/">
+                                    <i class="fa fa-stack-exchange"></i> {[{ b.volume_name }]}
+                                </a>
+                            </td>
+                            <!--td data-title="'backup.size' | i18next">
+                                {[{ b.size }]}
+                            </td-->
+                            <td data-title="'backup.status' | i18next">
+                                <span class="" ng-if="status_desc[b.status][1] == 1">{[{ status_desc[b.status][0] }]} </span>
+                                <div ng-if="status_desc[b.status][1] == 0"
+                                     class="progress progress-striped active"
+                                     style="width:140px; margin-bottom:0px;">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        <span class="">{[{ status_desc[b.status][0] }]} </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-title="'backup.create_date' | i18next">
+                                {[{ b.create_date }]}
+                            </td>
+                            <td data-title="'constant.actions' | i18next">
+                                <div class="btn-group" >
+                                    <button class="btn btn-default" ng-class="{disabled: b.status == 10}"
+                                            type="button" ng-click="backup_action(b, 'detail')">
+                                        <i class="fa fa-eye"></i>
+                                        {[{ 'backup.detail' | i18next }]}
+                                    </button>
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
+                                            aria-expanded="false"><i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul role="menu" class="dropdown-menu">
+                                        <!--li ng-if="b.status == 1">
+                                            <a href="#" ng-click="backup_action(b, 'restore')">
+                                                <i class="fa fa-history"></i>
+                                                {[{ 'backup.restore' | i18next }]} </a>
+                                        </li-->
+                                        <li ng-if="b.status != 20">
+                                            <a href="#" ng-click="backup_action(b, 'delete')">
+                                                <i class="fa fa-times"></i>
+                                                {[{ 'backup.delete' | i18next }]} </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<script type="text/ng-template" id="detail.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title" >
+            {[{ 'backup.backup' | i18next }]}{[{ 'backup.detail' | i18next }]} - {[{ backup_info.name }]}
+        </h4>
+    </div>
+    <div class="modal-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="backup_table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                        <tr ng-repeat="b in $data">
+                            <td data-title="'backup.resource' | i18next">
+                                <a ng-if="b.resource_type == 'Instance'" class="btn default blue-stripe btn-xs">
+                                    <i class="fa fa-desktop"></i> {[{ b.resource_name }]}
+                                </a>
+                                <a ng-if="b.resource_type == 'Volume'" class="btn default blue-stripe btn-xs">
+                                    <i class="fa fa-stack-exchange"></i> {[{ b.resource_name }]}
+                                </a>
+                            </td>
+                            <td data-title="'backup.size' | i18next">
+                                {[{ b.resource_size }]} GB
+                            </td>
+                            <td data-title="'backup.status' | i18next">
+                                <span class="" ng-if="status_desc[b.status][1] == 1">{[{ status_desc[b.status][0] }]} </span>
+                                <div ng-if="status_desc[b.status][1] == 0"
+                                     class="progress progress-striped active"
+                                     style="width:140px; margin-bottom:0px;">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        <span class="">{[{ status_desc[b.status][0] }]} </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-title="'backup.create_date' | i18next">
+                                {[{ backup_info.create_date }]}
+                            </td>
+                            <td data-title="'constant.actions' | i18next">
+                                <div class="btn-group" >
+                                    <button class="btn btn-default" ng-class="{disabled: b.status != 1}"
+                                            type="button" ng-click="backup_action(backup_info, 'restore', b)">
+                                        <i class="fa fa-eye"></i>
+                                        {[{ 'backup.restore' | i18next }]}
+                                    </button>
+                                    <!--button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
+                                            aria-expanded="false"><i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul role="menu" class="dropdown-menu">
+                                        <li ng-if="b.status != 20">
+                                            <a href="#" ng-click="backup_action(b, 'delete')">
+                                                <i class="fa fa-times"></i>
+                                                {[{ 'backup.delete' | i18next }]} </a>
+                                        </li>
+                                    </ul-->
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+    </div>
+</script>
+<!-- BEGIN MAIN JS & CSS -->

@@ -45,7 +45,6 @@ from cloud.api import network_base
 
 LOG = logging.getLogger(__name__)
 
-
 # API static values
 INSTANCE_ACTIVE_STATE = 'ACTIVE'
 VOLUME_STATE_AVAILABLE = "available"

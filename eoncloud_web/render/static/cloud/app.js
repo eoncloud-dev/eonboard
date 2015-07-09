@@ -127,6 +127,9 @@ CloudApp.factory('ToastrService', function () {
         success: function (message, title) {
             toastr.success(message, title);
         },
+        warning: function (message, title) {
+            toastr.warning(message, title);
+        },
         error: function (message, title) {
             toastr.error(message, title);
         }
@@ -189,6 +192,11 @@ CloudApp.factory('Operation', ['$resource', function ($resource) {
 
 CloudApp.factory('ForumReply', ['$resource', function($resource){
     return $resource("/api/forum-replies/:id")
+}]);
+
+/* Setup Backup */
+CloudApp.factory('Backup', ['$resource', function ($resource) {
+    return $resource("/api/backup/:id");
 }]);
 
 /* Setup App Main Controller */
@@ -495,6 +503,27 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }]
+                }
+            })
+            // backup
+            .state("backup", {
+                url: "/backup/",
+                templateUrl: "/static/cloud/views/backup.html",
+                data: {pageTitle: 'Backup'},
+                controller: "BackupController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/backup_ctl.js'
+                            ]
+                        });
+                    }],
+                    status_desc: function(CommonHttpService){
+                        return CommonHttpService.get("/api/backup/status/");
+                    }
                 }
             })
         ;

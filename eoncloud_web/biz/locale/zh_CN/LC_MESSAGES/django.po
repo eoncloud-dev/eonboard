@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-25 11:58+0800\n"
+"POT-Creation-Date: 2015-07-07 15:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,92 +22,97 @@ msgstr ""
 msgid "email address format error"
 msgstr "电子邮件地址格式不正确"
 
-#: account/models.py:17
+#: account/models.py:15
 msgid "Mobile"
 msgstr "手机号"
 
-#: account/models.py:18
+#: account/models.py:16
 msgid "User Type"
 msgstr "用户类型"
 
-#: account/models.py:27 account/models.py:28
+#: account/models.py:25 account/models.py:26
 msgid "UserProfile"
 msgstr "用户设置"
 
-#: account/models.py:38
+#: account/models.py:64
 msgid "Contract name"
 msgstr "合同名称"
 
-#: account/models.py:39
+#: account/models.py:65
 msgid "Customer name"
 msgstr "客户名称"
 
-#: account/models.py:40
+#: account/models.py:66
 msgid "Start Date"
 msgstr "开始日期"
 
-#: account/models.py:41
+#: account/models.py:67
 msgid "End Date"
 msgstr "结束日期"
 
-#: account/models.py:42 account/models.py:66 firewall/models.py:15
-#: firewall/models.py:36 floating/models.py:25 forum/models.py:11
-#: forum/models.py:25 instance/models.py:45 network/models.py:15
-#: network/models.py:56 network/models.py:74 network/models.py:90
-#: volume/models.py:17
+#: account/models.py:68 account/models.py:91 backup/models.py:30
+#: backup/models.py:129 firewall/models.py:15 firewall/models.py:36
+#: floating/models.py:25 forum/models.py:11 forum/models.py:28
+#: instance/models.py:45 network/models.py:15 network/models.py:56
+#: network/models.py:74 network/models.py:90 volume/models.py:17
 msgid "Deleted"
 msgstr "已删除"
 
-#: account/models.py:56 account/models.py:57
-msgid "Contract"
-msgstr "合同"
-
-#: account/models.py:63
-msgid "Resouce"
-msgstr "资源"
-
-#: account/models.py:64
-msgid "Limit"
-msgstr "配额"
-
-#: account/models.py:65 account/models.py:85 firewall/models.py:14
+#: account/models.py:69 account/models.py:92 account/models.py:110
+#: backup/models.py:28 backup/models.py:127 firewall/models.py:14
 #: firewall/models.py:37 floating/models.py:23 forum/models.py:12
-#: forum/models.py:26 image/models.py:20 instance/models.py:25
-#: instance/models.py:85 network/models.py:16 network/models.py:57
+#: forum/models.py:29 image/models.py:25 instance/models.py:25
+#: instance/models.py:84 network/models.py:16 network/models.py:57
 #: network/models.py:75 volume/models.py:16
 msgid "Create Date"
 msgstr "创建日期"
 
-#: account/models.py:70 account/models.py:71
+#: account/models.py:70 account/models.py:93
+msgid "Update Date"
+msgstr "修改日期"
+
+#: account/models.py:83 account/models.py:84 account/settings.py:30
+msgid "Contract"
+msgstr "合同"
+
+#: account/models.py:89
+msgid "Resouce"
+msgstr "资源"
+
+#: account/models.py:90
+msgid "Limit"
+msgstr "配额"
+
+#: account/models.py:97 account/models.py:98
 msgid "Quota"
 msgstr "配额"
 
-#: account/models.py:79
+#: account/models.py:105 backup/models.py:121
 msgid "Resource"
 msgstr "资源"
 
-#: account/models.py:81
+#: account/models.py:106 backup/models.py:119
 msgid "Resource ID"
 msgstr "资源 ID"
 
-#: account/models.py:82
+#: account/models.py:107 backup/models.py:122
 msgid "Resource Name"
 msgstr "资源名称"
 
-#: account/models.py:83
+#: account/models.py:108
 msgid "Action"
 msgstr "操作"
 
-#: account/models.py:84
+#: account/models.py:109
 msgid "Result"
 msgstr "结果"
 
-#: account/models.py:106
+#: account/models.py:132
 #, python-format
 msgid "%(resource)s:%(resource_name)s execute %(action)s operation"
 msgstr "%(resource)s:%(resource_name)s 执行了 %(action)s 操作"
 
-#: account/models.py:117 account/models.py:118
+#: account/models.py:151 account/models.py:152
 msgid "Operation"
 msgstr "操作日志"
 
@@ -119,8 +124,8 @@ msgstr "个人"
 msgid "Company"
 msgstr "企业"
 
-#: account/settings.py:12 account/settings.py:21 instance/models.py:52
-#: instance/models.py:53
+#: account/settings.py:12 account/settings.py:22 backup/models.py:22
+#: instance/models.py:52 instance/models.py:53
 msgid "Instance"
 msgstr "云主机"
 
@@ -144,91 +149,237 @@ msgstr "磁盘数量"
 msgid "Floating IP"
 msgstr "公网IP"
 
-#: account/settings.py:22 account/settings.py:26 volume/models.py:29
+#: account/settings.py:23 account/settings.py:27 volume/models.py:29
 #: volume/models.py:30
 msgid "Volume"
 msgstr "磁盘"
 
-#: account/settings.py:23 instance/models.py:34 network/models.py:36
+#: account/settings.py:24 instance/models.py:34 network/models.py:36
 #: network/models.py:37 network/models.py:89
 msgid "Network"
 msgstr "私有网络"
 
-#: account/settings.py:24 network/models.py:61 network/models.py:62
+#: account/settings.py:25 network/models.py:61 network/models.py:62
 msgid "Subnet"
 msgstr "子网"
 
-#: account/settings.py:25 network/models.py:80 network/models.py:81
+#: account/settings.py:26 network/models.py:80 network/models.py:81
 msgid "Router"
 msgstr "路由器"
 
-#: account/settings.py:27
+#: account/settings.py:28
 msgid "Firewall"
 msgstr "防火墙"
 
-#: account/settings.py:28
+#: account/settings.py:29
 msgid "FirewallRules"
 msgstr "防火墙规则"
 
-#: account/settings.py:32
+#: account/settings.py:35
 msgid "reboot"
 msgstr "重启"
 
-#: account/settings.py:33
+#: account/settings.py:36
 msgid "power_on"
 msgstr "开机"
 
-#: account/settings.py:34
+#: account/settings.py:37
 msgid "power_off"
 msgstr "关机"
 
-#: account/settings.py:35
+#: account/settings.py:38
 msgid "vnc_console"
 msgstr "VNC登录"
 
-#: account/settings.py:36
+#: account/settings.py:39
 msgid "bind_floating"
 msgstr "绑定公网IP"
 
-#: account/settings.py:37
+#: account/settings.py:40
 msgid "unbind_floating"
 msgstr "解绑公网IP"
 
-#: account/settings.py:38
+#: account/settings.py:41
 msgid "change_firewall"
 msgstr "更新防火墙"
 
-#: account/settings.py:39
+#: account/settings.py:42
 msgid "attach_volume"
 msgstr "挂载磁盘"
 
-#: account/settings.py:40
+#: account/settings.py:43
 msgid "detach_volume"
 msgstr "卸载磁盘"
 
-#: account/settings.py:41
+#: account/settings.py:44
 msgid "terminate"
 msgstr "删除"
 
-#: account/settings.py:42
+#: account/settings.py:45
 msgid "launch"
 msgstr "创建"
 
-#: account/settings.py:43
+#: account/settings.py:46
 msgid "create"
 msgstr "创建"
 
-#: account/settings.py:44
+#: account/settings.py:47
 msgid "update"
 msgstr "更新"
 
-#: account/settings.py:45
+#: account/settings.py:48
+msgid "delete"
+msgstr "删除"
+
+#: account/settings.py:49
 msgid "attach router"
 msgstr "连接路由器"
 
-#: account/settings.py:46
+#: account/settings.py:50
 msgid "detach router"
 msgstr "离开路由器"
+
+#: account/views.py:118
+msgid "Contract is created successfully!"
+msgstr ""
+
+#: account/views.py:122
+msgid "Contract data is not valid!"
+msgstr ""
+
+#: account/views.py:127
+msgid "Failed to create contract for unknown reason."
+msgstr ""
+
+#: account/views.py:145
+msgid "Contract is updated successfully!"
+msgstr ""
+
+#: account/views.py:150
+msgid "Failed to update contract for unknown reason."
+msgstr ""
+
+#: account/views.py:168
+msgid "Contracts have been deleted!"
+msgstr ""
+
+#: account/views.py:172
+msgid "Failed to delete contracts for unknown reason."
+msgstr ""
+
+#: account/views.py:204
+msgid "User has been deactivated!"
+msgstr "用户已禁用，将不能登录"
+
+#: account/views.py:216
+msgid "User has been activated!"
+msgstr "用户已激活，可以正常使用"
+
+#: account/views.py:270
+msgid "Quotas have been saved successfully!"
+msgstr ""
+
+#: account/views.py:274
+msgid "Failed to save quotas for unknown reason."
+msgstr ""
+
+#: account/views.py:296
+msgid "Quota have been saved successfully!"
+msgstr ""
+
+#: account/views.py:301
+msgid "Failed to save quota for unknown reason."
+msgstr ""
+
+#: account/views.py:311
+msgid "Quota have been deleted successfully!"
+msgstr "配额删除成功"
+
+#: account/views.py:315
+msgid "Failed to create quota for unknown reason."
+msgstr "配额创建失败"
+
+#: backup/models.py:16 idc/models.py:14 instance/models.py:80
+msgid "Name"
+msgstr "名称"
+
+#: backup/models.py:17
+msgid "Back Type"
+msgstr "备份类型"
+
+#: backup/models.py:20
+msgid "Volumes"
+msgstr "磁盘"
+
+#: backup/models.py:29 backup/models.py:128 floating/models.py:24
+msgid "Delete Date"
+msgstr "删除日期"
+
+#: backup/models.py:31 backup/models.py:130 floating/models.py:16
+#: instance/models.py:23 network/models.py:11 network/models.py:53
+#: network/models.py:71 volume/models.py:15
+msgid "Status"
+msgstr "状态"
+
+#: backup/models.py:110 backup/models.py:111
+msgid "Backup"
+msgstr "备份"
+
+#: backup/models.py:120
+msgid "Backend UUID"
+msgstr ""
+
+#: backup/models.py:123
+msgid "Size(GB)"
+msgstr ""
+
+#: backup/models.py:135 backup/models.py:136
+msgid "Backup Item"
+msgstr "备份项"
+
+#: backup/settings.py:9
+msgid "BACKUP_TYPE_FULL"
+msgstr "全量备份"
+
+#: backup/settings.py:10
+msgid "BACKUP_TYPE_INCREMENT"
+msgstr "增量备份"
+
+#: backup/settings.py:27 backup/settings.py:40
+msgid "Backup Waiting"
+msgstr "等待备份"
+
+#: backup/settings.py:28 backup/settings.py:41
+msgid "Backup Available"
+msgstr "可用"
+
+#: backup/settings.py:29 backup/settings.py:42
+msgid "Backup Error"
+msgstr "错误"
+
+#: backup/settings.py:30 backup/settings.py:43
+msgid "Backup Deleted"
+msgstr "已删除"
+
+#: backup/settings.py:31 backup/settings.py:44
+msgid "Backup Backuping"
+msgstr "备份中"
+
+#: backup/settings.py:32 backup/settings.py:45
+msgid "Backup Restoring"
+msgstr "恢复中"
+
+#: backup/settings.py:33 backup/settings.py:46
+msgid "Backup Pending Delete"
+msgstr "待删除"
+
+#: backup/settings.py:34 backup/settings.py:47
+msgid "Backup Pending Restore"
+msgstr "待恢复"
+
+#: backup/settings.py:35 backup/settings.py:48
+msgid "Backup Deleting"
+msgstr "删除中"
 
 #: firewall/models.py:8
 msgid "Firewall Name"
@@ -363,18 +514,9 @@ msgstr "规则删除失败"
 msgid "Public IP"
 msgstr "公网IP"
 
-#: floating/models.py:16 instance/models.py:23 network/models.py:11
-#: network/models.py:53 network/models.py:71 volume/models.py:15
-msgid "Status"
-msgstr "状态"
-
 #: floating/models.py:18
 msgid "Bandwidth MB"
 msgstr "带宽 MB"
-
-#: floating/models.py:24
-msgid "Delete Date"
-msgstr "删除日期"
 
 #: floating/models.py:30 floating/models.py:31
 msgid "Floating"
@@ -428,7 +570,7 @@ msgstr "解绑云主机"
 msgid "title"
 msgstr "标题"
 
-#: forum/models.py:8 forum/models.py:22
+#: forum/models.py:8 forum/models.py:26
 msgid "content"
 msgstr "内容"
 
@@ -436,33 +578,29 @@ msgstr "内容"
 msgid "Close Status"
 msgstr ""
 
-#: forum/views.py:25 forum/views.py:26
+#: forum/views.py:29 forum/views.py:30
 msgid "Creating Forum error"
 msgstr "创建工单失败"
 
-#: forum/views.py:42
+#: forum/views.py:46
 msgid "Creating Forum reply success"
 msgstr "回复成功"
 
-#: forum/views.py:43
+#: forum/views.py:50
 msgid "Creating Forum reply error"
 msgstr "回复失败"
 
-#: forum/views.py:54
+#: forum/views.py:64
 msgid "Close forum success"
 msgstr "关闭工单成功"
 
-#: forum/views.py:56
+#: forum/views.py:66
 msgid "No selected forum"
 msgstr "选择工单"
 
-#: forum/views.py:59
+#: forum/views.py:69
 msgid "Close Forum error"
 msgstr "关闭工单失败"
-
-#: idc/models.py:14 instance/models.py:81
-msgid "Name"
-msgstr "名称"
 
 #: idc/models.py:15
 msgid "openstack host"
@@ -520,41 +658,93 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: idc/models.py:60 idc/models.py:61
+#: idc/models.py:59 idc/models.py:60
 msgid "UserDataCenter"
 msgstr "用户数据中心"
 
+#: idc/views.py:68
+msgid "Data Center is created successfully!"
+msgstr ""
+
+#: idc/views.py:72
+msgid "Data Center data is not valid!"
+msgstr ""
+
+#: idc/views.py:77 idc/views.py:104
+msgid "Failed to create data center for unknown reason."
+msgstr ""
+
+#: idc/views.py:89
+msgid "This host has been used by other data center."
+msgstr ""
+
+#: idc/views.py:100
+msgid "Data Center is updated successfully!"
+msgstr ""
+
+#: idc/views.py:115
+msgid "Data centers have been deleted!"
+msgstr "数据中心删除成功"
+
+#: idc/views.py:119
+msgid "Failed to delete data centers for unknown reason."
+msgstr "数据中心删除失败"
+
 #: image/models.py:6
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: image/models.py:7
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
-#: image/models.py:12
+#: image/models.py:17
 msgid "Image Name"
 msgstr "名称"
 
-#: image/models.py:13
+#: image/models.py:18
 msgid "UUID"
 msgstr "UUID"
 
-#: image/models.py:13
+#: image/models.py:18
 msgid "Openstack Image UUID"
 msgstr "Openstack 镜像 UUID"
 
-#: image/models.py:14
+#: image/models.py:19
 msgid "Login Name"
 msgstr "登录用户名"
 
-#: image/models.py:15
+#: image/models.py:20
 msgid "Image OS Type"
 msgstr "镜像类型"
 
-#: image/models.py:24 image/models.py:25
+#: image/models.py:45 image/models.py:46
 msgid "Image"
 msgstr "镜像 "
+
+#: image/views.py:44
+msgid "Image is created successfully!"
+msgstr "镜像创建成功"
+
+#: image/views.py:47 image/views.py:68
+msgid "Image data is not valid!"
+msgstr ""
+
+#: image/views.py:52
+msgid "Failed to create image for unknown reason."
+msgstr "镜像创建失败"
+
+#: image/views.py:65
+msgid "Image is updated successfully!"
+msgstr "镜像更新成功"
+
+#: image/views.py:73
+msgid "Failed to update image for unknown reason."
+msgstr "镜像更新失败"
+
+#: image/views.py:83
+msgid "Images have been deleted!"
+msgstr "镜像已删除"
 
 #: instance/models.py:15
 msgid "Linux Image"
@@ -572,7 +762,7 @@ msgstr ""
 msgid "Terminate Date"
 msgstr ""
 
-#: instance/models.py:27 instance/models.py:82
+#: instance/models.py:27 instance/models.py:81
 msgid "Cpu Cores"
 msgstr ""
 
@@ -592,15 +782,15 @@ msgstr ""
 msgid "Private IP"
 msgstr ""
 
-#: instance/models.py:83
+#: instance/models.py:82
 msgid "Memory MB"
 msgstr ""
 
-#: instance/models.py:84
+#: instance/models.py:83
 msgid "Price"
 msgstr ""
 
-#: instance/models.py:90 instance/models.py:91
+#: instance/models.py:89 instance/models.py:90
 msgid "Flavor"
 msgstr "规格"
 
@@ -737,9 +927,33 @@ msgstr "删除"
 msgid "Instance Launch"
 msgstr "创建云主机"
 
+#: instance/views.py:56
+msgid "Flavor is created successfully!"
+msgstr ""
+
+#: instance/views.py:59 instance/views.py:78
+msgid "Flavor data is not valid!"
+msgstr ""
+
+#: instance/views.py:64
+msgid "Failed to create flavor for unknown reason."
+msgstr ""
+
+#: instance/views.py:75
+msgid "Flavor is updated successfully!"
+msgstr "规格更新成功"
+
+#: instance/views.py:83
+msgid "Failed to update flavor for unknown reason."
+msgstr "规格更新失败"
+
+#: instance/views.py:90
+msgid "Flavors have been deleted!"
+msgstr "规格已删除"
+
 #: network/models.py:9 network/models.py:46
 msgid "Network Name"
-msgstr ""
+msgstr "名称"
 
 #: network/models.py:10
 msgid "OS Network UUID"
@@ -845,35 +1059,35 @@ msgstr "默认私有网络不支持此操作"
 msgid "network exist address , not operation"
 msgstr "子网地址已经存在"
 
-#: network/views.py:124
+#: network/views.py:126
 msgid "Link router success"
 msgstr "加入路由器成功"
 
-#: network/views.py:128
+#: network/views.py:130
 msgid "Network not add subnet ,not operation "
 msgstr "请将私有网络先加入路由器"
 
-#: network/views.py:138
+#: network/views.py:140
 msgid "Leave router success "
 msgstr "离开路由器成功"
 
-#: network/views.py:141
+#: network/views.py:143
 msgid "Network operation error"
 msgstr "操作异常"
 
-#: network/views.py:190
+#: network/views.py:192
 msgid "Create router success"
 msgstr "创建路由器成功"
 
-#: network/views.py:192
+#: network/views.py:194
 msgid "Valid Router fail"
 msgstr "数据提交异常"
 
-#: network/views.py:195
+#: network/views.py:197
 msgid "Create router fail"
 msgstr "创建路由器失败"
 
-#: network/views.py:199
+#: network/views.py:201
 msgid "The selected router not exist"
 msgstr "路由器不存在"
 
@@ -1017,3 +1231,12 @@ msgstr "磁盘已挂载到云主机:%(instance)s"
 #: volume/views.py:122
 msgid "Deleting Volume"
 msgstr "删除中"
+
+#~ msgid "full"
+#~ msgstr "全量备份"
+
+#~ msgid "increment"
+#~ msgstr "增量备份"
+
+#~ msgid "Wating Backup"
+#~ msgstr "等待备份"

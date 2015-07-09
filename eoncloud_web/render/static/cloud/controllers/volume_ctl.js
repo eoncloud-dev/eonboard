@@ -19,7 +19,7 @@ CloudApp.controller('VolumeController', function ($rootScope, $scope, $filter, $
         getData: function ($defer, params) {
             Volume.query(function (data) {
                 var data_list = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) : volume.name;
+                    $filter('orderBy')(data, params.orderBy()) : data;
                 params.total(data_list.length);
                 $scope.current_volume_data = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
                 $defer.resolve($scope.current_volume_data);

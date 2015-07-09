@@ -19,8 +19,8 @@ from biz.image.settings import WINDOWS, LINUX
 
 from cloud_utils import create_rc_by_instance
 from network_task import create_default_private_network
-
 from cloud import volume_task
+from cloud import backup_task
 
 from api import nova
 
@@ -89,8 +89,9 @@ def instance_create(instance, password):
 def instance_get(instance):
     rc = create_rc_by_instance(instance)
     try:
-        server = nova.server_get(rc, instance.uuid)
-        return server
+        return nova.server_get(rc, instance.uuid)
+    except nova.nova_exceptions.NotFound as e:
+        return None
     except Exception as e:
         LOG.exception(e)
         return None
@@ -111,6 +112,8 @@ def instance_deleted_release_resource(instance):
     from biz.floating.settings import FLOATING_AVAILABLE
     floatings = Floating.objects.filter(instance=instance, deleted=0) 
     for f in floatings:
+        LOG.info('Release instance floating:[%s][%s][floating:%s]' % (
+                    instance.id, instance.name, f.ip))
         f.instance = None
         f.status = FLOATING_AVAILABLE
         f.save()
@@ -119,11 +122,22 @@ def instance_deleted_release_resource(instance):
     from biz.volume.models import Volume
     volumes = Volume.objects.filter(instance=instance, deleted=0)
     for vol in volumes:
+        LOG.info('Release instance volume:[%s][%s][volume:%s]' % (
+                    instance.id, instance.name, vol.name))
         vol.instance = None
         vol.status = VOLUME_STATE_AVAILABLE
         vol.save()
 
-    # TODO: release backup
+    # release backup
+    from biz.backup.models import Backup, BackupItem
+    for item in BackupItem.objects.filter(
+                    resource_id=instance.id,
+                    resource_type="Instance",
+                    deleted=False):
+        LOG.info('Release instance backup:[%s][%s][backup:%s]' % (
+                    instance.id, instance.name, item.backup.name))
+        item.backup.mark_delete()
+        backup_task.backup_action_task(item.backup, "delete")
 
 @app.task
 def instance_create_task(instance, **kwargs):

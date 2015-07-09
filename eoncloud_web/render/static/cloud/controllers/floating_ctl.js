@@ -255,7 +255,7 @@ CloudApp.controller('AssociateController',
             }
             CommonHttpService.post("/api/floatings/action/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
-                    ToastrService.success($i18next("floatingIP.create_success_and_waiting"), $i18next("success"));
+                    ToastrService.success($i18next("floatingIP.op_success_and_waiting"), $i18next("success"));
                     floating_table.reload();
                 }
                 else {

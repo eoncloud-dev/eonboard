@@ -428,7 +428,12 @@ CloudApp.controller('InstanceChangeFirewallController',
         $scope.instance = instance;
         $scope.has_error = false;
         $scope.selected_firewall = false;
-        $scope.firewalls = firewalls;
+        $scope.firewalls = [];
+        for(var i = 0; i < firewalls.length; i++) {
+            if(firewalls[i].id != instance.firewall_group) {
+                $scope.firewalls.push(firewalls[i]);
+            }
+        }
 
         $scope.action = function (firewall) {
             if (firewall) {

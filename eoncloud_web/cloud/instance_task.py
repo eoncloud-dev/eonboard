@@ -15,6 +15,7 @@ from biz.instance.settings import INSTANCE_STATE_RUNNING, \
 from biz.volume.settings import VOLUME_STATE_AVAILABLE, VOLUME_STATE_IN_USE,\
             VOLUME_STATE_ERROR
 from biz.network.models import Network, Subnet
+from biz.firewall.models import Firewall
 from biz.image.settings import WINDOWS, LINUX
 
 from cloud_utils import create_rc_by_instance
@@ -50,7 +51,6 @@ def flavor_delete(instance):
     except Exception as e:
         LOG.exception(e)
         return False
-
 
 
 def instance_create(instance, password):
@@ -141,17 +141,18 @@ def instance_deleted_release_resource(instance):
 
 @app.task
 def instance_create_task(instance, **kwargs):
-
     password = kwargs.get("password", None)
     if not instance or not password:
         return
 
-    LOG.info('begin to start create instance:[%s][%s][pwd:%s]' % (instance.id, instance.name, password))
+    LOG.info('begin to start create instance:[%s][%s][pwd:%s]' % (
+                    instance.id, instance.name, password))
      
     # create flavor
     flavor = flavor_create(instance)
     if not flavor:
-        LOG.error('create flavor error!!! instance:[%s][%s]' % (instance.id, instance.name))
+        LOG.error('create flavor error!!! instance:[%s][%s]' % (
+                    instance.id, instance.name))
         return
     
     instance.flavor_id = flavor.id
@@ -161,6 +162,14 @@ def instance_create_task(instance, **kwargs):
     if instance.network_id == 0:
         network = create_default_private_network(instance)
         instance.network_id = network.id
+
+    if not instance.firewall_group:
+        f = Firewall.objects.filter(is_default=True,
+                            user=instance.user,
+                            user_data_center=instance.user_data_center,
+                            deleted=False)
+        if len(f) > 0:
+            instance.firewall_group = f[0]
 
     instance.save() 
     LOG.info('network ok instance:[%s][%s]' % (instance.id, instance.name))

@@ -1,0 +1,217 @@
+<div class="row">
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                {[{ 'balancer.info' | i18next }]}
+            </div>
+        </div>
+        <div class="portlet-body">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-md-2">
+                            {[{ 'balancer.balancer_name' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{ balancer.name }]}
+                        </td>
+                        <td class="col-md-2">
+                            {[{ 'balancer.description' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{balancer.description}]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-2">
+                            {[{ 'balancer.subnet' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{balancer.subnet_info.address}]}
+                        </td>
+                        <td class="col-md-2">
+                            {[{ 'balancer.protocol' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{balancer.protocol_desc}]}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-2">
+                            VIP
+                        </td>
+                        <td class="col-md-3">
+                            <div ng-if="balancer.vip!=null && balancer.vip_info.address !='' && balancer.vip_info.address !=null">{[{ 'balancer.private_ip' | i18next }]}:{[{ balancer.vip_info.address }]}</div>
+                            <div ng-if="balancer.vip!=null &&  balancer.vip_info.public_address !='' && balancer.vip_info.public_address !=null">{[{ 'balancer.public_ip' | i18next }]}:{[{ balancer.vip_info.public_address }]}</div>
+                        </td>
+                        <td class="col-md-2">
+                            {[{ 'balancer.port' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{balancer.vip_info.protocol_port}]}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                {[{ 'balancer.member' | i18next }]}
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="caption font-green-sharp" style="margin-bottom: 15px;">
+                <a class="btn btn-icon-only btn-default" href="#" ng-click="member_table.reload();">
+                    <i class="fa fa-refresh"></i>
+                </a>
+                <a href="javascript:void(0);" id="loadBalance-fa-plus" ng-click="add_member(balancer)" class="btn btn-primary"><i class="fa fa-plus"></i>{[{ 'balancer.add_member' | i18next }]}</a>
+                <a class="btn btn-danger" ng-click="delete_member_action()" ng-class="{'disabled-link disabled ': checked_count <= 0}">
+                    <i class="fa fa-trash"></i>
+                    {[{ 'balancer.delete' | i18next }]}
+                </a>
+            </div>
+            <div  class="dataTables_wrapper no-footer">
+                <table ng-table="member_table"
+                       class="table table-striped table-bordered table-advance table-hover">
+                    <tbody>
+                    <tr ng-repeat="member in $data " >
+                        <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'" >
+                            <input type="checkbox" ng-class="{'disabled': status_desc[member.status][1] == 0}" ng-model="checkboxes.items[member.id]"/>
+                        </td>
+                        <td data-title="'balancer.instance' | i18next">{[{ member.instance_info.name }]}</td>
+                        <td data-title="'balancer.IP_address' | i18next">{[{ member.address }]}</td>
+                        <td data-title="'balancer.protocol_port' | i18next">{[{ member.protocol_port }]}</td>
+                        <td data-title="'balancer.weight' | i18next">{[{ member.weight }]}</td>
+                        <td data-title="'router.status' | i18next">
+                            <span class="" ng-if="status_desc[member.status][1] == 1">{[{ status_desc[member.status][0] }]} </span>
+                            <div ng-if="status_desc[member.status][1] == 0"
+                                 class="progress progress-striped active"
+                                 style="width:140px; margin-bottom:0px;">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                     aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    <span class="">{[{ status_desc[member.status][0] }]} </span>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-title="'router.operation' | i18next">
+                            <div class="btn-group">
+                                <button class="btn btn-default"
+                                        type="button" ng-click="modal_edit_member(member)">
+                                    <i class="fa fa-edit"></i>
+                                    {[{ 'edit' | i18next }]}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/ng-template" id="ng-table/headers/checkbox.html">
+    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/>
+</script>
+
+
+<!--添加member -->
+<script type="text/ng-template" id="add_member.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'balancer.create_member_title' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" id="create_member_form" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.member' | i18next }]}<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <select multiple="multiple" size="5" class="form-control required" ng-options="f.name for f in instances track by f.id" name="members" ng-model="member.members" >
+                            <option value="" selected>{[{'balancer.no_have' | i18next }]}</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.weight' | i18next }]}
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <input type="text"  maxlength="20" name="weight" ng-model="member.weight"
+                               class="form-control number">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.protocol_port' | i18next }]}<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <input type="text"  maxlength="20" name="protocol_port" min="0" max="65535" ng-model="member.protocol_port"
+                               class="form-control number  required">
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="modal-footer">
+        <button href="javascript:;" class="btn" ng-click="cancel()">
+            {[{ 'cancel' | i18next }]} </button>
+        <button class="btn btn-primary"  ng-click="submit_member_click(member)">{[{ 'confirm' | i18next }]}</button>
+    </div>
+</script>
+
+<!--修改member -->
+<script type="text/ng-template" id="update_member.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'balancer.update_member_title' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form role="form" id="create_member_form" class="form-horizontal form-bordered">
+
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.weight' | i18next }]}
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <input type="text"  maxlength="20" name="weight" ng-model="member.weight"
+                               class="form-control number">
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="modal-footer">
+        <button href="javascript:;" class="btn" ng-click="cancel()">
+            {[{ 'cancel' | i18next }]} </button>
+        <button class="btn btn-primary"  ng-click="submit_member_click(member)">{[{ 'confirm' | i18next }]}</button>
+    </div>
+</script>

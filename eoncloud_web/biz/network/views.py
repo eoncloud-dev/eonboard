@@ -7,11 +7,11 @@ import simplejson
 from biz.instance.models import Instance
 from biz.account.models import Operation
 from biz.network.models import Network, Subnet, Router, RouterInterface
-from cloud.network_task import network_create_task, network_delete_task,\
-    router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task,\
+from cloud.network_task import network_create_task, network_delete_task, \
+    router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task, \
     router_add_gateway_task, router_remove_gateway_task
 from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE,NETWORK_STATE_UPDATING
-from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
+from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer, SubnetSerializer
 from biz.instance.serializer import InstanceSerializer
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
@@ -141,6 +141,12 @@ def network_attach_router_view(request, **kwargs):
     except Exception as e:
         LOG.info('Network operation error ,%s' % e)
         return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
+
+@api_view(['GET'])
+def subnet_list_view(request, **kwargs):
+    query_set = Subnet.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"], status=NETWORK_STATE_ACTIVE)
+    serializer = SubnetSerializer(query_set,many=True)
+    return Response(serializer.data)
 
 
 def check_network_is_use(network_id):

@@ -9,6 +9,7 @@ CloudApp.controller('RouterController', function($rootScope, $scope, $filter, $t
     $rootScope.settings.layout.pageSidebarClosed = false;
 
     $scope.status_desc = status_desc;
+    console.log(status_desc)
     $scope.isNetwork = function (isNetwork){
         if(isNetwork==true){
             return '是';

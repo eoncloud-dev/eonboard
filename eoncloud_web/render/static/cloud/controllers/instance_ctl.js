@@ -528,7 +528,7 @@ CloudApp.controller('InstanceCreateController',
                 "network_id": instance_config.network == 0 ? 0 : instance_config.network.id,
                 "image": instance_config.select_image.id,
                 "image_info": instance_config.select_image.id,
-                "sys_disk": instance_config.select_image.os_type == 'Linux' ? 30 : 50,
+                "sys_disk": instance_config.select_image.disk_size,
                 "password": instance_config.password
 
             }

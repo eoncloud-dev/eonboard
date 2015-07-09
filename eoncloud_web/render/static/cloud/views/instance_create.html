@@ -50,8 +50,8 @@
                                         <a ng-repeat="image in images_list" href="#" class="list-group-item"
                                            ng-class="{active: instance_config.select_image == image}"
                                            ng-click="instance_config.select_image=image;">
-                                            <span ng-if="image.os_type=='Linux'"><i class="fa fa-linux"></i> {[{ image.name }]}</span>
-                                            <span ng-if="image.os_type=='Windows'"><i class="fa fa-windows"></i> {[{ image.name }]}</span>
+                                            <span ng-if="image.os_name=='Linux'"><i class="fa fa-linux"></i> {[{ image.name }]}</span>
+                                            <span ng-if="image.os_name=='Windows'"><i class="fa fa-windows"></i> {[{ image.name }]}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -80,10 +80,7 @@
                                         <h4 class="block">{[{ 'instance.os_disk' | i18next }]}</h4>
 
                                         <div class="note note-info">
-                                            <strong ng-if="instance_config.select_image.os_type == 'Linux'">30GB {[{
-                                                'instance.os_disk_free' | i18next }]}</strong>
-                                            <strong ng-if="instance_config.select_image.os_type == 'Windows'">50GB {[{
-                                                'instance.os_disk_free' | i18next }]}</strong>
+                                            <strong>{[{ instance_config.select_image.disk_size }]}GB {[{'instance.os_disk_free' | i18next }]}</strong>
                                         </div>
                                     </div>
 

@@ -107,9 +107,7 @@ CloudApp.controller('ImageController',
             $scope.image = ResourceTool.copy_only_data(image);
             $scope.os_types = [{key: 1, label: 'Windows'}, {key: 2, label: 'Linux'}];
 
-            $modalInstance.opened.then(function() {
-                setTimeout(ImageForm.init, 0);
-            });
+            $modalInstance.rendered.then(ImageForm.init);
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();

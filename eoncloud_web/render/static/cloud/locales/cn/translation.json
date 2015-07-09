@@ -38,6 +38,7 @@
     "select_owner": "请选择拥有者",
     "select_data_center": "请选择数据中心",
     "confirm_delete": "确认要删除这些镜像吗？",
+    "title_create": "创建镜像",
     "help": {
         "owner": "没有拥有者的镜像将成为公共镜像"
     }

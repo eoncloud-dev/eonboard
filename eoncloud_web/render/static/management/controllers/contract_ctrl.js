@@ -7,7 +7,7 @@
 'use strict';
 
 CloudApp.controller('ContractController',
-    function ($rootScope, $scope, $filter, $timeout,
+    function ($rootScope, $scope, $filter,
               $modal, $i18next, ngTableParams, Contract,
               CommonHttpService, ToastrService, CheckboxGroup) {
 
@@ -140,9 +140,7 @@ CloudApp.controller('ContractController',
             $scope.users = [];
             $scope.udcList = [];
 
-            $modalInstance.opened.then(function() {
-                setTimeout(ContractForm.init, 0)
-            });
+            $modalInstance.rendered.then(ContractForm.init);
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();
@@ -190,9 +188,7 @@ CloudApp.controller('ContractController',
             $scope.user = {};
             $scope.udc = {};
 
-            $modalInstance.opened.then(function() {
-                setTimeout(ContractForm.init, 0)
-            });
+            $modalInstance.rendered.then(ContractForm.init);
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();
@@ -282,10 +278,8 @@ CloudApp.controller('ContractController',
 
         });
 
-        $modalInstance.opened.then(function() {
-            setTimeout(function(){
-                $scope.form = QuotaValidation.init();
-            }, 0)
+        $modalInstance.rendered.then(function() {
+            $scope.form = QuotaValidation.init();
         });
 
         $scope.cancel = function () {

@@ -107,9 +107,7 @@ CloudApp.controller('FlavorController',
 
             $scope.flavor = ResourceTool.copy_only_data(flavor);
 
-            $modalInstance.opened.then(function() {
-                setTimeout(FlavorForm.init, 0);
-            });
+            $modalInstance.rendered.then(FlavorForm.init);
 
             $scope.cancel = function () {
                 $modalInstance.dismiss();

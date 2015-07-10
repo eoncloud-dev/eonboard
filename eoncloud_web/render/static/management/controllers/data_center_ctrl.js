@@ -143,10 +143,6 @@ CloudApp.controller('DataCenterController',
         return {
             init: function(){
 
-                jQuery.validator.addMethod('ip', function(value, element){
-                    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value);
-                }, '请输入正确的IP地址');
-
                 var config = {
                     rules: {
                         name: {

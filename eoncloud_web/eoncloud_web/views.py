@@ -24,7 +24,7 @@ def cloud(request, template_name="cloud.html"):
 
 @superuser_required
 def management(request):
-    return render(request, 'management.html')
+    return render(request, 'management.html', {'inited': DataCenter.objects.exists()})
 
 
 def login(request, template_name="login.html"):

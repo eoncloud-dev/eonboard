@@ -18,6 +18,9 @@ from biz.backup import views as backup_view
 # instance&flavor
 urlpatterns = [
         url(r'^management-summary/$', overview_views.summary),
+        url(r'^init/data_center/$', overview_views.init_data_center),
+        url(r'^init/flavors/$', overview_views.init_flavors),
+        url(r'^init/images/$', overview_views.init_images),
         url(r'^instances/$', instance_view.InstanceList.as_view()),
         #url(r'^instances/(?P<pk>[0-9]+)/$', instance_view.InstanceDetail.as_view()),
         url(r'^instances/status/$', instance_view.instance_status_view),

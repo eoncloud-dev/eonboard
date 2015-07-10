@@ -1,0 +1,87 @@
+<!-- BEGIN DATA CENTER -->
+<div class="col-md-4">
+    <h4 class="form-section">{[{ 'init_wizard.data_center' | i18next }]}</h4>
+    <table>
+        <tr>
+            <td class="col-md-3"> {[{ 'data_center.name' | i18next }]}: </td>
+            <td class="col-md-4"> <p class="form-control-static"> {[{ data_center.name }]} &nbsp;</p></td>
+        </tr>
+        <tr>
+            <td> {[{ 'data_center.host' | i18next }]}: </td>
+            <td> <p class="form-control-static"> {[{ data_center.host }]} &nbsp;</p></td>
+        </tr>
+        <tr>
+            <td> {[{ 'data_center.user' | i18next }]}: </td>
+            <td> <p class="form-control-static"> {[{ data_center.user }]} &nbsp;</p></td>
+        </tr>
+        <tr>
+            <td> {[{ 'data_center.password' | i18next }]}: </td>
+            <td> <p class="form-control-static"> {[{ data_center.password }]} &nbsp;</p></td>
+        </tr>
+        <tr>
+            <td> {[{ 'data_center.auth_url' | i18next }]}: </td>
+            <td> <p class="form-control-static"> {[{ data_center.auth_url }]} &nbsp;</p></td>
+        </tr>
+        <tr>
+            <td> {[{ 'data_center.ext_net' | i18next }]}: </td>
+            <td> <p class="form-control-static"> {[{ data_center.ext_net }]} &nbsp;</p></td>
+        </tr>
+    </table>
+</div>
+<!-- END DATA CENTER -->
+
+<!-- BEGIN FLAVOR -->
+<div class="col-md-4">
+   <h4 class="form-section">{[{ 'init_wizard.flavor' | i18next }]}</h4>
+   <div class="portlet box">
+        <div class="portlet-body">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">{[{ 'flavor.name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.cpu' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.memory' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'flavor.price' | i18next }]}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="flavor in flavors">
+                        <td> {[{ flavor.name }]} </td>
+                        <td> {[{ flavor.cpu }]} </td>
+                        <td> {[{ flavor.memory }]} </td>
+                        <td> {[{ flavor.price }]} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- END FLAVOR -->
+
+<!-- BEGIN IMAGE -->
+<div class="col-md-4">
+    <h4 class="form-section">{[{ 'init_wizard.image' | i18next }]}</h4>
+    <div class="portlet box">
+        <div class="portlet-body">
+            <table class="table table-striped table-bordered table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">{[{ 'image.name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.uuid' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.login_name' | i18next }]}</th>
+                        <th style="width: 20%;">{[{ 'image.os_type' | i18next }]}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="image in images">
+                        <td> {[{ image.name }]} </td>
+                        <td> {[{ image.uuid }]} </td>
+                        <td> {[{ image.login_name }]} </td>
+                        <td> {[{ image.os_type }]} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- END IMAGE -->

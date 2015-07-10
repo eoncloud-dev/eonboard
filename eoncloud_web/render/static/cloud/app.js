@@ -611,8 +611,8 @@ CloudApp.factory('ValidationTool', function(){
 });
 
 /* Init global settings and run the app */
-CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval",
-    function ($rootScope, settings, $state, $http, $cookies, $interval) {
+CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "CommonHttpService",
+    function ($rootScope, settings, $state, $http, $cookies, $interval, CommonHttpService) {
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
         $rootScope.timer_list = [];
@@ -622,5 +622,9 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
                 var t = $rootScope.timer_list.pop();
                 $interval.cancel(t);
             }
+        });
+
+        CommonHttpService.get("/api/account/site-config/").then(function(data){
+            $rootScope.site_config = data;
         });
     }]);

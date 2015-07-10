@@ -65,11 +65,19 @@
 
 <!-- BEGIN BODY -->
 
+{% if inited %}
 <body ng-controller="AppController"
       class="page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-on-load"
       ng-class="{'page-container-bg-solid': settings.layout.pageBodySolid,
-                 'page-sidebar-closed': settings.layout.pageSidebarClosed,
-                 'page-full-width': !inited}">
+                 'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+{% else %}
+<body ng-controller="AppController"
+      class="page-header-fixed page-sidebar-closed-hide-logo
+            page-quick-sidebar-over-content page-on-load
+            page-full-width"
+      ng-class="{'page-container-bg-solid': settings.layout.pageBodySolid,
+                 'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+{% endif %}
 
 <!-- BEGIN PAGE SPINNER -->
 <div ng-spinner-bar class="page-spinner-bar">

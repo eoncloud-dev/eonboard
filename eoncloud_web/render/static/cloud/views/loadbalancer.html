@@ -107,13 +107,13 @@
                                                     </li>
                                                     <li ng-class="{'disabled-link': status_desc[balancer.status][1] == 0 || (balancer.vip == null || balancer.vip =='') || (balancer.vip_info.public_address !=null && balancer.vip_info.public_address !='') }" >
                                                         <a ng-class="{'disabled': status_desc[balancer.status][1] == 0 || (balancer.vip == null || balancer.vip =='') || (balancer.vip_info.public_address !=null && balancer.vip_info.public_address !='')}"
-                                                           href="javascript:void(0);" ng-click="public_ip_action(balancer,'bind')" role="button">
+                                                           href="javascript:void(0);" ng-click="public_ip_action(balancer,'associate')" role="button">
                                                             {[{ 'balancer.bind_public' | i18next }]}
                                                         </a>
                                                     </li>
                                                     <li ng-class="{'disabled-link': (balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0) || balancer.vip_info.public_address ==null || balancer.vip_info.public_address =='' }" >
                                                         <a ng-class="{'disabled': (balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0) || balancer.vip_info.public_address ==null || balancer.vip_info.public_address ==''}"
-                                                           href="javascript:void(0);" ng-click="public_ip_action(balancer,'unbind')" role="button">
+                                                           href="javascript:void(0);" ng-click="public_ip_action(balancer,'disassociate')" role="button">
                                                             {[{ 'balancer.unbind_public' | i18next }]}
                                                         </a>
                                                     </li>

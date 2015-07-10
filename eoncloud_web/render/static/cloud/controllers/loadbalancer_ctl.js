@@ -550,36 +550,48 @@ CloudApp.controller('LoadBalancerAttachMonitorsController', function ($rootScope
 
 });
 //绑定公网ipcontroller
-CloudApp.controller('LoadBalancerFloatIpController', function ($rootScope, $scope, $modalInstance, $i18next,CommonHttpService, ToastrService, floating_ips,loadbalancer_table) {
+CloudApp.controller('LoadBalancerFloatIpController', function ($rootScope, $scope,$state, $modalInstance, $i18next,CommonHttpService, ToastrService, floating_ips,loadbalancer_table) {
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
 
     $scope.floating_ips = [];
     if(floating_ips.length>0){
-        for (var i = 0; i < floating_ips.length; i++) {
-            if (floating_ips[i].status == 10 && floating_ips[i].instance == null) {
-                $scope.floating_ips.push(floating_ips[i]);
+        if($scope.action == 'associate'){
+            for (var i = 0; i < floating_ips.length; i++) {
+                if (floating_ips[i].status == 10 && floating_ips[i].resource == null) {
+                    $scope.floating_ips.push(floating_ips[i]);
+                }
+            }
+        }else{
+            for (var i = 0; i < floating_ips.length; i++) {
+                if (floating_ips[i].status == 20 && floating_ips[i].resource_info.id == $scope.balancer.id) {
+                    $scope.floating_ips.push(floating_ips[i]);
+                }
             }
         }
+
+
     }
     //float ip operation
     $scope.submit_attach_floatIp_click = function (floatIp){
         var post_data = {
-            "vip_id":$scope.balancer.vip,
-            "floating_ip_id":floatIp,
-            "action":$scope.action
+            "floating_id":floatIp,
+            "action":$scope.action,
+            "resource": $scope.balancer.id,
+            "resource_type":"LOADBALANCER"
         }
 
-        CommonHttpService.post("/api/lbs/vip/floating/", post_data).then(function (data) {
+        CommonHttpService.post("/api/floatings/action/", post_data).then(function (data) {
+            $modalInstance.dismiss();
             if (data.OPERATION_STATUS == 1) {
-                ToastrService.success(data.MSG, $i18next("success"));
-                loadbalancer_table.reload();
+                ToastrService.success($i18next("floatingIP.op_success_and_waiting"), $i18next("success"));
+                $state.go("floating");
+                Layout.setSidebarMenuActiveLink('match');
             }
             else {
-                ToastrService.error(data.MSG, $i18next("op_failed"));
+                ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
             }
-            $modalInstance.dismiss();
         });
     }
 

@@ -400,12 +400,13 @@ CloudApp.controller('InstanceFloatingController',
                 var post_data = {
                     "action": action,
                     "floating_id": floating.id,
-                    "instance_id": $scope.instance.id
+                    "resource": $scope.instance.id,
+                    "resource_type":"INSTANCE"
                 };
                 CommonHttpService.post("/api/floatings/action/", post_data).then(function (data) {
                     $modalInstance.dismiss();
                     if (data.OPERATION_STATUS == 1) {
-                        ToastrService.success($i18next("floatingIP.create_success_and_waiting"), $i18next("success"));
+                        ToastrService.success($i18next("floatingIP.op_success_and_waiting"), $i18next("success"));
                         $state.go("floating");
                     }
                     else {

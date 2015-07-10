@@ -12,14 +12,13 @@ CloudApp.controller('OperationController', function($rootScope, $scope, $filter,
         page: 1,
         count: 10
     },{
-        counts: [],
+        counts: [10, 20, 30, 40, 50],
         getData: function ($defer, params) {
-            Operation.query(function (data) {
-                var data_list = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) : volume.name;
-                params.total(data_list.length);
-                $defer.resolve(data_list.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            });
+            Operation.query({page: params.page(), page_size: params.count()},
+                function (data) {
+                    params.total(data.count);
+                    $defer.resolve(data.results);
+                });
         }
     });
 });

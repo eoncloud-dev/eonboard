@@ -22,6 +22,7 @@ from biz.account.forms import CloudUserCreateForm
 from biz.account.models import Contract, Operation, Quota, UserProxy, QUOTA_ITEM
 from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
 from biz.account.utils import get_quota_usage
+from eoncloud_web.pagination import PagePagination
 
 LOG = logging.getLogger(__name__)
 
@@ -81,15 +82,17 @@ def quota_view(request):
 class OperationList(generics.ListAPIView):
     queryset = Operation.objects
     serializer_class = OperationSerializer
-    
-    def list(self, request, *args, **kwargs):
+    pagination_class = PagePagination
 
-        queryset = self.get_queryset()
+    def get_queryset(self):
+
+        request = self.request
+        queryset = super(OperationList, self).get_queryset()
 
         if not request.user.is_superuser:
             queryset = queryset.filter(user=request.user, udc__id=request.session["UDC_ID"])
 
-        return Response(OperationSerializer(queryset, many=True).data)
+        return queryset.all()
 
 
 class ContractList(generics.ListCreateAPIView):

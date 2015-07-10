@@ -187,7 +187,7 @@ CloudApp.factory('Firewall', ['$resource', function ($resource) {
 
 /* Setup Operation */
 CloudApp.factory('Operation', ['$resource', function ($resource) {
-    return $resource("/api/operation/:id");
+    return $resource("/api/operation/:id", {}, {query: {isArray: false}});
 }]);
 
 CloudApp.factory('ForumReply', ['$resource', function($resource){

@@ -161,7 +161,8 @@
     "edit_router_title": "修改路由器",
     "edit": "修改",
     "operation": "操作",
-    "delete": "删除"
+    "delete": "删除",
+    "is_default": "默认路由"
   },
 
   "network": {
@@ -184,7 +185,8 @@
     "delete": "删除",
     "attachRouter": "连接路由器",
     "attach_network_title": "连接路由器",
-    "releaseRouter": "离开路由器"
+    "releaseRouter": "离开路由器",
+    "is_default": "默认网络"
   },
 
   "floatingIP": {

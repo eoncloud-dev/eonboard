@@ -277,18 +277,14 @@ def create_quotas(request):
 @api_view(['POST'])
 def create_quota(request):
     try:
-
         contract = Contract.objects.get(pk=request.data['contract'])
         resource, limit = request.data['resource'], request.data['limit']
         pk = request.data['id'] if 'id' in request.data else None
 
         if pk and Quota.objects.filter(pk=pk).exists():
-
             quota = Quota.objects.get(pk=pk)
             quota.limit = limit
-
             quota.save()
-
         else:
             quota = Quota.objects.create(resource=resource, limit=limit, contract=contract)
 
@@ -304,7 +300,6 @@ def create_quota(request):
 @api_view(['POST'])
 def delete_quota(request):
     try:
-
         Quota.living.filter(pk=request.data['id']).update(deleted=True)
 
         return Response({'success': True,
@@ -313,3 +308,8 @@ def delete_quota(request):
     except Exception as e:
         LOG.error("Failed to create quota, msg:[%s]" % e)
         return Response({"success": False, "msg": _('Failed to create quota for unknown reason.')})
+
+
+@api_view(["GET"])
+def get_config_view(request):
+    return Response(settings.SITE_CONFIG) 

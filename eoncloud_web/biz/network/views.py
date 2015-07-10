@@ -1,31 +1,36 @@
 #coding=utf-8
+
 import logging
-from celery.bin.celery import status
+
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework.decorators import api_view
-import simplejson
+from rest_framework import status
+from rest_framework.response import Response
 
 from biz.instance.models import Instance
 from biz.account.models import Operation
 from biz.network.models import Network, Subnet, Router, RouterInterface
+from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
+from biz.instance.serializer import InstanceSerializer
+
 from cloud.network_task import network_create_task, network_delete_task,\
     router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task,\
     router_add_gateway_task, router_remove_gateway_task
 from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE,NETWORK_STATE_UPDATING
-from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
-from biz.instance.serializer import InstanceSerializer
-from rest_framework.response import Response
-from django.utils.translation import ugettext_lazy as _
+
 LOG = logging.getLogger(__name__)
 
 
-@api_view(['POST', 'GET'])
+@api_view(['GET'])
 def network_list_view(request,**kwargs):
     network_set = Network.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = NetworkSerializer(network_set, many=True)
     return Response(serializer.data)
 
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 def network_create_view(request, **kwargs):
     data = request.data
     if data.get('id') is None or data.get('id') == '':
@@ -182,7 +187,8 @@ def router_list_view(request, **kwargs):
 @api_view(['GET', 'POST'])
 def router_create_view(request, **kwargs):
     data = request.data
-    if data.get('id') is None or data.get('id') == '':
+    if (data.get('id') is None or data.get('id') == '') and \
+            settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
         try:
             serializer = RouterSerializer(data=request.data, context={"request": request})
             if serializer.is_valid():
@@ -218,7 +224,8 @@ def router_create_view(request, **kwargs):
 @api_view(['GET', 'POST'])
 def router_delete_view(request, **kwargs):
     data = request.data
-    if data.get("router_id") is not None:
+    if data.get("router_id") is not None and \
+            settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
         router = Router.objects.get(pk=data.get('router_id'))
         if router.is_default:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Default Router can not be deleted')})
@@ -249,11 +256,6 @@ def check_router_is_use(router_id):
         return True
     return False
 
-
-'''
-get network topology data
-get network topology data
-'''
 
 @api_view(['GET'])
 def network_topology_data_view(request, **kwargs):

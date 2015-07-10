@@ -19,8 +19,7 @@ def index(request, template_name="index.html"):
 
 @login_required
 def cloud(request, template_name="cloud.html"):
-    return render_to_response(template_name, RequestContext(request, {
-    }))
+    return render_to_response(template_name, RequestContext(request, {}))
 
 
 @superuser_required
@@ -49,9 +48,6 @@ def login(request, template_name="login.html"):
                 raise Exception("User has not register to any SDDC")
             return HttpResponseRedirect(reverse("cloud"))
 
-    # if authenticationForm.errors.has_key("__all__"):
-    #     error = authenticationForm.errors['__all__']
-
     return render_to_response(template_name, RequestContext(request, {
         "authenticationForm": authenticationForm,
         "error": authenticationForm.errors.get('__all__', None),
@@ -71,10 +67,8 @@ def current_user(request):
             return JsonResponse({'result': {'logged': True}, 'user': request.user.username})
 
         udc_id = request.session["UDC_ID"]
-
         data_center_names = DataCenter.objects.filter(userdatacenter__pk=udc_id)
-
-        cc_name = data_center_names[0].name if data_center_names else u''
+        cc_name = data_center_names[0].name if data_center_names else u'N/A'
 
         return JsonResponse({'result': {'logged': True},
                             'user': request.user.username,

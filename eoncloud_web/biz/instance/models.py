@@ -4,8 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from biz.account.models import Operation
 from biz.network.models import Network
-from biz.instance.settings import INSTANCE_STATE_WAITING, INSTANCE_STATES, PROTOCOLs, \
-    ACTIONS, IP_VERSIONS, IPV4, IPV6, ACTION_ALLOW
+from biz.instance.settings import INSTANCE_STATE_WAITING, INSTANCE_STATES, \
+            PROTOCOLs, ACTIONS, IP_VERSIONS, IPV4, IPV6, ACTION_ALLOW
 from biz.floating.models import Floating
 
 

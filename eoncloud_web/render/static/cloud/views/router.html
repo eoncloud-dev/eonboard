@@ -15,12 +15,12 @@
                     <a class="btn btn-icon-only btn-default" href="#" ng-click="router_table.reload();">
                         <i class="fa fa-refresh"></i>
                     </a>
-                    <a class="btn btn-primary" href="#" ng-click="modal_create_router()"
+                    <a ng-if="site_config.MULTI_ROUTER_ENABLED" class="btn btn-primary" href="#" ng-click="modal_create_router()"
                        role="button">
                         <i class="fa fa-plus"></i>
                         {[{ 'router.create' | i18next }]}
                     </a>
-                    <a class="btn btn-danger" ng-click="batch_action('delete')" ng-class="{'disabled-link disabled ': checked_count <= 0}">
+                    <a ng-if="site_config.MULTI_ROUTER_ENABLED" class="btn btn-danger" ng-click="batch_action('delete')" ng-class="{'disabled-link disabled ': checked_count <= 0}">
                         <i class="fa fa-trash"></i>
                         {[{ 'router.delete' | i18next }]}
                     </a>
@@ -37,7 +37,6 @@
                                 <input type="checkbox" ng-class="{'disabled': status_desc[network.status][1] == 0}" ng-model="checkboxes.items[router.id]"/>
                             </td>
                             <td data-title="'router.name' | i18next">{[{ router.name }]}</td>
-                            <!--td data-title="'router.is_gateway' | i18next">{[{ isNetwork(router.is_gateway) }]}</td -->
                             <td data-title="'router.gateway' | i18next">{[{ router.gateway }]}</td>
                             <td data-title="'router.status' | i18next">
                                 <span class="" ng-if="status_desc[router.status][1] == 1">{[{ status_desc[router.status][0] }]} </span>
@@ -49,6 +48,10 @@
                                         <span class="">{[{ status_desc[router.status][0] }]} </span>
                                     </div>
                                 </div>
+                            </td>
+                            <td data-title="'router.is_default' | i18next">
+                                <i ng-class="{'fa-check': router.is_default, 'fa-ban': !router.is_default}"
+                                    class="fa"></i>
                             </td>
                             <td data-title="'router.create_time' | i18next"> {[{ router.create_date | date:"yyyy/MM/dd HH:mm:ss" }]} </td>
                             <td data-title="'router.operation' | i18next">

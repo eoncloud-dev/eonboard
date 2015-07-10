@@ -38,7 +38,10 @@
                                 <input type="checkbox" ng-class="{'disabled': status_desc[network.status][1] == 0}"  ng-model="checkboxes.items[network.id]"/>
                             </td>
                             <td data-title="'network.name' | i18next">{[{ network.name }]}</td>
-                            <td data-title="'network.router' | i18next">{[{ network.router_info }]}</td>
+                            <td data-title="'network.router' | i18next">
+                                <a class="btn default blue-stripe btn-xs" ng-href="#/router/" ng-if="network.router_info">
+                                    <i class="fa fa-life-ring"></i> {[{ network.router_info}]} </a>
+                            </td>
                             <td data-title="'network.netAddress' | i18next">{[{ network.address }]}</td>
                             <td data-title="'network.status' | i18next">
                                 <span class="" ng-if="status_desc[network.status][1] == 1">{[{ status_desc[network.status][0] }]} </span>
@@ -50,6 +53,11 @@
                                         <span class="">{[{ status_desc[network.status][0] }]} </span>
                                     </div>
                                 </div>
+                            </td>
+
+                            <td data-title="'network.is_default' | i18next">
+                                <i ng-class="{'fa-check': network.is_default, 'fa-ban': !network.is_default}"
+                                    class="fa"></i>
                             </td>
                             <td data-title="'network.create_time' | i18next"> {[{ network.create_date }]} </td>
                             <td data-title="'network.operation' | i18next">

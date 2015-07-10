@@ -14,7 +14,8 @@ class FloatingSerializer(serializers.ModelSerializer):
 
     create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
     delete_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
-    instance_info = InstanceSerializer(source="instance", required=False, allow_null=True, default=None, read_only=True) 
+
+    resource_info = serializers.DictField(source="re_resource", read_only=True)
 
     def validate_user(self, value):
         request = self.context.get('request', None)

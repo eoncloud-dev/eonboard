@@ -114,6 +114,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^floatings/create/$', floating_view.create_view),
         url(r'^floatings/action/$', floating_view.floating_action_view),
         url(r'^floatings/status/$', floating_view.floating_status_view),
+        url(r'^floatings/target_list/$', floating_view.floating_ip_target_list_view),
+
     ]
 )
 

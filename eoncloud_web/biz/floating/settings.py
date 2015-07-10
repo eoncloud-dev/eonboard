@@ -46,3 +46,8 @@ ALLOWED_FLOATING_ACTIONS = {
     "associate": _("associate"),
     "disassociate": _("disassociate"),
 }
+#绑定公网IP资源类型
+RESOURCE_TYPE = (
+    ('INSTANCE', 'INSTANCE'),
+    ("LOADBALANCER", 'LOADBALANCER'),
+)

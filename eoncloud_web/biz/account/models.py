@@ -147,6 +147,5 @@ class Operation(models.Model):
 
     class Meta:
         db_table = "user_operation"
-        ordering = ['-create_date']
         verbose_name = _("Operation")
         verbose_name_plural = _("Operation")

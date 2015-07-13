@@ -224,7 +224,7 @@ CloudApp.controller('ContractController',
                 });
             };
         }
-    ).factory('ContractForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
+    ).factory('ContractForm', ['ValidationTool', 'DatePicker', function (ValidationTool, DatePicker) {
         return {
             init: function(){
 
@@ -248,7 +248,7 @@ CloudApp.controller('ContractController',
                 };
 
                 ValidationTool.init('#contractForm', config);
-                ComponentsPickers.init();
+                DatePicker.initDatePickers();
               }
             }
         }]

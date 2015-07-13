@@ -509,7 +509,10 @@
     "public_ip":"公网IP",
     "no_have":"无",
     "delete":"删除",
-    "HTTP_STATUS_CODE":"HTTP状态码"
+    "HTTP_STATUS_CODE":"HTTP状态码",
+    "select_public_ip":"请选择公网IP",
+    "select_monitor":"请选择监听器",
+    "add_member":"添加成员"
   }
 
 }

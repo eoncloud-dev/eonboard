@@ -299,8 +299,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             })
             // load balancer
-            .state("loadbalancers", {
-                url: "/loadbalancers/",
+            .state("lbaas", {
+                url: "/lbaas/",
                 templateUrl: "/static/cloud/views/loadbalancer.html",
                 data: {pageTitle: 'LoadBalancer'},
                 controller: "LoadBalancerController",
@@ -321,8 +321,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             })
             // load balancer
-            .state("loadbalancersinfo", {
-                url: "/loadbalancers/:balancer_id",
+            .state("lbaasinfo", {
+                url: "/lbaas/:balancer_id",
                 templateUrl: "/static/cloud/views/loadbalancer_info.html",
                 data: {pageTitle: 'LoadBalancer'},
                 controller: "LoadBalancerInfoController",

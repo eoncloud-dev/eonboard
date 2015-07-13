@@ -53,7 +53,7 @@
                                             <input type="checkbox" ng-class="{'disabled': status_desc[balancer.status][1] == 0}" ng-model="checkboxes.items[balancer.id]"/>
                                         </td>
                                         <td data-title="'balancer.balancer_name' | i18next">
-                                            <a href="#/loadbalancers/{[{balancer.id}]}">{[{ balancer.name }]}</a></td>
+                                            <a href="#/lbaas/{[{balancer.id}]}">{[{ balancer.name }]}</a></td>
                                         <td data-title="'balancer.description' | i18next">{[{ balancer.description }]}</td>
                                         <td data-title="'balancer.vip_address' | i18next">
                                             <div ng-if="balancer.vip!=null && balancer.vip_info.address !='' && balancer.vip_info.address !=null">{[{ 'balancer.private_ip' | i18next }]}:{[{ balancer.vip_info.address }]}</div>
@@ -87,6 +87,12 @@
                                                         aria-expanded="false"><i class="fa fa-angle-down"></i></button>
                                                 <ul role="menu" class="dropdown-menu">
 
+                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}" >
+                                                        <a ng-class="{'disabled':status_desc[balancer.status][1] == 0}"
+                                                           href="#/lbaas/{[{balancer.id}]}"  role="button">
+                                                            {[{ 'balancer.add_member' | i18next }]}
+                                                        </a>
+                                                    </li>
                                                     <li ng-class="{'disabled-link': (balancer.vip !=null && balancer.vip !='') || status_desc[balancer.status][1] == 0}" >
                                                         <a ng-class="{'disabled': (balancer.vip !=null && balancer.vip !='') || status_desc[balancer.status][1] == 0}"
                                                            href="javascript:void(0);" ng-click="modal_create_vip(balancer)" role="button">
@@ -117,13 +123,13 @@
                                                             {[{ 'balancer.unbind_public' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'attach')" role="button">
+                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}">
+                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'attach')" role="button">
                                                             {[{ 'balancer.attach_monitor' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li>
-                                                        <a href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'detach')" role="button">
+                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}">
+                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'detach')" role="button">
                                                             {[{ 'balancer.detach_monitor' | i18next }]}
                                                         </a>
                                                     </li>
@@ -529,7 +535,7 @@
     </div>
     <div class="modal-body">
         <form role="form" id="create_monitor_form" class="form-horizontal form-bordered">
-            <div class="form-group">
+            <div class="form-group" ng-class="{'has-error':has_error && monitor == undefined}">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.monitor' | i18next }]}<span class="required" aria-required="true"> * </span>
                 </label>
@@ -542,6 +548,9 @@
                             <option ng-repeat="mo in monitors" value="{[{ mo.id }]}">{[{mo.monitor_type_desc}]} delay:{[{mo.delay}]} timeout: {[{mo.timeout}]} max_retries:{[{mo.max_retries}]}</option>
                         </select>
                     </div>
+                    <span ng-if="has_error && monitor == undefined" id="name-error" class="help-block help-block-error">
+                               {[{ 'balancer.select_monitor' | i18next }]}
+                            </span>
                 </div>
             </div>
         </form>
@@ -562,7 +571,7 @@
     </div>
     <div class="modal-body">
         <form role="form" id="create_monitor_form" class="form-horizontal form-bordered">
-            <div class="form-group">
+            <div class="form-group" ng-class="{'has-error':has_error && floatIp == undefined}">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.public_ip' | i18next }]}<span class="required" aria-required="true"> * </span>
                 </label>
@@ -575,6 +584,9 @@
                             <option ng-repeat="fp in floating_ips" value="{[{ fp.id }]}">{[{fp.ip}]}</option>
                         </select>
                     </div>
+                    <span ng-if="has_error && floatIp == undefined" id="name-error" class="help-block help-block-error">
+                               {[{ 'balancer.select_public_ip' | i18next }]}
+                            </span>
                 </div>
             </div>
         </form>

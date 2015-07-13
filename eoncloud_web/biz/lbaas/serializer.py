@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from biz.idc.models import UserDataCenter
-from biz.loadbalancers.models import BalancerPool, BalancerVIP, BalancerMember, BalancerMonitor
-from biz.loadbalancers.settings import PROTOCOL_CHOICES, LB_METHOD_CHOICES
+from biz.lbaas.models import BalancerPool, BalancerVIP, BalancerMember, BalancerMonitor
+from biz.lbaas.settings import PROTOCOL_CHOICES, LB_METHOD_CHOICES
 from biz.network.serializer import SubnetSerializer
 from biz.instance.serializer import InstanceSerializer
 

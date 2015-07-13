@@ -18,8 +18,10 @@ from biz.floating.settings import FLOATING_AVAILABLE, FLOATING_RELEASED, \
 from biz.network.settings import NETWORK_STATE_ACTIVE,\
     NETWORK_STATE_ERROR, NETWORK_STATE_UPDATING
 from biz.instance.models import Instance
+
 from biz.lbaas.models import BalancerPool
 from biz.lbaas.models import BalancerVIP
+
 from biz.floating.models import Floating
 
 from api import neutron

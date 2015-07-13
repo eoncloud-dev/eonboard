@@ -62,7 +62,7 @@ MIDDLEWARE_CLASSES = (
     #'django.middleware.security.SecurityMiddleware',
 )
 
-REST_FRAMEWORK = { 
+REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication'

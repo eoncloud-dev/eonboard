@@ -12,9 +12,41 @@
         <div class="portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
-                    <a class="btn btn-icon-only btn-default" href="#" ng-click="operation_table.reload();">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="reload()">
                         <i class="fa fa-refresh"></i>
                     </a>
+                </div>
+                <div class="tools" data-ng-keypress="keypress($event)">
+                    <form class="form-inline">
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="resource_name">{[{ 'operation.resource' | i18next }]}</label>
+                            <input id="resource_name" size="10"
+                                   data-ng-model="condition.resource_name"
+                                   class="form-control form-control-inline">
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="resource">{[{ 'operation.resource' | i18next }]}</label>
+                            <select id="resource" ng-model="condition.resource"
+                                    class="form-control">
+                                <option value="">-----------</option>
+                                <option data-ng-repeat="option in filters.resources"
+                                        value="{[{ option.resource }]}">
+                                    {[{ option.name }]}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="date_range">{[{ 'operation.date_range' | i18next }]}</label>
+                            <input id="date_range" readonly="true" size="10" data-ng-model="condition.start_date"
+                                   class="form-control form-control-inline date-picker">
+                            ~
+                            <input readonly="true" size="10" data-ng-model="condition.end_date"
+                                   class="form-control form-control-inline date-picker">
+                        </div>
+                        <a class="btn btn-default" data-ng-click="search()">
+                            {[{ 'action.query' | i18next }]}
+                        </a>
+                    </form>
                 </div>
             </div>
             <div class="portlet-body">

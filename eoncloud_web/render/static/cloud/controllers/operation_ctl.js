@@ -1,25 +1,61 @@
 'use strict';
 
-CloudApp.controller('OperationController', function($rootScope, $scope, $filter, $timeout, ngTableParams, Operation) {
+CloudApp.controller('OperationController',
+    function($rootScope, $scope, ngTableParams,
+            CommonHttpService, DatePicker, Operation) {
+
     $scope.$on('$viewContentLoaded', function() {   
         Metronic.initAjax();
+        DatePicker.initDatePickers();
     });
 
     $rootScope.settings.layout.pageBodySolid = true;
     $rootScope.settings.layout.pageSidebarClosed = false;
 
-    $scope.operation_table = new ngTableParams({
+    $scope.condition = {operator: "", start_date: "", end_date: ""};
+    var table = $scope.operation_table = new ngTableParams({
         page: 1,
-        count: 10
+        count: 10,
+        filter: {}
     },{
-        counts: [],
+        counts: [10, 20, 30, 40, 50],
         getData: function ($defer, params) {
-            Operation.query(function (data) {
-                var data_list = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) : volume.name;
-                params.total(data_list.length);
-                $defer.resolve(data_list.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-            });
+            var filter = params.filter(),
+                searchParams = {page: params.page(), page_size: params.count()};
+
+            angular.extend(searchParams, filter);
+            Operation.query(searchParams,
+                function (data) {
+                    params.total(data.count);
+                    $defer.resolve(data.results);
+                });
         }
     });
+
+    $scope.search = function(){
+        angular.copy($scope.condition, table.filter());
+        table.page(1);
+        table.reload();
+    };
+
+    $scope.reload = function(){
+        table.reload();
+        loadFilters();
+    };
+
+    $scope.keypress = function($event){
+        if($event.keyCode == 13){
+            $event.preventDefault();
+            $scope.search();
+        }
+    };
+
+    var loadFilters = function(){
+        CommonHttpService.get('/api/operation/filters').then(function(filters){
+            $scope.filters = filters;
+        });
+    };
+
+   loadFilters();
 });
+

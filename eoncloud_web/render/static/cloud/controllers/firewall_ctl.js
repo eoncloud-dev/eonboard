@@ -283,7 +283,7 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
          $scope.create = function(firewall_rule){
 
              var post_data ={}
-             if ($scope.selected_rule =='tcp' ||　$scope.selected_rule=='udp'){
+             if ($scope.selected_rule =='tcp' || $scope.selected_rule=='udp'){
                  if((firewall_rule.port_range =='port' && $.trim(firewall_rule.port)=='')){
                      $scope.firewall_rule_port = true;
                      return ;

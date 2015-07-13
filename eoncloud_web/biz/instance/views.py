@@ -41,6 +41,10 @@ class FlavorList(generics.ListCreateAPIView):
     queryset = Flavor.objects.all()
     serializer_class = FlavorSerializer
 
+    def list(self, request):
+        serializer = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializer.data)
+
 
 class FlavorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Flavor.objects.all()

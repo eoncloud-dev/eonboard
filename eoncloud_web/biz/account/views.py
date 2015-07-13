@@ -22,6 +22,7 @@ from biz.account.forms import CloudUserCreateForm
 from biz.account.models import Contract, Operation, Quota, UserProxy, QUOTA_ITEM
 from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
 from biz.account.utils import get_quota_usage
+from biz.idc.models import DataCenter
 from eoncloud_web.pagination import PagePagination
 
 LOG = logging.getLogger(__name__)
@@ -87,12 +88,54 @@ class OperationList(generics.ListAPIView):
     def get_queryset(self):
 
         request = self.request
+        resource = request.query_params.get('resource')
+        resource_name = request.query_params.get('resource_name')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
         queryset = super(OperationList, self).get_queryset()
 
-        if not request.user.is_superuser:
+        if resource:
+            queryset = queryset.filter(resource=resource)
+
+        if resource_name:
+            queryset = queryset.filter(resource_name__istartswith=resource_name)
+
+        if start_date:
+            queryset = queryset.filter(create_date__gte=start_date)
+
+        if end_date:
+            queryset = queryset.filter(create_date__lte=end_date)
+
+        if request.user.is_superuser:
+
+            data_center_pk = request.query_params.get('data_center', '')
+            operator_pk = request.query_params.get('operator', '')
+
+            if data_center_pk:
+                queryset = queryset.filter(udc__data_center__pk=data_center_pk)
+
+            if operator_pk:
+                queryset = queryset.filter(user__pk=operator_pk)
+        else:
             queryset = queryset.filter(user=request.user, udc__id=request.session["UDC_ID"])
 
-        return queryset.all()
+        return queryset.order_by('-create_date')
+
+
+@api_view()
+def operation_filters(request):
+
+    resources = Operation.objects.values('resource').distinct()
+
+    for data in resources:
+        data['name'] = _(data['resource'])
+
+    return Response({
+        "resources": resources,
+        "operators": UserProxy.normal_users.values('pk', 'username'),
+        "data_centers": DataCenter.objects.values('pk', 'name')
+    })
 
 
 class ContractList(generics.ListCreateAPIView):

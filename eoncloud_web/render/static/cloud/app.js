@@ -149,6 +149,24 @@ CloudApp.factory("BoxService", function () {
     };
 });
 
+/* Init date pickers */
+CloudApp.factory('DatePicker', function (){
+
+    var initDatePickers = function(){
+        if (jQuery().datepicker) {
+            $('.date-picker').datepicker({
+                rtl: Metronic.isRTL(),
+                orientation: "left",
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
+        }
+    };
+
+    return {
+        initDatePickers: initDatePickers
+    }
+});
 
 /* Setup image */
 CloudApp.factory('Image', ['$resource', function ($resource) {
@@ -499,6 +517,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
+                                '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
+                                '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
                                 '/static/cloud/controllers/operation_ctl.js'
                             ]
                         });

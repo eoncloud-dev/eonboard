@@ -3,9 +3,59 @@
         <div class="portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
-                    <a class="btn btn-icon-only btn-default" href="#" ng-click="operation_table.reload();">
+                    <a class="btn btn-icon-only btn-default" href="#" data-ng-click="reload();">
                         <i class="fa fa-refresh"></i>
                     </a>
+                </div>
+                <div class="tools" data-ng-keypress="keypress($event)">
+                    <form class="form-inline">
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="resource_name">{[{ 'operation.resource' | i18next }]}</label>
+                            <input id="resource_name" size="10"
+                                   data-ng-model="condition.resource_name"
+                                   class="form-control form-control-inline">
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="resource">{[{ 'operation.resource' | i18next }]}</label>
+                            <select id="resource" ng-model="condition.resource"
+                                    class="form-control">
+                                <option value="">-----------</option>
+                                <option data-ng-repeat="option in filters.resources"
+                                        value="{[{ option.resource }]}">
+                                    {[{ option.name }]}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="operator">{[{ 'operation.operator' | i18next }]}</label>
+                            <select id="operator" data-ng-model="condition.operator"
+                                    class="form-control">
+                                <option value="">------------</option>
+                                <option data-ng-repeat="operator in filters.operators"
+                                        value="{[{ operator.pk }]}"> {[{ operator.username }]}</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="data_center">{[{ 'operation.data_center' | i18next }]}</label>
+                            <select id="data_center" data-ng-model="condition.data_center"
+                                    class="form-control">
+                                <option value="">--------------</option>
+                                <option data-ng-repeat="data_center in filters.data_centers"
+                                        value="{[{ data_center.pk }]}"> {[{ data_center.name }]}</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-right: 10px;">
+                            <label for="date_range">{[{ 'operation.date_range' | i18next }]}</label>
+                            <input id="date_range" readonly="true" size="10" data-ng-model="condition.start_date"
+                                   class="form-control form-control-inline date-picker">
+                            ~
+                            <input readonly="true" size="10" data-ng-model="condition.end_date"
+                                   class="form-control form-control-inline date-picker">
+                        </div>
+                        <a class="btn btn-default" data-ng-click="search()">
+                            {[{ 'action.query' | i18next }]}
+                        </a>
+                    </form>
                 </div>
             </div>
             <div class="portlet-body">
@@ -14,8 +64,7 @@
                            class="table table-striped table-bordered table-advance table-hover">
                         <tbody>
                         <tr ng-repeat="op in $data">
-                            <td data-title="'operation.resource' | i18next"
-                                filter="{'resource_i18n': 'text' }">
+                            <td data-title="'operation.resource' | i18next">
                                 <span>{[{ op.resource_i18n }]}</span>
                             </td>
                             <td data-title="'operation.resource_name' | i18next">
@@ -24,12 +73,10 @@
                             <td data-title="'operation.desc' | i18next">
                                 <span>{[{ op.desc }]}</span>
                             </td>
-                            <td data-title="'operation.operator' | i18next"
-                                filter="{'operator': 'text'}">
+                            <td data-title="'operation.operator' | i18next">
                                 <span>{[{ op.operator }]}</span>
                             </td>
-                            <td data-title="'operation.data_center' | i18next"
-                                filter="{'data_center_name': 'text'}">
+                            <td data-title="'operation.data_center' | i18next">
                                 <span>{[{ op.data_center_name }]}</span>
                             </td>
                             <td data-title="'operation.occur_time' | i18next">{[{ op.create_date }]}</td>

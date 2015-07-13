@@ -359,7 +359,8 @@
     "desc":"操作描述",
     "occur_time":"操作时间",
     "operator": "操作者",
-    "data_center": "数据中心"
+    "data_center": "数据中心",
+    "date_range": "时间段"
   },
 
   "management": {
@@ -404,7 +405,8 @@
     "update": "更新",
     "delete": "删除",
     "batch_delete": "批量删除",
-    "submit": "提交"
+    "submit": "提交",
+    "query": "查询"
   },
 
   "user": {

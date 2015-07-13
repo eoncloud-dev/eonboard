@@ -112,6 +112,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^account/quota/$', account_view.quota_view),
         url(r'^account/site-config/$', account_view.get_config_view),
         url(r'^operation/$', account_view.OperationList.as_view()),
+        url(r'^operation/filters$', account_view.operation_filters),
         url(r'^users/$', account_view.UserList.as_view()),
         url(r'^users/(?P<pk>[0-9]+)/$', account_view.UserDetail.as_view()),
         url(r'^users/deactivate/$', account_view.deactivate_user),

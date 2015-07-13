@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('instance', models.ForeignKey(blank=True, to='instance.Instance', null=True)),
             ],
             options={
-                'db_table': 'balancer_member',
+                'db_table': 'lbaas_member',
             },
             bases=(models.Model,),
         ),
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ('user_data_center', models.ForeignKey(to='idc.UserDataCenter')),
             ],
             options={
-                'db_table': 'balancer_monitor',
+                'db_table': 'lbaas_monitor',
             },
             bases=(models.Model,),
         ),
@@ -76,7 +76,7 @@ class Migration(migrations.Migration):
                 ('user_data_center', models.ForeignKey(to='idc.UserDataCenter')),
             ],
             options={
-                'db_table': 'balance_pools',
+                'db_table': 'lbaas_pools',
             },
             bases=(models.Model,),
         ),
@@ -84,11 +84,11 @@ class Migration(migrations.Migration):
             name='BalancerPoolMonitor',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
-                ('monitor', models.ForeignKey(related_name='monitor_re', to='loadbalancers.BalancerMonitor')),
-                ('pool', models.ForeignKey(related_name='pool_re', to='loadbalancers.BalancerPool')),
+                ('monitor', models.ForeignKey(related_name='monitor_re', to='lbaas.BalancerMonitor')),
+                ('pool', models.ForeignKey(related_name='pool_re', to='lbaas.BalancerPool')),
             ],
             options={
-                'db_table': 'balancer_pool_monitor',
+                'db_table': 'lbaas_pool_monitor',
             },
             bases=(models.Model,),
         ),
@@ -110,26 +110,26 @@ class Migration(migrations.Migration):
                 ('status', models.IntegerField(default=0, verbose_name='Status', choices=[(0, 'CREATING'), (1, 'ACTIVE'), (2, 'CREATED'), (3, 'DOWN'), (4, 'ERROR'), (5, 'INACTIVE'), (6, 'UPDATING'), (7, 'DELETING')])),
                 ('create_date', models.DateTimeField(auto_now_add=True, verbose_name='Create Date')),
                 ('deleted', models.BooleanField(default=False, verbose_name='Deleted')),
-                ('pool', models.ForeignKey(blank=True, to='loadbalancers.BalancerPool', null=True)),
+                ('pool', models.ForeignKey(blank=True, to='lbaas.BalancerPool', null=True)),
                 ('subnet', models.ForeignKey(blank=True, to='network.Subnet', null=True)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('user_data_center', models.ForeignKey(to='idc.UserDataCenter')),
             ],
             options={
-                'db_table': 'balancer_vip',
+                'db_table': 'lbaas_vip',
             },
             bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='balancerpool',
             name='vip',
-            field=models.ForeignKey(blank=True, to='loadbalancers.BalancerVIP', null=True),
+            field=models.ForeignKey(blank=True, to='lbaas.BalancerVIP', null=True),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='balancermember',
             name='pool',
-            field=models.ForeignKey(blank=True, to='loadbalancers.BalancerPool', null=True),
+            field=models.ForeignKey(blank=True, to='lbaas.BalancerPool', null=True),
             preserve_default=True,
         ),
         migrations.AddField(

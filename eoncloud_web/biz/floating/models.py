@@ -38,8 +38,8 @@ class Floating(models.Model):
                 instance = Instance.objects.get(pk=self.resource, user=self.user)
                 return {"id": instance.id, "name": instance.name, "resource_type": self.resource_type}
             elif resource_dict[self.resource_type] =='LOADBALANCER':
-                from biz.loadbalancers.models import BalancerPool
-                from biz.loadbalancers.serializer import BalancerPoolSerializer
+                from biz.lbaas.models import BalancerPool
+                from biz.lbaas.serializer import BalancerPoolSerializer
                 pool = BalancerPool.objects.get(pk=self.resource, user=self.user)
                 return {"id": pool.id, "name": pool.name, "resource_type": self.resource_type}
         except Exception as e:

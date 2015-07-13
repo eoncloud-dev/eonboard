@@ -11,10 +11,10 @@ from cloud_utils import create_rc_by_balancer_pool, \
     create_rc_by_balancer_vip, create_rc_by_balancer_member,\
     create_rc_by_balancer_monitor
 
-from biz.loadbalancers.settings import POOL_ACTIVE, POOL_ERROR, POOL_DOWN
-from biz.loadbalancers.models import BalancerMember, BalancerPoolMonitor, BalancerVIP
+from biz.lbaas.settings import POOL_ACTIVE, POOL_ERROR, POOL_DOWN
+from biz.lbaas.models import BalancerMember, BalancerPoolMonitor, BalancerVIP
 
-from biz.loadbalancers.settings import SESSION_PER_CHOICES
+from biz.lbaas.settings import SESSION_PER_CHOICES
 
 from api import lbaas, network
 

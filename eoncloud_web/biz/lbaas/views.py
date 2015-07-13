@@ -14,6 +14,7 @@ from cloud.loadbalancer_task import pool_create_task, pool_update_task, pool_del
     pool_member_create_task, pool_member_update, pool_member_delete_task, pool_monitor_create, pool_monitor_update, \
     pool_monitor_delete, pool_monitor_association_create, pool_monitor_association_delete,vip_associate_floating_ip ,vip_disassociate_floating_ip
 
+from biz.account.models import Operation
 LOG = logging.getLogger(__name__)
 
 
@@ -47,6 +48,7 @@ def pool_create_view(request, **kwargs):
         if pool_id == '':
             pool = serializer.save()
             pool_create_task.delay(pool)
+            Operation.log(pool, obj_name=pool.name, action='create', result=1)
             return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer pool success')})
         else:
             try:
@@ -57,6 +59,7 @@ def pool_create_view(request, **kwargs):
                 pool.status = POOL_UPDATING
                 pool.save()
                 pool_update_task.delay(pool)
+                Operation.log(pool, obj_name=pool.name, action='update', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Update balancer pool success')})
             except Exception as e:
                 LOG.error(e)
@@ -73,6 +76,7 @@ def pool_delete_view(request, **kwargs):
         pool.status = POOL_DELETING
         pool.save()
         pool_delete_task.delay(pool)
+        Operation.log(pool, obj_name=pool.name, action='delete', result=1)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Delete balancer pool')})
     else:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Balancer pool no exist')})
@@ -94,6 +98,7 @@ def pool_vip_create_view(request, **kwargs):
                 pool_vip_create_task(vip)
                 pool.vip = vip
                 pool.save()
+                Operation.log(vip, obj_name=vip.name, action='create', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer vip success')})
             else:
                 try:
@@ -105,6 +110,7 @@ def pool_vip_create_view(request, **kwargs):
                     vip = BalancerVIP.objects.get(pk=vip_id, user=request.user)
 
                     v = pool_vip_update_task(vip)
+                    Operation.log(vip, obj_name=vip.name, action='update', result=1)
                     if v:
                         vip.save()
                         return Response({"OPERATION_STATUS": 1, "MSG": _('Vip update success')})
@@ -129,7 +135,7 @@ def pool_vip_delete_view(request, **kwargs):
         vip.status = POOL_DELETING
         vip.save()
         pool_vip_delete_task(vip)
-
+        Operation.log(vip, obj_name=vip.name, action='delete', result=1)
         pool = BalancerPool.objects.get(pk=vip.pool.id)
         if pool:
             pool.vip = None
@@ -152,7 +158,7 @@ def pool_vip_associate_view(request, **kwargs):
 
         if action == 'bind':
             p = vip_associate_floating_ip(vip, floating.uuid)
-
+            Operation.log(vip, obj_name=vip.name, action='associate', result=1)
             if p:
                 vip.public_address = floating.ip
                 vip.save()
@@ -187,7 +193,7 @@ def pool_monitor_association_option_view(request, **kwargs):
 
         if action =='attach':
             p = pool_monitor_association_create(pool, monitor.monitor_uuid)
-
+            Operation.log(pool, obj_name=pool.name, action='attach', result=1)
             if p:
                 BalancerPoolMonitor.objects.create(pool=pool, monitor=monitor)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Balancer monitor association success')})
@@ -196,6 +202,7 @@ def pool_monitor_association_option_view(request, **kwargs):
 
         elif action == 'detach':
             p = pool_monitor_association_delete(pool, monitor.monitor_uuid)
+            Operation.log(pool, obj_name=pool.name, action='detach', result=1)
             if p:
                 pool_monitor_set = BalancerPoolMonitor.objects.filter(pool=pool.id, monitor=monitor.id)
                 for pool_monitor in pool_monitor_set:
@@ -239,6 +246,7 @@ def pool_member_create_view(request, **kwargs):
                     member.instance = instance
                     member.save()
                     pool_member_create_task.delay(member)
+                    Operation.log(member, obj_name=instance.name, action='create', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Add member success')})
             else:
                 return Response({"OPERATION_STATUS": 0, "MSG": _('No select member')})
@@ -248,6 +256,7 @@ def pool_member_create_view(request, **kwargs):
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Member no exists')})
             member.weight = request.POST.get("weight",'')
             m = pool_member_update(member)
+            Operation.log(member, obj_name=member.instance.name, action='update', result=1)
             if m:
                 member.save()
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Member update success')})
@@ -269,6 +278,7 @@ def pool_member_delete_view(request, **kwargs):
         else:
             member.deleted = True
             member.save()
+        Operation.log(member, obj_name=member.instance.name, action='delete', result=1)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Delete balancer member success')})
     else:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Balancer member no exist')})
@@ -292,10 +302,11 @@ def pool_monitor_create_view(request, **kwargs):
         if monitor_id == '':
             monitor = serializer.save()
             m = pool_monitor_create(monitor)
-            print m
+
             if m:
                 monitor.monitor_uuid = m.id
                 monitor.save()
+                Operation.log(monitor, obj_name=monitor.get_type_display(), action='create', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer monitor success')})
             else:
                 monitor.delete()
@@ -310,6 +321,7 @@ def pool_monitor_create_view(request, **kwargs):
             m = pool_monitor_update(monitor)
             if m:
                 monitor.save()
+                Operation.log(monitor, obj_name=monitor.get_type_display(), action='update', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Update balancer monitor success')})
             else:
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Update balancer monitor Fail')})
@@ -328,6 +340,7 @@ def pool_monitor_delete_view(request, **kwargs):
         pool_monitor_delete(monitor)
         monitor.deleted = True
         monitor.save()
+        Operation.log(monitor, obj_name=monitor.get_type_display(), action='delete', result=1)
         return Response({"OPERATION_STATUS": 1, "MSG": _('Delete balancer monitor success')})
     else:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Balancer monitor no exist')})

@@ -16,7 +16,7 @@ class BalancerPool(models.Model):
     lb_method = models.IntegerField(_("lb_method"), choices=LB_METHOD_CHOICES)
     provider = models.IntegerField(_("Provider"), default=0, choices=PROVIDER_CHOICES)
     admin_state_up = models.BooleanField(_("admin state up"), default=True, choices=ADMIN_STATE_UP)
-    vip = models.ForeignKey("loadbalancers.BalancerVIP",  null=True, blank=True)
+    vip = models.ForeignKey("lbaas.BalancerVIP",  null=True, blank=True)
 
     status = models.IntegerField(_("Status"), default=POOL_CREATING, choices=POOL_STATES)
     create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
@@ -25,12 +25,12 @@ class BalancerPool(models.Model):
     user_data_center = models.ForeignKey('idc.UserDataCenter')
 
     class Meta:
-        db_table = "balance_pools"
+        db_table = "lbaas_pools"
 
 
 class BalancerMember(models.Model):
     id = models.AutoField(primary_key=True)
-    pool = models.ForeignKey('loadbalancers.BalancerPool', null=True, blank=True)
+    pool = models.ForeignKey('lbaas.BalancerPool', null=True, blank=True)
     instance = models.ForeignKey("instance.Instance", null=True, blank=True)
 
     member_uuid = models.CharField(_("Member_UUID"), null=True, blank=True, max_length=40)
@@ -46,7 +46,7 @@ class BalancerMember(models.Model):
     user_data_center = models.ForeignKey('idc.UserDataCenter')
 
     class Meta:
-        db_table = 'balancer_member'
+        db_table = 'lbaas_member'
 
 
 class BalancerVIP(models.Model):
@@ -56,7 +56,7 @@ class BalancerVIP(models.Model):
     name = models.CharField(_("Pool name"), null=True, blank=True, max_length=64)
     description = models.CharField(_("Description"), null=True, blank=True, max_length=128)
 
-    pool = models.ForeignKey('loadbalancers.BalancerPool', null=True, blank=True)
+    pool = models.ForeignKey('lbaas.BalancerPool', null=True, blank=True)
     subnet = models.ForeignKey("network.Subnet", null=True, blank=True)
     public_address = models.CharField(_('Address'), null=True, blank=True, max_length=20)
     address = models.CharField(_('Address'), null=True, blank=True, max_length=20)
@@ -75,7 +75,7 @@ class BalancerVIP(models.Model):
     user_data_center = models.ForeignKey('idc.UserDataCenter')
 
     class Meta:
-        db_table = 'balancer_vip'
+        db_table = 'lbaas_vip'
 
     @property
     def session_persistence_desc(self):
@@ -112,14 +112,14 @@ class BalancerMonitor(models.Model):
         return desc
 
     class Meta:
-        db_table = 'balancer_monitor'
+        db_table = 'lbaas_monitor'
 
 
 class BalancerPoolMonitor(models.Model):
     id = models.AutoField(primary_key=True)
-    monitor = models.ForeignKey("loadbalancers.BalancerMonitor", related_name="monitor_re")
-    pool = models.ForeignKey("loadbalancers.BalancerPool", related_name="pool_re")
+    monitor = models.ForeignKey("lbaas.BalancerMonitor", related_name="monitor_re")
+    pool = models.ForeignKey("lbaas.BalancerPool", related_name="pool_re")
 
     class Meta:
-        db_table = 'balancer_pool_monitor'
+        db_table = 'lbaas_pool_monitor'
 

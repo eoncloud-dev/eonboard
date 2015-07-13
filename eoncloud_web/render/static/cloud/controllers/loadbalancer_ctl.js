@@ -426,10 +426,16 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
         "max_retries":false
     }
 
+    $scope.flag = true;
     //create balancer confirm submit
     $scope.submit_balancer_click = function (balancer){
+        if(!$scope.flag){
+            return $scope.flag;
+        }
+        $scope.flag = false;
         CreateBalancerForm.init()
         if(!$("#create_balancer_form").validate().form()){
+            $scope.flag = true;
             return;
         }
         var post_data = {
@@ -462,8 +468,13 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
 
     //create vip confirm submit
     $scope.submit_vip_click = function (vip){
+        if(!$scope.flag){
+            return $scope.flag;
+        }
+        $scope.flag = false;
         CreateVipForm.init()
         if(!$("#create_vip_form").validate().form()){
+            $scope.flag = true;
             return;
         }
         var post_data = {
@@ -526,10 +537,15 @@ CloudApp.controller('LoadBalancerAttachMonitorsController', function ($rootScope
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
-
+    $scope.has_error = false;
     $scope.monitors = monitors;
     //create vip confirm submit
     $scope.submit_attach_monitor_click = function (monitor){
+
+        if (monitor == undefined || monitor == ''){
+            $scope.has_error = true;
+            return ;
+        }
         var post_data = {
             "pool_id":$scope.balancer.id,
             "monitor_id":monitor,
@@ -544,8 +560,9 @@ CloudApp.controller('LoadBalancerAttachMonitorsController', function ($rootScope
             else {
                 ToastrService.error(data.MSG, $i18next("op_failed"));
             }
-            $modalInstance.dismiss();
+
         });
+        $modalInstance.dismiss();
     }
 
 });
@@ -573,8 +590,13 @@ CloudApp.controller('LoadBalancerFloatIpController', function ($rootScope, $scop
 
 
     }
+    $scope.has_error = false;
     //float ip operation
     $scope.submit_attach_floatIp_click = function (floatIp){
+        if(floatIp == undefined || floatIp == ''){
+            $scope.has_error = true;
+            return false;
+        }
         var post_data = {
             "floating_id":floatIp,
             "action":$scope.action,
@@ -609,11 +631,17 @@ CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $mo
 
 
 
-
+    //控制表单重复提交
+    $scope.flag = true;
     //create balancer confirm submit
     $scope.submit_click = function (monitor){
+        if(!$scope.flag){
+            return $scope.flag;
+        }
+        $scope.flag = false;
         CreateMonitorForm.init();
         if(!$("#create_monitor_form").validate().form()){
+            $scope.flag = true;
             return;
         }
         var post_data = {
@@ -639,8 +667,9 @@ CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $mo
             else {
                 ToastrService.error(data.MSG, $i18next("op_failed"));
             }
-            $modalInstance.dismiss();
         });
+
+        $modalInstance.dismiss();
     }
 }).factory('CreateMonitorForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
         return {
@@ -839,12 +868,19 @@ CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope
         $modalInstance.dismiss();
     };
 
+    //控制表单重复提交
+    $scope.flag = true;
 
 
     $scope.instances = instances;
     $scope.submit_member_click = function(member){
+        if(!$scope.flag){
+            return $scope.flag;
+        }
+        $scope.flag = false;
         CreateMemberForm.init();
         if(!$("#create_member_form").validate().form()){
+            $scope.flag = true;
             return;
         }
         var post_data = {
@@ -874,8 +910,8 @@ CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope
             else {
                 ToastrService.error(data.MSG, $i18next("op_failed"));
             }
-            $modalInstance.dismiss();
         });
+        $modalInstance.dismiss();
     }
 }).factory('CreateMemberForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
         return {

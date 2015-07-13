@@ -5,7 +5,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from biz.instance import views as instance_view
 from biz.image import views as image_view
 from biz.network import views as network_view
-from biz.loadbalancers import views as lb_view
+from biz.lbaas import views as lb_view
 from biz.volume import views as volume_view
 from biz.floating import views as floating_view
 

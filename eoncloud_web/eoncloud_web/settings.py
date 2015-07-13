@@ -62,8 +62,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 REST_FRAMEWORK = {
-    "PAGE_SIZE": 10,
-    "PAGE_SIZE_QUERY_PARAM": "page_size",
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication'

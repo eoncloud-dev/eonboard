@@ -93,32 +93,32 @@
                                                             {[{ 'balancer.add_member' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': (balancer.vip !=null && balancer.vip !='') || status_desc[balancer.status][1] == 0}" >
-                                                        <a ng-class="{'disabled': (balancer.vip !=null && balancer.vip !='') || status_desc[balancer.status][1] == 0}"
+                                                    <li ng-class="{'disabled-link': (balancer.vip) || status_desc[balancer.status][1] == 0}" >
+                                                        <a ng-class="{'disabled': (balancer.vip ) || status_desc[balancer.status][1] == 0}"
                                                            href="javascript:void(0);" ng-click="modal_create_vip(balancer)" role="button">
                                                             {[{ 'balancer.create_vip_title' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0}" >
-                                                        <a ng-class="{'disabled': balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0}"
+                                                    <li ng-class="{'disabled-link': !balancer.vip  || status_desc[balancer.status][1] == 0}" >
+                                                        <a ng-class="{'disabled': !balancer.vip || status_desc[balancer.status][1] == 0}"
                                                            href="javascript:void(0);" ng-click="modal_edit_vip(balancer)" role="button">
                                                             {[{ 'balancer.update_vip' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0}" >
-                                                        <a ng-class="{'disabled': balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0}"
+                                                    <li ng-class="{'disabled-link': !balancer.vip  || status_desc[balancer.status][1] == 0}" >
+                                                        <a ng-class="{'disabled': !balancer.vip  || status_desc[balancer.status][1] == 0}"
                                                            href="javascript:void(0);" ng-click="delete_vip_action(balancer)" role="button">
                                                             {[{ 'balancer.delete_vip' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': status_desc[balancer.status][1] == 0 || (balancer.vip == null || balancer.vip =='') || (balancer.vip_info.public_address !=null && balancer.vip_info.public_address !='') }" >
-                                                        <a ng-class="{'disabled': status_desc[balancer.status][1] == 0 || (balancer.vip == null || balancer.vip =='') || (balancer.vip_info.public_address !=null && balancer.vip_info.public_address !='')}"
+                                                    <li ng-class="{'disabled-link': status_desc[balancer.status][1] == 0 || (!balancer.vip) || (balancer.vip_info.public_address ) }" >
+                                                        <a ng-class="{'disabled': status_desc[balancer.status][1] == 0 || (!balancer.vip) || (balancer.vip_info.public_address )}"
                                                            href="javascript:void(0);" ng-click="public_ip_action(balancer,'associate')" role="button">
                                                             {[{ 'balancer.bind_public' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': (balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0) || balancer.vip_info.public_address ==null || balancer.vip_info.public_address =='' }" >
-                                                        <a ng-class="{'disabled': (balancer.vip == null || balancer.vip =='' || status_desc[balancer.status][1] == 0) || balancer.vip_info.public_address ==null || balancer.vip_info.public_address ==''}"
+                                                    <li ng-class="{'disabled-link': (!balancer.vip || status_desc[balancer.status][1] == 0) || !balancer.vip_info.public_address  }" >
+                                                        <a ng-class="{'disabled': (!balancer.vip || status_desc[balancer.status][1] == 0) || !balancer.vip_info.public_address}"
                                                            href="javascript:void(0);" ng-click="public_ip_action(balancer,'disassociate')" role="button">
                                                             {[{ 'balancer.unbind_public' | i18next }]}
                                                         </a>
@@ -644,7 +644,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.protocol' | i18next }]}<span class="required" aria-required="true"> * </span>
                 </label>
@@ -660,7 +660,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.session_persistence' | i18next }]}

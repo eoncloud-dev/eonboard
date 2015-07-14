@@ -390,11 +390,21 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
         $rootScope.timer_list = [];
+        var callbacks = [];
+
+        $rootScope.executeWhenLeave = function(callback){
+            callbacks.push(callback);
+        };
 
         $rootScope.$on("$stateChangeStart", function (e, toState, toParams, fromState, fromParams) {
             while ($rootScope.timer_list.length > 0) {
                 var t = $rootScope.timer_list.pop();
                 $interval.cancel(t);
+            }
+
+            while(callbacks.length > 0){
+                var callback = callbacks.pop();
+                callback();
             }
         });
 

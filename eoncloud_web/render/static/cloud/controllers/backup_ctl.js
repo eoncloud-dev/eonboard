@@ -50,7 +50,10 @@ CloudApp.controller('BackupController',
             }
 
         }, 5000);
-        $rootScope.timer_list.push(timer);
+
+        $rootScope.executeWhenLeave(function(){
+            $interval.cancel(timer);
+        });
 
 
         $scope.instance_backup = function (backup) {

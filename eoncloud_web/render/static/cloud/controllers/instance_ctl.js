@@ -55,7 +55,10 @@ CloudApp.controller('InstanceController',
             }
 
         }, 5000);
-        $rootScope.timer_list.push(timer);
+        //$rootScope.cleanTimerWhenLeave(timer);
+        $rootScope.executeWhenLeave(function(){
+            $interval.cancel(timer);
+        });
 
         $scope.modal_create_instance = function () {
             $modal.open({

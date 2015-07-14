@@ -87,7 +87,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn" ng-click="cancel()">{[{ 'firewall.cancel' | i18next }]}</button>
-            <button class="btn btn-primary" ng-click="create(firewall)">{[{ 'firewall.ensure' | i18next }]}</button>
+            <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="create(firewall)">{[{ 'firewall.ensure' | i18next }]}</button>
         </div>
     </div>
 </script>

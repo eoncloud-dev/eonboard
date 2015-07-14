@@ -260,12 +260,18 @@ CloudApp.controller('VolumeCreateController',
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
+        //控制表单重复提交
+        $scope.flag = true;
         //提交方法
         $scope.volume_submit = function (volume, type) {
             if (typeof(volume.name) === 'undefined' || volume.name == "") {
                 $scope.has_error = true;
                 return false;
             }
+            if(!$scope.flag){
+                return
+            }
+            $scope.flag = false;
             if ("create" === type) {
                 var post_data = {
                     "name": volume.name,
@@ -274,11 +280,11 @@ CloudApp.controller('VolumeCreateController',
                 CommonHttpService.post("/api/volumes/create/", post_data).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
                         ToastrService.success(data.MSG, $i18next("success"));
-                        volume_table.reload();
                     }
                     else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
                     }
+                    volume_table.reload();
                     $modalInstance.dismiss();
                 });
             } else if ("update" === type) {
@@ -290,11 +296,11 @@ CloudApp.controller('VolumeCreateController',
                 CommonHttpService.post("/api/volumes/update/", post_data).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
                         ToastrService.success(data.MSG, $i18next("success"));
-                        volume_table.reload();
                     }
                     else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
                     }
+                    volume_table.reload();
                     $modalInstance.dismiss();
                 });
             }
@@ -312,9 +318,14 @@ CloudApp.controller('VolumeAttachController', function ($rootScope, $scope, $sce
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
+    $scope.flag = true;
     //挂载方法
     $scope.attach_or_detach = function (selected_instance, action) {
         if ((action == "attach" && selected_instance) || action=='detach') {
+            if(!$scope.flag){
+                return
+            }
+            $scope.flag = false;
             var post_data = {
                 "volume_id": $scope.volume.id,
                 "instance_id": selected_instance.id,

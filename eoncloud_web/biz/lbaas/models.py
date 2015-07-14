@@ -84,7 +84,7 @@ class BalancerVIP(models.Model):
 class BalancerMonitor(models.Model):
     id = models.AutoField(primary_key=True)
     monitor_uuid = models.CharField(_('Monitor uuid'), null=False, blank=True, max_length=40)
-
+    name = models.CharField(_("Monitor name"), null=True, blank=True, max_length=128)
     type = models.IntegerField(_("Type"), choices=MONITOR_TYPE)
     delay = models.IntegerField(_("Delay"), null=True, blank=True, max_length=10)
     timeout = models.IntegerField(_("Timeout"), null=True, blank=True, max_length=10)

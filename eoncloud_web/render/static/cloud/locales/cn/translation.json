@@ -510,6 +510,7 @@
     "delete_vip":"删除VIP",
     "update_vip":"修改VIP",
     "vip_name":"VIP名称",
+    "monitor_name":"监听器名称",
     "bind_public":"绑定公网IP",
     "unbind_public":"解除公网IP绑定",
     "attach_monitor":"关联监听器",
@@ -522,7 +523,8 @@
     "HTTP_STATUS_CODE":"HTTP状态码",
     "select_public_ip":"请选择公网IP",
     "select_monitor":"请选择监听器",
-    "add_member":"添加成员"
+    "add_member":"添加成员",
+    "delay_lg_timeout":"超时时间不能大于延迟时间"
   }
 
 }

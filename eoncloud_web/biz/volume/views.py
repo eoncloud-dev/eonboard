@@ -7,7 +7,8 @@ from .models import Volume
 from biz.instance.models import Instance
 from biz.account.models import Operation
 from .serializer import VolumeSerializer
-from .settings import VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING, VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE, VOLUME_STATE_DELETING
+from .settings import VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING, VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE, \
+    VOLUME_STATE_DELETING, VOLUME_STATE_ERROR
 
 from cloud.volume_task import volume_create_task,volume_delete_action_task
 from cloud.instance_task import volume_attach_or_detach_task
@@ -48,7 +49,13 @@ def volume_create_view(request, format=None):
         serializer = VolumeSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             volume = serializer.save()
-            volume_create_task.delay(volume)
+            try:
+                volume_create_task.delay(volume)
+            except Exception as e:
+                LOG.error(e)
+                volume.status = VOLUME_STATE_ERROR
+                volume.save()
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Volume create error')})
             Operation.log(volume, obj_name=volume.name, action="create", result=1)
             return Response({"OPERATION_STATUS": 1, "MSG": _('Creating Volume')}, status=status.HTTP_201_CREATED)
         else:
@@ -115,12 +122,22 @@ def volume_attach_or_detach(data, volume, action):
 def delete_action(volume):
     if volume.instance is not None:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Volume attached to instance,instance:%(instance)s') % {'instance': volume.instance.name}}, status=status.HTTP_200_OK)
-    volume.status = VOLUME_STATE_DELETING
-    volume.save()
-    Operation.log(volume, obj_name=volume.name, action="terminate", result=1)
-    volume_delete_action_task.delay(volume)
-    return Response({"OPERATION_STATUS": 1, "MSG": _('Deleting Volume')}, status=status.HTTP_200_OK)
 
+    if volume.volume_id:
+        volume.status = VOLUME_STATE_DELETING
+        volume.save()
+        try:
+            volume_delete_action_task.delay(volume)
+            Operation.log(volume, obj_name=volume.name, action="terminate", result=1)
+        except Exception as e:
+            LOG.error("Delete volume error,msg:%s" % e)
+            volume.status = VOLUME_STATE_ERROR
+            volume.save()
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Deleting Volume error')}, status=status.HTTP_200_OK)
+    else:
+        volume.deleted = True
+        volume.save()
+        return Response({"OPERATION_STATUS": 1, "MSG": _('Deleting Volume')}, status=status.HTTP_200_OK)
 
 
 

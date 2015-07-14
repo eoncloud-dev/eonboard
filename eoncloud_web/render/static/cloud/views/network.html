@@ -130,7 +130,7 @@
     <div class="modal-footer">
         <button href="javascript:;" class="btn" ng-click="cancel()">
             {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-click="submit_click(network_create)">确定</button>
+        <button class="btn btn-primary" ng-click="submit_click(network_create)" ng-class="{'disabled':!flag}">确定</button>
     </div>
 </script>
 <script type="text/ng-template" id="network_attach_router.html">
@@ -183,7 +183,7 @@
     </div>
     <div class="modal-footer">
         <button  class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-click="submit_click(router_selected,'attach')">确定</button>
+        <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="submit_click(router_selected,'attach')">确定</button>
     </div>
 </script>
 <!-- BEGIN MAIN JS & CSS -->

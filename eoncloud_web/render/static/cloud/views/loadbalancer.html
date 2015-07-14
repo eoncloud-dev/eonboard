@@ -167,6 +167,7 @@
                                             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox2.html'" >
                                                 <input type="checkbox" ng-class="{'disabled': status_desc[balancer.status][1] == 0}" ng-model="checkboxes_monitor.items[monitor.id]"/>
                                             </td>
+                                            <td data-title="'balancer.monitor_name' | i18next">{[{ monitor.name }]}</td>
                                             <td data-title="'balancer.monitor_type' | i18next">{[{ monitor.monitor_type_desc }]}</td>
                                             <td data-title="'balancer.balancer' | i18next">{[{ monitor.balancer_desc }]}</td>
                                             <td data-title="'balancer.delay' | i18next">{[{ monitor.delay }]}
@@ -366,6 +367,21 @@
         <form role="form" id="create_monitor_form" name="create_monitor_form" class="form-horizontal form-bordered">
             <div class="form-group">
                 <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.monitor_name' | i18next }]}<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <input type="text"  maxlength="120" name="name" ng-model="monitor.name"
+                               class="form-control  required">
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
                     {[{'balancer.monitor_type' | i18next }]}<span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-8">
@@ -373,7 +389,7 @@
                         <span class="input-group-addon">
                         <i class="fa fa-openid"></i>
                         </span>
-                        <select class="form-control" name="monitor_type" required  ng-model="monitor.monitor_type" >
+                        <select class="form-control" name="type" required  ng-model="monitor.type" >
                             <option value="" selected>{[{'balancer.select' | i18next }]}</option>
                             <option ng-repeat="mon in constant.monitor_type" value="{[{mon[0]}]}">{[{mon[1]}]}</option>
                         </select>
@@ -397,7 +413,7 @@
 
                 </div>
             </div>
-            <div class="form-group" >
+            <div class="form-group" ng-class="{'has-error':timeout_error}">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.timeout' | i18next }]}<span class="required" aria-required="true"> * </span>
                 </label>
@@ -406,10 +422,10 @@
                         <span class="input-group-addon">
                         <i class="fa fa-openid"></i>
                         </span>
-                        <input type="number"  maxlength="20" name="timeout" required ng-model="monitor.timeout"
+                        <input type="number" max="#delay" maxlength="20" name="timeout" required ng-model="monitor.timeout"
                                class="form-control  required">
                     </div>
-
+                    <div class="help-block help-block-error" ng-if="timeout_error">{[{'balancer.delay_lg_timeout' | i18next }]}</div>
                 </div>
             </div>
             <div class="form-group"  >
@@ -474,6 +490,21 @@
     </div>
     <div class="modal-body">
         <form role="form" id="create_monitor_form" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'balancer.monitor_name' | i18next }]}<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-openid"></i>
+                        </span>
+                        <input type="text"  maxlength="120" name="name" ng-model="monitor.name"
+                               class="form-control  required">
+
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-md-3 control-label" for="title">
                     {[{'balancer.delay' | i18next }]}<span class="required" aria-required="true"> * </span>

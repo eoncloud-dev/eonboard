@@ -26,18 +26,19 @@ def firewall_list_view(request ,**kwargs):
 
 @api_view(['POST'])
 def firewall_create_view(request, **kwargs):
-    try:
-        serializer = FirewallSerializer(data=request.data, context={"request": request})
-        if serializer.is_valid():
-            firewall = serializer.save()
-            Operation.log(firewall, obj_name=firewall.name, action="create", result=1)
+    serializer = FirewallSerializer(data=request.data, context={"request": request})
+    if serializer.is_valid():
+        firewall = serializer.save()
+        Operation.log(firewall, obj_name=firewall.name, action="create", result=1)
+        try:
             security_group_create_task.delay(firewall)
-            return Response({"OPERATION_STATUS": 1, "MSG": _('Creating firewall')}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        LOG.error("create Firewall  error ,msg:[%s]" % e)
-        return Response({"OPERATION_STATUS": 0, "MSG": _('Firewall create error')})
+        except Exception as e:
+            firewall.delete()
+            LOG.error("Create firewall error, msg:%s" % e)
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Firewall create error')})
+        return Response({"OPERATION_STATUS": 1, "MSG": _('Creating firewall')}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -53,10 +54,18 @@ def firewall_delete_view(request, **kwargs):
     if check_firewall_use(request, firewall.id):
         return Response({"OPERATION_STATUS": 0, "MSG": _('Firewall used can not delete')})
     else:
-        security_group_delete_task.delay(firewall)
-        firewall.deleted = True
-        firewall.save()
-        Operation.log(firewall, obj_name=firewall.name, action="terminate", result=1)
+        if firewall.firewall_id:
+            try:
+                security_group_delete_task.delay(firewall)
+            except Exception as e:
+                LOG.error("Delete firewall error, msg:%s" % e)
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Firewall delete error')})
+            firewall.deleted = True
+            firewall.save()
+            Operation.log(firewall, obj_name=firewall.name, action="terminate", result=1)
+        else:
+            firewall.deleted = True
+            firewall.save()
     return Response({"OPERATION_STATUS": 1, "MSG": _('Firewall delete success')})
 
 
@@ -74,19 +83,18 @@ def firewall_rule_create_view(request):
     firewall_id = data.get('firewall')
     if not firewall_id:
         return Response({'OPERATION_STATUS': 0, 'MSG': _('no selected security group')})
-    try:
-        firewall = Firewall.objects.get(pk=firewall_id, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
-        serializer = FirewallRulesSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            firewall_rule = serializer.save()
-            Operation.log(firewall_rule, obj_name=firewall_rule.direction + firewall_rule.protocol, action="create", result=1)
+    serializer = FirewallRulesSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        firewall_rule = serializer.save()
+        Operation.log(firewall_rule, obj_name=firewall_rule.direction + firewall_rule.protocol, action="create", result=1)
+        try:
             security_group_rule_create_task.delay(firewall_rule)
-            return Response({'OPERATION_STATUS': 1, 'MSG': _('Create firewall rule success')})
-        return Response({'OPERATION_STATUS': 0, 'MSG': _('Valid firewall rule nopass')})
-    except Exception as e:
-        LOG.error("Create firewall rule error,msg: %s" % e)
-        return Response({'OPERATION_STATUS': 0, 'MSG': _('Create firewall rule error')})
-
+        except Exception as e:
+            firewall_rule.delete()
+            LOG.error("Create firewall rule error,msg: %s" % e)
+            return Response({'OPERATION_STATUS': 0, 'MSG': _('Create firewall rule error')})
+        return Response({'OPERATION_STATUS': 1, 'MSG': _('Create firewall rule success')})
+    return Response({'OPERATION_STATUS': 0, 'MSG': _('Valid firewall rule nopass')})
 
 @api_view(['POST'])
 def firewall_rule_delete_view(request):
@@ -143,9 +151,9 @@ def instance_change_firewall_view(request, **kwargs):
 def check_firewall_use(request,firewall_id):
     instance_set = Instance.objects.filter(deleted=False, user=request.user,
                                            user_data_center=request.session["UDC_ID"], firewall_group=firewall_id)
-    if instance_set is None:
-        return False
-    return True
+    if instance_set:
+        return True
+    return False
 
 
 

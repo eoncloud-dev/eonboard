@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='floating',
             name='resource_type',
-            field=models.CharField(blank=True, max_length=40, null=True, verbose_name='reource type', choices=[(b'INSTANCE', b'INSTANCE'), (b'LOADBALANCER', b'LOADBALANCER')]),
+            field=models.CharField(blank=True, max_length=40, null=True, verbose_name='Resource type', choices=[(b'INSTANCE', b'INSTANCE'), (b'LOADBALANCER', b'LOADBALANCER')]),
             preserve_default=True,
         ),
     ]

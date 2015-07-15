@@ -1,6 +1,5 @@
 #-*-coding=utf-8-*-
 
-
 # sync instance status interval
 INSTANCE_SYNC_INTERVAL_SECOND = 10
 # max loop count for sync instance status
@@ -12,6 +11,7 @@ MULTI_ROUTER_ENABLED = False
 
 # site brand
 BRAND = "EonCloud"
+ICP_NUMBER = u"冀ICP备15016515号-1"
 
 MCC = {
     "1" : u"金融",   
@@ -43,6 +43,7 @@ DEFAULT_NETWORK_NAME = u"默认网络"
 DEFAULT_SUBNET_NAME = u"默认子网"
 DEFAULT_ROUTER_NAME = u"默认路由"
 DEFAULT_FIREWALL_NAME = u"默认防火墙"
+# openstack name format "{prefix}-{xxx}-{id}"
 OS_NAME_PREFIX = u"eon"
 
 # backup config
@@ -70,4 +71,5 @@ SITE_CONFIG = {
     "QUOTA_CHECK" : QUOTA_CHECK,
     "MULTI_ROUTER_ENABLED" : MULTI_ROUTER_ENABLED,
     "BRAND": BRAND,
+    "ICP_NUMBER": ICP_NUMBER,
 }

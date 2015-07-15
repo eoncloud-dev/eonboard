@@ -76,7 +76,7 @@ class BalancerMonitorSerializer(serializers.ModelSerializer):
     user_data_center = serializers.PrimaryKeyRelatedField(queryset=UserDataCenter.objects.all(), required=False, allow_null=True, default=None)
     create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
     monitor_type_desc = serializers.CharField(source='get_type_display', read_only=True)
-    balancer_desc = serializers.CharField(source="balancer", required=False, allow_null=True, default=None, read_only=True)
+    balancer_desc = serializers.CharField(source="balancers_name", required=False, allow_null=True, default=None, read_only=True)
 
     def validate_user(self, value):
         request = self.context.get('request', None)

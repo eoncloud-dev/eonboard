@@ -100,6 +100,7 @@ CloudApp.controller('LoadBalancerController', function ($rootScope, $scope, $fil
 
     /*创建负载资源弹出窗口*/
     $scope.modal_create_loadbalancer = function () {
+        $scope.balancer = {}
         var modalBalancer = $modal.open({
             templateUrl: 'create_balancer.html',
             controller: 'LoadBalancerCreateController',
@@ -224,7 +225,7 @@ CloudApp.controller('LoadBalancerController', function ($rootScope, $scope, $fil
         bootbox.confirm($i18next("balancer.confirm_delete_vip"), function (confirm) {
             if (confirm) {
                 var post_data = {
-                    'vip_id':balancer.vip
+                    'pool_id':balancer.id
                 }
                 CommonHttpService.post("/api/lbs/vip/delete/", post_data).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
@@ -483,7 +484,7 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
             "subnet":$scope.balancer.subnet,
             "description":vip.description,
             "protocol_port":vip.protocol_port,
-            "protocol":vip.protocol,
+            "protocol":$scope.balancer.protocol,
             "connection_limit":vip.connection_limit
         }
         if(vip.session_persistence !=undefined  && vip.session_persistence>=0){
@@ -502,8 +503,9 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
             else {
                 ToastrService.error(data.MSG, $i18next("op_failed"));
             }
-            $modalInstance.dismiss();
+
         });
+        $modalInstance.dismiss();
     }
 
 }).factory('CreateBalancerForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {

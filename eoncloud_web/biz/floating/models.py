@@ -20,7 +20,7 @@ class Floating(models.Model):
     instance = models.ForeignKey('instance.Instance', null=True, blank=True, default=None)
 
     resource = models.IntegerField(_("Resource"), null=True, blank=True, default=None)
-    resource_type = models.CharField(_("reource type"), null=True, blank=True, choices=RESOURCE_TYPE, max_length=40)
+    resource_type = models.CharField(_("Resource type"), null=True, blank=True, choices=RESOURCE_TYPE, max_length=40)
 
     user = models.ForeignKey('auth.User')
     user_data_center = models.ForeignKey('idc.UserDataCenter')
@@ -29,15 +29,15 @@ class Floating(models.Model):
     deleted = models.BooleanField(_("Deleted"), default=False)
 
     @property
-    def re_resource(self):
+    def resource_info(self):
         resource_dict = dict(RESOURCE_TYPE)
         try:
-            if resource_dict[self.resource_type] =='INSTANCE':
+            if resource_dict[self.resource_type] == 'INSTANCE':
                 from biz.instance.models import Instance
                 from biz.instance.serializer import InstanceSerializer
                 instance = Instance.objects.get(pk=self.resource, user=self.user)
                 return {"id": instance.id, "name": instance.name, "resource_type": self.resource_type}
-            elif resource_dict[self.resource_type] =='LOADBALANCER':
+            elif resource_dict[self.resource_type] == 'LOADBALANCER':
                 from biz.lbaas.models import BalancerPool
                 from biz.lbaas.serializer import BalancerPoolSerializer
                 pool = BalancerPool.objects.get(pk=self.resource, user=self.user)

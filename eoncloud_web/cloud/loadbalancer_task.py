@@ -34,7 +34,6 @@ def pool_create(pool=None):
                                  admin_state_up=pool.admin_state_up,
                                  provider=pool.get_provider_display()
                                  )
-        print p
         return p
     except Exception as e:
         LOG.exception(e)
@@ -48,7 +47,6 @@ def pool_update(pool=None):
                            'lb_method': pool.get_lb_method_display()
                            }}
         p = lbaas.pool_update(rc, pool_id=pool.pool_uuid, **params)
-        print p
         return p
     except Exception as e:
         LOG.exception(e)
@@ -124,7 +122,7 @@ def pool_member_delete(member=None):
         return False
 
 
-def pool_vip_create(vip=None):
+def pool_vip_create(vip, pool_uuid):
     rc = create_rc_by_balancer_vip(vip)
     try:
         session_persistence = {}
@@ -138,7 +136,7 @@ def pool_vip_create(vip=None):
                                subnet_id=vip.subnet.subnet_id,
                                protocol_port=vip.protocol_port,
                                protocol=vip.get_protocol_display(),
-                               pool_id=vip.pool.pool_uuid,
+                               pool_id=pool_uuid,
                                session_persistence=session_persistence,
                                admin_state_up=vip.admin_state_up,
                                connection_limit=vip.connection_limit,
@@ -362,14 +360,11 @@ def pool_delete_task(pool=None):
 
 
 @app.task
-def pool_vip_create_task(vip=None):
-    if not vip:
-        return False
+def pool_vip_create_task(vip, pool):
     LOG.info("Begin create balancer vip,id[%s]"% vip.id)
-    v = pool_vip_create(vip)
+    v = pool_vip_create(vip, pool.pool_uuid)
     if v:
         LOG.info("Create balancer vip seuuce, id[%s],uuid[%s]" % (vip.id, v.id))
-        print v
         vip.status = POOL_ACTIVE
         vip.vip_uuid = v.id
         vip.address = v.address
@@ -377,6 +372,8 @@ def pool_vip_create_task(vip=None):
         vip.save()
     else:
         LOG.error("Create balancer vip fail,id[%s]" % vip.id)
+        pool.vip = None
+        pool.save()
         vip.status = POOL_ERROR
         vip.save()
 
@@ -388,7 +385,6 @@ def pool_vip_update_task(vip=None):
     v = pool_vip_update(vip)
     if v:
         LOG.info("Update balancer vip seuuce, id[%s],uuid[%s]" % (vip.id, v.id))
-        print v
         vip.status = POOL_ACTIVE
         vip.save()
         return v
@@ -423,7 +419,6 @@ def pool_member_create_task(member=None):
     LOG.info("Begin create balancer member, id[%s]" % member.id)
     m = pool_member_create(member)
     if m:
-        print m
         LOG.info("Create balancer member success,id[%s],uuid[%s]" % (member.id, m.id))
         member.member_uuid = m.id
         member.status = POOL_ACTIVE

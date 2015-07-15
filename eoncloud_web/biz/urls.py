@@ -76,7 +76,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^lbs/(?P<pk>[0-9]+)/$', lb_view.pool_get_view),
         url(r'^lbs/create/$', lb_view.pool_create_view),
         url(r'^lbs/delete/$', lb_view.pool_delete_view),
-        url(r'^lbs/getavmonitor/(?P<pool_id>[0-9]+)/$', lb_view.get_av_monitor_view),
+        url(r'^lbs/getavmonitor/(?P<pool_id>[0-9]+)/$', lb_view.get_available_monitor_view),
         url(r'^lbs/poolmonitoraction/$', lb_view.pool_monitor_association_option_view),
         url(r'^lbs/monitors/$', lb_view.pool_monitor_list_view),
         url(r'^lbs/monitors/create/$', lb_view.pool_monitor_create_view),

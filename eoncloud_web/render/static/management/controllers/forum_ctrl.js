@@ -48,10 +48,7 @@ CloudApp.controller('ForumController',
         });
     };
 
-    var stopLoadForums = $interval(loadForums, 10000);
-    $scope.$on('$destroy', function () {
-        $interval.cancel(stopLoadForums);
-    });
+    $rootScope.setInterval(loadForums, 10000);
 
     $scope.loadReplies = function(forum){
 

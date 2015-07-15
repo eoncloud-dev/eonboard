@@ -6,7 +6,7 @@
 
 CloudApp.controller('FlavorController',
     function($rootScope, $scope, $filter, $modal, $i18next,
-             CommonHttpService, ToastrService, ngTableParams,
+             CommonHttpService, ToastrService, ngTableParams, ngTableHelper,
              Flavor, CheckboxGroup){
 
         $scope.$on('$viewContentLoaded', function(){
@@ -24,14 +24,10 @@ CloudApp.controller('FlavorController',
                 count: 10
             },{
                 counts: [],
-                getData: function ($defer, params) {
-                    Flavor.query(function (data) {
-
-                        var results = $filter('orderBy')(data, params.orderBy());
-                        params.total(results.length);
-                        $scope.flavors = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                getData: function($defer, params){
+                    Flavor.query(function(data){
+                        $scope.flavors = ngTableHelper.paginate(data, $defer, params);
                         checkboxGroup.syncObjects($scope.flavors);
-                        $defer.resolve($scope.flavors);
                     });
                 }
             });

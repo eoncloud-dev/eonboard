@@ -7,7 +7,7 @@
 CloudApp.controller('ImageController',
     function($rootScope, $scope, $filter, $modal, $i18next,
              CommonHttpService, ToastrService, ngTableParams,
-             Image, CheckboxGroup){
+             Image, CheckboxGroup, ngTableHelper){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -26,10 +26,7 @@ CloudApp.controller('ImageController',
                 counts: [],
                 getData: function ($defer, params) {
                     Image.query(function (data) {
-                        var results = $filter('orderBy')(data, params.orderBy());
-                        params.total(results.length);
-                        $scope.images = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                        $defer.resolve($scope.images);
+                        $scope.images = ngTableHelper.paginate(data, $defer, params);
                         checkboxGroup.syncObjects($scope.images);
                     });
                 }

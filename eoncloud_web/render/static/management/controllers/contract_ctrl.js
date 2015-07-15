@@ -9,7 +9,8 @@
 CloudApp.controller('ContractController',
     function ($rootScope, $scope, $filter,
               $modal, $i18next, ngTableParams, Contract,
-              CommonHttpService, ToastrService, CheckboxGroup) {
+              CommonHttpService, ToastrService, CheckboxGroup,
+              ngTableHelper) {
 
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
@@ -28,16 +29,8 @@ CloudApp.controller('ContractController',
             counts: [],
             getData: function ($defer, params) {
                 Contract.query(function (data) {
-
-                    var data_list = $filter('orderBy')(data, params.orderBy());
-
-                    params.total(data_list.length);
-
-                    $scope.contracts = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
+                    $scope.contracts = ngTableHelper.paginate(data, $defer, params);
                     checkboxGroup.syncObjects($scope.contracts);
-
-                    $defer.resolve($scope.contracts);
                 });
             }
         });

@@ -2,7 +2,7 @@
 
 CloudApp.controller('OperationController',
     function($rootScope, $scope, ngTableParams,
-             CommonHttpService, DatePicker, Operation) {
+             CommonHttpService, DatePicker, Operation, ngTableHelper) {
     $scope.$on('$viewContentLoaded', function() {   
         Metronic.initAjax();
         DatePicker.initDatePickers();
@@ -27,10 +27,9 @@ CloudApp.controller('OperationController',
                 searchParams = {page: params.page(), page_size: params.count()};
 
             angular.extend(searchParams, filter);
-            Operation.query(searchParams,
-                function (data) {
-                    params.total(data.count);
+            Operation.query(searchParams, function (data) {
                     $defer.resolve(data.results);
+                    ngTableHelper.countPages(params, data.count);
                 });
         }
     });

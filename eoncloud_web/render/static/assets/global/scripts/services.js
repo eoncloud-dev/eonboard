@@ -210,7 +210,7 @@ angular.module('cloud.services', [])
 
 })
 
-/* Init date pickers */
+/* Init date pickers, more functions come later. */
 .factory('DatePicker', function (){
 
     var initDatePickers = function(){
@@ -227,4 +227,44 @@ angular.module('cloud.services', [])
     return {
         initDatePickers: initDatePickers
     }
-});
+})
+
+.factory('ngTableHelper', function(){
+
+        var countPages = function(params, total){
+
+            params.total(total);
+
+            var pageNum = Math.ceil(total / params.count());
+
+            if(pageNum == 0){
+                pageNum = 1;
+            }
+
+            if(pageNum < params.page()){
+                params.page(pageNum);
+            }
+        };
+
+        var paginate = function(data, $defer, params){
+
+            if(!angular.isArray(data)){
+               return data;
+            }
+
+            countPages(params, data.length);
+
+            var start = (params.page() - 1) * params.count(),
+                end = params.page() * params.count(),
+                partial = data.slice(start, end);
+
+            $defer.resolve(partial);
+
+            return partial;
+        };
+
+        return {
+            countPages: countPages,
+            paginate: paginate
+        };
+    });

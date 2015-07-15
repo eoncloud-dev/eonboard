@@ -6,7 +6,8 @@
 
 CloudApp.controller('UserController',
     function($rootScope, $scope, $filter, $modal, $i18next,
-             CommonHttpService, ToastrService, ngTableParams, User){
+             CommonHttpService, ToastrService, ngTableParams,
+             User, ngTableHelper){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -24,14 +25,7 @@ CloudApp.controller('UserController',
                 counts: [],
                 getData: function ($defer, params) {
                     User.query(function (data) {
-
-                        var results = $filter('orderBy')(data, params.orderBy());
-
-                        params.total(results.length);
-
-                        $scope.users = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
-
-                        $defer.resolve($scope.users);
+                        $scope.users = ngTableHelper.paginate(data, $defer, params);
                     });
                 }
             });

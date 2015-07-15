@@ -9,7 +9,7 @@
 CloudApp.controller('DataCenterController',
     function($rootScope, $scope, $filter, $modal, $i18next,
              CommonHttpService, ToastrService, ngTableParams,
-            DataCenter, CheckboxGroup){
+            DataCenter, CheckboxGroup, ngTableHelper){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -28,12 +28,8 @@ CloudApp.controller('DataCenterController',
                 counts: [],
                 getData: function ($defer, params) {
                     DataCenter.query(function (data) {
-
-                        var results = $filter('orderBy')(data, params.orderBy());
-                        params.total(results.length);
-                        $scope.data_centers = results.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                        $scope.data_centers = ngTableHelper.paginate(data, $defer, params);
                         checkboxGroup.syncObjects($scope.data_centers);
-                        $defer.resolve($scope.data_centers);
                     });
                 }
             });

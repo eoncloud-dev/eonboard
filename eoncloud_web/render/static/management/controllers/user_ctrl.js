@@ -68,4 +68,81 @@ CloudApp.controller('UserController',
 
             });
         };
+
+        $scope.viewUdcList = function(user){
+            $modal.open({
+                templateUrl: 'udc_list.html',
+                controller: 'UserUdcListController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    user: function(){
+                        return User.get({id: user.id});
+                    }
+                }
+            });
+        };
+
+        $scope.openPasswordModal = function(user){
+            $modal.open({
+                templateUrl: 'change-password.html',
+                controller: 'ChangePasswordController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    user: function(){
+                        return user;
+                    }
+                }
+            });
+        };
+    })
+
+    .controller('UserUdcListController',
+        function($scope, $modalInstance, ngTableParams, user){
+
+            $scope.cancel = $modalInstance.dismiss;
+
+            $scope.udc_table = new ngTableParams({
+                    page: 1,
+                    count: 10
+                },{
+                    counts: [],
+                    getData: function ($defer, params) {
+                        user.$promise.then(function(){
+                            $defer.resolve(user.user_data_centers);
+                        });
+                }
+            });
+    })
+
+    .controller('ChangePasswordController',
+        function($scope, $modalInstance, $i18next, ngTableParams,
+                 CommonHttpService, ValidationTool, ToastrService,
+                 user){
+
+            var form = null;
+            $scope.user = user = {id: user.id, old_password: '', new_password: '', confirm_password: ''};
+
+            $scope.cancel = $modalInstance.dismiss;
+
+            $modalInstance.rendered.then(function(){
+                form = ValidationTool.init('#passwordForm');
+            });
+
+            $scope.changePassword = function(){
+
+                if(!form.valid()){
+                    return;
+                }
+
+                CommonHttpService.post('/api/users/change-password/', user).then(function(result){
+                    if(result.success){
+                        ToastrService.success(result.msg, $i18next("success"));
+                        $modalInstance.dismiss();
+                    } else {
+                        ToastrService.error(result.msg, $i18next("op_failed"));
+                    }
+                });
+            }
     });

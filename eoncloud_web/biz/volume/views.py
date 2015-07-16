@@ -138,10 +138,3 @@ def delete_action(volume):
         volume.deleted = True
         volume.save()
         return Response({"OPERATION_STATUS": 1, "MSG": _('Deleting Volume')}, status=status.HTTP_200_OK)
-
-
-
-
-
-
-

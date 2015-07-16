@@ -17,10 +17,12 @@ from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.contrib.auth.models import check_password
 
 from biz.account.forms import CloudUserCreateForm
 from biz.account.models import Contract, Operation, Quota, UserProxy, QUOTA_ITEM
-from biz.account.serializer import ContractSerializer, OperationSerializer, UserSerializer, QuotaSerializer
+from biz.account.serializer import (ContractSerializer, OperationSerializer,
+                                    UserSerializer, QuotaSerializer, DetailedUserSerializer)
 from biz.account.utils import get_quota_usage
 from biz.idc.models import DataCenter
 from eoncloud_web.pagination import PagePagination
@@ -230,8 +232,8 @@ class UserList(generics.ListAPIView):
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserProxy.normal_users.all()
+    serializer_class = DetailedUserSerializer
 
     def perform_destroy(self, instance):
 
@@ -260,6 +262,31 @@ def activate_user(request):
     user.save()
 
     return Response({"success": True, "msg": _('User has been activated!')}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def change_password(request):
+
+    pk = request.data['id']
+    old_password = request.data['old_password']
+    new_password = request.data['new_password']
+    confirm_password = request.data['confirm_password']
+
+    if new_password != confirm_password:
+        return Response({"success": False, "msg": _("The new password doesn't match confirm password!")})
+
+    try:
+        user = UserProxy.objects.get(pk=pk)
+    except UserProxy.DoesNotExist:
+        return Response({"success": False, "msg": _("The user is not founded!")})
+
+    if not check_password(old_password, user.password):
+        return Response({"success": False, "msg": _("The original password is not correct!")})
+
+    user.set_password(new_password)
+    user.save()
+
+    return Response({"success": True, "msg": _("Password has been changed!")})
 
 
 class QuotaList(generics.ListAPIView):

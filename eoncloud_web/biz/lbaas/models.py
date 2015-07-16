@@ -26,6 +26,8 @@ class BalancerPool(models.Model):
 
     class Meta:
         db_table = "lbaas_pool"
+        verbose_name = _("BalancerPool")
+        verbose_name_plural = _("BalancerPool")
 
 
 class BalancerMember(models.Model):
@@ -47,6 +49,8 @@ class BalancerMember(models.Model):
 
     class Meta:
         db_table = 'lbaas_member'
+        verbose_name = _("BalancerMember")
+        verbose_name_plural = _("BalancerMember")
 
 
 class BalancerVIP(models.Model):
@@ -75,6 +79,8 @@ class BalancerVIP(models.Model):
 
     class Meta:
         db_table = 'lbaas_vip'
+        verbose_name = _("BalancerVIP")
+        verbose_name_plural = _("BalancerVIP")
 
     @property
     def session_persistence_desc(self):
@@ -109,6 +115,8 @@ class BalancerMonitor(models.Model):
 
     class Meta:
         db_table = 'lbaas_monitor'
+        verbose_name = _("BalancerMonitor")
+        verbose_name_plural = _("BalancerMonitor")
 
 
 class BalancerPoolMonitor(models.Model):
@@ -118,4 +126,6 @@ class BalancerPoolMonitor(models.Model):
 
     class Meta:
         db_table = 'lbaas_pool_monitor'
+        verbose_name = _("BalancerPoolMonitor")
+        verbose_name_plural = _("BalancerPoolMonitor")
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-16 17:36+0800\n"
+"POT-Creation-Date: 2015-07-16 18:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr "结束日期"
 #: account/models.py:72 account/models.py:95 backup/models.py:30
 #: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
 #: floating/models.py:29 forum/models.py:11 forum/models.py:28
-#: instance/models.py:45 lbaas/models.py:23 lbaas/models.py:44
-#: lbaas/models.py:72 lbaas/models.py:98 network/models.py:15
+#: instance/models.py:45 lbaas/models.py:23 lbaas/models.py:46
+#: lbaas/models.py:76 lbaas/models.py:104 network/models.py:15
 #: network/models.py:56 network/models.py:74 network/models.py:90
 #: volume/models.py:17
 msgid "Deleted"
@@ -64,8 +64,8 @@ msgstr "已删除"
 #: backup/models.py:28 backup/models.py:137 firewall/models.py:14
 #: firewall/models.py:37 floating/models.py:27 forum/models.py:12
 #: forum/models.py:29 image/models.py:25 instance/models.py:25
-#: instance/models.py:84 lbaas/models.py:22 lbaas/models.py:43
-#: lbaas/models.py:71 lbaas/models.py:97 network/models.py:16
+#: instance/models.py:84 lbaas/models.py:22 lbaas/models.py:45
+#: lbaas/models.py:75 lbaas/models.py:103 network/models.py:16
 #: network/models.py:57 network/models.py:75 volume/models.py:16
 msgid "Create Date"
 msgstr "创建日期"
@@ -335,8 +335,8 @@ msgid "Delete Date"
 msgstr "删除日期"
 
 #: backup/models.py:31 backup/models.py:140 floating/models.py:17
-#: instance/models.py:23 lbaas/models.py:21 lbaas/models.py:42
-#: lbaas/models.py:69 network/models.py:11 network/models.py:53
+#: instance/models.py:23 lbaas/models.py:21 lbaas/models.py:44
+#: lbaas/models.py:73 network/models.py:11 network/models.py:53
 #: network/models.py:71 volume/models.py:15
 msgid "Status"
 msgstr "状态"
@@ -442,7 +442,7 @@ msgstr ""
 msgid "Port range max"
 msgstr ""
 
-#: firewall/models.py:29 lbaas/models.py:62
+#: firewall/models.py:29 lbaas/models.py:66
 msgid "Protocol"
 msgstr ""
 
@@ -987,11 +987,11 @@ msgstr "规格已删除"
 msgid "Pool UUID"
 msgstr "资源池ID"
 
-#: lbaas/models.py:12 lbaas/models.py:56
+#: lbaas/models.py:12 lbaas/models.py:60
 msgid "Pool name"
 msgstr "名称"
 
-#: lbaas/models.py:13 lbaas/models.py:57
+#: lbaas/models.py:13 lbaas/models.py:61
 msgid "Description"
 msgstr "描述"
 
@@ -1007,77 +1007,98 @@ msgstr "负载策略"
 msgid "Provider"
 msgstr ""
 
-#: lbaas/models.py:18 lbaas/models.py:40 lbaas/models.py:68 lbaas/models.py:95
+#: lbaas/models.py:18 lbaas/models.py:42 lbaas/models.py:72
+#: lbaas/models.py:101
 msgid "Admin state up"
 msgstr ""
 
-#: lbaas/models.py:36
+#: lbaas/models.py:29 lbaas/models.py:30
+msgid "BalancerPool"
+msgstr "负载均衡器"
+
+#: lbaas/models.py:38
 msgid "Member_UUID"
 msgstr ""
 
-#: lbaas/models.py:37 lbaas/models.py:60 lbaas/models.py:61
+#: lbaas/models.py:39 lbaas/models.py:64 lbaas/models.py:65
 msgid "Address"
 msgstr "地址"
 
-#: lbaas/models.py:38 lbaas/models.py:63
+#: lbaas/models.py:40 lbaas/models.py:67
 msgid "Protocol port"
 msgstr "端口"
 
-#: lbaas/models.py:39
+#: lbaas/models.py:41
 msgid "Weight"
 msgstr "权重"
 
-#: lbaas/models.py:54
+#: lbaas/models.py:52 lbaas/models.py:53
+msgid "BalancerMember"
+msgstr "负载均衡器成员"
+
+#: lbaas/models.py:58
 msgid "VIP_uuid"
 msgstr "虚IP ID"
 
-#: lbaas/models.py:65
+#: lbaas/models.py:69
 msgid "Port id"
 msgstr "端口"
 
-#: lbaas/models.py:66
+#: lbaas/models.py:70
 msgid "Session persistence"
 msgstr "会话持久化"
 
-#: lbaas/models.py:67
+#: lbaas/models.py:71
 msgid "Connection limit"
 msgstr "链接限制"
 
-#: lbaas/models.py:86
+#: lbaas/models.py:82 lbaas/models.py:83
+msgid "BalancerVIP"
+msgstr ""
+
+#: lbaas/models.py:92
 msgid "Monitor uuid"
 msgstr "监听器"
 
-#: lbaas/models.py:87
+#: lbaas/models.py:93
 msgid "Monitor name"
 msgstr "名称"
 
-#: lbaas/models.py:88
+#: lbaas/models.py:94
 msgid "Type"
 msgstr "类型"
 
-#: lbaas/models.py:89
+#: lbaas/models.py:95
 msgid "Delay"
 msgstr "延迟"
 
-#: lbaas/models.py:90
+#: lbaas/models.py:96
 msgid "Timeout"
 msgstr "超时"
 
-#: lbaas/models.py:91
+#: lbaas/models.py:97
 msgid "Max retries"
 msgstr "最大重试次数"
 
-#: lbaas/models.py:92
+#: lbaas/models.py:98
 msgid "Http method"
 msgstr "HTTP Method"
 
-#: lbaas/models.py:93
+#: lbaas/models.py:99
 msgid "Url path"
 msgstr ""
 
-#: lbaas/models.py:94
+#: lbaas/models.py:100
 msgid "Expected codes"
 msgstr "期望状态吗"
+
+#: lbaas/models.py:118 lbaas/models.py:119
+msgid "BalancerMonitor"
+msgstr "负载均衡监听器"
+
+#: lbaas/models.py:129 lbaas/models.py:130
+msgid "BalancerPoolMonitor"
+msgstr "负载均衡器不存在"
 
 #: lbaas/settings.py:15 network/settings.py:19 network/settings.py:32
 msgid "CREATING"

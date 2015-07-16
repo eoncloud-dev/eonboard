@@ -108,19 +108,6 @@ angular.module('cloud.services', [])
     };
 })
 
-.factory("BoxService", function(){
-    return {
-        "alert": function(message){
-            bootbox.alert(message);
-        },
-        "confirm": function(message){
-            bootbox.confirm(message, function(result) {
-                return result;
-            });
-        }
-    };
-})
-
 .factory('ValidationTool', function(){
 
     var defaultConfig = {

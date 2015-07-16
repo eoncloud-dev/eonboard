@@ -19,6 +19,7 @@ var CloudApp = angular.module("CloudApp", [
     "ngTable",
     "ngResource",
     "ngCookies",
+    "ngBootbox",
     "jm.i18next",
     "cloud.services",
     "cloud.resources",

@@ -5,7 +5,7 @@
  */
 
 CloudApp.controller('ImageController',
-    function($rootScope, $scope, $filter, $modal, $i18next,
+    function($rootScope, $scope, $filter, $modal, $i18next, $ngBootbox,
              CommonHttpService, ToastrService, ngTableParams,
              Image, CheckboxGroup, ngTableHelper){
 
@@ -52,11 +52,7 @@ CloudApp.controller('ImageController',
 
         var deleteImages = function(ids){
 
-            bootbox.confirm($i18next("image.confirm_delete"), function(confirmed){
-
-                if(!confirmed){
-                    return;
-                }
+            $ngBootbox.confirm($i18next("image.confirm_delete")).then(function(){
 
                 if(typeof ids == 'function'){
                     ids = ids();

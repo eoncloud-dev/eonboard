@@ -298,6 +298,53 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     }
                 }
             })
+            // load balancer
+            .state("lbaas", {
+                url: "/lbaas/",
+                templateUrl: "/static/cloud/views/loadbalancer.html",
+                data: {pageTitle: 'LoadBalancer'},
+                controller: "LoadBalancerController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+
+                                '/static/cloud/controllers/loadbalancer_ctl.js'
+                            ]
+                        });
+                    }],
+                    status_desc:function(CommonHttpService){
+                        return CommonHttpService.get("/api/lbs/status/")
+                    }
+                }
+            })
+            // load balancer
+            .state("lbaasinfo", {
+                url: "/lbaas/:balancer_id",
+                templateUrl: "/static/cloud/views/loadbalancer_info.html",
+                data: {pageTitle: 'LoadBalancer'},
+                controller: "LoadBalancerInfoController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+
+                                '/static/cloud/controllers/loadbalancer_ctl.js'
+                            ]
+                        });
+                    }],
+                    balancer_id:function($stateParams) {
+                        return $stateParams.balancer_id;
+                    },
+                    status_desc:function(CommonHttpService){
+                        return CommonHttpService.get("/api/lbs/status/")
+                    }
+                }
+            })
             // router
             .state("topology", {
                 url: "/topology/",
@@ -383,6 +430,40 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             })
         ;
     }]);
+CloudApp.factory('ValidationTool', function(){
+
+    var defaultConfig = {
+        onkeyup: false,
+        doNotHideMessage: true,
+        errorElement: 'span',
+        errorClass: 'help-block help-block-error',
+        focusInvalid: false,
+        errorPlacement: function (error, element) {
+            error.insertAfter($(element).closest('.input-group'));
+        },
+
+        highlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+
+        unhighlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+        }
+    };
+
+    return {
+        init: function(selector, config){
+            for(var attr in defaultConfig){
+                if(config[attr] === undefined){
+                    config[attr] = defaultConfig[attr];
+                }
+            }
+            $(selector).validate(config);
+
+            return $(selector);
+        }
+    }
+});
 
 /* Init global settings and run the app */
 CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "CommonHttpService",

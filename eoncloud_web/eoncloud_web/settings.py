@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'biz.image',
     'biz.floating',
     'biz.network',
+    'biz.lbaas',
     'biz.volume',
     'cloud',
     'render',

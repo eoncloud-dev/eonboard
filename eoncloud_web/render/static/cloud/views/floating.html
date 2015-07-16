@@ -50,8 +50,10 @@
                                 </div>
                             </td>
                             <td data-title="'floatingIP.related_resources' | i18next">
-                                <a class="btn default blue-stripe btn-xs" ng-href="#/instance/" ng-if="floating.instance_info">
-                                    <i class="fa fa-desktop"></i> {[{ floating.instance_info.name}]} </a>
+                                <a class="btn default blue-stripe btn-xs"  ng-href="#/instance/" ng-if="floating.resource && floating.resource_type =='INSTANCE'">
+                                    <i class="fa fa-desktop"></i> {[{ floating.resource_info.name}]} </a>
+                                <a class="btn default blue-stripe btn-xs"  ng-href="#/lbaas/" ng-if="floating.resource && floating.resource_type =='LOADBALANCER'">
+                                    <i class="fa fa-sitemap"></i> {[{ floating.resource_info.name}]} </a>
                             </td>
                             <td width="180" data-title="'floatingIP.action'|i18next">
                                 <div class="btn-group">

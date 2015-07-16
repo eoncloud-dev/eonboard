@@ -14,10 +14,13 @@ from cloud_utils import create_rc_by_network,\
 from biz.network.models import Network, Subnet, Router, RouterInterface
 from biz.firewall.models import Firewall, FirewallRules
 from biz.floating.settings import FLOATING_AVAILABLE, FLOATING_RELEASED, \
-                   FLOATING_BINDED, FLOATING_ERROR
+                   FLOATING_BINDED, FLOATING_ERROR, RESOURCE_TYPE
 from biz.network.settings import NETWORK_STATE_ACTIVE,\
     NETWORK_STATE_ERROR, NETWORK_STATE_UPDATING
 from biz.instance.models import Instance
+from biz.lbaas.models import BalancerPool
+from biz.lbaas.models import BalancerVIP
+from biz.floating.models import Floating
 
 from api import neutron
 from api import network
@@ -292,39 +295,81 @@ def floating_release(floating, **kwargs):
 
 
 def floating_associate(floating, **kwargs):
-    ins_id = kwargs.get("instance_id")[0] 
-    if ins_id:
+    resource_type_dict = dict(RESOURCE_TYPE)
+    resource_type = kwargs.get('resource_type')[0]
+    resource = kwargs.get('resource')[0]
+    if resource:
         rc = create_rc_by_floating(floating)
-        ins = Instance.objects.get(pk=ins_id)
-        ports = network.floating_ip_target_get_by_instance(rc, ins.uuid)
+        ports = None
+        resource_obj = None
+        if resource_type_dict[str(resource_type)] == 'INSTANCE':
+            ins = Instance.objects.get(pk=resource)
+            resource_obj = ins
+            ports = network.floating_ip_target_get_by_instance(rc, ins.uuid)
+        elif resource_type_dict[resource_type] == 'LOADBALANCER':
+            pool = BalancerPool.objects.get(pk=resource)
+            if not pool or not pool.vip:
+                floating.status = FLOATING_AVAILABLE
+                floating.save()
+                return None
+            resource_obj = pool
+            ports = pool.vip.port_id+"_"+pool.vip.address
         if not ports:
-            LOG.info("floating action, [%s][associate][ins:%s] ports is None" % (floating.id, ins_id));
+            LOG.info("floating action, resourceType[%s],[%s][associate][ins:%s] ports is None" % (resource_type_dict[resource_type], floating.id, resource));
             floating.status = FLOATING_AVAILABLE
             floating.save()
-            return 
+            return
         LOG.info("floating action, [%s][associate][ins:%s][ports:%s]" % (
-                            floating.id, ins.id, ports));
-        network.floating_ip_associate(rc, floating.uuid, ports)
-        port, fixed_ip = ports.split('_')
-        floating.instance = ins
-        floating.status = FLOATING_BINDED
-        floating.fixed_ip = fixed_ip 
-        floating.port_id = port
-        floating.save()
-    else: 
+                            floating.id, resource, ports))
+        try:
+            network.floating_ip_associate(rc, floating.uuid, ports)
+            port, fixed_ip = ports.split('_')
+            floating.resource = resource
+            floating.resource_type = resource_type
+            floating.status = FLOATING_BINDED
+            floating.fixed_ip = fixed_ip
+            floating.port_id = port
+            floating.save()
+            if resource_type_dict[str(resource_type)] == 'INSTANCE':
+                resource_obj.public_ip = floating.ip
+                resource_obj.save()
+            elif resource_type_dict[resource_type] == 'LOADBALANCER':
+                vip = BalancerVIP.objects.get(pk=resource_obj.vip.id)
+                vip.public_address = floating.ip
+                vip.save()
+        except Exception as e:
+            LOG.error(e)
+            floating.status = FLOATING_AVAILABLE
+            floating.save()
+    else:
         LOG.info("floating action, [%s][associate] no ins_id" % floating.id);
 
 
 def floating_disassociate(floating, **kwargs):
     rc = create_rc_by_floating(floating)
     LOG.info("floating action, [%s][disassociate][port:%s]" % (floating.id, floating.port_id));
-    if floating.uuid and floating.port_id:
-        network.floating_ip_disassociate(rc, floating.uuid, floating.port_id)
-    floating.instance = None
-    floating.status = FLOATING_AVAILABLE
-    floating.fixed_ip = None
-    floating.port_id = None
-    floating.save();
+    try:
+        if floating.uuid and floating.port_id:
+            network.floating_ip_disassociate(rc, floating.uuid, floating.port_id)
+
+        if floating.resource_type == 'INSTANCE':
+            ins = Instance.objects.get(pk=floating.resource)
+            ins.public_ip = None
+            ins.save()
+        elif floating.resource_type == 'LOADBALANCER':
+            pool = BalancerPool.objects.get(pk=floating.resource)
+            vip = BalancerVIP.objects.get(pk=pool.vip.id)
+            vip.public_address = None
+            vip.save()
+        #floating.instance = None
+        floating.resource = None
+        floating.resource_type = None
+        floating.status = FLOATING_AVAILABLE
+        floating.fixed_ip = None
+        floating.port_id = None
+        floating.save()
+    except Exception as e:
+        return False
 
         
 @app.task

@@ -5,6 +5,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from biz.instance import views as instance_view
 from biz.image import views as image_view
 from biz.network import views as network_view
+from biz.lbaas import views as lb_view
 from biz.volume import views as volume_view
 from biz.floating import views as floating_view
 
@@ -51,6 +52,7 @@ urlpatterns += format_suffix_patterns(
         url(r'^networks/$', network_view.network_list_view),
         url(r'^networks/create/$', network_view.network_create_view),
         url(r'^networks/status/$', network_view.network_status_view),
+        url(r'^networks/subnets/$', network_view.subnet_list_view),
         url(r'^networks/delete/$', network_view.delete_action),
         url(r'^networks/router/action$', network_view.network_attach_router_view),
         url(r'^networks/topology/$', network_view.network_topology_data_view),
@@ -64,6 +66,30 @@ urlpatterns += format_suffix_patterns(
         url(r'^routers/create/$', network_view.router_create_view),
         url(r'^routers/delete/$', network_view.router_delete_view),
         url(r'^routers/search/$', network_view.router_search_view),
+    ]
+)
+
+# LB
+urlpatterns += format_suffix_patterns(
+    [
+        url(r'^lbs/$', lb_view.pool_list_view),
+        url(r'^lbs/(?P<pk>[0-9]+)/$', lb_view.pool_get_view),
+        url(r'^lbs/create/$', lb_view.pool_create_view),
+        url(r'^lbs/delete/$', lb_view.pool_delete_view),
+        url(r'^lbs/getavmonitor/(?P<pool_id>[0-9]+)/$', lb_view.get_available_monitor_view),
+        url(r'^lbs/poolmonitoraction/$', lb_view.pool_monitor_association_option_view),
+        url(r'^lbs/monitors/$', lb_view.pool_monitor_list_view),
+        url(r'^lbs/monitors/create/$', lb_view.pool_monitor_create_view),
+        url(r'^lbs/monitors/delete/$', lb_view.pool_monitor_delete_view),
+        url(r'^lbs/vip/create/$', lb_view.pool_vip_create_view),
+        url(r'^lbs/vip/update/$', lb_view.pool_vip_create_view),
+        url(r'^lbs/vip/delete/$', lb_view.pool_vip_delete_view),
+        url(r'^lbs/vip/floating/$', lb_view.pool_vip_associate_view),
+        url(r'^lbs/members/(?P<balancer_id>[0-9]+)/$', lb_view.pool_member_list_view),
+        url(r'^lbs/members/create/$', lb_view.pool_member_create_view),
+        url(r'^lbs/members/delete/$', lb_view.pool_member_delete_view),
+        url(r'^lbs/constant/$', lb_view.get_constant_view),
+        url(r'^lbs/status/$', lb_view.get_status_view),
     ]
 )
 
@@ -88,6 +114,8 @@ urlpatterns += format_suffix_patterns(
         url(r'^floatings/create/$', floating_view.create_view),
         url(r'^floatings/action/$', floating_view.floating_action_view),
         url(r'^floatings/status/$', floating_view.floating_status_view),
+        url(r'^floatings/target_list/$', floating_view.floating_ip_target_list_view),
+
     ]
 )
 

@@ -7,6 +7,7 @@ CloudApp.controller('RouterController',
             Metronic.initAjax();
         });
 
+
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
@@ -156,12 +157,16 @@ CloudApp.controller('RouterCreateController',
             $scope.cancel = function () {
                 $modalInstance.dismiss();
             };
-
+        $scope.flag = true;
         $scope.submit_click = function (router) {
             if (typeof(router.name) == 'undefined' || router.name == '') {
                 $scope.has_error = true;
                 return;
             }
+            if(!$scope.flag){
+                return
+            }
+            $scope.flag = false
             var post_data = {
                 "id": router.id,
                 "name": router.name,

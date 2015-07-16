@@ -69,3 +69,19 @@ def create_rc_by_dc(dc=None):
 
 def create_rc_by_security(firewall=None):
     return _create_rc(firewall)
+
+
+def create_rc_by_balancer_pool(pool=None):
+    return _create_rc(pool)
+
+
+def create_rc_by_balancer_member(member=None):
+    return _create_rc(member)
+
+
+def create_rc_by_balancer_vip(vip=None):
+    return _create_rc(vip)
+
+
+def create_rc_by_balancer_monitor(monitor=None):
+    return _create_rc(monitor)

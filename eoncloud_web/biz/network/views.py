@@ -7,45 +7,49 @@ from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework.response import Response
 
 from biz.instance.models import Instance
 from biz.account.models import Operation
 from biz.network.models import Network, Subnet, Router, RouterInterface
+
+from biz.network.serializer import SubnetSerializer
+from rest_framework.response import Response
+from django.utils.translation import ugettext_lazy as _
 from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
 from biz.instance.serializer import InstanceSerializer
 
-from cloud.network_task import network_create_task, network_delete_task,\
-    router_create_task, router_delete_task, network_link_router_task, router_remove_interface_task,\
-    router_add_gateway_task, router_remove_gateway_task
-from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE,NETWORK_STATE_UPDATING
+from cloud.network_task import network_create_task, network_delete_task, router_create_task, router_delete_task, \
+    network_link_router_task, router_remove_interface_task, router_add_gateway_task, router_remove_gateway_task
+from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE, NETWORK_STATE_UPDATING, NETWORK_STATE_ERROR
 
 LOG = logging.getLogger(__name__)
 
 
 @api_view(['GET'])
-def network_list_view(request,**kwargs):
+def network_list_view(request):
     network_set = Network.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = NetworkSerializer(network_set, many=True)
     return Response(serializer.data)
 
 
 @api_view(['POST'])
-def network_create_view(request, **kwargs):
+def network_create_view(request):
     data = request.data
     if data.get('id') is None or data.get('id') == '':
-        try:
-            serializer = NetworkSerializer(data=request.data, context={"request": request})
-            if serializer.is_valid():
-                network = serializer.save()
-                Operation.log(obj=network, obj_name=network.name, action='create', result=1)
+        serializer = NetworkSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            network = serializer.save()
+            Operation.log(obj=network, obj_name=network.name, action='create', result=1)
+            try:
                 network_create_task.delay(network=network)
                 return Response({"OPERATION_STATUS": 1, "MSG": _("Create network success")})
-            else:
-                return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            LOG.error("create network  error ,msg:[%s]" % e)
-            return Response({"OPERATION_STATUS": 0, "MSG": _('Create network error')})
+            except Exception as e:
+                network.status = NETWORK_STATE_ERROR
+                network.save()
+                LOG.error("create network  error ,msg:[%s]" % e)
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Create network error')})
+        else:
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
     else:
         network = Network.objects.get(pk=data.get('id'))
         if network is None:
@@ -58,7 +62,7 @@ def network_create_view(request, **kwargs):
 
 
 @api_view(['POST', 'GET'])
-def delete_action(request, **kwargs):
+def delete_action(request):
     data = request.data
     if data.get("network_id") is not None:
         network = Network.objects.get(pk=data.get('network_id'))
@@ -68,6 +72,10 @@ def delete_action(request, **kwargs):
         # Was unable to delete the use of the network
         if not check_network_is_use:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Was unable to delete the use of the network')})
+        if not network.network_id:
+            network.deleted = True
+            network.save()
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted success')})
         network.deleted = True
         network.save()
         Operation.log(obj=network, obj_name=network.name, action='terminate', result=1)
@@ -78,33 +86,27 @@ def delete_action(request, **kwargs):
 
 
 @api_view(['GET'])
-def network_status_view(request, format=None):
+def network_status_view(request):
     return Response(NETWORK_STATES_DICT)
 
 
 @api_view(['POST'])
-def network_attach_router_view(request, **kwargs):
-    '''
-    1、create subnet
-    2、创建关联关系
-    3、执行任务
-    '''
+def network_attach_router_view(request):
+    # 1、create subnet
+    # 2、创建关联关系
+    # 3、执行任务
     try:
         data = request.data
         network_id = data.get('network_id')
         address = data.get('address')
         network = Network.objects.get(pk=network_id)
         action = data.get('action')
-        '''
-        default not allowed operation
-        '''
+        # default not allowed operation
         if network.is_default:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Default network not allow operation')})
 
         if action == 'attach':
-            '''
-            check address is exist, exist return or not exist continue
-            '''
+            # check address is exist, exist return or not exist continue
             if check_subnet_address(network_id, address):
                 return Response({"OPERATION_STATUS": 0, "MSG": _('network exist address , not operation')})
             router_id = data.get('router_id')
@@ -126,8 +128,12 @@ def network_attach_router_view(request, **kwargs):
             router.status = NETWORK_STATE_UPDATING
             router.save()
             Operation.log(obj=network, obj_name=network.name, action='attach_router', result=1)
-            network_link_router_task.delay(router=router, subnet=subnet, router_interface=router_interface)
-
+            try:
+                network_link_router_task.delay(router=router, subnet=subnet, router_interface=router_interface)
+            except Exception as e:
+                LOG.error("Attach router error, msg: %s " % e)
+                subnet.delete()
+                router_interface.delete()
             return Response({"OPERATION_STATUS": 1, "MSG": _('Link router success')})
         elif action == 'detach':
             Operation.log(obj=network, obj_name=network.name, action='detach_router', result=1)
@@ -141,11 +147,27 @@ def network_attach_router_view(request, **kwargs):
                 for router_interface in router_interface_set:
                     router_interface.deleted = True
                     router_interface.save()
-                    router_remove_interface_task.delay(router=router_interface.router, subnet=subnet, router_interface=router_interface)
+                    try:
+                        router_remove_interface_task.delay(router=router_interface.router, subnet=subnet,
+                                                           router_interface=router_interface)
+                    except Exception as e:
+                        LOG.error("Detach router error, msg: %s " % e)
+                        subnet.deleted = False
+                        subnet.save()
+                        router_interface.deleted = False
+                        router_interface.save()
+                        return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
             return Response({"OPERATION_STATUS": 1, "MSG": _('Leave router success ')})
     except Exception as e:
         LOG.info('Network operation error ,%s' % e)
         return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
+
+@api_view(['GET'])
+def subnet_list_view(request):
+    query_set = Subnet.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"],
+                                      status=NETWORK_STATE_ACTIVE)
+    serializer = SubnetSerializer(query_set,many=True)
+    return Response(serializer.data)
 
 
 def check_network_is_use(network_id):
@@ -178,14 +200,14 @@ def check_subnet_address(network_id, address):
 '''
 
 @api_view(['GET', 'POST'])
-def router_list_view(request, **kwargs):
+def router_list_view(request):
     router_set = Router.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = RouterSerializer(router_set,many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
-def router_create_view(request, **kwargs):
+def router_create_view(request):
     data = request.data
     if (data.get('id') is None or data.get('id') == '') and \
             settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
@@ -222,7 +244,7 @@ def router_create_view(request, **kwargs):
 
 
 @api_view(['GET', 'POST'])
-def router_delete_view(request, **kwargs):
+def router_delete_view(request):
     data = request.data
     if data.get("router_id") is not None and \
             settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
@@ -244,7 +266,7 @@ def router_delete_view(request, **kwargs):
 
 
 @api_view(['GET'])
-def router_search_view(request, **kwargs):
+def router_search_view(request):
     router_set = Router.objects.filter(status=NETWORK_STATE_ACTIVE, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = RouterSerializer(router_set, many=True)
     return Response(serializer.data)
@@ -258,13 +280,13 @@ def check_router_is_use(router_id):
 
 
 @api_view(['GET'])
-def network_topology_data_view(request, **kwargs):
+def network_topology_data_view(request):
     routers = Router.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
 
     router_interface = RouterInterface.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
-    networks =Network.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
+    networks = Network.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
     instances = Instance.objects.filter(deleted=False,  user=request.user, user_data_center=request.session["UDC_ID"])
-    network_data = {}
+    network_data = dict()
     network_data['routers'] = RouterSerializer(routers, many=True).data
     network_data['networks'] = NetworkSerializer(networks, many=True).data
     network_data['router_interfaces'] = RouterInterfaceSerializer(router_interface, many=True).data

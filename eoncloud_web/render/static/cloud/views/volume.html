@@ -179,7 +179,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'create')" ng-class="{'disabled': check_can_submit()}"> {[{ 'submit' | i18next
+        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'create')" ng-class="{'disabled': check_can_submit() || !flag}"> {[{ 'submit' | i18next
             }]}
         </button>
     </div>
@@ -222,7 +222,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'update')"> {[{ 'submit' | i18next
+        <button type="button" class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="volume_submit(volume,'update')"> {[{ 'submit' | i18next
             }]}
         </button>
     </div>
@@ -277,7 +277,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-click="attach_or_detach(selected_instance,'attach')"> {[{
+        <button type="button" class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="attach_or_detach(selected_instance,'attach')"> {[{
             'volume.attach' | i18next }]}
         </button>
     </div>
@@ -307,7 +307,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-click="attach_or_detach('','detach')"> {[{ 'volume.detach' |
+        <button type="button" class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="attach_or_detach('','detach')"> {[{ 'volume.detach' |
             i18next }]}
         </button>
     </div>

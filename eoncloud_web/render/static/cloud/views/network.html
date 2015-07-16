@@ -70,13 +70,13 @@
                                     <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
                                             aria-expanded="false"><i class="fa fa-angle-down"></i></button>
                                     <ul role="menu" class="dropdown-menu">
-                                        <li ng-class="{'disabled-link': network.router_info !='' && status_desc[network.status][1] == 1}" >
-                                            <a ng-class="{'disabled': network.router_info !='' && status_desc[network.status][1] == 1}"  href="javascript:void(0);" ng-click="modal_attach_network(network)" role="button">
+                                        <li ng-class="{'disabled-link': (network.router_info !=null && network.router_info !='') || status_desc[network.status][1] == 0}" >
+                                            <a ng-class="{'disabled': (network.router_info !=null && network.router_info !='') || status_desc[network.status][1] == 0}"  href="javascript:void(0);" ng-click="modal_attach_network(network)" role="button">
                                                 {[{ 'network.attachRouter' | i18next }]}
                                             </a>
                                         </li>
-                                        <li ng-class="{'disabled-link': network.router_info =='' && status_desc[network.status][1] == 1}" >
-                                            <a ng-class="{'disabled': network.router_info =='' && status_desc[network.status][1] == 1 }"  href="javascript:void(0);" ng-click="detach_action(network,'detach')" role="button">
+                                        <li ng-class="{'disabled-link': (network.router_info == null || network.router_info =='') || status_desc[network.status][1] == 0}" >
+                                            <a ng-class="{'disabled': (network.router_info == null || network.router_info =='') || status_desc[network.status][1] == 0 }"  href="javascript:void(0);" ng-click="detach_action(network,'detach')" role="button">
                                                 {[{ 'network.releaseRouter' | i18next }]}
                                             </a>
                                         </li>
@@ -130,7 +130,7 @@
     <div class="modal-footer">
         <button href="javascript:;" class="btn" ng-click="cancel()">
             {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-click="submit_click(network_create)">确定</button>
+        <button class="btn btn-primary" ng-click="submit_click(network_create)" ng-class="{'disabled':!flag}">确定</button>
     </div>
 </script>
 <script type="text/ng-template" id="network_attach_router.html">
@@ -183,7 +183,7 @@
     </div>
     <div class="modal-footer">
         <button  class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-click="submit_click(router_selected,'attach')">确定</button>
+        <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="submit_click(router_selected,'attach')">确定</button>
     </div>
 </script>
 <!-- BEGIN MAIN JS & CSS -->

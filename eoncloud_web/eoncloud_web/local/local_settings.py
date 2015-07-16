@@ -5,7 +5,8 @@ INSTANCE_SYNC_INTERVAL_SECOND = 10
 # max loop count for sync instance status
 MAX_COUNT_SYNC  = 30
 
-# eoncloud switch
+
+# enabled quota check
 QUOTA_CHECK = True
 MULTI_ROUTER_ENABLED = False
 

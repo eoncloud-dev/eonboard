@@ -108,13 +108,12 @@ CloudApp.controller('FloatingController',
                 templateUrl: 'associate.html',
                 controller: 'AssociateController',
                 backdrop: "static",
-                size: 'lg',
                 resolve: {
                     floating: function () {
                         return floating;
                     },
                     instances: function () {
-                        return Instance.query();
+                        return CommonHttpService.get("/api/floatings/target_list/");;
                     },
                     floating_table: function () {
                         return $scope.floating_table;
@@ -251,7 +250,8 @@ CloudApp.controller('AssociateController',
             var post_data = {
                 "action": "associate",
                 "floating_id": $scope.floating.id,
-                "instance_id": $scope.selected_instance.id
+                "resource": $scope.selected_instance.id,
+                "resource_type":$scope.selected_instance.resource_type
             }
             CommonHttpService.post("/api/floatings/action/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {

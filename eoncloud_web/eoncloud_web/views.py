@@ -52,6 +52,7 @@ def login(request, template_name="login.html"):
         "authenticationForm": authenticationForm,
         "error": authenticationForm.errors.get('__all__', None),
         "BRAND": settings.BRAND,
+        "ICP_NUMBER": settings.ICP_NUMBER
     }))
 
 

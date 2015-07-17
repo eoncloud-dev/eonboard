@@ -130,7 +130,7 @@
         </li>
         <li class="heading">
             <h3 class="uppercase">
-                {[{ 'sidebar.support' | i18next }]}
+                {[{ 'sidebar.operation_support' | i18next }]}
             </h3>
         </li>
         <li id="forum">
@@ -139,6 +139,15 @@
                 <span class="title">
                     {[{ 'sidebar.support' | i18next }]}
                 </span>
+            </a>
+        </li>
+        <li id="notifications">
+            <a href="#/notification/">
+                <i class="fa fa-bullhorn"></i>
+                <span class="title">
+                    {[{ 'sidebar.notifications' | i18next }]}
+                </span>
+                <span data-ng-if="num > 0" class="badge" style="background-color: red;"> {[{ num }]} </span>
             </a>
         </li>
     </ul>

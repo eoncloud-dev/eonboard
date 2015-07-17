@@ -1,11 +1,12 @@
 #coding=utf-8
 
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM
+from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, NotificationLevel, TimeUnit
 
 from biz.account.mixins import LivingDeadModel
 
@@ -153,3 +154,75 @@ class Operation(models.Model):
         db_table = "user_operation"
         verbose_name = _("Operation")
         verbose_name_plural = _("Operation")
+
+
+class Notification(LivingDeadModel):
+    receiver = models.ForeignKey(User, related_name="notifications",
+                                 related_query_name='notification')
+    level = models.IntegerField(choices=NotificationLevel.OPTIONS, default=NotificationLevel.INFO)
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    is_read = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
+    create_date = models.DateTimeField(auto_now_add=True)
+    read_date = models.DateTimeField(null=True)
+
+    @property
+    def time_ago(self):
+        time_delta = (timezone.now() - self.create_date).total_seconds() * TimeUnit.SECOND
+
+        if time_delta < TimeUnit.MINUTE:
+            return _("just now")
+        elif time_delta < TimeUnit.HOUR:
+            minutes = time_delta / TimeUnit.MINUTE
+            return _("%(minutes)d minutes ago") % {'minutes': minutes}
+        elif time_delta < TimeUnit.DAY:
+            hours = time_delta / TimeUnit.HOUR
+            return _("%(hours)d hours ago") % {'hours': hours}
+        elif time_delta < TimeUnit.YEAR:
+            days = time_delta / TimeUnit.DAY
+            return _("%(days)d days ago") % {'days': days}
+        else:
+            years = time_delta / TimeUnit.YEAR
+            return _("%(years)d years ago") % {'years': years}
+
+    @classmethod
+    def create(cls, receiver, title, content, level=NotificationLevel.INFO):
+        return cls.objects.create(receiver=receiver, title=title, content=content, level=level)
+
+    def mark_read(self):
+        self.is_read = True
+        self.read_date = timezone.now()
+        self.save()
+
+    def fake_delete(self):
+        self.deleted = True
+        self.save()
+
+    class Meta:
+        db_table = "notification"
+        verbose_name = _("Notification")
+        verbose_name_plural = _("Notifications")
+
+
+NOTIFICATION_KEY_METHODS = ((NotificationLevel.INFO, 'info'),
+                            (NotificationLevel.SUCCESS, 'success'), (NotificationLevel.ERROR, 'error'),
+                            (NotificationLevel.WARNING, 'warning'), (NotificationLevel.DANGER, 'danger'))
+
+# This loop will create some is_xxx(eg, is_info, is_success..) property
+for value, name in NOTIFICATION_KEY_METHODS:
+    def bind(level):
+        setattr(Notification, 'is_' + name, property(lambda self: self.level == level))
+
+    bind(value)
+
+# This loop will create some action method, user can create notification like this way:
+# Notification.info(receiver, title, content)
+for value, name in NOTIFICATION_KEY_METHODS:
+    def bind(level):
+        def action(cls, receiver, title, content):
+            return cls.create(receiver, title, content, level=level)
+
+        setattr(Notification, name, classmethod(action))
+
+    bind(value)

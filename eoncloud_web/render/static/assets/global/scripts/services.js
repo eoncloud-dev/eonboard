@@ -167,7 +167,6 @@ angular.module('cloud.services', [])
 
         var groupChecker = {
             objects: objects,
-            checkedObjects: [],
             toggleAll: function(){
                 var self = this;
                 angular.forEach(self.objects, function(obj){
@@ -198,6 +197,13 @@ angular.module('cloud.services', [])
                        func(obj);
                     }
                 });
+            },
+            checkedObjects: function(){
+                var results = [];
+                this.forEachChecked(function(obj){
+                    results.push(obj);
+                });
+                return results;
             }
         };
 

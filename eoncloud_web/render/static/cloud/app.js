@@ -77,10 +77,21 @@ CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', functi
 }]);
 
 /* Setup Layout Part - Sidebar */
-CloudApp.controller('SidebarController', ['$scope', function ($scope) {
-    $scope.$on('$includeContentLoaded', function () {
-        Layout.initSidebar(); // init sidebar
-    });
+CloudApp.controller('SidebarController', ['$scope', '$interval', 'Notification',
+    function ($scope, $interval, Notification) {
+        $scope.$on('$includeContentLoaded', function () {
+            Layout.initSidebar(); // init sidebar
+        });
+
+        var checkNotifications = function(){
+            Notification.status(function(status){
+                $scope.num = status.num;
+            });
+        };
+
+        $interval(checkNotifications, 10000);
+
+        checkNotifications();
 }]);
 
 /* Setup Layout Part - Footer */
@@ -119,6 +130,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     },
                     quota: function (CommonHttpService) {
                         return CommonHttpService.get("/api/account/quota/");
+                    },
+                    notificationStatus: function (Notification){
+                        return Notification.status().$promise;
                     }
                 }
             })
@@ -380,8 +394,25 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-
                                 '/static/cloud/controllers/forum_ctl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+
+            .state("notification", {
+                url: "/notification/",
+                templateUrl: "/static/cloud/views/notification.html",
+                data: {pageTitle: 'Notification'},
+                controller: "NotificationController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/notification_ctrl.js'
                             ]
                         });
                     }]
@@ -479,7 +510,6 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
 
         $rootScope.setInterval = function(func, interval){
             var timer = $interval(func, interval);
-
             $rootScope.executeWhenLeave(function(){
                 $interval.cancel(timer);
             });

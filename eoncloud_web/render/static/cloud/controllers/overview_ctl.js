@@ -1,7 +1,7 @@
 'use strict';
 
 CloudApp.controller('OverviewController',
-    function ($rootScope, $scope, contract, Operation, quota) {
+    function ($rootScope, $scope, Operation, Notification, contract, quota) {
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
@@ -39,4 +39,8 @@ CloudApp.controller('OverviewController',
         Operation.query({page_size: 6}, function (data) {
             $scope.operation_list = data.results;
         });
+
+        Notification.status(function(status){
+            $scope.notificationNum = status.num;
+        })
     });

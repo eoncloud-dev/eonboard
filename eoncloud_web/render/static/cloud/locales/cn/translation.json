@@ -285,12 +285,15 @@
     "user": "用户",
     "management": "后台管理",
     "backup": "备份",
-    "market_management": "运营管理"
+    "market_management": "运营管理",
+    "operation_support": "运营支持",
+    "notifications": "通知"
   },
 
   "overview": {
     "quota_usage": "配额使用情况",
-    "contract_info": "合同详情"
+    "contract_info": "合同详情",
+    "new_message_tip": "You have <strong>__num__</strong> messages not read yet! Click <a class=\"alert-link\" href=\"#/notification/\"> here </a> to check."
   },
 
   "quota": {
@@ -434,6 +437,22 @@
     "activate": "激活",
     "view_detail": "明细"
   },
+
+  "notification": {
+      "notify": "发送通知",
+      "broadcast": "广播",
+      "all_users": "全体用户",
+      "receivers": "接收者",
+      "level": "等级",
+      "content": "内容",
+      "title": "标题",
+      "all": "全部",
+      "unread": "未读",
+      "read": "已读",
+      "data_center": "数据中心",
+      "data_center_broadcast": "数据中心广播"
+  },
+
   "init_wizard": {
     "title": "易用云初始化 - 步骤",
     "data_center": "数据中心",
@@ -448,6 +467,7 @@
     "image_create_failed": "镜像初始化失败，您可以在这里继续尝试，也可以在<a href=\"javascript: image();\">镜像管理</a>界面重新创建。",
     "skip": "跳过"
   },
+
   "backup": {
     "backup": "备份",
     "page_desc": "备份（Backup）用于在块设备级别（block device level）上进行硬盘的备份与恢复， 可以同时对多张硬盘做备份（包括系统盘和数据盘），也可以对主机做在线备份。 一张硬盘可以有多个备份链，每条备份链包括一个全量备份点以及多个增量备份点， 您可以随时从任意一个备份点恢复数据。",

@@ -49,3 +49,39 @@ RESOURCE_ACTION_CHOICES = (
     ("attach_router", _("attach router")),
     ("detach_router", _("detach router")),
 )
+
+
+class NotificationLevel(object):
+
+    INFO = 1
+    SUCCESS = 2
+    ERROR = 3
+    WARNING = 4
+    DANGER = 5
+
+    OPTIONS = (
+        (INFO, _("Information")),
+        (SUCCESS, _("Success")),
+        (ERROR, _("Error")),
+        (WARNING, _("Warning")),
+        (DANGER, _("Danger")),
+    )
+
+    MAP = dict(OPTIONS)
+
+    @classmethod
+    def get_label(cls, value, default=""):
+        return  cls.MAP.get(value, default)
+
+
+class TimeUnit(object):
+
+    SECOND = 1000
+
+    MINUTE = 60 * SECOND
+
+    HOUR = 60 * MINUTE
+
+    DAY = 24 * HOUR
+
+    YEAR = 365 * DAY

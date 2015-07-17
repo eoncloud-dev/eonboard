@@ -7,7 +7,7 @@
 CloudApp.controller('UserController',
     function($rootScope, $scope, $filter, $modal, $i18next,
              CommonHttpService, ToastrService, ngTableParams,
-             User, ngTableHelper){
+             CheckboxGroup, ngTableHelper, User){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -17,6 +17,7 @@ CloudApp.controller('UserController',
         $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.users = [];
+        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.users);
 
         $scope.user_table = new ngTableParams({
                 page: 1,
@@ -26,6 +27,7 @@ CloudApp.controller('UserController',
                 getData: function ($defer, params) {
                     User.query(function (data) {
                         $scope.users = ngTableHelper.paginate(data, $defer, params);
+                        checkboxGroup.syncObjects($scope.users);
                     });
                 }
             });
@@ -96,6 +98,49 @@ CloudApp.controller('UserController',
                 }
             });
         };
+
+        var openBroadcastModal = function(users){
+            $modal.open({
+                templateUrl: 'broadcast.html',
+                controller: 'BroadcastController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    users: function(){
+                        return users;
+                    },
+                    notificationOptions: function(){
+                        return CommonHttpService.get('/api/notifications/options/');
+                    }
+                }
+            }).result.then(function(){
+                   checkboxGroup.uncheck();
+            });
+        };
+
+        $scope.openBroadcastModal = function(){
+            openBroadcastModal(checkboxGroup.checkedObjects());
+        };
+
+        $scope.openNotifyModal = function(user){
+            openBroadcastModal([user]);
+        };
+
+        $scope.openDataCenterBroadcastModal = function(){
+            $modal.open({
+                templateUrl: 'data_center_broadcast.html',
+                controller: 'DataCenterBroadcastController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    notificationOptions: function(){
+                        return CommonHttpService.get('/api/notifications/options/');
+                    }
+                }
+            });
+        };
+
+
     })
 
     .controller('UserUdcListController',
@@ -139,7 +184,94 @@ CloudApp.controller('UserController',
                 CommonHttpService.post('/api/users/change-password/', user).then(function(result){
                     if(result.success){
                         ToastrService.success(result.msg, $i18next("success"));
-                        $modalInstance.dismiss();
+                        $modalInstance.close();
+                    } else {
+                        ToastrService.error(result.msg, $i18next("op_failed"));
+                    }
+                });
+            }
+    })
+
+    .controller('BroadcastController',
+        function($scope, $modalInstance, $i18next, ngTableParams,
+                 CommonHttpService, ValidationTool, ToastrService,
+                 users, notificationOptions){
+
+            var INFO = 1, form = null, options = [];
+
+            angular.forEach(notificationOptions, function(option){
+                options.push({key: option[0], label: [option[1]]});
+            });
+
+            $scope.users = users;
+            $scope.options = options;
+            $scope.cancel = $modalInstance.dismiss;
+            $scope.notification = {title: '', content: '', level: INFO};
+
+            $modalInstance.rendered.then(function(){
+                form = ValidationTool.init('#notificationForm');
+            });
+
+            $scope.broadcast = function(notification){
+
+                if(!form.valid()){
+                    return;
+                }
+
+                var params = angular.copy(notification);
+
+                if(users.length > 0){
+                    params.receiver_ids = [];
+                    angular.forEach(users, function(user){
+                        params.receiver_ids.push(user.id);
+                    });
+                }
+
+                CommonHttpService.post('/api/notifications/broadcast/', params).then(function(result){
+                    if(result.success){
+                        ToastrService.success(result.msg, $i18next("success"));
+                        $modalInstance.close();
+                    } else {
+                        ToastrService.error(result.msg, $i18next("op_failed"));
+                    }
+                });
+            }
+    })
+
+    .controller('DataCenterBroadcastController',
+        function($scope, $modalInstance, $i18next, ngTableParams,
+                 CommonHttpService, ValidationTool, ToastrService,
+                 DataCenter, notificationOptions){
+
+            var INFO = 1, form = null, options = [];
+
+            angular.forEach(notificationOptions, function(option){
+                options.push({key: option[0], label: [option[1]]});
+            });
+
+            $scope.options = options;
+            $scope.cancel = $modalInstance.dismiss;
+            $scope.notification = {title: '', content: '', level: INFO};
+            $scope.data_centers = DataCenter.query(function(data_centers){
+                $scope.notification.data_center = data_centers[0].id;
+            });
+
+            $modalInstance.rendered.then(function(){
+                form = ValidationTool.init('#notificationForm');
+            });
+
+            $scope.broadcast = function(notification){
+
+                if(!form.valid()){
+                    return;
+                }
+
+                var params = angular.copy(notification);
+
+                CommonHttpService.post('/api/notifications/data-center-broadcast/', params).then(function(result){
+                    if(result.success){
+                        ToastrService.success(result.msg, $i18next("success"));
+                        $modalInstance.close();
                     } else {
                         ToastrService.error(result.msg, $i18next("op_failed"));
                     }

@@ -68,4 +68,13 @@ angular.module('cloud.resources', [])
 
 .factory('Backup', ['$resource', function ($resource) {
     return $resource("/api/backup/:id");
+}])
+
+.factory('Notification', ['$resource', function ($resource){
+    return $resource("/api/notifications/:id/:action/",
+        {id: '@id'},
+        {
+            status: {isArray: false,  params: {action: 'status'}},
+            markRead: {method: 'POST', isArray:false, params: {action: 'mark-read'}}
+        });
 }]);

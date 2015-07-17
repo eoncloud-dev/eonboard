@@ -152,6 +152,13 @@ urlpatterns += format_suffix_patterns(
         url(r'^quotas/create/$', account_view.create_quota),
         url(r'^quotas/delete/$', account_view.delete_quota),
         url(r'^quota-resource-options/$', account_view.resource_options),
+        url(r'^notifications/broadcast/$', account_view.broadcast),
+        url(r'^notifications/data-center-broadcast/$', account_view.data_center_broadcast),
+        url(r'^notifications/$', account_view.NotificationList.as_view()),
+        url(r'^notifications/options/$', account_view.notification_options),
+        url(r'^notifications/status/$', account_view.notification_status),
+        url(r'^notifications/(?P<pk>[0-9]+)/$', account_view.NotificationDetail.as_view()),
+        url(r'^notifications/(?P<pk>[0-9]+)/mark-read/$', account_view.mark_read),
     ]
 )
 

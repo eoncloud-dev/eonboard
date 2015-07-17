@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from django.contrib.auth.models import User
 
-from biz.account.models import Contract, Quota, Operation, UserProxy
+from biz.account.models import Contract, Quota, Operation, UserProxy, Notification, NOTIFICATION_KEY_METHODS
 
 from biz.idc.serializer import DetailedUserDataCenterSerializer
 
@@ -52,3 +52,17 @@ class DetailedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProxy
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, allow_null=True)
+    is_info = serializers.ReadOnlyField()
+    is_success = serializers.ReadOnlyField()
+    is_error = serializers.ReadOnlyField()
+    is_warning = serializers.ReadOnlyField()
+    is_danger = serializers.ReadOnlyField()
+    time_ago = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Notification
+

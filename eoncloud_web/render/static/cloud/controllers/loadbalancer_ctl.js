@@ -186,7 +186,7 @@ CloudApp.controller('LoadBalancerController', function ($rootScope, $scope, $fil
                 subnets:function(){
                     return null;
                 },
-                constant:function(){
+                constant:function(){//获取创建相关常量信息
                     return CommonHttpService.get("/api/lbs/constant/")
                 }
             }
@@ -411,21 +411,13 @@ CloudApp.controller('LoadBalancerController', function ($rootScope, $scope, $fil
 });
 
 //负载资源创建controller
-CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope, $modalInstance, $i18next, $timeout,CommonHttpService, ToastrService,CreateBalancerForm,CreateVipForm, constant,subnets,loadbalancer_table) {
+CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope, $modalInstance, $i18next, $timeout,CommonHttpService, ToastrService,ValidationTool, constant,subnets,loadbalancer_table) {
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
-
+    //获取创建相关常量信息，协议/会话类型/负载方法/监控类型
     $scope.constant = constant;
     $scope.subnets = subnets;
-
-
-    $scope.create_balancer_form_error = {
-        "monitor_type":false,
-        "delay":false,
-        "timeout":false,
-        "max_retries":false
-    }
 
     $scope.flag = true;
     //create balancer confirm submit
@@ -434,7 +426,7 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
             return $scope.flag;
         }
         $scope.flag = false;
-        CreateBalancerForm.init()
+        ValidationTool.init('#create_balancer_form', {});
         if(!$("#create_balancer_form").validate().form()){
             $scope.flag = true;
             return;
@@ -473,7 +465,7 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
             return $scope.flag;
         }
         $scope.flag = false;
-        CreateVipForm.init()
+        ValidationTool.init('#create_vip_form', {});
         if(!$("#create_vip_form").validate().form()){
             $scope.flag = true;
             return;
@@ -508,31 +500,7 @@ CloudApp.controller('LoadBalancerCreateController', function ($rootScope, $scope
         $modalInstance.dismiss();
     }
 
-}).factory('CreateBalancerForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
-        return {
-            init: function(){
-
-                var config = {
-
-                };
-
-                ValidationTool.init('#create_balancer_form', config);
-            }
-        }
-    }]
-).factory('CreateVipForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
-        return {
-            init: function(){
-
-                var config = {
-
-                };
-
-                ValidationTool.init('#create_vip_form', config);
-            }
-        }
-    }]
-);
+});
 
 //关联监听器controller
 CloudApp.controller('LoadBalancerAttachMonitorsController', function ($rootScope, $scope, $modalInstance, $i18next,CommonHttpService, ToastrService, monitors,loadbalancer_table) {
@@ -623,14 +591,20 @@ CloudApp.controller('LoadBalancerFloatIpController', function ($rootScope, $scop
 
 
 //监控创建controller
-CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $modalInstance, $i18next, $timeout,CommonHttpService, ToastrService,CreateMonitorForm, constant,monitor_table) {
+CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $modalInstance, $i18next, $timeout,CommonHttpService, ToastrService,ValidationTool, constant,monitor_table) {
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
 
     $scope.constant = constant;
 
+    $scope.timeout_error =false;
 
+
+    $scope.$watch('timeout', function (value) {
+        $scope.timeout_error =false;
+
+    });
 
 
     //控制表单重复提交
@@ -641,22 +615,38 @@ CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $mo
             return $scope.flag;
         }
         $scope.flag = false;
-        CreateMonitorForm.init();
+
+        ValidationTool.init('#create_monitor_form', {});
         if(!$("#create_monitor_form").validate().form()){
             $scope.flag = true;
             return;
         }
+
+        var delay  =$scope.monitor.delay;
+        var timeout  =$scope.monitor.timeout;
+        if(delay && timeout){
+            if(timeout > delay){
+                $scope.timeout_error = true;
+            }
+        }
+        console.log(12121)
+        if($scope.timeout_error){
+            $scope.flag = true;
+            return
+        }
         var post_data = {
+            "name":monitor.name,
             "delay":monitor.delay,
             "timeout":monitor.timeout,
-            "max_retries":monitor.max_retries
+            "max_retries":monitor.max_retries,
+            "type":monitor.type
         }
         if(monitor.id && monitor.id!=''){
             post_data.monitor_id = monitor.id;
             post_data.type = monitor.type
         }else{
-            post_data.type=monitor.monitor_type;
-            if(monitor.monitor_type == '2' || monitor.monitor_type == '2'){
+            post_data.type=monitor.type;
+            if(monitor.monitor_type == '2' || monitor.monitor_type == '3'){
                 post_data.url_path = monitor.url_path;
                 post_data.expected_codes = monitor.expected_codes;
             }
@@ -673,19 +663,7 @@ CloudApp.controller('MonitorCreateController', function ($rootScope, $scope, $mo
 
         $modalInstance.dismiss();
     }
-}).factory('CreateMonitorForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
-        return {
-            init: function(){
-
-                var config = {
-
-                };
-
-                ValidationTool.init('#create_monitor_form', config);
-            }
-        }
-    }]
-);
+});
 
 
 //负载均衡详情页controller
@@ -865,7 +843,7 @@ CloudApp.controller('LoadBalancerInfoController', function ($rootScope, $scope, 
 
 
 //负载均衡member添加controller
-CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope, $filter, $i18next,$modalInstance,CommonHttpService, ToastrService,CreateMemberForm,member_table,instances) {
+CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope, $filter, $i18next,$modalInstance,CommonHttpService, ToastrService,ValidationTool,member_table,instances) {
     $scope.cancel = function () {
         $modalInstance.dismiss();
     };
@@ -880,7 +858,7 @@ CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope
             return $scope.flag;
         }
         $scope.flag = false;
-        CreateMemberForm.init();
+        ValidationTool.init('#create_member_form', {});
         if(!$("#create_member_form").validate().form()){
             $scope.flag = true;
             return;
@@ -915,16 +893,4 @@ CloudApp.controller('LoadBalancerMemberController', function ($rootScope, $scope
         });
         $modalInstance.dismiss();
     }
-}).factory('CreateMemberForm', ['ValidationTool', '$i18next', function (ValidationTool, $18next) {
-        return {
-            init: function(){
-
-                var config = {
-
-                };
-
-                ValidationTool.init('#create_member_form', config);
-            }
-        }
-    }]
-);
+});

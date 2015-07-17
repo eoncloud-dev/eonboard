@@ -228,6 +228,15 @@
                     return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value);
             }, "{% trans 'Please enter a valid IP.' %}");
 
+    jQuery.validator.addMethod('complexPassword',
+            function(value, element){
+                if(value.length < 8){
+                    return false;
+                }
+
+                return /([a-zA-Z0-9].*[!@#$%^&*?_~])|([!@#$%^&*?_~].*[a-zA-Z0-9])/.test(value);
+            }, "{% trans 'Use strong passwords that combine upper and lowercase letters, numbers, and symbols(!@#$%^&*?_~ allowed).' %}");
+
     bootbox.setDefaults("locale", "zh_CN");
 
 </script>

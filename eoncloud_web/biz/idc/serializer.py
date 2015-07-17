@@ -16,3 +16,11 @@ class UserDataCenterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserDataCenter
+
+
+class DetailedUserDataCenterSerializer(serializers.ModelSerializer):
+
+    data_center = DataCenterSerializer(read_only=True)
+
+    class Meta:
+        model = UserDataCenter

@@ -208,11 +208,17 @@ CloudApp.controller('NetworkCreateController',
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
+        $scope.flag = true;
         $scope.submit_click = function(network_create){
             if(typeof(network_create.name)==='undefined' || network_create.name == ""){
                 $scope.has_error = true;
                 return false;
             }
+
+            if(!$scope.flag){
+                return
+            }
+            $scope.flag = false;
             var post_data = {
                 "id":$scope.network_create.id,
                 "name":$scope.network_create.name
@@ -250,7 +256,7 @@ CloudApp.controller('NetworkAttachController',
             }
         });
 
-
+        $scope.flag = true;
         $scope.submit_click = function(router_selected,action){
             if($.trim($scope.cidr.three)==''){
                 $scope.address_error = true;
@@ -261,6 +267,10 @@ CloudApp.controller('NetworkAttachController',
                 $scope.has_error = true;
                 return false;
             }
+            if(!$scope.flag){
+                return
+            }
+            $scope.flag = false
             var post_data={
                 "router_id":router_selected.id,
                 "network_id":$scope.selectedNetwork.id,

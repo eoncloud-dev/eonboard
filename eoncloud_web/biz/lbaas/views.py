@@ -1,32 +1,37 @@
 import logging
+import copy
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.utils.translation import ugettext_lazy as _
 
-
-from .models import BalancerPool, BalancerMember, BalancerVIP, BalancerMonitor, BalancerPoolMonitor
-from .serializer import BalancerPoolSerializer, BalancerMemberSerializer, BalancerVIPSerializer, BalancerMonitorSerializer
-from .settings import POOL_ERROR, POOL_ACTIVE, POOL_CREATING, POOL_DELETING, \
-    POOL_UPDATING, PROTOCOL_CHOICES, LB_METHOD_CHOICES, MONITOR_TYPE, POOL_STATES_DICT, SESSION_PER_CHOICES
 from biz.instance.models import Instance
 from biz.floating.models import Floating
-from cloud.loadbalancer_task import pool_create_task, pool_update_task, pool_delete_task, pool_vip_create_task, pool_vip_update_task, pool_vip_delete_task,\
-    pool_member_create_task, pool_member_update, pool_member_delete_task, pool_monitor_create, pool_monitor_update, \
-    pool_monitor_delete, pool_monitor_association_create, pool_monitor_association_delete,vip_associate_floating_ip ,vip_disassociate_floating_ip
-
 from biz.account.models import Operation
+
+from .models import BalancerPool, BalancerMember, BalancerVIP, BalancerMonitor, BalancerPoolMonitor
+from .serializer import BalancerPoolSerializer, BalancerMemberSerializer, BalancerVIPSerializer, \
+    BalancerMonitorSerializer
+from .settings import POOL_DELETING, POOL_UPDATING, PROTOCOL_CHOICES, LB_METHOD_CHOICES, MONITOR_TYPE, POOL_STATES_DICT,\
+    SESSION_PER_CHOICES, POOL_ERROR
+
+from cloud.loadbalancer_task import pool_create_task, pool_update_task, pool_delete_task, pool_vip_create_task, \
+    pool_vip_update_task, pool_vip_delete_task, pool_member_create_task, pool_member_update, pool_member_delete_task, \
+    pool_monitor_create, pool_monitor_update, pool_monitor_delete, pool_monitor_association_create, \
+    pool_monitor_association_delete, vip_associate_floating_ip, vip_disassociate_floating_ip
+
+
 LOG = logging.getLogger(__name__)
 
 
 @api_view(['GET', 'POST'])
-def pool_list_view(request, **kwargs):
+def pool_list_view(request):
     query_set = BalancerPool.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = BalancerPoolSerializer(query_set, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def pool_get_view(request, pk=None,**kwargs):
+def pool_get_view(request, pk=None):
     try:
         pool = BalancerPool.objects.get(pk=pk, user=request.user)
         serializer = BalancerPoolSerializer(pool)
@@ -38,18 +43,23 @@ def pool_get_view(request, pk=None,**kwargs):
 
 
 @api_view(['POST'])
-def pool_create_view(request, **kwargs):
+def pool_create_view(request):
     serializer = BalancerPoolSerializer(data=request.data, context={"request": request})
     if serializer.is_valid():
         pool_id = request.POST.get("pool_id", '')
         '''
         if pool_id is '' add pool ,else update pool
         '''
-        if pool_id == '':
+        if not pool_id:
             pool = serializer.save()
-            pool_create_task.delay(pool)
-            Operation.log(pool, obj_name=pool.name, action='create', result=1)
-            return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer pool success')})
+            try:
+                pool_create_task.delay(pool)
+                Operation.log(pool, obj_name=pool.name, action='create', result=1)
+                return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer pool success')})
+            except Exception as e:
+                LOG.error("Create pool error, msg: %s " % e)
+                pool.status = POOL_ERROR
+                pool.save()
         else:
             try:
                 pool = BalancerPool.objects.get(pk=pool_id, user=request.user)
@@ -69,10 +79,15 @@ def pool_create_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_delete_view(request, **kwargs):
+def pool_delete_view(request):
     pool_id = request.POST.get('pool_id', '')
     pool = BalancerPool.objects.get(pk=pool_id, user=request.user, user_data_center=request.session["UDC_ID"])
+
     if pool:
+        if not pool.pool_uuid:
+            pool.deleted = True
+            pool.save()
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Delete balancer pool')})
         pool.status = POOL_DELETING
         pool.save()
         pool_delete_task.delay(pool)
@@ -83,49 +98,49 @@ def pool_delete_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_vip_create_view(request, **kwargs):
+def pool_vip_create_view(request):
     serializer = BalancerVIPSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         pool_id = request.POST.get("pool", "")
         pool = BalancerPool.objects.get(pk=pool_id, user=request.user, user_data_center=request.session["UDC_ID"])
-        if pool_id and pool:
-            '''
-            If member_is not blank, then create member, otherwise update it.
-            '''
-            vip_id = request.POST.get("vip_id", '')
-            if vip_id == '':
-                vip = serializer.save()
-                pool_vip_create_task(vip, pool.pool_uuid)
-                pool.vip = vip
-                pool.save()
-                Operation.log(vip, obj_name=vip.name, action='create', result=1)
-                return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer vip success')})
-            else:
-                try:
-                    vip = BalancerVIP.objects.get(pk=vip_id, user=request.user)
 
-                    vip.session_persistence = request.POST.get('session_persistence', vip.session_persistence)
-                    vip.name = request.POST.get('name', vip.name)
-                    vip.description = request.POST.get('description', vip.description)
-
-                    v = pool_vip_update_task(vip)
-                    Operation.log(vip, obj_name=vip.name, action='update', result=1)
-                    if v:
-                        vip.save()
-                        return Response({"OPERATION_STATUS": 1, "MSG": _('Vip update success')})
-                    else:
-                        return Response({"OPERATION_STATUS": 0, "MSG": _('Vip update fail')})
-                except Exception as e:
-                    LOG.error(e)
-                    return Response({"OPERATION_STATUS": 0, "MSG": _('Vip no exist')})
-        else:
+        if not pool_id or not pool:
             return Response({"OPERATION_STATUS": 0, "MSG": _('No select balancer pool')})
+
+        # If member_is not blank, then create member, otherwise update it.
+
+        vip_id = request.POST.get("vip_id", '')
+        if vip_id == '':
+            vip = serializer.save()
+            pool.status = POOL_UPDATING
+            pool.save()
+            pool_vip_create_task.delay(vip, pool)
+            Operation.log(vip, obj_name=vip.name, action='create', result=1)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Create balancer vip success')})
+        else:
+            try:
+                vip = BalancerVIP.objects.get(pk=vip_id, user=request.user)
+
+                vip.session_persistence = request.POST.get('session_persistence', vip.session_persistence)
+                vip.name = request.POST.get('name', vip.name)
+                vip.description = request.POST.get('description', vip.description)
+
+                v = pool_vip_update_task(vip)
+                Operation.log(vip, obj_name=vip.name, action='update', result=1)
+                if v:
+                    vip.save()
+                    return Response({"OPERATION_STATUS": 1, "MSG": _('Vip update success')})
+                else:
+                    return Response({"OPERATION_STATUS": 0, "MSG": _('Vip update fail')})
+            except Exception as e:
+                LOG.error(e)
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Vip no exist')})
     else:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Vip data valid no pass')})
 
 
 @api_view(['POST'])
-def pool_vip_delete_view(request, **kwargs):
+def pool_vip_delete_view(request):
     pool_id = request.POST.get('pool_id', '')
     try:
         pool = BalancerPool.objects.get(pk=pool_id, user=request.user)
@@ -143,11 +158,11 @@ def pool_vip_delete_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_vip_associate_view(request, **kwargs):
+def pool_vip_associate_view(request):
     vip_id = request.POST.get("vip_id", "")
     float_ip_id = request.POST.get("floating_ip_id", "")
     action = request.POST.get("action", '')
-    if vip_id == '' or float_ip_id == '':
+    if not vip_id or not float_ip_id:
         return Response({"OPERATION_STATUS": 0, "MSG": _('No select float ip or vip')})
     try:
         vip = BalancerVIP.objects.get(pk=vip_id, user=request.user)
@@ -177,18 +192,18 @@ def pool_vip_associate_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_monitor_association_option_view(request, **kwargs):
+def pool_monitor_association_option_view(request):
     pool_id = request.POST.get("pool_id", "")
     monitor_id = request.POST.get("monitor_id", "")
     action = request.POST.get("action", '')
-    if pool_id == '' or monitor_id == '':
+    if not pool_id or not monitor_id:
         return Response({"OPERATION_STATUS": 0, "MSG": _('No select balancer or monitor')})
 
     try:
         pool = BalancerPool.objects.get(pk=pool_id, user=request.user)
         monitor = BalancerMonitor.objects.get(pk=monitor_id, user=request.user)
 
-        if action =='attach':
+        if action == 'attach':
             p = pool_monitor_association_create(pool, monitor.monitor_uuid)
             Operation.log(pool, obj_name=pool.name, action='attach', result=1)
             if p:
@@ -213,23 +228,20 @@ def pool_monitor_association_option_view(request, **kwargs):
 
 
 @api_view(['GET', 'POST'])
-def pool_member_list_view(request, balancer_id=None, **kwargs):
+def pool_member_list_view(request, balancer_id=None):
     query_set = BalancerMember.objects.filter(deleted=False, pool=balancer_id, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = BalancerMemberSerializer(query_set, many=True)
     return Response(serializer.data)
 
 
 @api_view(['POST'])
-def pool_member_create_view(request, **kwargs):
+def pool_member_create_view(request):
     members = request.POST.get("members")
     serializer = BalancerMemberSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         member_id = request.POST.get("member_id", '')
         pool_id = request.POST.get("pool", '')
-        try:
-            pool = BalancerPool.objects.get(pk=pool_id, user=request.user)
-        except Exception as e:
-            LOG.error(e)
+        if not BalancerPool.objects.filter(pk=pool_id, user=request.user).exists():
             return Response({"OPERATION_STATUS": 0, "MSG": _('Selected balancer no exists')})
         '''
         if member_id is '' add member ,else update member
@@ -238,7 +250,9 @@ def pool_member_create_view(request, **kwargs):
             member_array = members.split(',')
             if len(member_array) > 0:
                 for m in member_array:
-                    member = serializer.save()
+                    serializer2 = BalancerMemberSerializer(data=request.data, context={'request': request})
+                    serializer2.is_valid()
+                    member = serializer2.save()
                     instance = Instance.objects.get(pk=int(m), user=request.user)
                     member.instance = instance
                     member.save()
@@ -264,7 +278,7 @@ def pool_member_create_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_member_delete_view(request, **kwargs):
+def pool_member_delete_view(request):
     member_id = request.POST.get('member_id', '')
     member = BalancerMember.objects.get(pk=member_id)
     if member:
@@ -282,14 +296,14 @@ def pool_member_delete_view(request, **kwargs):
 
 
 @api_view(['GET', 'POST'])
-def pool_monitor_list_view(request, **kwargs):
+def pool_monitor_list_view(request):
     query_set = BalancerMonitor.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = BalancerMonitorSerializer(query_set, many=True)
     return Response(serializer.data)
 
 
 @api_view(['POST'])
-def pool_monitor_create_view(request, **kwargs):
+def pool_monitor_create_view(request):
     serializer = BalancerMonitorSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         monitor_id = request.POST.get('monitor_id','')
@@ -327,7 +341,7 @@ def pool_monitor_create_view(request, **kwargs):
 
 
 @api_view(['POST'])
-def pool_monitor_delete_view(request, **kwargs):
+def pool_monitor_delete_view(request):
     monitor_id = request.POST.get('monitor_id', '')
     monitor = BalancerMonitor.objects.get(pk=monitor_id, user=request.user)
     pool_monitor = BalancerPoolMonitor.objects.filter(monitor=monitor_id)
@@ -344,18 +358,18 @@ def pool_monitor_delete_view(request, **kwargs):
 
 
 @api_view(['GET'])
-def get_constant_view(request, **kwargs):
+def get_constant_view(request):
     return Response({'protocol': PROTOCOL_CHOICES, 'lb_method': LB_METHOD_CHOICES, "monitor_type": MONITOR_TYPE,
                      "session_per": SESSION_PER_CHOICES})
 
 
 @api_view(['GET'])
-def get_status_view(request, **kwargs):
+def get_status_view(request):
     return Response(POOL_STATES_DICT)
 
 
 @api_view(['POST'])
-def get_available_monitor_view(request, pool_id, **kwargs):
+def get_available_monitor_view(request, pool_id):
     action = request.POST.get("action", '')
     if action == 'attach':
         monitors = BalancerMonitor.objects.filter(deleted=False, user=request.user).exclude(monitor_re__pool=pool_id)

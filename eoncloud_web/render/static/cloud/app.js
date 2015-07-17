@@ -477,16 +477,25 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
             callbacks.push(callback);
         };
 
+        $rootScope.setInterval = function(func, interval){
+            var timer = $interval(func, interval);
+
+            $rootScope.executeWhenLeave(function(){
+                $interval.cancel(timer);
+            });
+        };
+
         $rootScope.$on("$stateChangeStart", function (e, toState, toParams, fromState, fromParams) {
             while ($rootScope.timer_list.length > 0) {
                 var t = $rootScope.timer_list.pop();
                 $interval.cancel(t);
             }
 
-            while(callbacks.length > 0){
-                var callback = callbacks.pop();
+            angular.forEach(callbacks, function(callback){
                 callback();
-            }
+            });
+
+            callbacks = [];
         });
 
         CommonHttpService.get("/api/account/site-config/").then(function(data){

@@ -47,6 +47,10 @@ class UserProxy(User):
 
     super_users = SuperUserManager()
 
+    @property
+    def user_data_centers(self):
+        return self.userdatacenter_set.all()
+
 
 class LivingManager(models.Manager):
     def get_queryset(self):

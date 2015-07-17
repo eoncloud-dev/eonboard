@@ -117,10 +117,16 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
              $modalInstance.dismiss();
          };
 
+         //控制表单重复提交
+         $scope.flag =true;
          $scope.create = function(firewall){
              if($scope.firewall == undefined || $scope.firewall.name == null || $scope.firewall.name == "" ){
                  $scope.has_error = true ;
              }else{
+                 if(!$scope.flag){
+                     return
+                 }
+                 $scope.flag = false;
                  var post_data = {
                      "name":firewall.name,
                      "desc":firewall.desc
@@ -128,11 +134,12 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
                  CommonHttpService.post("/api/firewall/create/", post_data).then(function (data) {
                      if (data.OPERATION_STATUS == 1) {
                          ToastrService.success(data.MSG, $i18next("success"));
-                         firewall_table.reload();
+
                      }
                      else {
                          ToastrService.error(data.MSG, $i18next("op_failed"));
                      }
+                     firewall_table.reload();
                      $modalInstance.dismiss();
                  });
              }
@@ -280,6 +287,9 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
              }
          });
 
+         //控制表单重复提交
+         $scope.flag = true;
+
          $scope.create = function(firewall_rule){
 
              var post_data ={}
@@ -329,14 +339,20 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
                  }
              }
 
+             if(!$scope.flag){
+                 return
+             }
+             $scope.flag = false;
+
              CommonHttpService.post("/api/firewall/firewall_rules/create/", post_data).then(function (data) {
                  if (data.OPERATION_STATUS == 1) {
                      ToastrService.success(data.MSG, $i18next("success"));
-                     firewall_rules_table.reload();
+
                  }
                  else {
                      ToastrService.error(data.MSG, $i18next("op_failed"));
                  }
+                 firewall_rules_table.reload();
                  $modalInstance.dismiss();
              });
          }

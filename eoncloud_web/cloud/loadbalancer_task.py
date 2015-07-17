@@ -370,15 +370,19 @@ def pool_vip_create_task(vip, pool):
         vip.address = v.address
         vip.port_id = v.port_id
         vip.save()
+        pool.status = POOL_ACTIVE
+        pool.vip = vip
+        pool.save()
     else:
         LOG.error("Create balancer vip fail,id[%s]" % vip.id)
+        pool.status = POOL_ACTIVE
         pool.vip = None
         pool.save()
         vip.status = POOL_ERROR
         vip.save()
 
 @app.task
-def pool_vip_update_task(vip=None):
+def pool_vip_update_task(vip):
     if not vip:
         return False
     LOG.info("Begin update balancer vip,id[%s]"% vip.id)
@@ -396,7 +400,7 @@ def pool_vip_update_task(vip=None):
 
 
 @app.task
-def pool_vip_delete_task(vip=None):
+def pool_vip_delete_task(vip):
     if not vip:
         return False
     LOG.info("Begin delete balancer vip, id[%s]" % vip.id)
@@ -413,7 +417,7 @@ def pool_vip_delete_task(vip=None):
 
 
 @app.task
-def pool_member_create_task(member=None):
+def pool_member_create_task(member):
     if not member:
         return False
     LOG.info("Begin create balancer member, id[%s]" % member.id)

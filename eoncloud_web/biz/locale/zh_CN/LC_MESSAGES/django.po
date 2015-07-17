@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-07 15:57+0800\n"
+"POT-Creation-Date: 2015-07-16 18:16+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,85 +34,88 @@ msgstr "用户类型"
 msgid "UserProfile"
 msgstr "用户设置"
 
-#: account/models.py:64
+#: account/models.py:68
 msgid "Contract name"
 msgstr "合同名称"
 
-#: account/models.py:65
+#: account/models.py:69
 msgid "Customer name"
 msgstr "客户名称"
 
-#: account/models.py:66
+#: account/models.py:70
 msgid "Start Date"
 msgstr "开始日期"
 
-#: account/models.py:67
+#: account/models.py:71
 msgid "End Date"
 msgstr "结束日期"
 
-#: account/models.py:68 account/models.py:91 backup/models.py:30
-#: backup/models.py:129 firewall/models.py:15 firewall/models.py:36
-#: floating/models.py:25 forum/models.py:11 forum/models.py:28
-#: instance/models.py:45 network/models.py:15 network/models.py:56
-#: network/models.py:74 network/models.py:90 volume/models.py:17
+#: account/models.py:72 account/models.py:95 backup/models.py:30
+#: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
+#: floating/models.py:29 forum/models.py:11 forum/models.py:28
+#: instance/models.py:45 lbaas/models.py:23 lbaas/models.py:46
+#: lbaas/models.py:76 lbaas/models.py:104 network/models.py:15
+#: network/models.py:56 network/models.py:74 network/models.py:90
+#: volume/models.py:17
 msgid "Deleted"
 msgstr "已删除"
 
-#: account/models.py:69 account/models.py:92 account/models.py:110
-#: backup/models.py:28 backup/models.py:127 firewall/models.py:14
-#: firewall/models.py:37 floating/models.py:23 forum/models.py:12
+#: account/models.py:73 account/models.py:96 account/models.py:114
+#: backup/models.py:28 backup/models.py:137 firewall/models.py:14
+#: firewall/models.py:37 floating/models.py:27 forum/models.py:12
 #: forum/models.py:29 image/models.py:25 instance/models.py:25
-#: instance/models.py:84 network/models.py:16 network/models.py:57
-#: network/models.py:75 volume/models.py:16
+#: instance/models.py:84 lbaas/models.py:22 lbaas/models.py:45
+#: lbaas/models.py:75 lbaas/models.py:103 network/models.py:16
+#: network/models.py:57 network/models.py:75 volume/models.py:16
 msgid "Create Date"
 msgstr "创建日期"
 
-#: account/models.py:70 account/models.py:93
+#: account/models.py:74 account/models.py:97
 msgid "Update Date"
 msgstr "修改日期"
 
-#: account/models.py:83 account/models.py:84 account/settings.py:30
+#: account/models.py:87 account/models.py:88 account/settings.py:30
 msgid "Contract"
 msgstr "合同"
 
-#: account/models.py:89
+#: account/models.py:93
 msgid "Resouce"
 msgstr "资源"
 
-#: account/models.py:90
+#: account/models.py:94
 msgid "Limit"
 msgstr "配额"
 
-#: account/models.py:97 account/models.py:98
+#: account/models.py:101 account/models.py:102
 msgid "Quota"
 msgstr "配额"
 
-#: account/models.py:105 backup/models.py:121
+#: account/models.py:109 backup/models.py:125 floating/models.py:22
 msgid "Resource"
 msgstr "资源"
 
-#: account/models.py:106 backup/models.py:119
+#: account/models.py:110 backup/models.py:121
 msgid "Resource ID"
 msgstr "资源 ID"
 
-#: account/models.py:107 backup/models.py:122
+#: account/models.py:111 backup/models.py:127
 msgid "Resource Name"
 msgstr "资源名称"
 
-#: account/models.py:108
+#: account/models.py:112
 msgid "Action"
 msgstr "操作"
 
-#: account/models.py:109
+#: account/models.py:113
 msgid "Result"
 msgstr "结果"
 
-#: account/models.py:132
+#: account/models.py:136
 #, python-format
 msgid "%(resource)s:%(resource_name)s execute %(action)s operation"
 msgstr "%(resource)s:%(resource_name)s 执行了 %(action)s 操作"
 
-#: account/models.py:151 account/models.py:152
+#: account/models.py:154 account/models.py:155
 msgid "Operation"
 msgstr "操作日志"
 
@@ -239,63 +242,79 @@ msgstr "连接路由器"
 msgid "detach router"
 msgstr "离开路由器"
 
-#: account/views.py:118
+#: account/views.py:166
 msgid "Contract is created successfully!"
 msgstr ""
 
-#: account/views.py:122
+#: account/views.py:170
 msgid "Contract data is not valid!"
 msgstr ""
 
-#: account/views.py:127
+#: account/views.py:175
 msgid "Failed to create contract for unknown reason."
 msgstr ""
 
-#: account/views.py:145
+#: account/views.py:193
 msgid "Contract is updated successfully!"
 msgstr ""
 
-#: account/views.py:150
+#: account/views.py:198
 msgid "Failed to update contract for unknown reason."
 msgstr ""
 
-#: account/views.py:168
+#: account/views.py:216
 msgid "Contracts have been deleted!"
 msgstr ""
 
-#: account/views.py:172
+#: account/views.py:220
 msgid "Failed to delete contracts for unknown reason."
 msgstr ""
 
-#: account/views.py:204
+#: account/views.py:252
 msgid "User has been deactivated!"
 msgstr "用户已禁用，将不能登录"
 
-#: account/views.py:216
+#: account/views.py:264
 msgid "User has been activated!"
 msgstr "用户已激活，可以正常使用"
 
-#: account/views.py:270
+#: account/views.py:276
+msgid "The new password doesn't match confirm password!"
+msgstr ""
+
+#: account/views.py:281
+msgid "The user is not founded!"
+msgstr ""
+
+#: account/views.py:284
+msgid "The original password is not correct!"
+msgstr ""
+
+#: account/views.py:289
+msgid "Password has been changed!"
+msgstr "密码修改成功"
+
+#: account/views.py:343
 msgid "Quotas have been saved successfully!"
 msgstr ""
 
-#: account/views.py:274
+#: account/views.py:347
 msgid "Failed to save quotas for unknown reason."
 msgstr ""
 
-#: account/views.py:296
+#: account/views.py:365
 msgid "Quota have been saved successfully!"
 msgstr ""
 
-#: account/views.py:301
+#: account/views.py:370
 msgid "Failed to save quota for unknown reason."
 msgstr ""
 
-#: account/views.py:311
+#: account/views.py:379
 msgid "Quota have been deleted successfully!"
 msgstr "配额删除成功"
 
-#: account/views.py:315
+#: account/views.py:383
 msgid "Failed to create quota for unknown reason."
 msgstr "配额创建失败"
 
@@ -311,29 +330,34 @@ msgstr "备份类型"
 msgid "Volumes"
 msgstr "磁盘"
 
-#: backup/models.py:29 backup/models.py:128 floating/models.py:24
+#: backup/models.py:29 backup/models.py:138 floating/models.py:28
 msgid "Delete Date"
 msgstr "删除日期"
 
-#: backup/models.py:31 backup/models.py:130 floating/models.py:16
-#: instance/models.py:23 network/models.py:11 network/models.py:53
+#: backup/models.py:31 backup/models.py:140 floating/models.py:17
+#: instance/models.py:23 lbaas/models.py:21 lbaas/models.py:44
+#: lbaas/models.py:73 network/models.py:11 network/models.py:53
 #: network/models.py:71 volume/models.py:15
 msgid "Status"
 msgstr "状态"
 
-#: backup/models.py:110 backup/models.py:111
+#: backup/models.py:112 backup/models.py:113
 msgid "Backup"
 msgstr "备份"
 
-#: backup/models.py:120
+#: backup/models.py:123
 msgid "Backend UUID"
 msgstr ""
 
-#: backup/models.py:123
+#: backup/models.py:129
 msgid "Size(GB)"
 msgstr ""
 
-#: backup/models.py:135 backup/models.py:136
+#: backup/models.py:132
+msgid "RBD Image"
+msgstr "镜像 "
+
+#: backup/models.py:145 backup/models.py:146
 msgid "Backup Item"
 msgstr "备份项"
 
@@ -418,7 +442,7 @@ msgstr ""
 msgid "Port range max"
 msgstr ""
 
-#: firewall/models.py:29
+#: firewall/models.py:29 lbaas/models.py:66
 msgid "Protocol"
 msgstr ""
 
@@ -446,79 +470,87 @@ msgstr "IPv4"
 msgid "IPv6"
 msgstr "IPv6"
 
-#: firewall/views.py:35
-msgid "Creating firewall"
-msgstr "创建防火墙"
-
-#: firewall/views.py:37 network/views.py:40 volume/views.py:55
-msgid "Data valid error"
-msgstr "数据格式错误"
-
-#: firewall/views.py:40
+#: firewall/views.py:38
 msgid "Firewall create error"
 msgstr "创建"
 
-#: firewall/views.py:47
+#: firewall/views.py:39
+msgid "Creating firewall"
+msgstr "创建防火墙"
+
+#: firewall/views.py:41 network/views.py:52 volume/views.py:62
+msgid "Data valid error"
+msgstr "数据格式错误"
+
+#: firewall/views.py:48
 msgid "Not selected Firewall"
 msgstr "选择防火墙"
 
-#: firewall/views.py:50
+#: firewall/views.py:51
 msgid "Firewall not exists"
 msgstr "防火墙不存在"
 
-#: firewall/views.py:52
+#: firewall/views.py:53
 msgid "Firewall default can not delete"
 msgstr "默认防火墙允许删除"
 
-#: firewall/views.py:54
+#: firewall/views.py:55
 msgid "Firewall used can not delete"
 msgstr "被使用的防火墙不允许删除"
 
-#: firewall/views.py:60
+#: firewall/views.py:62
+msgid "Firewall delete error"
+msgstr "防火墙删除失败"
+
+#: firewall/views.py:69
 msgid "Firewall delete success"
 msgstr "防火墙删除成功"
 
-#: firewall/views.py:76
+#: firewall/views.py:85
 msgid "no selected security group"
 msgstr "选择安全组"
 
-#: firewall/views.py:84
-msgid "Create firewall rule success"
-msgstr "创建规则成功"
-
-#: firewall/views.py:85
-msgid "Valid firewall rule nopass"
-msgstr "规则格式错误"
-
-#: firewall/views.py:88
+#: firewall/views.py:95
 msgid "Create firewall rule error"
 msgstr "创建规则失败"
 
-#: firewall/views.py:95
+#: firewall/views.py:96
+msgid "Create firewall rule success"
+msgstr "创建规则成功"
+
+#: firewall/views.py:97
+msgid "Valid firewall rule nopass"
+msgstr "规则格式错误"
+
+#: firewall/views.py:103
 msgid "Not selected Firewall rule"
 msgstr "选择规则"
 
-#: firewall/views.py:98
+#: firewall/views.py:106
 msgid "Firewall rule not exists"
 msgstr "规则不存在"
 
-#: firewall/views.py:104
+#: firewall/views.py:112
 msgid "Firewall rule delete success"
 msgstr "规则删除成功"
 
-#: firewall/views.py:107
+#: firewall/views.py:115
 msgid "Firewall rule delete error"
 msgstr "规则删除失败"
 
-#: floating/models.py:12 instance/models.py:43
+#: floating/models.py:13 instance/models.py:43
 msgid "Public IP"
 msgstr "公网IP"
 
-#: floating/models.py:18
+#: floating/models.py:19
 msgid "Bandwidth MB"
 msgstr "带宽 MB"
 
-#: floating/models.py:30 floating/models.py:31
+#: floating/models.py:23
+msgid "Resource type"
+msgstr "资源类型"
+
+#: floating/models.py:51 floating/models.py:52
 msgid "Floating"
 msgstr "公网IP"
 
@@ -722,27 +754,27 @@ msgstr "镜像类型"
 msgid "Image"
 msgstr "镜像 "
 
-#: image/views.py:44
+#: image/views.py:45
 msgid "Image is created successfully!"
 msgstr "镜像创建成功"
 
-#: image/views.py:47 image/views.py:68
+#: image/views.py:48 image/views.py:69
 msgid "Image data is not valid!"
 msgstr ""
 
-#: image/views.py:52
+#: image/views.py:53
 msgid "Failed to create image for unknown reason."
 msgstr "镜像创建失败"
 
-#: image/views.py:65
+#: image/views.py:66
 msgid "Image is updated successfully!"
 msgstr "镜像更新成功"
 
-#: image/views.py:73
+#: image/views.py:74
 msgid "Failed to update image for unknown reason."
 msgstr "镜像更新失败"
 
-#: image/views.py:83
+#: image/views.py:84
 msgid "Images have been deleted!"
 msgstr "镜像已删除"
 
@@ -927,29 +959,367 @@ msgstr "删除"
 msgid "Instance Launch"
 msgstr "创建云主机"
 
-#: instance/views.py:56
+#: instance/views.py:60
 msgid "Flavor is created successfully!"
 msgstr ""
 
-#: instance/views.py:59 instance/views.py:78
+#: instance/views.py:63 instance/views.py:82
 msgid "Flavor data is not valid!"
 msgstr ""
 
-#: instance/views.py:64
+#: instance/views.py:68
 msgid "Failed to create flavor for unknown reason."
 msgstr ""
 
-#: instance/views.py:75
+#: instance/views.py:79
 msgid "Flavor is updated successfully!"
 msgstr "规格更新成功"
 
-#: instance/views.py:83
+#: instance/views.py:87
 msgid "Failed to update flavor for unknown reason."
 msgstr "规格更新失败"
 
-#: instance/views.py:90
+#: instance/views.py:94
 msgid "Flavors have been deleted!"
 msgstr "规格已删除"
+
+#: lbaas/models.py:11
+msgid "Pool UUID"
+msgstr "资源池ID"
+
+#: lbaas/models.py:12 lbaas/models.py:60
+msgid "Pool name"
+msgstr "名称"
+
+#: lbaas/models.py:13 lbaas/models.py:61
+msgid "Description"
+msgstr "描述"
+
+#: lbaas/models.py:15
+msgid "protocol"
+msgstr "协议"
+
+#: lbaas/models.py:16
+msgid "Lb method"
+msgstr "负载策略"
+
+#: lbaas/models.py:17
+msgid "Provider"
+msgstr ""
+
+#: lbaas/models.py:18 lbaas/models.py:42 lbaas/models.py:72
+#: lbaas/models.py:101
+msgid "Admin state up"
+msgstr ""
+
+#: lbaas/models.py:29 lbaas/models.py:30
+msgid "BalancerPool"
+msgstr "负载均衡器"
+
+#: lbaas/models.py:38
+msgid "Member_UUID"
+msgstr ""
+
+#: lbaas/models.py:39 lbaas/models.py:64 lbaas/models.py:65
+msgid "Address"
+msgstr "地址"
+
+#: lbaas/models.py:40 lbaas/models.py:67
+msgid "Protocol port"
+msgstr "端口"
+
+#: lbaas/models.py:41
+msgid "Weight"
+msgstr "权重"
+
+#: lbaas/models.py:52 lbaas/models.py:53
+msgid "BalancerMember"
+msgstr "负载均衡器成员"
+
+#: lbaas/models.py:58
+msgid "VIP_uuid"
+msgstr "虚IP ID"
+
+#: lbaas/models.py:69
+msgid "Port id"
+msgstr "端口"
+
+#: lbaas/models.py:70
+msgid "Session persistence"
+msgstr "会话持久化"
+
+#: lbaas/models.py:71
+msgid "Connection limit"
+msgstr "链接限制"
+
+#: lbaas/models.py:82 lbaas/models.py:83
+msgid "BalancerVIP"
+msgstr ""
+
+#: lbaas/models.py:92
+msgid "Monitor uuid"
+msgstr "监听器"
+
+#: lbaas/models.py:93
+msgid "Monitor name"
+msgstr "名称"
+
+#: lbaas/models.py:94
+msgid "Type"
+msgstr "类型"
+
+#: lbaas/models.py:95
+msgid "Delay"
+msgstr "延迟"
+
+#: lbaas/models.py:96
+msgid "Timeout"
+msgstr "超时"
+
+#: lbaas/models.py:97
+msgid "Max retries"
+msgstr "最大重试次数"
+
+#: lbaas/models.py:98
+msgid "Http method"
+msgstr "HTTP Method"
+
+#: lbaas/models.py:99
+msgid "Url path"
+msgstr ""
+
+#: lbaas/models.py:100
+msgid "Expected codes"
+msgstr "期望状态吗"
+
+#: lbaas/models.py:118 lbaas/models.py:119
+msgid "BalancerMonitor"
+msgstr "负载均衡监听器"
+
+#: lbaas/models.py:129 lbaas/models.py:130
+msgid "BalancerPoolMonitor"
+msgstr "负载均衡器不存在"
+
+#: lbaas/settings.py:15 network/settings.py:19 network/settings.py:32
+msgid "CREATING"
+msgstr "创建中"
+
+#: lbaas/settings.py:16 lbaas/settings.py:26 network/settings.py:16
+#: network/settings.py:29
+msgid "ACTIVE"
+msgstr "已启动"
+
+#: lbaas/settings.py:17 lbaas/settings.py:27
+msgid "CREATED"
+msgstr "创建成功"
+
+#: lbaas/settings.py:18 lbaas/settings.py:28 network/settings.py:17
+#: network/settings.py:30
+msgid "DOWN"
+msgstr "已关闭"
+
+#: lbaas/settings.py:19 lbaas/settings.py:29 network/settings.py:18
+#: network/settings.py:31
+msgid "ERROR"
+msgstr "错误"
+
+#: lbaas/settings.py:20 lbaas/settings.py:30
+msgid "INACTIVE"
+msgstr "未激活"
+
+#: lbaas/settings.py:21 lbaas/settings.py:31 network/settings.py:21
+#: network/settings.py:34
+msgid "UPDATING"
+msgstr "更新中"
+
+#: lbaas/settings.py:22 lbaas/settings.py:32 network/settings.py:20
+#: network/settings.py:33
+msgid "DELETING"
+msgstr "删除中"
+
+#: lbaas/settings.py:25
+msgid "Creating"
+msgstr "创建中"
+
+#: lbaas/views.py:41
+msgid "Balancer no exists"
+msgstr "负载均衡器不存在"
+
+#: lbaas/views.py:58
+msgid "Create balancer pool success"
+msgstr "创建负载均衡器成功"
+
+#: lbaas/views.py:73
+msgid "Update balancer pool success"
+msgstr "更新负载均衡器成功"
+
+#: lbaas/views.py:76
+msgid "Selected balancer no exist"
+msgstr "负载均衡器不存在"
+
+#: lbaas/views.py:78
+msgid "Balancer data valid no pass"
+msgstr "负载均衡器数据有误"
+
+#: lbaas/views.py:90 lbaas/views.py:95
+msgid "Delete balancer pool"
+msgstr "删除负载均衡器"
+
+#: lbaas/views.py:97
+msgid "Balancer pool no exist"
+msgstr "负载均衡器不存在"
+
+#: lbaas/views.py:108
+msgid "No select balancer pool"
+msgstr "请选择负载均衡器"
+
+#: lbaas/views.py:119
+msgid "Create balancer vip success"
+msgstr "创建负载均衡器成功"
+
+#: lbaas/views.py:132
+msgid "Vip update success"
+msgstr "虚IP更新成功"
+
+#: lbaas/views.py:134
+msgid "Vip update fail"
+msgstr "虚IP更新失败"
+
+#: lbaas/views.py:137
+msgid "Vip no exist"
+msgstr "虚IP不存在"
+
+#: lbaas/views.py:139
+msgid "Vip data valid no pass"
+msgstr "虚IP数据有误"
+
+#: lbaas/views.py:155
+msgid "Delete balancer vip"
+msgstr "删除虚IP"
+
+#: lbaas/views.py:157
+msgid "Balancer pool or vip no exits"
+msgstr "负载均衡器或者VIP不存在"
+
+#: lbaas/views.py:166
+msgid "No select float ip or vip"
+msgstr "选择公网IP或者VIP"
+
+#: lbaas/views.py:177
+msgid "Vip association floating success"
+msgstr "虚IP关联公网IP成功"
+
+#: lbaas/views.py:179
+msgid "Vip association floating fail"
+msgstr "虚IP关联公网IP失败"
+
+#: lbaas/views.py:186
+msgid "Vip disassociation floating success"
+msgstr "虚IP解除关联公网IP成功"
+
+#: lbaas/views.py:188
+msgid "Vip disassociation floating fail"
+msgstr "虚IP解除关联公网IP失败"
+
+#: lbaas/views.py:191
+msgid "Vip or Floating no exist"
+msgstr "虚IP或者公网IP不存在"
+
+#: lbaas/views.py:200
+msgid "No select balancer or monitor"
+msgstr "选择负载均衡器和监听器"
+
+#: lbaas/views.py:211
+msgid "Balancer monitor association success"
+msgstr "监听器管理成功"
+
+#: lbaas/views.py:213
+msgid "Balancer monitor association fail"
+msgstr "监听器关联失败"
+
+#: lbaas/views.py:222
+msgid "Balancer monitor cancel association success"
+msgstr "监听器解除成功"
+
+#: lbaas/views.py:224
+msgid "Balancer monitor cancel association fail"
+msgstr "监听器解除失败"
+
+#: lbaas/views.py:227
+msgid "balancer or monitor no exist"
+msgstr "负载均衡器或者监听器不存在"
+
+#: lbaas/views.py:245
+msgid "Selected balancer no exists"
+msgstr "请选择负载均衡器"
+
+#: lbaas/views.py:261
+msgid "Add member success"
+msgstr "添加成员成功"
+
+#: lbaas/views.py:263
+msgid "No select member"
+msgstr "请选择成员"
+
+#: lbaas/views.py:267
+msgid "Member no exists"
+msgstr "成员不存在"
+
+#: lbaas/views.py:273
+msgid "Member update success"
+msgstr "成员信息更新成功"
+
+#: lbaas/views.py:275
+msgid "Update member fail"
+msgstr "成员信息更新失败"
+
+#: lbaas/views.py:277
+msgid "Member data valid no pass"
+msgstr "成员信息数据有误"
+
+#: lbaas/views.py:293
+msgid "Delete balancer member success"
+msgstr "删除成员成功"
+
+#: lbaas/views.py:295
+msgid "Balancer member no exist"
+msgstr "成员不存在"
+
+#: lbaas/views.py:321
+msgid "Create balancer monitor success"
+msgstr "创建监听器成功"
+
+#: lbaas/views.py:324
+msgid "Create balancer monitor Fail"
+msgstr "创建监听器失败"
+
+#: lbaas/views.py:328
+msgid "Monitor no exists"
+msgstr "监听器不存在"
+
+#: lbaas/views.py:336
+msgid "Update balancer monitor success"
+msgstr "更新监听器成功"
+
+#: lbaas/views.py:338
+msgid "Update balancer monitor Fail"
+msgstr "更新监听器失败"
+
+#: lbaas/views.py:340
+msgid "Monitor data valid no pass"
+msgstr "监听器数据有误"
+
+#: lbaas/views.py:349
+msgid "Monitor is used,can't deleted"
+msgstr "使用中的监听器不允许删除"
+
+#: lbaas/views.py:355
+msgid "Delete balancer monitor success"
+msgstr "删除监听器成功"
+
+#: lbaas/views.py:357
+msgid "Balancer monitor no exist"
+msgstr "监听器不存在"
 
 #: network/models.py:9 network/models.py:46
 msgid "Network Name"
@@ -995,121 +1365,117 @@ msgstr "路由器端口"
 msgid "BUILD"
 msgstr "构建中"
 
-#: network/settings.py:16 network/settings.py:29
-msgid "ACTIVE"
-msgstr "已启动"
-
-#: network/settings.py:17 network/settings.py:30
-msgid "DOWN"
-msgstr "已关闭"
-
-#: network/settings.py:18 network/settings.py:31
-msgid "ERROR"
-msgstr "错误"
-
-#: network/settings.py:19 network/settings.py:32
-msgid "CREATING"
-msgstr "创建中"
-
-#: network/settings.py:20 network/settings.py:33
-msgid "DELETING"
-msgstr "删除中"
-
-#: network/settings.py:21 network/settings.py:34
-msgid "UPDATING"
-msgstr "更新中"
-
-#: network/views.py:38
+#: network/views.py:45
 msgid "Create network success"
 msgstr "创建私有网络成功"
 
-#: network/views.py:43
+#: network/views.py:50
 msgid "Create network error"
 msgstr "创建私有网络失败"
 
-#: network/views.py:47
+#: network/views.py:56
 msgid "The selected network not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:52
+#: network/views.py:61
 msgid "Update network success"
 msgstr "更新私有网络成功"
 
-#: network/views.py:62
+#: network/views.py:71
 msgid "Default network can not be deleted"
 msgstr "默认的私有网络不允许删除"
 
-#: network/views.py:65
+#: network/views.py:74
 msgid "Was unable to delete the use of the network"
 msgstr "使用中的私有网络不允许删除"
 
-#: network/views.py:70
+#: network/views.py:78 network/views.py:83
 msgid "Network deleted success"
 msgstr "私有网络删除成功"
 
-#: network/views.py:72
+#: network/views.py:85
 msgid "The selected network does not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:97
+#: network/views.py:106
 msgid "Default network not allow operation"
 msgstr "默认私有网络不支持此操作"
 
-#: network/views.py:104
+#: network/views.py:111
 msgid "network exist address , not operation"
 msgstr "子网地址已经存在"
 
-#: network/views.py:126
+#: network/views.py:137
 msgid "Link router success"
 msgstr "加入路由器成功"
 
-#: network/views.py:130
+#: network/views.py:141
 msgid "Network not add subnet ,not operation "
 msgstr "请将私有网络先加入路由器"
 
-#: network/views.py:140
-msgid "Leave router success "
-msgstr "离开路由器成功"
-
-#: network/views.py:143
+#: network/views.py:159 network/views.py:163
 msgid "Network operation error"
 msgstr "操作异常"
 
-#: network/views.py:192
+#: network/views.py:160
+msgid "Leave router success "
+msgstr "离开路由器成功"
+
+#: network/views.py:220
 msgid "Create router success"
 msgstr "创建路由器成功"
 
-#: network/views.py:194
+#: network/views.py:222
 msgid "Valid Router fail"
 msgstr "数据提交异常"
 
-#: network/views.py:197
+#: network/views.py:225
 msgid "Create router fail"
 msgstr "创建路由器失败"
 
-#: network/views.py:201
+#: network/views.py:229
 msgid "The selected router not exist"
 msgstr "路由器不存在"
 
-#: network/views.py:215
+#: network/views.py:243
 msgid "Update router success"
 msgstr "路由器更新成功"
 
-#: network/views.py:224
+#: network/views.py:253
 msgid "Default Router can not be deleted"
 msgstr "默认路由器不允许删除"
 
-#: network/views.py:229
+#: network/views.py:258
 msgid "Router used can not deleted"
 msgstr "使用中的路由器不允许删除"
 
-#: network/views.py:234
+#: network/views.py:263
 msgid "Router deleted success"
 msgstr "路由器删除成功"
 
-#: network/views.py:236
+#: network/views.py:265
 msgid "The selected router does not exist"
 msgstr "路由器不存在"
+
+#: overview/views.py:43
+msgid "The host IP is used by other Data Center, Please check your host IP."
+msgstr ""
+
+#: overview/views.py:48
+msgid "Unknown Error happened when creating data center!"
+msgstr ""
+
+#: overview/views.py:55
+msgid "Data center is initialized successfully!"
+msgstr "数据中心初始化成功"
+
+#: overview/views.py:75 overview/views.py:101
+msgid "Unknown Error happened when creating flavors!"
+msgstr "创建规格失败"
+
+#: overview/views.py:78 overview/views.py:104
+msgid "Flavors are initialized successfully!"
+msgstr "规格更新成功"
 
 #: volume/models.py:10
 msgid "Volume name"
@@ -1187,48 +1553,52 @@ msgstr "容量型"
 msgid "Performance"
 msgstr "性能型"
 
-#: volume/views.py:53
-msgid "Creating Volume"
-msgstr "创建中"
-
-#: volume/views.py:58
+#: volume/views.py:58 volume/views.py:65
 msgid "Volume create error"
 msgstr "创建磁盘成功"
 
-#: volume/views.py:70
+#: volume/views.py:60
+msgid "Creating Volume"
+msgstr "创建中"
+
+#: volume/views.py:77
 msgid "Volume update success"
 msgstr "更新磁盘成功"
 
-#: volume/views.py:72
+#: volume/views.py:79
 msgid "No select Volume "
 msgstr "请选择磁盘"
 
-#: volume/views.py:75
+#: volume/views.py:82
 msgid "Volume update error"
 msgstr "更新磁盘失败"
 
-#: volume/views.py:87
+#: volume/views.py:94
 msgid "Unknown volume action"
 msgstr "未知的磁盘操作"
 
-#: volume/views.py:90
+#: volume/views.py:97
 msgid "Volume action error"
 msgstr "操作失败"
 
-#: volume/views.py:105
+#: volume/views.py:112
 msgid "Attaching volume"
 msgstr "挂载中"
 
-#: volume/views.py:112
+#: volume/views.py:119
 msgid "Detaching volume"
 msgstr "卸载中"
 
-#: volume/views.py:117
+#: volume/views.py:124
 #, python-format
 msgid "Volume attached to instance,instance:%(instance)s"
 msgstr "磁盘已挂载到云主机:%(instance)s"
 
-#: volume/views.py:122
+#: volume/views.py:136
+msgid "Deleting Volume error"
+msgstr "删除磁盘失败"
+
+#: volume/views.py:140
 msgid "Deleting Volume"
 msgstr "删除中"
 

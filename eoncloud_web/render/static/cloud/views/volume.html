@@ -68,7 +68,7 @@
                                     <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
                                             aria-expanded="false"><i class="fa fa-angle-down"></i></button>
                                     <ul role="menu" class="dropdown-menu">
-                                        <li ng-class="{'disabled-link': volume.status!=2}">
+                                        <li ng-class="{'disabled-link': volume.status !=2}">
                                             <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=2}"
                                                ng-click="modal_attach_to_instance(volume)">
                                                 <i class="fa fa-hdd-o"></i>

@@ -70,7 +70,7 @@ def delete_action(request):
         if network.is_default:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Default network can not be deleted')})
         # Was unable to delete the use of the network
-        if not check_network_is_use:
+        if check_network_is_use(network.id):
             return Response({"OPERATION_STATUS": 0, "MSG": _('Was unable to delete the use of the network')})
         if not network.network_id:
             network.deleted = True
@@ -166,14 +166,14 @@ def network_attach_router_view(request):
 def subnet_list_view(request):
     query_set = Subnet.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"],
                                       status=NETWORK_STATE_ACTIVE)
-    serializer = SubnetSerializer(query_set,many=True)
+    serializer = SubnetSerializer(query_set, many=True)
     return Response(serializer.data)
 
 
 def check_network_is_use(network_id):
     subnet_set = Subnet.objects.filter(network=network_id, deleted=False)
     instance_set = Instance.objects.filter(network_id=network_id, deleted=False)
-    if subnet_set is None or instance_set is None:
+    if subnet_set or instance_set:
         return True
     return False
 

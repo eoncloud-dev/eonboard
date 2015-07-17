@@ -9,9 +9,9 @@ from biz.instance.models import Instance
 from biz.account.models import Operation
 from .serializer import VolumeSerializer
 from .settings import VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING, VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE, \
-    VOLUME_STATE_DELETING, VOLUME_STATE_ERROR
+    VOLUME_STATE_DELETING, VOLUME_STATE_ERROR, VOLUME_STATE_IN_USE
 
-from cloud.volume_task import volume_create_task,volume_delete_action_task
+from cloud.volume_task import volume_create_task,volume_delete_action_task, volume_get
 from cloud.instance_task import volume_attach_or_detach_task
 from django.utils.translation import ugettext_lazy as _
 
@@ -52,13 +52,13 @@ def volume_create_view(request, format=None):
             volume = serializer.save()
             try:
                 volume_create_task.delay(volume)
+                Operation.log(volume, obj_name=volume.name, action="create", result=1)
+                return Response({"OPERATION_STATUS": 1, "MSG": _('Creating Volume')}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 LOG.error(e)
                 volume.status = VOLUME_STATE_ERROR
                 volume.save()
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Volume create error')})
-            Operation.log(volume, obj_name=volume.name, action="create", result=1)
-            return Response({"OPERATION_STATUS": 1, "MSG": _('Creating Volume')}, status=status.HTTP_201_CREATED)
         else:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
@@ -109,15 +109,27 @@ def volume_attach_or_detach(data, volume, action):
         instance = Instance.objects.get(pk=data.get('instance_id'))
         volume.save()
         Operation.log(volume, obj_name=volume.name, action="attach_volume", result=1)
-        volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
-        return Response({"OPERATION_STATUS": 1, "MSG": _('Attaching volume')}, status=status.HTTP_201_CREATED)
+        try:
+            volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Attaching volume')}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            volume.status = VOLUME_STATE_AVAILABLE
+            volume.save()
+            LOG.error("Attach volume error ,msg: %s" % e)
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Attach volume error')}, status=status.HTTP_201_CREATED)
     elif 'detach' == action:
         volume.status = VOLUME_STATE_DOWNLOADING
         instance = Instance.objects.get(pk=volume.instance.id)
         volume.save()
         Operation.log(volume, obj_name=volume.name, action="detach_volume", result=1)
-        volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
-        return Response({"OPERATION_STATUS": 1, "MSG": _('Detaching volume')}, status=status.HTTP_201_CREATED)
+        try:
+            volume_attach_or_detach_task.delay(instance=instance, volume=volume, action=action)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Detaching volume')}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            LOG.error("Detach volume error , msg: % s" % e)
+            volume.status = VOLUME_STATE_IN_USE
+            volume.save()
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Detach volume error')}, status=status.HTTP_201_CREATED)
 
 
 def delete_action(volume):
@@ -130,6 +142,7 @@ def delete_action(volume):
         try:
             volume_delete_action_task.delay(volume)
             Operation.log(volume, obj_name=volume.name, action="terminate", result=1)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Deleting Volume')}, status=status.HTTP_200_OK)
         except Exception as e:
             LOG.error("Delete volume error,msg:%s" % e)
             volume.status = VOLUME_STATE_ERROR

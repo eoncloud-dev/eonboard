@@ -32,11 +32,11 @@ def firewall_create_view(request, **kwargs):
         Operation.log(firewall, obj_name=firewall.name, action="create", result=1)
         try:
             security_group_create_task.delay(firewall)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Creating firewall')}, status=status.HTTP_201_CREATED)
         except Exception as e:
             firewall.delete()
             LOG.error("Create firewall error, msg:%s" % e)
             return Response({"OPERATION_STATUS": 0, "MSG": _('Firewall create error')})
-        return Response({"OPERATION_STATUS": 1, "MSG": _('Creating firewall')}, status=status.HTTP_201_CREATED)
     else:
         return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
 

@@ -45,7 +45,7 @@
                         </div>
                         <div class="portlet-body">
                             <div  class="dataTables_wrapper no-footer">
-                            <table ng-table="loadbalancer_table"
+                                <table ng-table="loadbalancer_table"
                                    class="table table-striped table-bordered table-advance table-hover">
                                 <tbody>
                                     <tr ng-repeat="balancer in $data " >
@@ -56,8 +56,10 @@
                                             <a href="#/lbaas/{[{balancer.id}]}">{[{ balancer.name }]}</a></td>
                                         <td data-title="'balancer.description' | i18next">{[{ balancer.description }]}</td>
                                         <td data-title="'balancer.vip_address' | i18next">
-                                            <div ng-if="balancer.vip!=null && balancer.vip_info.address !='' && balancer.vip_info.address !=null">{[{ 'balancer.private_ip' | i18next }]}:{[{ balancer.vip_info.address }]}</div>
-                                            <div ng-if="balancer.vip!=null &&  balancer.vip_info.public_address !='' && balancer.vip_info.public_address !=null">{[{ 'balancer.public_ip' | i18next }]}:{[{ balancer.vip_info.public_address }]}</div>
+                                            {[{ balancer.vip_info.address }]}
+                                        </td>
+                                        <td data-title="'balancer.public_ip' | i18next">
+                                            {[{ balancer.vip_info.public_address }]}
                                         </td>
                                         <td data-title="'balancer.port' | i18next">{[{ balancer.vip_info.protocol_port }]}
                                         </td>
@@ -93,8 +95,8 @@
                                                             {[{ 'balancer.add_member' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link': (balancer.vip) || status_desc[balancer.status][1] == 0}" >
-                                                        <a ng-class="{'disabled': (balancer.vip ) || status_desc[balancer.status][1] == 0}"
+                                                    <li ng-class="{'disabled-link': ((balancer.vip) || status_desc[balancer.status][1] == 0) || balancer.status != 1}" >
+                                                        <a ng-class="{'disabled': ((balancer.vip) || status_desc[balancer.status][1] == 0) || balancer.status != 1}"
                                                            href="javascript:void(0);" ng-click="modal_create_vip(balancer)" role="button">
                                                             {[{ 'balancer.create_vip_title' | i18next }]}
                                                         </a>
@@ -123,13 +125,13 @@
                                                             {[{ 'balancer.unbind_public' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}">
-                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'attach')" role="button">
+                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0 || balancer.status != 1}">
+                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0 || balancer.status != 1}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'attach')" role="button">
                                                             {[{ 'balancer.attach_monitor' | i18next }]}
                                                         </a>
                                                     </li>
-                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}">
-                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'detach')" role="button">
+                                                    <li ng-class="{'disabled-link':status_desc[balancer.status][1] == 0 || balancer.status != 1}">
+                                                        <a ng-class="{'disabled-link':status_desc[balancer.status][1] == 0 || balancer.status != 1}" href="javascript:void(0);" ng-click="pool_monitor_assocation(balancer,'detach')" role="button">
                                                             {[{ 'balancer.detach_monitor' | i18next }]}
                                                         </a>
                                                     </li>
@@ -139,8 +141,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -252,7 +253,7 @@
                         </span>
                         <select class="form-control required"  name="subnet" ng-model="balancer.subnet" >
                             <option value="" selected>{[{'balancer.select' | i18next }]}</option>
-                            <option ng-repeat="subnet in subnets"  value="{[{subnet.id}]}">{[{subnet.address}]}</option>
+                            <option ng-repeat="subnet in subnets"  value="{[{subnet.id}]}">{[{subnet.network_info.name}]}({[{subnet.address}]})</option>
                         </select>
                     </div>
                 </div>

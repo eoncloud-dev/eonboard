@@ -43,9 +43,16 @@
                             VIP
                         </td>
                         <td class="col-md-3">
-                            <div ng-if="balancer.vip!=null && balancer.vip_info.address !='' && balancer.vip_info.address !=null">{[{ 'balancer.private_ip' | i18next }]}:{[{ balancer.vip_info.address }]}</div>
-                            <div ng-if="balancer.vip!=null &&  balancer.vip_info.public_address !='' && balancer.vip_info.public_address !=null">{[{ 'balancer.public_ip' | i18next }]}:{[{ balancer.vip_info.public_address }]}</div>
+                            {[{ balancer.vip_info.address }]}
                         </td>
+                        <td class="col-md-2">
+                            {[{ 'balancer.public_ip' | i18next }]}
+                        </td>
+                        <td class="col-md-3">
+                            {[{balancer.vip_info.public_address}]}
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="col-md-2">
                             {[{ 'balancer.port' | i18next }]}
                         </td>

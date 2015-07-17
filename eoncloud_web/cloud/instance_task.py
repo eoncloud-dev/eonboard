@@ -307,12 +307,16 @@ def volume_attach_or_detach_task(instance, volume, action, **kwargs):
         while True:
             time.sleep(settings.INSTANCE_SYNC_INTERVAL_SECOND)
             cinder = volume_task.volume_get(volume)
-
             if cinder and cinder.status.upper() == u'ERROR':
                 volume.status = VOLUME_STATE_ERROR
                 volume.save()
                 break
-            if cinder and cinder.status.upper() == u'IN-USE':
+            elif cinder and cinder.status.upper() == u'ERROR_ATTACHING':
+                volume.status = VOLUME_STATE_ERROR
+                volume.instance = instance
+                volume.save()
+                break
+            elif cinder and cinder.status.upper() == u'IN-USE':
                 volume.status = VOLUME_STATE_IN_USE
                 volume.instance = instance
                 volume.save()

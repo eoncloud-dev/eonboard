@@ -22,6 +22,11 @@ from biz.lbaas.models import BalancerPool
 from biz.lbaas.models import BalancerVIP
 from biz.floating.models import Floating
 
+from biz.lbaas.models import BalancerPool
+from biz.lbaas.models import BalancerVIP
+
+from biz.floating.models import Floating
+
 from api import neutron
 from api import network
 

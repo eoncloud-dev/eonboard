@@ -9,7 +9,7 @@
 CloudApp.controller('DataCenterController',
     function($rootScope, $scope, $filter, $modal, $i18next,
              CommonHttpService, ToastrService, ngTableParams,
-            DataCenter, CheckboxGroup, ngTableHelper){
+            DataCenter, ngTableHelper){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -19,7 +19,6 @@ CloudApp.controller('DataCenterController',
         $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.data_centers = [];
-        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.data_centers);
 
         $scope.data_center_table = new ngTableParams({
                 page: 1,
@@ -29,7 +28,6 @@ CloudApp.controller('DataCenterController',
                 getData: function ($defer, params) {
                     DataCenter.query(function (data) {
                         $scope.data_centers = ngTableHelper.paginate(data, $defer, params);
-                        checkboxGroup.syncObjects($scope.data_centers);
                     });
                 }
             });
@@ -50,51 +48,6 @@ CloudApp.controller('DataCenterController',
                     data_center: function(){return data_center;}
                 }
             });
-        };
-
-        var deleteDataCenters = function(ids){
-
-            bootbox.confirm($i18next("data_center.confirm_delete"), function (confirmed) {
-
-                if(!confirmed){
-                    return;
-                }
-
-                if(typeof ids == 'function'){
-                    ids = ids();
-                }
-
-                CommonHttpService.post("/api/data-centers/batch-delete/", {ids: ids})
-                    .then(function(data){
-                        if (data.success) {
-                            ToastrService.success(data.msg, $i18next("success"));
-                            $scope.data_center_table.reload();
-                            checkboxGroup.uncheck();
-                        } else {
-                            ToastrService.error(data.msg, $i18next("op_failed"));
-                        }
-                    });
-            });
-        };
-
-        $scope.batchDelete = function(){
-
-            deleteDataCenters(function(){
-                var ids = [];
-
-                checkboxGroup.forEachChecked(function(data_center){
-
-                    if(data_center.checked){
-                        ids.push(data_center.id);
-                    }
-                });
-
-                return ids;
-            });
-        };
-
-        $scope.delete = function(data_center){
-            deleteDataCenters([data_center.id]);
         };
     })
     .controller('DataCenterCreateController',

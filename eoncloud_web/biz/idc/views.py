@@ -124,7 +124,7 @@ def is_host_unique(request):
 
     host = request.query_params['host']
 
-    pk = request.query_params.get('pk', None)
+    pk = request.query_params.get('id', None)
 
     queryset = DataCenter.objects.filter(host=host)
 

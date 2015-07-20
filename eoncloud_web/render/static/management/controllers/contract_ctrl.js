@@ -9,7 +9,7 @@
 CloudApp.controller('ContractController',
     function ($rootScope, $scope, $filter,
               $modal, $i18next, ngTableParams, Contract,
-              CommonHttpService, ToastrService, CheckboxGroup,
+              CommonHttpService, ToastrService,
               ngTableHelper) {
 
         $scope.$on('$viewContentLoaded', function () {
@@ -20,7 +20,6 @@ CloudApp.controller('ContractController',
         $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.contracts = [];
-        var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.contracts);
 
         $scope.contract_table = new ngTableParams({
             page: 1,
@@ -30,7 +29,6 @@ CloudApp.controller('ContractController',
             getData: function ($defer, params) {
                 Contract.query(function (data) {
                     $scope.contracts = ngTableHelper.paginate(data, $defer, params);
-                    checkboxGroup.syncObjects($scope.contracts);
                 });
             }
         });
@@ -63,50 +61,6 @@ CloudApp.controller('ContractController',
                     contract: function(){return contract}
                 }
             });
-        };
-
-        var deleteContracts = function(contractIds){
-
-            bootbox.confirm($i18next("contract.confirm_delete"), function(confirmed){
-
-                if(!confirmed){
-                    return;
-                }
-
-                if(typeof contractIds == 'function'){
-                    contractIds = contractIds();
-                }
-
-                CommonHttpService.post("/api/contracts/batch-delete/", {contract_ids: contractIds})
-                    .then(function(data){
-                        if (data.success) {
-                            ToastrService.success(data.msg, $i18next("success"));
-                            checkboxGroup.uncheck();
-                            $scope.contract_table.reload();
-                        } else {
-                            ToastrService.error(data.msg, $i18next("op_failed"));
-                        }
-                    });
-            });
-        };
-
-        $scope.batchDelete = function(){
-            deleteContracts(function(){
-                var contractIds = [];
-
-                checkboxGroup.forEachChecked(function(contract){
-
-                    if(contract.checked){
-                        contractIds.push(contract.id);
-                    }
-                });
-
-                return contractIds;
-            });
-        };
-
-        $scope.delete = function(contract){
-                deleteContracts([contract.id]);
         };
 
         $scope.manage_quota = function(contract){

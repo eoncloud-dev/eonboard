@@ -13,19 +13,7 @@
                 <div class="timeline-badge">
                     <div class="timeline-icon">
                         <i class="font-green-haze"
-                        ng-class="{'icon-rocket': op.resource == 'Instance',
-                                    'icon-equalizer': op.resource == 'Network',
-                                    'icon-globe': op.resource == 'Floating',
-                                    'icon-shield ': op.resource == 'Firewall',
-                                    'icon-vector': op.resource == 'FirewallRules',
-                                    'icon-layers': op.resource == 'Backup',
-                                    'icon-disc': op.resource == 'Volume',
-                                    'icon-social-dropbox': op.resource == 'BalancerPool',
-                                    'icon-users': op.resource == 'BalancerMember',
-                                    'icon-globe': op.resource == 'BalancerVIP',
-                                    'icon-eye': op.resource == 'BalancerMonitor',
-                                    'icon-size-fullscreen': op.resource == 'Router'}"
-                        >
+                        ng-class="operation_icon(op)">
                         </i>
                     </div>
                 </div>

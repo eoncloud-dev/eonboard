@@ -1,0 +1,88 @@
+
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <ul class="nav nav-tabs" style="float: left;">
+            <li class="active">
+                <a data-toggle="tab" href="javascript:void(0)"
+                   data-ng-click="showAll()"
+                   aria-expanded="true">
+                    {[{ 'notification.all' | i18next }]}
+                </a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="javascript:void(0)"
+                   data-ng-click="showUnreadList()"
+                   aria-expanded="false">
+                    {[{ 'notification.unread' | i18next }]}
+                </a>
+            </li>
+            <li class="">
+                <a data-toggle="tab" href="javascript:void(0)"
+                   data-ng-click="showReadList()"
+                   aria-expanded="false">
+                    {[{ 'notification.read' | i18next }]}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <ul class="feeds">
+            <li data-ng-repeat="notification in notifications">
+                <a href="" data-ng-click="read(notification)">
+                    <div class="col1" style="width: 98%">
+                        <div class="cont">
+                            <div class="cont-col1">
+                                <span class="label label-sm label-icon label-info"
+                                        data-ng-if="notification.is_info">
+                                    <i class="fa fa-info"></i>
+                                </span>
+                                <span class="label label-sm label-icon label-success"
+                                      data-ng-if="notification.is_success">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                <span class="label label-sm label-icon label-default"
+                                      data-ng-if="notification.is_error">
+                                    <i class="fa fa-frown-o"></i>
+                                </span>
+                                <span class="label label-sm label-icon label-warning"
+                                      data-ng-if="notification.is_warning">
+                                    <i class="fa fa-exclamation-triangle "></i>
+                                </span>
+                                <span class="label label-sm label-icon label-danger"
+                                      data-ng-if="notification.is_danger">
+                                    <i class="fa fa-bolt"></i>
+                                </span>
+                            </div>
+                            <div class="cont-col2">
+                                <div class="desc"> {[{ notification.title }]} </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <div class="col2">
+                    <div class="date" style="width: 110px; margin-left: -50px;">
+                        {[{ notification.time_ago }]}
+                    </div>
+                </div>
+                <a href="javascript: void(0)" data-ng-click="delete(notification)"><i class="fa fa-trash"></i></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- BEGIN TEMPLATE DETAIL -->
+<script type="text/ng-template" id="detail.html">
+    <div class="modal-header">
+       <div class="modal-title"> {[{ notification.title }]}</div>
+    </div>
+    <div class="modal-body">
+        <p style="width: 100%; word-wrap: break-word;"> {[{ notification.content }]} </p>
+        <p style="text-align: right;"> {[{ notification.create_date }]} </p>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="close()">
+            {[{ 'close' | i18next }]}
+        </a>
+    </div>
+</script>
+<!-- END TEMPLATE DETAIL -->

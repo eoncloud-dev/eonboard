@@ -8,7 +8,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -20,18 +19,22 @@ from django.utils import timezone
 from django.contrib.auth.models import check_password
 
 from biz.account.forms import CloudUserCreateForm
-from biz.account.models import Contract, Operation, Quota, UserProxy, QUOTA_ITEM
+from biz.account.settings import QUOTA_ITEM, NotificationLevel
+from biz.account.models import (Contract, Operation, Quota,
+                                UserProxy, Notification)
 from biz.account.serializer import (ContractSerializer, OperationSerializer,
-                                    UserSerializer, QuotaSerializer, DetailedUserSerializer)
+                                    UserSerializer, QuotaSerializer,
+                                    DetailedUserSerializer, NotificationSerializer)
 from biz.account.utils import get_quota_usage
-from biz.idc.models import DataCenter
+from biz.idc.models import DataCenter, UserDataCenter
 from eoncloud_web.pagination import PagePagination
+from eoncloud_web.decorators import require_POST, require_GET
+from eoncloud_web.shortcuts import retrieve_params
 
 LOG = logging.getLogger(__name__)
 
 
 def signup(request, template_name="signup.html"):
-
     error = None
     if request.method == "GET":
         userCreationForm = CloudUserCreateForm()
@@ -48,24 +51,24 @@ def signup(request, template_name="signup.html"):
         error = userCreationForm.errors
 
     return render_to_response(template_name, RequestContext(request, {
-            "MCC": settings.MCC,
-            "SOURCE": settings.SOURCE,
-            "USER_TYPE": settings.USER_TYPE,
-            "BRAND": settings.BRAND,
-            "userCreationForm": userCreationForm,
-            "error": error,
+        "MCC": settings.MCC,
+        "SOURCE": settings.SOURCE,
+        "USER_TYPE": settings.USER_TYPE,
+        "BRAND": settings.BRAND,
+        "userCreationForm": userCreationForm,
+        "error": error,
     }))
 
 
 def signup_success(request, template_name="signup_success.html"):
     return render_to_response(template_name, RequestContext(request, {
-            "BRAND": settings.BRAND, 
+        "BRAND": settings.BRAND,
     }))
 
 
 def find_password(request, template_name="find_password.html"):
     return render_to_response(template_name, RequestContext(request, {
-            "BRAND": settings.BRAND, 
+        "BRAND": settings.BRAND,
     }))
 
 
@@ -127,7 +130,6 @@ class OperationList(generics.ListAPIView):
 
 @api_view()
 def operation_filters(request):
-
     resources = Operation.objects.values('resource').distinct()
 
     for data in resources:
@@ -205,7 +207,6 @@ def delete_contracts(request):
         contract_ids = request.data.getlist('contract_ids[]')
 
         for contract_id in contract_ids:
-
             contract = Contract.objects.get(pk=contract_id)
             contract.deleted = True
             contract.save()
@@ -221,7 +222,6 @@ def delete_contracts(request):
 
 
 class UserList(generics.ListAPIView):
-
     queryset = UserProxy.normal_users
     serializer_class = UserSerializer
 
@@ -231,12 +231,10 @@ class UserList(generics.ListAPIView):
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = UserProxy.normal_users.all()
     serializer_class = DetailedUserSerializer
 
     def perform_destroy(self, instance):
-
         instance.is_active = False
         instance.save()
 
@@ -254,7 +252,6 @@ def deactivate_user(request):
 
 @api_view(['POST'])
 def activate_user(request):
-
     pk = request.data['id']
 
     user = User.objects.get(pk=pk)
@@ -266,7 +263,6 @@ def activate_user(request):
 
 @api_view(["POST"])
 def change_password(request):
-
     pk = request.data['id']
     old_password = request.data['old_password']
     new_password = request.data['new_password']
@@ -290,23 +286,19 @@ def change_password(request):
 
 
 class QuotaList(generics.ListAPIView):
-
     queryset = Quota.living
     serializer_class = QuotaSerializer
 
     def list(self, request, *args, **kwargs):
-
         queryset = self.get_queryset()
 
         if 'contract_id' in request.query_params:
-
             queryset = queryset.filter(contract__id=request.query_params['contract_id'])
 
         return Response(self.serializer_class(queryset, many=True).data)
 
 
 class QuotaDetail(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = Quota.living
     serializer_class = QuotaSerializer
 
@@ -385,4 +377,68 @@ def delete_quota(request):
 
 @api_view(["GET"])
 def get_config_view(request):
-    return Response(settings.SITE_CONFIG) 
+    return Response(settings.SITE_CONFIG)
+
+
+@require_GET
+def notification_options(request):
+    return Response(NotificationLevel.OPTIONS)
+
+
+@require_POST
+def broadcast(request):
+    receiver_ids = request.data.getlist('receiver_ids[]')
+    level, title, content = retrieve_params(request.data,
+                                            'level', 'title', 'content')
+
+    receivers = UserProxy.normal_users.filter(is_active=True)
+    if receiver_ids:
+        receivers = UserProxy.normal_users.filter(pk__in=receiver_ids)
+
+    for receiver in receivers:
+        Notification.create(receiver, title, content, level)
+
+    return Response({"success": True,
+                     "msg": _('Notification is sent successfully!')})
+
+
+@require_POST
+def data_center_broadcast(request):
+    dc_id, level, title, content = retrieve_params(
+        request.data, 'data_center', 'level', 'title', 'content')
+
+    for receiver in UserProxy.normal_users. \
+            filter(userdatacenter__data_center__pk=dc_id, is_active=True):
+        Notification.create(receiver, title, content, level)
+
+    return Response({"success": True,
+                     "msg": _('Notification is sent successfully!')})
+
+
+class NotificationList(generics.ListAPIView):
+    queryset = Notification.living.all()
+    serializer_class = NotificationSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(receiver=request.user).order_by('-create_date')
+        return Response(self.serializer_class(queryset, many=True).data)
+
+
+class NotificationDetail(generics.RetrieveDestroyAPIView):
+    queryset = Notification.living.all()
+    serializer_class = NotificationSerializer
+
+    def perform_destroy(self, instance):
+        instance.fake_delete()
+
+
+@require_GET
+def notification_status(request):
+    num = Notification.living.filter(receiver=request.user, is_read=False).count()
+    return Response({"num": num})
+
+
+@require_POST
+def mark_read(request, pk):
+    Notification.objects.get(pk=pk).mark_read()
+    return Response(status=status.HTTP_200_OK)

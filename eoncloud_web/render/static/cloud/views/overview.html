@@ -11,6 +11,10 @@
 		</li>
 	</ul>	
 </div-->
+<div class="alert alert-danger alert-dismissable"
+        data-ng-if="notificationNum > 0">
+    <p data-ng-i18next="[html:i18next]({num: notificationNum})overview.new_message_tip">
+</div>
 <h1 class="page-title">
     {[{ 'sidebar.overview' | i18next }]}
 </h1>

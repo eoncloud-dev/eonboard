@@ -260,4 +260,52 @@ angular.module('cloud.services', [])
             countPages: countPages,
             paginate: paginate
         };
+    })
+
+.factory('passwordModal', ['$modal', function($modal){
+
+        var openPasswordModal = function(){
+            $modal.open({
+                templateUrl: '/static/assets/global/views/change-password.html',
+                controller: 'ChangePasswordController',
+                backdrop: "static",
+                size: 'lg'
+            });
+        };
+
+        return {open: openPasswordModal};
+    }])
+
+.controller('ChangePasswordController',
+    function($scope, $modalInstance, $i18next, $window, $timeout, ngTableParams,
+         CommonHttpService, ValidationTool, ToastrService){
+
+            var form = null;
+
+            $scope.params = {old_password: '', new_password: '', confirm_password: ''};
+
+            $scope.cancel = $modalInstance.dismiss;
+
+            $modalInstance.rendered.then(function(){
+                form = ValidationTool.init('#passwordForm');
+            });
+
+            $scope.changePassword = function(){
+
+                if(!form.valid()){
+                    return;
+                }
+
+                CommonHttpService.post('/api/users/change-password/', $scope.params).then(function(result){
+                    if(result.success){
+                        ToastrService.success(result.msg, $i18next("success"));
+                        $modalInstance.close();
+                        $timeout(function(){
+                            window.location.href = "/login/";
+                        }, 5000);
+                    } else {
+                        ToastrService.error(result.msg, $i18next("op_failed"));
+                    }
+                });
+            }
     });

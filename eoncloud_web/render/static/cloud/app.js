@@ -66,14 +66,17 @@ CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, 
  ***/
 
 /* Setup Layout Part - Header */
-CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
-    $scope.$on('$includeContentLoaded', function () {
-        Layout.initHeader(); // init header
-    });
+CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', 'passwordModal',
+    function ($rootScope, $scope, $http, passwordModal) {
+        $scope.$on('$includeContentLoaded', function () {
+            Layout.initHeader(); // init header
+        });
 
-    $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
-        $rootScope.current_user = data;
-    });
+        $scope.passwordModal = passwordModal;
+
+        $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
+            $rootScope.current_user = data;
+        });
 }]);
 
 /* Setup Layout Part - Sidebar */
@@ -461,40 +464,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             })
         ;
     }]);
-CloudApp.factory('ValidationTool', function(){
-
-    var defaultConfig = {
-        onkeyup: false,
-        doNotHideMessage: true,
-        errorElement: 'span',
-        errorClass: 'help-block help-block-error',
-        focusInvalid: false,
-        errorPlacement: function (error, element) {
-            error.insertAfter($(element).closest('.input-group'));
-        },
-
-        highlight: function (element) {
-            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-        },
-
-        unhighlight: function (element) {
-            $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-        }
-    };
-
-    return {
-        init: function(selector, config){
-            for(var attr in defaultConfig){
-                if(config[attr] === undefined){
-                    config[attr] = defaultConfig[attr];
-                }
-            }
-            $(selector).validate(config);
-
-            return $(selector);
-        }
-    }
-});
 
 /* Init global settings and run the app */
 CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "CommonHttpService",

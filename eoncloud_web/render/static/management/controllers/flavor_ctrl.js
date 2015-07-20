@@ -5,7 +5,7 @@
  **/
 
 CloudApp.controller('FlavorController',
-    function($rootScope, $scope, $filter, $modal, $i18next,
+    function($rootScope, $scope, $filter, $modal, $i18next, $ngBootbox,
              CommonHttpService, ToastrService, ngTableParams, ngTableHelper,
              Flavor, CheckboxGroup){
 
@@ -52,11 +52,7 @@ CloudApp.controller('FlavorController',
 
         var deleteFlavors = function(ids){
 
-            bootbox.confirm($i18next("flavor.confirm_delete"), function(confirmed){
-
-                if(!confirmed){
-                    return;
-                }
+            $ngBootbox.confirm($i18next("flavor.confirm_delete")).then(function(){
 
                 if(typeof ids == 'function'){
                     ids = ids();

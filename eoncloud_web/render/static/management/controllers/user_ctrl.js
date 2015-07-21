@@ -85,20 +85,6 @@ CloudApp.controller('UserController',
             });
         };
 
-        $scope.openPasswordModal = function(user){
-            $modal.open({
-                templateUrl: 'change-password.html',
-                controller: 'ChangePasswordController',
-                backdrop: "static",
-                size: 'lg',
-                resolve: {
-                    user: function(){
-                        return user;
-                    }
-                }
-            });
-        };
-
         var openBroadcastModal = function(users){
             $modal.open({
                 templateUrl: 'broadcast.html',
@@ -139,8 +125,6 @@ CloudApp.controller('UserController',
                 }
             });
         };
-
-
     })
 
     .controller('UserUdcListController',
@@ -159,37 +143,6 @@ CloudApp.controller('UserController',
                         });
                 }
             });
-    })
-
-    .controller('ChangePasswordController',
-        function($scope, $modalInstance, $i18next, ngTableParams,
-                 CommonHttpService, ValidationTool, ToastrService,
-                 user){
-
-            var form = null;
-            $scope.user = user = {id: user.id, old_password: '', new_password: '', confirm_password: ''};
-
-            $scope.cancel = $modalInstance.dismiss;
-
-            $modalInstance.rendered.then(function(){
-                form = ValidationTool.init('#passwordForm');
-            });
-
-            $scope.changePassword = function(){
-
-                if(!form.valid()){
-                    return;
-                }
-
-                CommonHttpService.post('/api/users/change-password/', user).then(function(result){
-                    if(result.success){
-                        ToastrService.success(result.msg, $i18next("success"));
-                        $modalInstance.close();
-                    } else {
-                        ToastrService.error(result.msg, $i18next("op_failed"));
-                    }
-                });
-            }
     })
 
     .controller('BroadcastController',

@@ -70,14 +70,18 @@ CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, 
  ***/
 
 /* Setup Layout Part - Header */
-CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', function ($rootScope, $scope, $http) {
-    $scope.$on('$includeContentLoaded', function () {
-        Layout.initHeader(); // init header
-    });
+CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', 'passwordModal',
+    function ($rootScope, $scope, $http, passwordModal) {
 
-    $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
-        $rootScope.current_user = data;
-    });
+        $scope.$on('$includeContentLoaded', function () {
+            Layout.initHeader(); // init header
+        });
+
+        $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
+            $rootScope.current_user = data;
+        });
+
+        $scope.passwordModal = passwordModal;
 }]);
 
 /* Setup Layout Part - Sidebar */

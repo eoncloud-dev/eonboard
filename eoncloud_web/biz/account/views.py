@@ -263,7 +263,8 @@ def activate_user(request):
 
 @api_view(["POST"])
 def change_password(request):
-    pk = request.data['id']
+
+    user = request.user
     old_password = request.data['old_password']
     new_password = request.data['new_password']
     confirm_password = request.data['confirm_password']
@@ -271,18 +272,13 @@ def change_password(request):
     if new_password != confirm_password:
         return Response({"success": False, "msg": _("The new password doesn't match confirm password!")})
 
-    try:
-        user = UserProxy.objects.get(pk=pk)
-    except UserProxy.DoesNotExist:
-        return Response({"success": False, "msg": _("The user is not founded!")})
-
     if not check_password(old_password, user.password):
         return Response({"success": False, "msg": _("The original password is not correct!")})
 
     user.set_password(new_password)
     user.save()
 
-    return Response({"success": True, "msg": _("Password has been changed!")})
+    return Response({"success": True, "msg": _("Password has been changed! Please login in again.")})
 
 
 class QuotaList(generics.ListAPIView):

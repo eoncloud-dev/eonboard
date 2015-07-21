@@ -165,6 +165,32 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
 
             })
 
+            // instance.detail
+            .state("instance_detail", {
+                url: "/instance-detail/:instance_id/",
+                templateUrl: "/static/cloud/views/instance_detail.html",
+                data: {pageTitle: 'Instance'},
+                controller: "InstanceDetailController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/instance_detail_ctl.js'
+                            ]
+                        });
+                    }],
+                    instance: function($stateParams, CommonHttpService){
+                        return CommonHttpService.get("/api/instances/" + $stateParams.instance_id + "/");
+                    },
+                    status_desc: function (CommonHttpService) {
+                        return CommonHttpService.get("/api/instances/status/")
+                    }
+                }
+
+            })
+
             // image
             .state("image", {
                 url: "/image/",
@@ -196,7 +222,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-
                                 '/static/cloud/controllers/volume_ctl.js'
                             ]
                         });

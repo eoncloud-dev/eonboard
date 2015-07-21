@@ -37,6 +37,22 @@ class InstanceList(generics.ListCreateAPIView):
         raise
 
 
+class InstanceDetail(generics.RetrieveAPIView):
+    queryset = Instance.objects.all().filter(deleted=False)
+    serializer_class = InstanceSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            obj = self.get_object()
+            if obj and obj.user == request.user:
+                serializer = InstanceSerializer(obj)
+                return Response(serializer.data)
+            else:
+                raise
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class FlavorList(generics.ListCreateAPIView):
     queryset = Flavor.objects.all()
     serializer_class = FlavorSerializer

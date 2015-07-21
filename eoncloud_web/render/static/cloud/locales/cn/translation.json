@@ -112,7 +112,11 @@
     "vnc_prompt": "如果VNC终端没有响应，请点击下方灰色的状态栏然后点击键盘。",
     "backup": "备份",
     "os_volume": "系统盘",
-    "backup_name_error": "请输入正确的备份名称"
+    "backup_name_error": "请输入正确的备份名称",
+    "detail": "云主机详情",
+    "overview": "概览",
+    "log": "控制台输出",
+    "monitor": "监控"
   },
 
   "flavor": {

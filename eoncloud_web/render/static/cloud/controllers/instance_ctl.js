@@ -14,8 +14,11 @@ CloudApp.controller('InstanceController',
         $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.status_desc = status_desc;
-        //$scope.instance_list = Instance.query();
-        $scope.current_instance_data = []
+        $scope.current_instance_data = [];
+
+        $scope.go_detail = function(ins){
+            $state.go('instance_detail', {"instance_id": ins.id});
+        };
 
         $scope.instance_table = new ngTableParams({
             page: 1,

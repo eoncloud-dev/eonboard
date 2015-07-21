@@ -47,9 +47,12 @@
                                 <input type="checkbox" ng-model="checkboxes.items[instance.id]"/>
                             </td>
                             <td width="50" data-title="'ID'">{[{ instance.id}]}</td>
-                            <td width="100" data-title="'instance.name' | i18next">{[{ instance.name}]}</td>
+                            <td width="100" data-title="'instance.name' | i18next">
+                                <a class="btn default blue-stripe btn-xs" ng-click="go_detail(instance)">
+                                    <i class="fa fa-desktop"></i> {[{ instance.name }]} </a>
+                            </td>
                             <td data-title="'instance.image' | i18next">
-                                <a class="btn default blue-stripe btn-xs" ng-href="#/image/">
+                                <a class="btn default yellow-stripe btn-xs" ng-href="#/image/">
                                     <i class="fa fa-circle-thin"></i> {[{ instance.image_info.name }]} </a>
                             </td>
                             <td data-title="'instance.flavor' | i18next">{[{ instance.cpu }]}CPU/ {[{ instance.memory

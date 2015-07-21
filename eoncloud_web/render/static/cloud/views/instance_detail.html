@@ -1,0 +1,49 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="fa fa-desktop"></i>
+            <a ng-href="#/instance/">{[{ "sidebar.instance"|i18next }]}</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            {[{ instance.name }]}
+        </li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet">
+            <div class="portlet-body">
+                <h3>{[{ 'instance.detail' | i18next }]}: {[{ instance.name }]}</h3>
+                    <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a ng-href="\#tab_instance_info" data-toggle="tab">
+                            {[{ 'instance.overview' | i18next }]} </a>
+                        </li>
+                        <li>
+                            <a ng-href="\#tab_instance_log" data-toggle="tab">
+                            {[{ 'instance.log' | i18next }]} </a>
+                        </li>
+                        <li>
+                            <a ng-href="\#tab_instance_monitor" data-toggle="tab">
+                            {[{ 'instance.monitor' | i18next }]} </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active in" id="tab_instance_info">
+            				<div data-ng-include="'/static/cloud/views/instance_detail_info.html'"></div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_instance_log">
+            				<div data-ng-include="'/static/cloud/views/instance_detail_log.html'"></div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_instance_monitor">
+            				<div data-ng-include="'/static/cloud/views/instance_detail_monitor.html'"></div>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

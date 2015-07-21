@@ -1,6 +1,5 @@
 {
   "name": "名称",
-  "profile": "基础信息",
   "count": "数量",
   "filter": "过滤器",
   "confirm": "确认",
@@ -142,10 +141,9 @@
     "create_success_and_waiting": "正在创建云硬盘",
     "update_success": "更新云硬盘成功",
     "attach_to_instance": "挂载云硬盘到主机",
-    "attach_from_instance": "卸载云硬盘",
+    "detach_from_instance": "卸载云硬盘",
     "confirm_delete": "确认删除云硬盘",
     "attach": "挂载",
-    "detach_from_instance": "卸载云硬盘",
     "detach": "卸载",
     "backup": "备份",
     "unselect_instance_error": "请选择一个云主机",
@@ -261,10 +259,6 @@
     "remote": "remote"
   },
 
-  "validate": {
-    "field_required": "字段不允许为空。"
-  },
-
   "sidebar": {
     "cloud": "云平台",
     "cloud_management": "云平台管理",
@@ -299,7 +293,7 @@
   "overview": {
     "quota_usage": "配额使用情况",
     "contract_info": "合同详情",
-    "new_message_tip": "You have <strong>__num__</strong> messages not read yet! Click <a class=\"alert-link\" href=\"#/notification/\"> here </a> to check."
+    "new_message_tip": "您有<strong>__num__</strong> 条未读消息! 点击 <a class=\"alert-link\" href=\"#/notification/\"> 这里 </a> 查看．"
   },
 
   "quota": {
@@ -338,9 +332,6 @@
     "select_user": "请选择用户",
     "select_udc": "请选择数据中心",
     "manage_quota": "管理配额",
-    "add_quota": "添加资源",
-    "confirm_delete": "确认删除这些合同吗？",
-    "confirm_delete_quota": "确认要删除这种资源吗？",
     "help": {
         "user_data_center": "这里只显示没有合同的用户数据中心",
         "date_range": "结束日期必须晚于起始日期"

@@ -18,9 +18,9 @@ from django.utils.translation import ugettext_lazy as _
 from biz.network.serializer import NetworkSerializer, RouterSerializer, RouterInterfaceSerializer
 from biz.instance.serializer import InstanceSerializer
 
-from cloud.network_task import network_create_task, network_delete_task, router_create_task, router_delete_task, \
+from cloud.network_task import network_and_subnet_create_task, network_delete_task, router_create_task, router_delete_task, \
     network_link_router_task, router_remove_interface_task, router_add_gateway_task, router_remove_gateway_task
-from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE, NETWORK_STATE_UPDATING, NETWORK_STATE_ERROR
+from .settings import NETWORK_STATES_DICT, NETWORK_STATE_ACTIVE, NETWORK_STATE_UPDATING, NETWORK_STATE_DELETING
 
 LOG = logging.getLogger(__name__)
 
@@ -34,27 +34,38 @@ def network_list_view(request):
 
 @api_view(['POST'])
 def network_create_view(request):
-    data = request.data
-    if data.get('id') is None or data.get('id') == '':
+    network_id = request.POST.get('id', '')
+    if not network_id:
+        address = request.POST.get('address', '')
+        # 检测地址是否已经占用
+        if check_address_exist(request,address):
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Network address exists')})
         serializer = NetworkSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             network = serializer.save()
-            Operation.log(obj=network, obj_name=network.name, action='create', result=1)
+            subnet = Subnet.objects.create(name=network.name+"("+address+")",
+                                           network=network,
+                                           address=address,
+                                           ip_version=4,
+                                           status=0,
+                                           user=network.user,
+                                           user_data_center=network.user_data_center)
             try:
-                network_create_task.delay(network=network)
+                network_and_subnet_create_task.delay(network=network, subnet=subnet)
+                Operation.log(obj=network, obj_name=network.name, action='create', result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _("Create network success")})
             except Exception as e:
-                network.status = NETWORK_STATE_ERROR
-                network.save()
+                subnet.delete()
+                network.delete()
                 LOG.error("create network  error ,msg:[%s]" % e)
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Create network error')})
         else:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        network = Network.objects.get(pk=data.get('id'))
-        if network is None:
+        network = Network.objects.get(pk=network_id, user=request.user)
+        if not network:
             return Response({"OPERATION_STATUS": 0, "MSG": _('The selected network not exist')})
-        network.name = data.get('name')
+        network.name = request.POST.get("name", '')
         network.deleted = False
         network.save()
         Operation.log(obj=network, obj_name=network.name, action='update', result=1)
@@ -63,9 +74,9 @@ def network_create_view(request):
 
 @api_view(['POST', 'GET'])
 def delete_action(request):
-    data = request.data
-    if data.get("network_id") is not None:
-        network = Network.objects.get(pk=data.get('network_id'))
+    try:
+        network = Network.objects.get(pk=request.POST.get("network_id", ''), user=request.user)
+
         # Defalut network can not be deleted
         if network.is_default:
             return Response({"OPERATION_STATUS": 0, "MSG": _('Default network can not be deleted')})
@@ -76,12 +87,19 @@ def delete_action(request):
             network.deleted = True
             network.save()
             return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted success')})
-        network.deleted = True
+
+        network.status = NETWORK_STATE_DELETING
         network.save()
-        Operation.log(obj=network, obj_name=network.name, action='terminate', result=1)
-        network_delete_task.delay(network)
-        return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted success')})
-    else:
+        try:
+            network_delete_task.delay(network)
+            Operation.log(obj=network, obj_name=network.name, action='terminate', result=1)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted success')})
+        except Exception as e:
+            network.status = NETWORK_STATE_ACTIVE
+            network.save()
+            LOG.error(e)
+            return Response({"OPERATION_STATUS": 1, "MSG": _('Network deleted error')})
+    except Network.DoesNotExist:
         return Response({"OPERATION_STATUS": 0, "MSG": _('The selected network does not exist')})
 
 
@@ -89,91 +107,99 @@ def delete_action(request):
 def network_status_view(request):
     return Response(NETWORK_STATES_DICT)
 
+'''
+    现在是单子网 操作连接和断开操作传入network_id 取第一个子网操作，如果改为多子网，则需要页面传入指定子网进行连接和断开操作
+    :param request:
+    :return:
+'''
+
 
 @api_view(['POST'])
 def network_attach_router_view(request):
-    # 1、create subnet
-    # 2、创建关联关系
-    # 3、执行任务
-    try:
-        data = request.data
-        network_id = data.get('network_id')
-        address = data.get('address')
-        network = Network.objects.get(pk=network_id)
-        action = data.get('action')
-        # default not allowed operation
-        if network.is_default:
-            return Response({"OPERATION_STATUS": 0, "MSG": _('Default network not allow operation')})
+    action = request.POST.get('action', '')
+    network_id = request.POST.get('network_id', '')
+    router_id = request.POST.get('router_id', '')
+    subnet_set = Subnet.objects.filter(network=network_id, user=request.user, deleted=False)
+    # 控制是否存在子网
+    if not subnet_set:
+        return Response({"OPERATION_STATUS": 0, "MSG": _('Unkown operation')})
 
+    subnet = subnet_set[0]
+    if action:
+        return network_router_link_operation(subnet, action, router_id)
+    else:
+        return Response({"OPERATION_STATUS": 0, "MSG": _('Unkown operation')})
+
+
+def network_router_link_operation(subnet, action, router_id=None):
+    # network attach router or detach router function, appoint subnet
+    # 1、创建关联关系
+    # 2、执行任务
+    try:
         if action == 'attach':
+            if not router_id:
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Unkown router')})
             # check address is exist, exist return or not exist continue
-            if check_subnet_address(network_id, address):
+            if check_router_isexits_subnet(subnet):
                 return Response({"OPERATION_STATUS": 0, "MSG": _('network exist address , not operation')})
-            router_id = data.get('router_id')
-            router = Router.objects.get(pk=router_id)
-            subnet = Subnet.objects.create(name="subnet-00",
-                                           network=network,
-                                           address=address,
-                                           ip_version=4,
-                                           status=0,
-                                           user=network.user,
-                                           user_data_center=network.user_data_center)
-            router_interface = RouterInterface.objects.create(network_id=network_id, router=router,
+
+            router = Router.objects.get(pk=router_id,  user=subnet.user, deleted=False)
+
+            router_interface = RouterInterface.objects.create(network_id=subnet.network.id, router=router,
                                                               subnet=subnet, deleted=False,
-                                                              user=network.user,
-                                                              user_data_center=network.user_data_center)
+                                                              user=subnet.user,
+                                                              user_data_center=subnet.user_data_center)
             '''
             update router status to updating
             '''
             router.status = NETWORK_STATE_UPDATING
             router.save()
-            Operation.log(obj=network, obj_name=network.name, action='attach_router', result=1)
+            Operation.log(obj=subnet.network, obj_name=subnet.network.name, action='attach_router', result=1)
             try:
                 network_link_router_task.delay(router=router, subnet=subnet, router_interface=router_interface)
+                return Response({"OPERATION_STATUS": 1, "MSG": _('Link router success')})
             except Exception as e:
-                LOG.error("Attach router error, msg: %s " % e)
-                subnet.delete()
                 router_interface.delete()
-            return Response({"OPERATION_STATUS": 1, "MSG": _('Link router success')})
+                router.status = NETWORK_STATE_ACTIVE
+                router.save()
+                LOG.error("Attach router error, msg: %s " % e)
+                return Response({"OPERATION_STATUS": 0, "MSG": _('Link router error')})
+
         elif action == 'detach':
-            Operation.log(obj=network, obj_name=network.name, action='detach_router', result=1)
-            if check_is_add_router(network_id):
-                return Response({"OPERATION_STATUS": 0, "MSG": _('Network not add subnet ,not operation ')})
-            subnet_set = Subnet.objects.filter(network_id=network_id, deleted=False)
-            for subnet in subnet_set:
-                subnet.deleted = True
-                subnet.save()
-                router_interface_set = RouterInterface.objects.filter(network_id=network_id, subnet=subnet)
-                for router_interface in router_interface_set:
-                    router_interface.deleted = True
+            router_interface_set = RouterInterface.objects.filter(network_id=subnet.network.id, subnet=subnet)
+            for router_interface in router_interface_set:
+                router_interface.deleted = True
+                router_interface.save()
+                router = Router.objects.get(pk=router_interface.router.id, user=subnet.user)
+                router.status = NETWORK_STATE_UPDATING
+                router.save()
+                try:
+                    router_remove_interface_task.delay(router=router_interface.router, subnet=subnet, router_interface=router_interface)
+                except Exception as e:
+                    LOG.error("Detach router error, msg: %s " % e)
+                    router_interface.deleted = False
                     router_interface.save()
-                    try:
-                        router_remove_interface_task.delay(router=router_interface.router, subnet=subnet,
-                                                           router_interface=router_interface)
-                    except Exception as e:
-                        LOG.error("Detach router error, msg: %s " % e)
-                        subnet.deleted = False
-                        subnet.save()
-                        router_interface.deleted = False
-                        router_interface.save()
-                        return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
+                    return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
+            Operation.log(obj=subnet.network, obj_name=subnet.network.name, action='attach_router', result=1)
             return Response({"OPERATION_STATUS": 1, "MSG": _('Leave router success ')})
     except Exception as e:
         LOG.info('Network operation error ,%s' % e)
         return Response({"OPERATION_STATUS": 0, "MSG": _('Network operation error')})
 
+
 @api_view(['GET'])
 def subnet_list_view(request):
     query_set = Subnet.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"],
-                                      status=NETWORK_STATE_ACTIVE)
+                                          status=NETWORK_STATE_ACTIVE)
+
     serializer = SubnetSerializer(query_set, many=True)
     return Response(serializer.data)
 
 
 def check_network_is_use(network_id):
-    subnet_set = Subnet.objects.filter(network=network_id, deleted=False)
+    interface_set = RouterInterface.objects.filter(network_id=network_id, deleted=False)
     instance_set = Instance.objects.filter(network_id=network_id, deleted=False)
-    if subnet_set or instance_set:
+    if interface_set or instance_set:
         return True
     return False
 
@@ -185,9 +211,16 @@ def check_is_add_router(network_id):
     return False
 
 
-def check_subnet_address(network_id, address):
-    subnet_set = Subnet.objects.filter(network=network_id, deleted=False, address=address)
-    if subnet_set is None:
+def check_router_isexits_subnet(subnet):
+    interface_set = RouterInterface.objects.filter(user=subnet.user, deleted=False, subnet__address=subnet.address)
+    if interface_set:
+        return True
+    return False
+
+
+def check_address_exist(request, address):
+    subnet_set = Subnet.objects.filter(user=request.user, deleted=False, address=address)
+    if subnet_set:
         return True
     return False
 '''
@@ -209,7 +242,7 @@ def router_list_view(request):
 @api_view(['GET', 'POST'])
 def router_create_view(request):
     data = request.data
-    if (data.get('id') is None or data.get('id') == '') and \
+    if (not request.POST.get('id', '')) and \
             settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
         try:
             serializer = RouterSerializer(data=request.data, context={"request": request})
@@ -246,7 +279,7 @@ def router_create_view(request):
 @api_view(['GET', 'POST'])
 def router_delete_view(request):
     data = request.data
-    if data.get("router_id") is not None and \
+    if request.POST.get("router_id", '') and \
             settings.SITE_CONFIG.get("MULTI_ROUTER_ENABLED", False):
         router = Router.objects.get(pk=data.get('router_id'))
         if router.is_default:

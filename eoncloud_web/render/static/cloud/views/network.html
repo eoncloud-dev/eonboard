@@ -123,42 +123,9 @@
                             </span>
                 </div>
             </div>
-            <div class="clear"></div>
-        </form>
-        <div class="clear"></div>
-    </div>
-    <div class="modal-footer">
-        <button href="javascript:;" class="btn" ng-click="cancel()">
-            {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-click="submit_click(network_create)" ng-class="{'disabled':!flag}">确定</button>
-    </div>
-</script>
-<script type="text/ng-template" id="network_attach_router.html">
-    <div class="modal-header">
-        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
-        <h4 class="modal-title" >{[{ 'network.attach_network_title' | i18next }]}</h4>
-    </div>
-    <div class="modal-body">
-        <form  role="form" class="form-horizontal form-bordered">
-            <!-- <div class="me">总价格:¥0.05每小时 × 1 =  ¥0.05每小时 (合¥36.00每月)</div> -->
-            <div class="form-group" ng-class="{'has-error': has_error && !router_selected}">
+            <div class="form-group" ng-if="operation =='create'" ng-class="{'has-error': address_error && cidr.three ==''}">
                 <!-- <input type="hidden"  maxlength="20" name="id" ng-model="network_create.id">-->
-                <label class="col-md-3 control-label" for="title">路由器</label>
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <select class="form-control" ng-options="f.name for f in routers track by f.id" ng-model="router_selected" style="width:300px">
-                            <option value="" selected>请选择</option>
-                        </select>
-                    </div>
-                    <span ng-if="has_error && !router_selected" id="name-error" class="help-block help-block-error">
-                               {[{ 'network.select_router' | i18next }]}
-                            </span>
-
-                </div>
-            </div>
-            <div class="form-group" ng-class="{'has-error': address_error && cidr.three ==''}">
-                <!-- <input type="hidden"  maxlength="20" name="id" ng-model="network_create.id">-->
-                <label class="col-md-3 control-label" for="title">网络地址</label>
+                <label class="col-md-3 control-label" for="title">{[{ 'network.netAddress' | i18next }]}</label>
                 <div class="col-md-8">
                     <div class="input-group">
                         <div class="address" style="display: flex;">
@@ -176,14 +143,40 @@
                                {[{ 'network.address_error' | i18next }]}
                             </span>
                 </div>
-
+            </div>
+            <div class="clear"></div>
+        </form>
+        <div class="clear"></div>
+    </div>
+    <div class="modal-footer">
+        <button href="javascript:;" class="btn" ng-click="cancel()">
+            {[{ 'cancel' | i18next }]} </button>
+        <button class="btn btn-primary" ng-click="submit_click(network_create)" ng-class="{'disabled':!flag}">确定</button>
+    </div>
+</script>
+<script type="text/ng-template" id="network_attach_router.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <h4 class="modal-title" >{[{ 'network.attach_network_title' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form  role="form" id="attachRouterFrom" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="title">{[{ 'network.router' | i18next }]}</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <select class="form-control required" name="router_selected" ng-options="f.name for f in routers track by f.id" ng-model="attach_data.router_selected" style="width:300px">
+                            <option value="" selected>{[{ 'please_select' | i18next }]}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </form>
         <div class="clear"></div>
     </div>
     <div class="modal-footer">
         <button  class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="submit_click(router_selected,'attach')">确定</button>
+        <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="submit_click(attach_data,'attach')">确定</button>
     </div>
 </script>
 <!-- BEGIN MAIN JS & CSS -->

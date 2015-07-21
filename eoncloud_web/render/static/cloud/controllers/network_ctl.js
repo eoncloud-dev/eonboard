@@ -143,7 +143,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
             }
         });
     }
-
+    //断开路由器连接
     $scope.detach_action = function(network, action){
         bootbox.confirm($i18next("network.confirm_" + action), function (confirm) {
             if (confirm) {
@@ -154,6 +154,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
                 CommonHttpService.post("/api/networks/router/action", post_data).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
                         $scope.network_table.reload();
+                        ToastrService.success(data.MSG, $i18next("success"));
                     }
                     else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
@@ -168,6 +169,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         "three":"0",
         "four":"0"
     }
+    // 连接路由器
     $scope.modal_attach_network = function(network){
         $scope.selectedNetwork=network;
         CommonHttpService.get("/api/routers/search/").then(function (data) {
@@ -204,12 +206,35 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
 
 CloudApp.controller('NetworkCreateController',
     function($rootScope, $scope, $filter, $i18next,$modalInstance,network_table,CommonHttpService,ToastrService) {
+
+
         $scope.has_error = false;
+        $scope.address_error=false;
+
+
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
+
+        $scope.$watch('cidr.three',function(value){
+            var reg = /^(^[0-9]$)|(^[1-9]\d$)|(^1\d{2}$)|(^2[0-4]\d$)|(^25[0-5]$)$/g
+
+            $scope.cidr.three = $scope.cidr.three.replace(/[^\d]/g,'');
+            if($scope.cidr.three!=''){
+                if($scope.cidr.three.match(reg)==null){
+                    $scope.cidr.three = 0
+                }
+            }
+        });
+
+
         $scope.flag = true;
         $scope.submit_click = function(network_create){
+            if($.trim($scope.cidr.three)==''){
+                $scope.address_error = true;
+                return false;
+            }
+            var address = $scope.cidr.first+"."+$scope.cidr.two+"."+$scope.cidr.three+"."+$scope.cidr.four+"/24";
             if(typeof(network_create.name)==='undefined' || network_create.name == ""){
                 $scope.has_error = true;
                 return false;
@@ -221,7 +246,8 @@ CloudApp.controller('NetworkCreateController',
             $scope.flag = false;
             var post_data = {
                 "id":$scope.network_create.id,
-                "name":$scope.network_create.name
+                "name":$scope.network_create.name,
+                "address":address
             }
             CommonHttpService.post("/api/networks/create/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
@@ -238,43 +264,27 @@ CloudApp.controller('NetworkCreateController',
     });
 
 CloudApp.controller('NetworkAttachController',
-    function($rootScope, $scope, $filter, $modalInstance,network_table,CommonHttpService,ToastrService,$i18next) {
-        $scope.has_error = false;
-        $scope.address_error=false;
-        $scope.router_selected = false;
+    function($rootScope, $scope, $filter, $modalInstance,network_table,CommonHttpService,ToastrService,$i18next,ValidationTool) {
+
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
-        $scope.$watch('cidr.three',function(value){
-            var reg = /^(^[0-9]$)|(^[1-9]\d$)|(^1\d{2}$)|(^2[0-4]\d$)|(^25[0-5]$)$/g
-
-            $scope.cidr.three = $scope.cidr.three.replace(/[^\d]/g,'');
-            if($scope.cidr.three!=''){
-                if($scope.cidr.three.match(reg)==null){
-                    $scope.cidr.three = 0
-                }
-            }
-        });
 
         $scope.flag = true;
-        $scope.submit_click = function(router_selected,action){
-            if($.trim($scope.cidr.three)==''){
-                $scope.address_error = true;
-                return false;
-            }
-            var address = $scope.cidr.first+"."+$scope.cidr.two+"."+$scope.cidr.three+"."+$scope.cidr.four+"/24";
-            if(!router_selected){
-                $scope.has_error = true;
-                return false;
-            }
+        $scope.submit_click = function(attach_data,action){
+
             if(!$scope.flag){
                 return
             }
             $scope.flag = false
+            ValidationTool.init('#attachRouterFrom', {});
+            if(!$("#attachRouterFrom").validate().form()){
+                $scope.flag = true;
+                return;
+            }
             var post_data={
-                "router_id":router_selected.id,
                 "network_id":$scope.selectedNetwork.id,
-                "address":address,
+                "router_id":attach_data.router_selected.id,
                 "action":action
             }
             CommonHttpService.post("/api/networks/router/action", post_data).then(function (data) {

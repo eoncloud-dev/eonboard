@@ -26,6 +26,8 @@
   "op_success_msg": "您的操作已经提交成功。",
   "op_forbid_msg": "您的操作暂时不支持，已禁止执行。",
   "tip_title": "操作提示",
+  "details":"详情",
+  "please_select":"请选择",
 
   "image": {
     "name": "镜像名称",
@@ -273,7 +275,7 @@
     "firewall": "防火墙",
     "private_network": "私有网络",
     "router": "路由器",
-    "loadbalancer":"负载均衡",
+    "lbaas":"负载均衡",
     "topology":"网络拓扑",
     "op_log": "操作日志",
     "monitor": "监控报警",

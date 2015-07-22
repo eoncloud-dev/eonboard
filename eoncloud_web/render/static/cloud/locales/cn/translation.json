@@ -53,6 +53,7 @@
     "flavor": "规格",
     "private_ip": "私有IP",
     "public_ip": "公网IP",
+    "net_address":"网络地址",
     "actions": "操作",
     "select_image": "选择镜像",
     "create_instance_title": "创建主机",
@@ -116,7 +117,9 @@
     "detail": "云主机详情",
     "overview": "概览",
     "log": "控制台输出",
-    "monitor": "监控"
+    "monitor": "监控",
+    "virtual_position":"虚拟机位置",
+    "instance_name":"实例名称"
   },
 
   "flavor": {
@@ -198,7 +201,7 @@
   "floatingIP": {
     "page_desc": "公网IP为静态互联网IP地址。在易用云系统中，您可以把申请到的IP地址绑定私有网络中的主机或路由器中，并可以随时解绑，或者分配到别的主机，路由器上，从而更灵活的使用互联网。",
     "allocate": "申请公网IP",
-    "binding_instance": "绑定到云主机",
+    "binding_resource": "绑定到资源",
     "more": "更多",
     "unbinding_instance": "解除绑定",
     "change_bandwidth": "改变带宽",
@@ -210,7 +213,7 @@
     "name_prompt": "请输入公网IP名称",
     "breadth": "宽带",
     "current_ip": "公网IP",
-    "instance_list": "主机列表",
+    "resource_list": "资源列表",
     "ensure": "确定",
     "cancel": "取消",
     "price": "单价",
@@ -220,7 +223,7 @@
     "confirm_disassociate": "确认解除当前绑定",
     "create_success_and_waiting": "正在创建公网IP",
     "op_success_and_waiting": "请求成功，等待操作完成",
-    "select_instance_first": "请选择要绑定的云主机"
+    "select_resource_first": "请选择要绑定的资源"
   },
 
   "firewall": {
@@ -497,6 +500,7 @@
     "balancer":"负载均衡器",
     "monitor":"监听器",
     "vip_tip":"创建负载均衡器后，需要创建VIP，然后绑定公网IP才能从外网访问",
+    "balancer_desc":"负载均衡器（Load Balancer） 可以将来自多个公网地址的访问流量分发到多台主机上，并支持自动检测并隔离不可用的主机，从而提高业务的服务能力和可用性。同时，你还可以随时通过添加或删减主机来调整你的服务能力，而且这些操作不会影响业务的正常访问。另外，负载均衡器还支持灵活配置多种转发策略，实现高级的自定义转发控制功能；支持 HTTP/HTTPS/TCP 三种监听模式，并支持透明代理，可以让后端主机不做任何更改，直接获取客户端真实 IP。",
     "create_balancer_title":"创建负载均衡器",
     "create_monitor_title":"创建监听器",
     "create_vip_title":"创建VIP",

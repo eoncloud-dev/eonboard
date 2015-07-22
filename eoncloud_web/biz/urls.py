@@ -24,6 +24,7 @@ urlpatterns = [
         url(r'^init/images/$', overview_views.init_images),
         url(r'^instances/$', instance_view.InstanceList.as_view()),
         url(r'^instances/(?P<pk>[0-9]+)/$', instance_view.InstanceDetail.as_view()),
+        url(r'^instances/details/(?P<pk>[0-9]+)/$', instance_view.instance_detail_view),
         url(r'^instances/status/$', instance_view.instance_status_view),
         url(r'^instances/create/$', instance_view.instance_create_view),
         url(r'^instances/search/$', instance_view.instance_search_view),

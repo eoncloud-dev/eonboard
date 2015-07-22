@@ -167,7 +167,7 @@ CloudApp.controller('VolumeController', function ($rootScope, $scope, $filter, $
             scope: $scope,
             resolve: {
                 operation_tip: function () {
-                    return $i18next("volume.detach_tip_start") + "ssssssssssssss" + $i18next("volume.detach_tip_end");
+                    return $i18next("volume.detach_tip_start") + volume.instance_info.name + $i18next("volume.detach_tip_end");
                 },
                 instances: function () {
                     return "";
@@ -180,12 +180,12 @@ CloudApp.controller('VolumeController', function ($rootScope, $scope, $filter, $
         modalVolume.result.then(function (result) {
         }, function (result) {
         });
-    }
+    };
     var post_action = function (vol, action) {
         var post_data = {
             "action": action,
             "volume_id": vol.id
-        }
+        };
         CommonHttpService.post("/api/volumes/action/", post_data).then(function (data) {
             if (data.OPERATION_STATUS == 1) {
                 $scope.volume_table.reload();

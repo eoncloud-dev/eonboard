@@ -9,6 +9,10 @@ from rest_framework.decorators import api_view
 
 from django.utils.translation import ugettext_lazy as _
 
+from biz.volume.models import Volume
+from biz.volume.serializer import VolumeSerializer
+from biz.firewall.models import Firewall
+from biz.firewall.serializer import FirewallSerializer
 from biz.instance.models import Instance, Flavor
 from biz.instance.serializer import InstanceSerializer, FlavorSerializer
 from biz.instance.utils import instance_action
@@ -16,7 +20,7 @@ from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING
 from biz.account.utils import check_quota
 from biz.account.models import Operation
 
-from cloud.instance_task import instance_create_task
+from cloud.instance_task import instance_create_task, instance_get_console_log, instance_get
 
 LOG = logging.getLogger(__name__)
 
@@ -140,3 +144,39 @@ def instance_search_view(request, **kwargs):
                                            user=request.user, user_data_center=request.session["UDC_ID"])
     serializer = InstanceSerializer(instance_set, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def instance_detail_view(request, pk):
+    tag = request.GET.get("tag", 'instance_detail')
+    try:
+        instance = Instance.objects.get(pk=pk, user=request.user)
+    except Exception as e:
+        LOG.error("Get instance error, msg:%s" % e)
+        return Response({"OPERATION_STATUS": 0, "MSG": "Instance no exist"}, status=status.HTTP_200_OK)
+
+    if "instance_detail" == tag:
+        instance_data = dict(InstanceSerializer(instance).data)
+
+        try:
+            server = instance_get(instance)
+            instance_data['host'] = getattr(server, 'OS-EXT-SRV-ATTR:host', None)
+            instance_data['instance_name'] = getattr(server, 'OS-EXT-SRV-ATTR:instance_name', None)
+        except Exception as e:
+            LOG.error("Obtain host fail,msg: %s" % e)
+
+        try:
+            firewall = Firewall.objects.get(pk=instance.firewall_group.id)
+            firewall_data = FirewallSerializer(firewall).data
+            instance_data['firewall'] = firewall_data
+        except Exception as e:
+            LOG.exception("Obtain firewall fail, msg:%s" % e)
+
+        # 挂载的所有硬盘
+        volume_set = Volume.objects.filter(instance=instance, deleted=False)
+        volume_data = VolumeSerializer(volume_set, many=True).data
+        instance_data['volume_list'] = volume_data
+        return Response(instance_data)
+    elif 'instance_log' == tag:
+        log_data = instance_get_console_log(instance)
+        return Response(log_data)

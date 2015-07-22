@@ -182,7 +182,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                         });
                     }],
                     instance: function($stateParams, CommonHttpService){
-                        return CommonHttpService.get("/api/instances/" + $stateParams.instance_id + "/");
+                        return CommonHttpService.get("/api/instances/details/" + $stateParams.instance_id + "/");
                     },
                     status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/instances/status/")

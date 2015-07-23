@@ -16,8 +16,13 @@ from biz.idc import views as idc_views
 from biz.overview import views as overview_views
 from biz.backup import views as backup_view
 
-# instance&flavor
+# various options and configurations
 urlpatterns = [
+    url(r'^settings/monitor/$', instance_view.monitor_settings)
+]
+
+ # instance&flavor
+urlpatterns += [
         url(r'^management-summary/$', overview_views.summary),
         url(r'^init/data_center/$', overview_views.init_data_center),
         url(r'^init/flavors/$', overview_views.init_flavors),

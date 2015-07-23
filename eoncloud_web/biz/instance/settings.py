@@ -149,3 +149,27 @@ IP_VERSIONS = (
     (IPV4, "IPV4"),
     (IPV6, "IPV6")
 )
+
+
+class MonitorInterval(object):
+
+    OPTIONS = (
+        ('second', _('Second')),
+        ('minute', _('Minute')),
+        ('hour', _('Hourly')),
+        ('day', _('Daily')),
+        ('week', _('Weekly')),
+        ('month', _('Monthly')),
+        ('year', _('Yearly'))
+    )
+
+    @classmethod
+    def filter_options(cls, keys):
+        result = []
+
+        for option in cls.OPTIONS:
+            if option[0] in keys:
+                result.append({'key': option[0], 'label': option[1]})
+
+        return result
+

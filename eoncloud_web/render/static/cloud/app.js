@@ -177,6 +177,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
+                                '/static/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css',
+                                '/static/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js',
+                                '/static/assets/global/plugins/moment.min.js',
                                 '/static/cloud/controllers/instance_detail_ctl.js'
                             ]
                         });
@@ -184,11 +187,13 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     instance: function($stateParams, CommonHttpService){
                         return CommonHttpService.get("/api/instances/details/" + $stateParams.instance_id + "/");
                     },
+                    monitorSettings: function (CommonHttpService) {
+                        return CommonHttpService.get("/api/settings/monitor/");
+                    },
                     status_desc: function (CommonHttpService) {
                         return CommonHttpService.get("/api/instances/status/")
                     }
                 }
-
             })
 
             // image

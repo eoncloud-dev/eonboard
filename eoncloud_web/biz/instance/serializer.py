@@ -1,5 +1,6 @@
 #-*-coding-utf-8-*-
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -7,8 +8,7 @@ from rest_framework import serializers
 from biz.idc.models import UserDataCenter
 from biz.image.serializer import ImageSerializer
 from biz.instance.models import Instance, Flavor
-from biz.image.models import Image
-from biz.network.serializer import NetworkSerializer
+
 
 class InstanceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True, default=None)

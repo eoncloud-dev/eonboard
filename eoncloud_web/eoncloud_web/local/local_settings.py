@@ -1,9 +1,9 @@
-#-*-coding=utf-8-*-
+# -*-coding=utf-8-*-
 
 # sync instance status interval
 INSTANCE_SYNC_INTERVAL_SECOND = 10
 # max loop count for sync instance status
-MAX_COUNT_SYNC  = 30
+MAX_COUNT_SYNC = 30
 
 
 # enabled quota check
@@ -15,8 +15,8 @@ BRAND = "EonCloud"
 ICP_NUMBER = u"冀ICP备15016515号-1"
 
 MCC = {
-    "1" : u"金融",   
-    "2" : u"军工",   
+    "1": u"金融",
+    "2": u"军工",
 }
 
 SOURCE = {
@@ -69,8 +69,20 @@ BACKUP_DELETE_COMMAND = "python /opt/eontools/rbd_backup.py -p %(source_pool)s -
 # backup config end
 
 SITE_CONFIG = {
-    "QUOTA_CHECK" : QUOTA_CHECK,
-    "MULTI_ROUTER_ENABLED" : MULTI_ROUTER_ENABLED,
+    "QUOTA_CHECK": QUOTA_CHECK,
+    "MULTI_ROUTER_ENABLED": MULTI_ROUTER_ENABLED,
     "BRAND": BRAND,
     "ICP_NUMBER": ICP_NUMBER,
+}
+
+MONITOR_CONFIG = {
+    "ENABLED": False,
+    'URLS': {
+        'CPU': "http://14.14.14.101:5601/#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))",
+        "DISK": "http://14.14.14.101:5601/#/visualize/edit/disk?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.disk_gb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:timestamp,interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
+        "INCOMING_BYTES": "http://14.14.14.101:5601/#/visualize/edit/instance.incoming.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:network.incoming.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
+        "OUTGOING_BYTES": "http://14.14.14.101:5601/#/visualize/edit/instance.outgoing.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{ uuid }]}!'')),vis:(aggs:!((id:'1',params:(field:network.outgoing.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
+        "MEMORY": "http://14.14.14.101:5601/#/visualize/edit/Memory?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.memory_mb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))"
+    },
+    'INTERVAL_OPTIONS': ['second', 'minute', 'hour', 'day', 'week', 'month']
 }

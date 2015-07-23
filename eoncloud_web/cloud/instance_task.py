@@ -104,6 +104,15 @@ def instance_get_vnc_console(instance):
     except Exception as e:
         LOG.exception(e)
         return None
+
+
+def instance_get_console_log(instance, tail_length=None):
+    rc = create_rc_by_instance(instance)
+    try:
+        return nova.server_console_output(rc, instance.uuid, tail_length=tail_length)
+    except Exception as e:
+        LOG.exception(e)
+        return None
         
 
 def instance_deleted_release_resource(instance):

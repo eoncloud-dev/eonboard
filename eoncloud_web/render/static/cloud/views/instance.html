@@ -48,8 +48,9 @@
                             </td>
                             <td width="50" data-title="'ID'">{[{ instance.id}]}</td>
                             <td width="100" data-title="'instance.name' | i18next">
-                                <a class="btn default blue-stripe btn-xs" ng-click="go_detail(instance)">
+                                <a class="btn default blue-stripe btn-xs" ng-if="check_instance_is_use(instance)" ng-click="go_detail(instance)">
                                     <i class="fa fa-desktop"></i> {[{ instance.name }]} </a>
+                                <span ng-if="!check_instance_is_use(instance)">{[{ instance.name }]} </span>
                             </td>
                             <td data-title="'instance.image' | i18next">
                                 <a class="btn default yellow-stripe btn-xs" ng-href="#/image/">

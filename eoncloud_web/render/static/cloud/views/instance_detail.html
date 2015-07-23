@@ -23,7 +23,7 @@
                             {[{ 'instance.overview' | i18next }]} </a>
                         </li>
                         <li>
-                            <a ng-href="\#tab_instance_log" data-toggle="tab">
+                            <a ng-href="\#tab_instance_log" ng-click="load_instance_log(instance.id)" data-toggle="tab">
                             {[{ 'instance.log' | i18next }]} </a>
                         </li>
                         <li>

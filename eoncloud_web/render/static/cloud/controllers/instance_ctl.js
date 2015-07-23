@@ -13,6 +13,13 @@ CloudApp.controller('InstanceController',
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
+        //检测主机是否可用
+        $scope.check_instance_is_use = function(instance){
+            if(instance.uuid){
+                return true
+            }
+            return false
+        }
         $scope.status_desc = status_desc;
         $scope.current_instance_data = [];
 

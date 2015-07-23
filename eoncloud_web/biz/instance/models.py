@@ -67,7 +67,7 @@ class Instance(models.Model):
         
     @property
     def floating_ip(self):
-        fs = Floating.objects.filter(instance=self, deleted=0) 
+        fs = Floating.objects.filter(resource=self.id, deleted=0)
         floating = None
         if len(fs) > 0:
             floating = fs[0]

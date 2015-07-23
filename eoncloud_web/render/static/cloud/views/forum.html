@@ -44,7 +44,7 @@
                         <div class="col-md-7">
                             <div class="tab-content scroller" style="height:500px;">
                                 <div id="ajax_forum_add" class="well"
-                                     ng-if="current_forum !='' && current_forum !=undefined ">
+                                     ng-if="current_forum !='' && current_forum !=undefined " style="margin-bottom: 0px;">
                                     <div class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
                                         <p class="font_16">{[{current_forum.title}]}</p>
 
@@ -73,17 +73,17 @@
 
                                         <p class="hei_30">{[{reply.create_date}]}</p>
                                     </div>
-                                    <div ng-if="!current_forum.status">
+                                    <div ng-if="!current_forum.closed">
                                         <div class="bg_4 margin-top-10 clear">
                                             <textarea class="form-control" rows="3" maxlength="255"
-                                                      ng-model="$parent.reply_content">
+                                                      ng-model="reply.reply_content">
 
                                             </textarea>
                                         </div>
                                         <div class="margin-top-10">
                                             <a id="reply_a" class="btn yellow" href="javascript:void(0);"
-                                               ng-click="forumReply(current_forum,reply_content)"
-                                               ng-class="{'disabled':reply_content==''}">
+                                               ng-click="forumReply(current_forum)"
+                                               ng-class="{'disabled':reply.reply_content==''}">
                                                 {[{ 'forum.reply' | i18next }]}<i
                                                     class="fa pad_l5 fa-plus-square-o"></i>
                                             </a>
@@ -125,7 +125,7 @@
                                                                                                       aria-required="true"> * </span></label>
 
                 <div class="col-md-8">
-                    <textarea type="text" class="form-control" maxlength="100" ng-model="forum.content" id="content"
+                    <textarea type="text" class="form-control" maxlength="255" ng-model="forum.content" id="content"
                               rows="7" cols="30"></textarea>
                 </div>
             </div>

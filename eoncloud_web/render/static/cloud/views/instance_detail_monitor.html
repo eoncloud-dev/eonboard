@@ -1,82 +1,247 @@
-<div class="row">
-				<div class="col-md-12 col-sm-12">
-					<!-- BEGIN PORTLET-->
-					<div class="portlet solid">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="fa fa-bar-chart-o"></i>CPU
-							</div>
-							<div class="actions">
-								<div data-toggle="buttons" class="btn-group">
-									<label class="btn grey-steel btn-sm active">
-									<input type="radio" id="option1" class="toggle" name="options">New</label>
-									<label class="btn grey-steel btn-sm">
-									<input type="radio" id="option2" class="toggle" name="options">Returning</label>
-								</div>
-							</div>
-						</div>
-						<div class="portlet-body">
+<div class="row" data-ng-controller="CpuMonitorController">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ 'monitor.cpu' | i18next }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in monitorIntervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
 
-							<iframe frameBorder="0" src="http://14.14.14.101:5601/#/visualize/edit/cpu?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'06e5fd14-8270-45d3-8bc9-d7767ab31233!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))" height="600" width="800"></iframe>
-							<iframe frameBorder="0" rc="http://14.14.14.101:5601/#/visualize/edit/cpu?embed&_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'06e5fd14-8270-45d3-8bc9-d7767ab31233!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))" height="600" width="800"></iframe>
-						</div>
-					</div>
-					<!-- END PORTLET-->
-				</div>
-				</div>
-				<div class="row">
-				<div class="col-md-12 col-sm-12">
-					<!-- BEGIN PORTLET-->
-					<div class="portlet solid">
-						<div class="portlet-title">
-							<div class="caption">
-								<i class="fa fa-bullhorn"></i>Network
-							</div>
-							<div class="actions">
-								<div class="btn-group pull-right">
-									<a data-close-others="true" data-hover="dropdown" data-toggle="dropdown" class="btn grey-steel btn-sm dropdown-toggle" href="">
-									Filter <span class="fa fa-angle-down">
-									</span>
-									</a>
-									<ul class="dropdown-menu pull-right">
-										<li>
-											<a href="javascript:;">
-											Q1 2014 <span class="label label-sm label-default">
-											past </span>
-											</a>
-										</li>
-										<li>
-											<a href="javascript:;">
-											Q2 2014 <span class="label label-sm label-default">
-											past </span>
-											</a>
-										</li>
-										<li class="active">
-											<a href="javascript:;">
-											Q3 2014 <span class="label label-sm label-success">
-											current </span>
-											</a>
-										</li>
-										<li>
-											<a href="javascript:;">
-											Q4 2014 <span class="label label-sm label-warning">
-											upcoming </span>
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div class="portlet-body">
 
-							<div style="margin: 20px 0 10px 30px">
-								<div class="row">
+<div class="row" data-ng-controller="MemoryMonitorController">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ 'monitor.memory' | i18next }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in monitorIntervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
 
-									<img src="http://14.14.14.101:5601/#/visualize/edit/cpu?_g=()&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'06e5fd14-8270-45d3-8bc9-d7767ab31233!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))"/>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- END PORTLET-->
-				</div>
-			</div>
+<div class="row" data-ng-controller="DiskMonitorController">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ 'monitor.disk' | i18next }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in monitorIntervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
+
+
+<div class="row" data-ng-controller="IncomingBytesMonitorController">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ 'monitor.incoming_bytes' | i18next }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in monitorIntervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
+
+
+<div class="row" data-ng-controller="OutgoingBytesMonitorController">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ 'monitor.outgoing_bytes' | i18next }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in monitorIntervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>

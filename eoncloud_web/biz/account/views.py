@@ -26,7 +26,7 @@ from biz.account.serializer import (ContractSerializer, OperationSerializer,
                                     UserSerializer, QuotaSerializer,
                                     DetailedUserSerializer, NotificationSerializer)
 from biz.account.utils import get_quota_usage
-from biz.idc.models import DataCenter, UserDataCenter
+from biz.idc.models import DataCenter
 from eoncloud_web.pagination import PagePagination
 from eoncloud_web.decorators import require_POST, require_GET
 from eoncloud_web.shortcuts import retrieve_params

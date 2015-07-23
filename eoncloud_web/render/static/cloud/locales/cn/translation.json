@@ -335,6 +335,9 @@
     "select_user": "请选择用户",
     "select_udc": "请选择数据中心",
     "manage_quota": "管理配额",
+    "add_quota": "添加资源",
+    "confirm_delete": "确认删除这些合同吗？",
+    "confirm_delete_quota": "确认要删除这种资源吗？",
     "help": {
         "user_data_center": "这里只显示没有合同的用户数据中心",
         "date_range": "结束日期必须晚于起始日期"
@@ -546,6 +549,17 @@
     "select_monitor":"请选择监听器",
     "add_member":"添加成员",
     "delay_lg_timeout":"超时时间不能大于延迟时间"
-  }
+  },
 
+  "monitor": {
+    "cpu": "CPU",
+    "memory": "内存(MB)",
+    "disk": "磁盘(GB)",
+    "incoming_bytes": "接收流量",
+    "outgoing_bytes": "发送流量",
+    "modes":{
+        "one_hour": "一小时内",
+        "time_range": "时间段"
+    }
+  }
 }

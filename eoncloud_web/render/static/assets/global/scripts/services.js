@@ -217,8 +217,28 @@ angular.module('cloud.services', [])
         }
     };
 
+    var initDateTimePickers = function(config){
+
+        config = config || {};
+
+        var defaultConfig = {
+            autoclose: true,
+            isRTL: Metronic.isRTL(),
+            pickerPosition: (Metronic.isRTL() ? "bottom-right" : "bottom-left"),
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            minuteStep: 10
+        };
+
+        angular.extend(defaultConfig, config);
+
+        $(".form_datetime").datetimepicker(defaultConfig);
+    };
+
     return {
-        initDatePickers: initDatePickers
+        initDatePickers: initDatePickers,
+        initDateTimePickers: initDateTimePickers
     }
 })
 

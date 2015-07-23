@@ -2,12 +2,12 @@
 
 import logging
 
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
-from django.utils.translation import ugettext_lazy as _
 
 from biz.volume.models import Volume
 from biz.volume.serializer import VolumeSerializer
@@ -16,10 +16,11 @@ from biz.firewall.serializer import FirewallSerializer
 from biz.instance.models import Instance, Flavor
 from biz.instance.serializer import InstanceSerializer, FlavorSerializer
 from biz.instance.utils import instance_action
-from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING
+from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING, MonitorInterval
 from biz.account.utils import check_quota
 from biz.account.models import Operation
 
+from eoncloud_web.decorators import require_GET
 from cloud.instance_task import instance_create_task, instance_get_console_log, instance_get
 
 LOG = logging.getLogger(__name__)
@@ -180,3 +181,11 @@ def instance_detail_view(request, pk):
     elif 'instance_log' == tag:
         log_data = instance_get_console_log(instance)
         return Response(log_data)
+
+@require_GET
+def monitor_settings(request):
+    monitor_config = settings.MONITOR_CONFIG.copy()
+    monitor_config['INTERVAL_OPTIONS'] = MonitorInterval.\
+        filter_options(monitor_config['INTERVAL_OPTIONS'])
+
+    return Response(monitor_config)

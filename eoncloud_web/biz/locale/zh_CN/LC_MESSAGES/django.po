@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-21 14:04+0800\n"
+"POT-Creation-Date: 2015-07-22 16:11+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr "结束日期"
 #: account/models.py:73 account/models.py:96 backup/models.py:30
 #: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
 #: floating/models.py:29 forum/models.py:11 forum/models.py:28
-#: instance/models.py:45 lbaas/models.py:23 lbaas/models.py:46
+#: instance/models.py:44 lbaas/models.py:23 lbaas/models.py:46
 #: lbaas/models.py:76 lbaas/models.py:104 network/models.py:15
 #: network/models.py:56 network/models.py:74 network/models.py:90
 #: volume/models.py:17
@@ -63,8 +63,8 @@ msgstr "已删除"
 #: account/models.py:74 account/models.py:97 account/models.py:115
 #: backup/models.py:28 backup/models.py:137 firewall/models.py:14
 #: firewall/models.py:37 floating/models.py:27 forum/models.py:12
-#: forum/models.py:29 image/models.py:25 instance/models.py:25
-#: instance/models.py:84 lbaas/models.py:22 lbaas/models.py:45
+#: forum/models.py:29 image/models.py:25 instance/models.py:26
+#: instance/models.py:82 lbaas/models.py:22 lbaas/models.py:45
 #: lbaas/models.py:75 lbaas/models.py:103 network/models.py:16
 #: network/models.py:57 network/models.py:75 volume/models.py:16
 msgid "Create Date"
@@ -189,7 +189,7 @@ msgstr "公网IP"
 msgid "Volume"
 msgstr "磁盘"
 
-#: account/settings.py:24 instance/models.py:34 network/models.py:36
+#: account/settings.py:24 instance/models.py:35 network/models.py:36
 #: network/models.py:37 network/models.py:89
 msgid "Network"
 msgstr "私有网络"
@@ -840,23 +840,23 @@ msgstr "镜像已删除"
 msgid "Linux Image"
 msgstr "Linux系统"
 
-#: instance/models.py:16
+#: instance/models.py:17
 msgid "Windows Image"
 msgstr "Windows系统"
 
-#: instance/models.py:22
+#: instance/models.py:23
 msgid "Instance Name"
 msgstr ""
 
-#: instance/models.py:26
+#: instance/models.py:27
 msgid "Terminate Date"
 msgstr ""
 
-#: instance/models.py:27 instance/models.py:81
+#: instance/models.py:28 instance/models.py:79
 msgid "Cpu Cores"
 msgstr ""
 
-#: instance/models.py:28
+#: instance/models.py:29
 msgid "Memory"
 msgstr ""
 
@@ -1016,6 +1016,34 @@ msgstr "删除"
 #: instance/settings.py:111
 msgid "Instance Launch"
 msgstr "创建云主机"
+
+#: instance/settings.py:157
+msgid "Second"
+msgstr "秒"
+
+#: instance/settings.py:158
+msgid "Minute"
+msgstr "分"
+
+#: instance/settings.py:159
+msgid "Hourly"
+msgstr "时"
+
+#: instance/settings.py:160
+msgid "Daily"
+msgstr "天"
+
+#: instance/settings.py:161
+msgid "Weekly"
+msgstr "周"
+
+#: instance/settings.py:162
+msgid "Monthly"
+msgstr "月"
+
+#: instance/settings.py:163
+msgid "Yearly"
+msgstr "年"
 
 #: instance/views.py:60
 msgid "Flavor is created successfully!"
@@ -1423,31 +1451,31 @@ msgstr "路由器端口"
 msgid "BUILD"
 msgstr "构建中"
 
-#: network/views.py:45
+#: network/views.py:56
 msgid "Create network success"
 msgstr "创建私有网络成功"
 
-#: network/views.py:50
+#: network/views.py:61
 msgid "Create network error"
 msgstr "创建私有网络失败"
 
-#: network/views.py:56
+#: network/views.py:67
 msgid "The selected network not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:61
+#: network/views.py:72
 msgid "Update network success"
 msgstr "更新私有网络成功"
 
-#: network/views.py:71
+#: network/views.py:82
 msgid "Default network can not be deleted"
 msgstr "默认的私有网络不允许删除"
 
-#: network/views.py:74
+#: network/views.py:85
 msgid "Was unable to delete the use of the network"
 msgstr "使用中的私有网络不允许删除"
 
-#: network/views.py:78 network/views.py:83
+#: network/views.py:89 network/views.py:96
 msgid "Network deleted success"
 msgstr "私有网络删除成功"
 
@@ -1459,12 +1487,51 @@ msgstr "私有网络不存在"
 msgid "Default network not allow operation"
 msgstr "默认私有网络不支持此操作"
 
+#: network/views.py:125 network/views.py:131
+#, fuzzy
+#| msgid "Unknown volume action"
+msgid "Unkown operation"
+msgstr "未知的磁盘操作"
+
+#: network/views.py:141
+msgid "Unkown router"
+msgstr ""
+
+#: network/views.py:42
+#, fuzzy
+#| msgid "Network deleted success"
+msgid "Network address exists"
+msgstr "私有网络删除成功"
+
+#: network/views.py:101
+#, fuzzy
+#| msgid "Network deleted success"
+msgid "Network deleted error"
+msgstr "私有网络删除成功"
+
+#: network/views.py:125 network/views.py:131
+#, fuzzy
+#| msgid "Unknown volume action"
+msgid "Unkown operation"
+msgstr "未知的磁盘操作"
+
+#: network/views.py:141
+msgid "Unkown router"
+msgstr ""
+
+#: network/views.py:144
 #: network/views.py:111
 msgid "network exist address , not operation"
 msgstr "子网地址已经存在"
 
-#: network/views.py:137
+#: network/views.py:160
 msgid "Link router success"
+msgstr "加入路由器成功"
+
+#: network/views.py:166
+#, fuzzy
+#| msgid "Link router success"
+msgid "Link router error"
 msgstr "加入路由器成功"
 
 #: network/views.py:141
@@ -1616,6 +1683,7 @@ msgid "Creating Volume"
 msgstr "创建中"
 
 #: volume/views.py:61 volume/views.py:66
+#: volume/views.py:58 volume/views.py:65
 msgid "Volume create error"
 msgstr "创建磁盘成功"
 
@@ -1660,6 +1728,7 @@ msgid "Detach volume error"
 msgstr "删除磁盘失败"
 
 #: volume/views.py:137
+#: volume/views.py:124
 #, python-format
 msgid "Volume attached to instance,instance:%(instance)s"
 msgstr "磁盘已挂载到云主机:%(instance)s"
@@ -1669,8 +1738,15 @@ msgid "Deleting Volume"
 msgstr "删除中"
 
 #: volume/views.py:150
+#: volume/views.py:136
 msgid "Deleting Volume error"
 msgstr "删除磁盘失败"
+
+#~ msgid "Default network not allow operation"
+#~ msgstr "默认私有网络不支持此操作"
+
+#~ msgid "Network not add subnet ,not operation "
+#~ msgstr "请将私有网络先加入路由器"
 
 #~ msgid "full"
 #~ msgstr "全量备份"

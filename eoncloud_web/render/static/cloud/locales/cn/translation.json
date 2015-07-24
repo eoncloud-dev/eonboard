@@ -453,7 +453,8 @@
       "unread": "未读",
       "read": "已读",
       "data_center": "数据中心",
-      "data_center_broadcast": "数据中心广播"
+      "data_center_broadcast": "数据中心广播",
+      "announce": "发布公告"
   },
 
   "init_wizard": {
@@ -490,6 +491,7 @@
     "confirm_restore": "确认恢复到此备份",
     "create_success_and_waiting": "请求发送成功，请等待操作执行完毕"
   },
+
   "balancer":{
     "balancer":"负载均衡器",
     "monitor":"监听器",

@@ -125,6 +125,20 @@ CloudApp.controller('UserController',
                 }
             });
         };
+
+        $scope.openAnnounceModal = function(){
+            $modal.open({
+                templateUrl: 'announce.html',
+                controller: 'AnnounceController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    notificationOptions: function(){
+                        return CommonHttpService.get('/api/notifications/options/');
+                    }
+                }
+            });
+        };
     })
 
     .controller('UserUdcListController',
@@ -191,10 +205,10 @@ CloudApp.controller('UserController',
             }
     })
 
-    .controller('DataCenterBroadcastController',
-        function($scope, $modalInstance, $i18next, ngTableParams,
+    .controller('AnnounceController',
+        function($scope, $modalInstance, $i18next,
                  CommonHttpService, ValidationTool, ToastrService,
-                 DataCenter, notificationOptions){
+                 notificationOptions){
 
             var INFO = 1, form = null, options = [];
 
@@ -205,15 +219,12 @@ CloudApp.controller('UserController',
             $scope.options = options;
             $scope.cancel = $modalInstance.dismiss;
             $scope.notification = {title: '', content: '', level: INFO};
-            $scope.data_centers = DataCenter.query(function(data_centers){
-                $scope.notification.data_center = data_centers[0].id;
-            });
 
             $modalInstance.rendered.then(function(){
                 form = ValidationTool.init('#notificationForm');
             });
 
-            $scope.broadcast = function(notification){
+            $scope.announce = function(notification){
 
                 if(!form.valid()){
                     return;
@@ -221,7 +232,7 @@ CloudApp.controller('UserController',
 
                 var params = angular.copy(notification);
 
-                CommonHttpService.post('/api/notifications/data-center-broadcast/', params).then(function(result){
+                CommonHttpService.post('/api/notifications/announce/', params).then(function(result){
                     if(result.success){
                         ToastrService.success(result.msg, $i18next("success"));
                         $modalInstance.close();

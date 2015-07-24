@@ -1,5 +1,6 @@
 #coding=utf-8
 
+import logging
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -9,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, NotificationLevel, TimeUnit
 
 from biz.account.mixins import LivingDeadModel
+
+LOG = logging.getLogger(__name__)
 
 
 class UserProfile(models.Model):
@@ -156,16 +159,12 @@ class Operation(models.Model):
         verbose_name_plural = _("Operation")
 
 
-class Notification(LivingDeadModel):
-    receiver = models.ForeignKey(User, related_name="notifications",
-                                 related_query_name='notification')
+class Notification(models.Model):
     level = models.IntegerField(choices=NotificationLevel.OPTIONS, default=NotificationLevel.INFO)
     title = models.CharField(max_length=100)
     content = models.TextField()
-    is_read = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
     create_date = models.DateTimeField(auto_now_add=True)
-    read_date = models.DateTimeField(null=True)
+    is_announcement = models.BooleanField(default=False)
 
     @property
     def time_ago(self):
@@ -186,23 +185,28 @@ class Notification(LivingDeadModel):
             years = time_delta / TimeUnit.YEAR
             return _("%(years)d years ago") % {'years': years}
 
-    @classmethod
-    def create(cls, receiver, title, content, level=NotificationLevel.INFO):
-        return cls.objects.create(receiver=receiver, title=title, content=content, level=level)
-
-    def mark_read(self):
-        self.is_read = True
-        self.read_date = timezone.now()
-        self.save()
-
-    def fake_delete(self):
-        self.deleted = True
-        self.save()
-
     class Meta:
         db_table = "notification"
         verbose_name = _("Notification")
         verbose_name_plural = _("Notifications")
+
+    @classmethod
+    def broadcast(cls, receivers, title, content, level):
+
+        notification = cls.objects.create(title=title, content=content, level=level)
+        for receiver in receivers:
+            Feed.objects.create(receiver=receiver, notification=notification)
+
+    @classmethod
+    def pull_announcements(cls, receiver):
+
+        try:
+            for notification in Notification.objects.filter(is_announcement=True).\
+                    exclude(feed=Feed.objects.filter(receiver=receiver)):
+
+                Feed.objects.create(notification=notification, receiver=receiver)
+        except:
+            LOG.exception("Failed to pull announcement for user: %s", receiver.username)
 
 
 NOTIFICATION_KEY_METHODS = ((NotificationLevel.INFO, 'info'),
@@ -219,10 +223,41 @@ for value, name in NOTIFICATION_KEY_METHODS:
 # This loop will create some action method, user can create notification like this way:
 # Notification.info(receiver, title, content)
 for value, name in NOTIFICATION_KEY_METHODS:
+
     def bind(level):
+
         def action(cls, receiver, title, content):
-            return cls.create(receiver, title, content, level=level)
+            notification = cls.objects.create(title=title, content=content, level=level)
+            Feed.objects.create(receiver=receiver, notificaiton=notification)
+
+            return notification
 
         setattr(Notification, name, classmethod(action))
 
     bind(value)
+
+
+class Feed(LivingDeadModel):
+
+    is_read = models.BooleanField(default=False)
+    receiver = models.ForeignKey(User, related_name="notifications",
+                                 related_query_name='notification')
+
+    create_date = models.DateTimeField(auto_now_add=True)
+    read_date = models.DateTimeField(null=True)
+    deleted = models.BooleanField(default=False)
+    notification = models.ForeignKey(Notification, related_name="feeds", related_query_name="feed")
+
+    class Meta:
+        db_table = "user_feed"
+        verbose_name = _("Feed")
+        verbose_name_plural = _("Feeds")
+
+    def mark_read(self):
+        self.is_read = True
+        self.read_date = timezone.now()
+        self.save()
+
+    def fake_delete(self):
+        self.deleted = True
+        self.mark_read()

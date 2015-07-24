@@ -5,82 +5,46 @@
 
 
 CloudApp.controller('NotificationController',
-    function($rootScope, $scope, $modal, CommonHttpService, Notification){
+    function($rootScope, $scope, $modal, Feed){
 
     $scope.$on('$viewContentLoaded', function() {
         Metronic.initAjax();
     });
 
-    var unreadList = [],
-        readList = [],
-        all = $scope.notifications = [];
+    $scope.feeds = [];
 
-    $scope.read = function(notification){
-        $modal.open({
-                templateUrl: 'detail.html',
-                controller: 'NotificationDetailController',
-                backdrop: "static",
-                size: 'lg',
-                resolve: {
-                    notification: function () {
-                        return notification;
-                    }
-                }
-            }).result.then(function(){
+    $scope.unreadStyle = {'color': 'blue'};
+    $scope.readStyle = {'color': 'gray'};
 
-                if(notification.is_read){
-                   return;
-                }
-
-                Notification.markRead({id: notification.id}, function(){
-                    notification.is_read = true;
-                    split();
-                });
-            });
-    };
-
-    $scope.showAll = function(){
-        $scope.notifications = all;
-    };
-
-    $scope.showReadList = function(){
-        $scope.notifications = readList;
-    };
-
-    $scope.showUnreadList = function(){
-        $scope.notifications = unreadList;
-    };
-
-    $scope.delete = function(notification){
-        Notification.delete({id: notification.id}, function(){
+    $scope.delete = function(feed){
+        Feed.delete({id: feed.id}, function(){
             load();
         });
     };
 
-    var split = function(){
-        unreadList.splice(0, unreadList.length);
-        readList.splice(0, readList.length);
+    $scope.collapse = function(target){
 
-        angular.forEach(all, function(notification){
-            if(notification.is_read){
-                readList.push(notification);
-            } else {
-               unreadList.push(notification);
+        target.isCollapsed = !target.isCollapsed;
+
+        if(target.is_read == false){
+            Feed.markRead({id: target.id}, function(){
+                    target.is_read = true;
+                });
+        }
+
+        angular.forEach($scope.feeds, function(feed){
+            if(feed.id != target.id){
+                feed.isCollapsed = false;
             }
         });
+
     };
 
-    var load = function(){
-        Notification.query(function(notifications){
-            all.splice(0, all.length);
-            angular.forEach(notifications, function(notification){
-                all.push(notification);
-            });
-            split();
+    var load = $scope.load = function(){
+        Feed.query(function(feeds){
+            $scope.feeds = feeds;
         });
     };
-
-    $rootScope.setInterval(load, 10000);
 
     load();
 })

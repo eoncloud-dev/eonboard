@@ -71,7 +71,11 @@ angular.module('cloud.resources', [])
 }])
 
 .factory('Notification', ['$resource', function ($resource){
-    return $resource("/api/notifications/:id/:action/",
+    return $resource("/api/notifications/:id/:action/", {id: '@id'});
+}])
+
+.factory('Feed', ['$resource', function ($resource){
+    return $resource("/api/feeds/:id/:action/",
         {id: '@id'},
         {
             status: {isArray: false,  params: {action: 'status'}},

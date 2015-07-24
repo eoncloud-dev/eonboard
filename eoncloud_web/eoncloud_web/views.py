@@ -6,10 +6,11 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 
 from biz.idc.models import DataCenter, UserDataCenter as UDC
+from biz.account.models import Notification
 from eoncloud_web.decorators import superuser_required
 
 
@@ -46,6 +47,9 @@ def login(request, template_name="login.html"):
                 request.session["UDC_ID"] = ucc[0].id
             else:
                 raise Exception("User has not register to any SDDC")
+
+            Notification.pull_announcements(user)
+
             return HttpResponseRedirect(reverse("cloud"))
 
     return render_to_response(template_name, RequestContext(request, {

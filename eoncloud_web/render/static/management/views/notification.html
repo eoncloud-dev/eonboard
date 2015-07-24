@@ -1,65 +1,76 @@
-
 <div class="portlet light">
     <div class="portlet-title">
         <div class="caption font-green-sharp">
-            <a class="btn btn-icon-only btn-default" href="#"
-               data-ng-click="load()">
+            <a class="btn btn-icon-only btn-default" href="#" ng-click="load()">
                 <i class="fa fa-refresh"></i>
             </a>
         </div>
     </div>
     <div class="portlet-body">
         <ul class="feeds" style="margin-left: 20px;">
-            <li data-ng-repeat="feed in feeds">
+            <li data-ng-repeat="notification in notifications">
                 <div class="row">
-                    <a href="" data-ng-click="collapse(feed)">
+                    <a href="" data-ng-click="collapse(notification)">
                         <div class="col1" style="width: 98%">
                             <div class="cont">
                                 <div class="cont-col1">
                                     <span class="label label-sm label-icon label-info"
-                                            data-ng-if="feed.notification.is_info">
+                                            data-ng-if="notification.is_info">
                                         <i class="fa fa-info"></i>
                                     </span>
                                     <span class="label label-sm label-icon label-success"
-                                          data-ng-if="feed.notification.is_success">
+                                          data-ng-if="notification.is_success">
                                         <i class="fa fa-check"></i>
                                     </span>
                                     <span class="label label-sm label-icon label-default"
-                                          data-ng-if="feed.notification.is_error">
+                                          data-ng-if="notification.is_error">
                                         <i class="fa fa-frown-o"></i>
                                     </span>
                                     <span class="label label-sm label-icon label-warning"
-                                          data-ng-if="feed.notification.is_warning">
+                                          data-ng-if="notification.is_warning">
                                         <i class="fa fa-exclamation-triangle "></i>
                                     </span>
                                     <span class="label label-sm label-icon label-danger"
-                                          data-ng-if="feed.notification.is_danger">
+                                          data-ng-if="notification.is_danger">
                                         <i class="fa fa-bolt"></i>
                                     </span>
                                 </div>
-                                <div class="cont-col2" >
-                                    <div class="desc" data-ng-if="feed.is_read" ng-style="readStyle">
-                                        {[{ feed.notification.title }]}
-                                    </div>
-                                    <div class="desc" data-ng-if="!feed.is_read" ng-style="unreadStyle">
-                                        {[{ feed.notification.title }]}
-                                    </div>
+                                <div class="cont-col2">
+                                    <div class="desc"> {[{ notification.title }]} </div>
                                 </div>
                             </div>
                         </div>
                     </a>
                     <div class="col2">
                         <div class="date" style="width: 110px; margin-left: -50px;">
-                            {[{ feed.notification.time_ago }]}
+                            {[{ notification.time_ago }]}
                         </div>
                     </div>
-                    <a href="javascript: void(0)" data-ng-click="delete(feed)"><i class="fa fa-trash"></i></a>
+                    <a href="javascript: void(0)" data-ng-click="delete(notification)"><i class="fa fa-trash"></i></a>
                 </div>
-                <div class="row" style="margin-top: 1em;"  data-ng-show="feed.isCollapsed">
-                    <pre style="width: 100%;"> {[{ feed.notification.content }]} </pre>
-                    <p style="text-align: right;"> {[{ feed.notification.create_date }]} </p>
+                <div class="row" style="margin-top: 1em;"  data-ng-show="notification.isCollapsed">
+                    <pre style="width: 100%;"> {[{ notification.content }]} </pre>
+                    <p style="text-align: right;"> {[{ notification.create_date }]} </p>
                 </div>
             </li>
         </ul>
     </div>
 </div>
+
+<!-- BEGIN TEMPLATE DETAIL -->
+<script type="text/ng-template" id="detail.html">
+    <div class="modal-header">
+       <div class="modal-title"> {[{ notification.title }]}</div>
+    </div>
+    <div class="modal-body">
+        <pre style="width: 100%; word-wrap: break-word;"> {[{ notification.content }]} </pre>
+        <p style="text-align: right;"> {[{ notification.create_date }]} </p>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="close()">
+            {[{ 'close' | i18next }]}
+        </a>
+    </div>
+</script>
+<!-- END TEMPLATE DETAIL -->
+

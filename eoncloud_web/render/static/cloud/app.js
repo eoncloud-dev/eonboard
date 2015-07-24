@@ -66,8 +66,9 @@ CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, 
  ***/
 
 /* Setup Layout Part - Header */
-CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', 'passwordModal',
-    function ($rootScope, $scope, $http, passwordModal) {
+CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', '$interval', 'Feed', 'passwordModal',
+    function ($rootScope, $scope, $http, $interval, Feed, passwordModal) {
+
         $scope.$on('$includeContentLoaded', function () {
             Layout.initHeader(); // init header
         });
@@ -77,24 +78,23 @@ CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', 'passw
         $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
             $rootScope.current_user = data;
         });
-}]);
 
-/* Setup Layout Part - Sidebar */
-CloudApp.controller('SidebarController', ['$scope', '$interval', 'Notification',
-    function ($scope, $interval, Notification) {
-        $scope.$on('$includeContentLoaded', function () {
-            Layout.initSidebar(); // init sidebar
-        });
-
-        var checkNotifications = function(){
-            Notification.status(function(status){
+        var checkFeeds = function(){
+            Feed.status(function(status){
                 $scope.num = status.num;
             });
         };
 
-        $interval(checkNotifications, 10000);
+        $interval(checkFeeds, 10000);
 
-        checkNotifications();
+        checkFeeds();
+}]);
+
+/* Setup Layout Part - Sidebar */
+CloudApp.controller('SidebarController', ['$scope', function ($scope) {
+        $scope.$on('$includeContentLoaded', function () {
+            Layout.initSidebar(); // init sidebar
+        });
 }]);
 
 /* Setup Layout Part - Footer */
@@ -134,8 +134,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     quota: function (CommonHttpService) {
                         return CommonHttpService.get("/api/account/quota/");
                     },
-                    notificationStatus: function (Notification){
-                        return Notification.status().$promise;
+                    feedStatus: function (Feed){
+                        return Feed.status().$promise;
                     }
                 }
             })

@@ -21,9 +21,9 @@ from django.contrib.auth.models import check_password
 from biz.account.forms import CloudUserCreateForm
 from biz.account.settings import QUOTA_ITEM, NotificationLevel
 from biz.account.models import (Contract, Operation, Quota,
-                                UserProxy, Notification)
+                                UserProxy, Notification, Feed)
 from biz.account.serializer import (ContractSerializer, OperationSerializer,
-                                    UserSerializer, QuotaSerializer,
+                                    UserSerializer, QuotaSerializer, FeedSerializer,
                                     DetailedUserSerializer, NotificationSerializer)
 from biz.account.utils import get_quota_usage
 from biz.idc.models import DataCenter
@@ -391,8 +391,7 @@ def broadcast(request):
     if receiver_ids:
         receivers = UserProxy.normal_users.filter(pk__in=receiver_ids)
 
-    for receiver in receivers:
-        Notification.create(receiver, title, content, level)
+    Notification.broadcast(receivers, title, content, level)
 
     return Response({"success": True,
                      "msg": _('Notification is sent successfully!')})
@@ -400,41 +399,67 @@ def broadcast(request):
 
 @require_POST
 def data_center_broadcast(request):
+
     dc_id, level, title, content = retrieve_params(
         request.data, 'data_center', 'level', 'title', 'content')
 
-    for receiver in UserProxy.normal_users. \
-            filter(userdatacenter__data_center__pk=dc_id, is_active=True):
-        Notification.create(receiver, title, content, level)
+    receivers = UserProxy.normal_users.filter(
+        userdatacenter__data_center__pk=dc_id, is_active=True)
+
+    Notification.broadcast(receivers, title, content, level)
 
     return Response({"success": True,
                      "msg": _('Notification is sent successfully!')})
 
 
+@require_POST
+def announce(request):
+    level, title, content = retrieve_params(request.data, 'level', 'title', 'content')
+    Notification.objects.create(title=title, content=content, level=level, is_announcement=True)
+
+    return Response({"success": True,
+                     "msg": _('Announcement is sent successfully!')})
+
+
 class NotificationList(generics.ListAPIView):
-    queryset = Notification.living.all()
+    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().order_by('-create_date')
+        return Response(self.serializer_class(queryset, many=True).data)
+
+
+class NotificationDetail(generics.RetrieveDestroyAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+
+class FeedList(generics.ListAPIView):
+    queryset = Feed.living.all()
+    serializer_class = FeedSerializer
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset().filter(receiver=request.user).order_by('-create_date')
         return Response(self.serializer_class(queryset, many=True).data)
 
 
-class NotificationDetail(generics.RetrieveDestroyAPIView):
-    queryset = Notification.living.all()
-    serializer_class = NotificationSerializer
+class FeedDetail(generics.RetrieveDestroyAPIView):
+    queryset = Feed.living.all()
+    serializer_class = FeedSerializer
 
     def perform_destroy(self, instance):
         instance.fake_delete()
 
 
 @require_GET
-def notification_status(request):
-    num = Notification.living.filter(receiver=request.user, is_read=False).count()
+def feed_status(request):
+    Notification.pull_announcements(request.user)
+    num = Feed.living.filter(receiver=request.user, is_read=False).count()
     return Response({"num": num})
 
 
 @require_POST
 def mark_read(request, pk):
-    Notification.objects.get(pk=pk).mark_read()
+    Feed.living.get(pk=pk).mark_read()
     return Response(status=status.HTTP_200_OK)

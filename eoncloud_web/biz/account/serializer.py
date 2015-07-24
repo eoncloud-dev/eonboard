@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from django.contrib.auth.models import User
 
-from biz.account.models import Contract, Quota, Operation, UserProxy, Notification, NOTIFICATION_KEY_METHODS
+from biz.account.models import Contract, Quota, Operation, UserProxy, Notification, Feed
 
 from biz.idc.serializer import DetailedUserDataCenterSerializer
 
@@ -66,3 +66,10 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
 
+
+class FeedSerializer(serializers.ModelSerializer):
+
+    notification = NotificationSerializer()
+
+    class Meta:
+        model = Feed

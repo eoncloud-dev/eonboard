@@ -160,11 +160,14 @@ urlpatterns += format_suffix_patterns(
         url(r'^quota-resource-options/$', account_view.resource_options),
         url(r'^notifications/broadcast/$', account_view.broadcast),
         url(r'^notifications/data-center-broadcast/$', account_view.data_center_broadcast),
+        url(r'^notifications/announce/$', account_view.announce),
         url(r'^notifications/$', account_view.NotificationList.as_view()),
         url(r'^notifications/options/$', account_view.notification_options),
-        url(r'^notifications/status/$', account_view.notification_status),
         url(r'^notifications/(?P<pk>[0-9]+)/$', account_view.NotificationDetail.as_view()),
-        url(r'^notifications/(?P<pk>[0-9]+)/mark-read/$', account_view.mark_read),
+        url(r'^feeds/$', account_view.FeedList.as_view()),
+        url(r'^feeds/(?P<pk>[0-9]+)/$', account_view.FeedDetail.as_view()),
+        url(r'^feeds/(?P<pk>[0-9]+)/mark-read/$', account_view.mark_read),
+        url(r'^feeds/status/$', account_view.feed_status),
     ]
 )
 

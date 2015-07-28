@@ -70,7 +70,7 @@
                                         <button ng-repeat="memory in memory_list" class="btn btn-default" type="button"
                                                 ng-class="{'btn-primary': instance_config.memory == memory, 'disabled': instance_config.cpu_memory.indexOf(memory) == -1}"
                                                 ng-click="instance_config.memory = memory;">
-                                            <span ng-if="memory/1024 > 1"> {[{ memory/1024 }]} GB</span>
+                                            <span ng-if="memory/1024 >= 1"> {[{ memory/1024 }]} GB</span>
                                             <span ng-if="memory/1024 < 1"> {[{ memory }]} MB</span>
 
                                         </button>
@@ -239,7 +239,7 @@
                                                 {[{ 'instance.memory' | i18next }]}
                                             </td>
                                             <td>
-                                                <span ng-if="instance_config.memory/1024 > 1"> {[{ instance_config.memory/1024 }]} GB</span>
+                                                <span ng-if="instance_config.memory/1024 >= 1"> {[{ instance_config.memory/1024 }]} GB</span>
                                                 <span ng-if="instance_config.memory/1024 < 1"> {[{ instance_config.memory }]} MB</span>
                                             </td>
                                         </tr>

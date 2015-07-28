@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
-from django.contrib import admin
 admin.autodiscover()
 
 import views
@@ -40,7 +39,7 @@ urlpatterns += patterns('',
                                 name="find_password"),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^current_user/$', views.current_user, name='current_user'),
-    #url(r'^password-reset-complete/$', 
+    #url(r'^password-reset-complete/$',
     #                views.password_reset_complete,
     #                name="password_reset_complete")
 )

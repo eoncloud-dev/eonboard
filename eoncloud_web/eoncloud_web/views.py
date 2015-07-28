@@ -1,5 +1,4 @@
 #-*-coding=utf-8-*-
-
 from django.conf import settings
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext

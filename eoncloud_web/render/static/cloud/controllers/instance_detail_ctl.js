@@ -72,7 +72,7 @@ function MonitorControllerFactory(urlName){
             };
 
             var loadMonitor = function(){
-                var url = urlTemplate(currentConfig);
+                var url = "/api/instances/monitor" + urlTemplate(currentConfig);
                 $scope.monitorUrl = $sce.trustAsResourceUrl(url);
             };
 

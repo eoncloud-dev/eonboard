@@ -1,9 +1,13 @@
 #coding=utf-8
 
+import re
 import logging
-
+from djproxy.views import HttpProxy
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
@@ -188,4 +192,22 @@ def monitor_settings(request):
     monitor_config['INTERVAL_OPTIONS'] = MonitorInterval.\
         filter_options(monitor_config['INTERVAL_OPTIONS'])
 
+    monitor_config.pop('BASE_URL')
+
     return Response(monitor_config)
+
+
+class MonitorProxy(HttpProxy):
+    base_url = settings.MONITOR_CONFIG['BASE_URL']
+
+    forbidden_pattern = re.compile(r"elasticsearch/.kibana/visualization/")
+
+    def proxy(self):
+        url = self.kwargs.get('url', '')
+
+        if self.forbidden_pattern.search(url):
+            return HttpResponse('', status=status.HTTP_403_FORBIDDEN)
+
+        return super(MonitorProxy, self).proxy()
+
+monitor_proxy = login_required(csrf_exempt(MonitorProxy.as_view()))

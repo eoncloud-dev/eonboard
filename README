@@ -1,34 +1,43 @@
-:Document
+## 关于Eonboard
 
-# env
+> 一个openstack horizon的fork，更简单，更易用，更稳定。  
+> 基于angularjs/django/celery搭建
 
-.venv/bin/pip freeze > requirements.txt
+##### 最新的release版本是V1.1
+	用户管理：
+	1. instance(detail/console.log/monitor)
+	2. instance actions
+	3. volume(attach/detach)
+	4. image(readonly)
+	5. floating ip(associate/disaccociate/allocate/release) 
+	6. network/network topology
+	7. router
+	8. LBaaS
+	9. Backup
+	10. Log
+	11. 工单
+	12. 通知和广播
+	13. 个人信息维护
+	
+	后台管理
+	1. 系统初始化
+	2. Openstack集群维护
+	3. 合同管理(配额)
+	4. flavor
+	5. image
+	6. Log
+	7. 工单
+	8. 用户管理
+	9. 消息管理
+	
 
-# db
+#####  如何部署
+	参阅docs/how_to_deploy.md
+	
+##### 依赖
+	1. ELK
+	2. Ceph
+	3. mysql/rabbit-mq
+	
+##### 屏幕截图
 
-create database cloud_web CHARACTER SET utf8;
-create user cloud_web;
-grant all privileges on cloud_web.* to 'cloud_web'@'%' identified by 'password' with grant option;
-flush privileges;
-
-# django init
-
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py init_flavor
-
-# run celery worker
-
-../.venv/bin/celery -A cloud worker -l info
-
-# run server
-
-../.venv/bin/python manage.py runserver --insecure
-
-
-# i18n by django
-django-admin makemessages --locale=zh_CN
-django-admin compilemessages --locale=zh_CN
-# or
-python ../manage.py makemessages -l zh_CN
-python ../manage.py compilemessages -l zh_CN

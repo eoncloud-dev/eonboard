@@ -94,3 +94,5 @@ MONITOR_CONFIG = {
     ],
     'intervals': ['second', 'minute', 'hour', 'day', 'week', 'month']
 }
+
+WORKFLOW_ENABLED = True

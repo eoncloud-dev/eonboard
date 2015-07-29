@@ -81,4 +81,10 @@ angular.module('cloud.resources', [])
             status: {isArray: false,  params: {action: 'status'}},
             markRead: {method: 'POST', isArray:false, params: {action: 'mark-read'}}
         });
+}])
+
+.factory('FlowInstance', ['$resource', function ($resource){
+    return $resource("/api/workflow-instances/:id/:action/",
+        {id: '@id'},
+        {status: {isArray: false, params: {action: 'status'}}});
 }]);

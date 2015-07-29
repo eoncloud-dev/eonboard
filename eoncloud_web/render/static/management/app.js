@@ -21,6 +21,7 @@ var CloudApp = angular.module("CloudApp", [
     "ngCookies",
     "ngBootbox",
     "jm.i18next",
+    "ngLodash",
     "cloud.services",
     "cloud.resources",
     "cloud.directives"
@@ -280,6 +281,31 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                             ]
                         });
                     }]
+                }
+            })
+
+            // workflow
+            .state("instance_create_flow", {
+                url: "/instance-create-flow/",
+                templateUrl: "/static/management/views/instance_creation_flow.html",
+                data: {pageTitle: 'Instance Creation Flow'},
+                controller: "InstanceCreateFlowController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/management/controllers/workflow_ctrl.js'
+                            ]
+                        });
+                    }],
+                    users: function(User){
+                        return User.query().$promise;
+                    },
+                    workflow: function(CommonHttpService){
+                        return CommonHttpService.get('/api/workflows/instance-create/')
+                    }
                 }
             });
     }]);

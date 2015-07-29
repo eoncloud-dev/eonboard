@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'biz.network',
     'biz.lbaas',
     'biz.volume',
+    'biz.workflow',
     'cloud',
     'render',
     'biz.firewall',

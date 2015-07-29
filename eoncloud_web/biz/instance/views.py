@@ -20,9 +20,11 @@ from biz.firewall.serializer import FirewallSerializer
 from biz.instance.models import Instance, Flavor
 from biz.instance.serializer import InstanceSerializer, FlavorSerializer
 from biz.instance.utils import instance_action
-from biz.instance.settings import INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING, MonitorInterval
+from biz.instance.settings import (INSTANCE_STATES_DICT, INSTANCE_STATE_RUNNING,
+                                   INSTANCE_STATE_AUDITING, MonitorInterval)
 from biz.account.utils import check_quota
 from biz.account.models import Operation
+from biz.workflow.models import FlowInstance
 
 from eoncloud_web.decorators import require_GET
 from cloud.instance_task import instance_create_task, instance_get_console_log, instance_get
@@ -125,9 +127,20 @@ def instance_create_view(request):
     serializer = InstanceSerializer(data=request.data, context={"request": request}) 
     if serializer.is_valid():
         ins = serializer.save()
+        ins.status = INSTANCE_STATE_AUDITING
+        ins.save()
+
         Operation.log(ins, obj_name=ins.name, action="launch", result=1)
-        instance_create_task.delay(ins, password=request.DATA["password"])
-        return Response({"OPERATION_STATUS": 1}, status=status.HTTP_201_CREATED)
+
+        if settings.WORKFLOW_ENABLED:
+            FlowInstance.create_instance_flow(ins, request.user, request.DATA['password'])
+            msg = _("Your application for instance \"%(instance_name)s\" is successful, "
+                    "please waiting for approval result!") % {'instance_name': ins.name}
+        else:
+            instance_create_task.delay(ins, password=request.DATA["password"])
+            msg = _("Your instance is created, please wait for instance booting.")
+        return Response({"OPERATION_STATUS": 1,
+                         "msg": msg}, status=status.HTTP_201_CREATED)
     else:
         return Response({"OPERATION_STATUS": 0}, status=status.HTTP_400_BAD_REQUEST) 
 

@@ -1,0 +1,61 @@
+<div>
+    <div class="col-md-12">
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="table"
+                           class="table table-striped table-bordered table-advance">
+                        <tr ng-repeat-start="instance in $data">
+                            <td data-title="'workflow.flow_instance_name' | i18next">
+                                {[{ instance.name }]}
+                            </td>
+                            <td data-title="'workflow.resource_info' | i18next">
+                               <b>{[{ instance.resource_info.name }]}/ {[{ instance.resource_info.cpu }]} CPU/ {[{ instance.resource_info.memory }]}MB/ {[{ instance.resource_info.sys_disk }]}GB</b>
+                            </td>
+                            <td data-title="'workflow.apply_start_date' | i18next">
+                                {[{ instance.create_date }]}
+                            </td>
+                            <td data-title="'workflow.apply_end_date' | i18next">
+                                <span data-ng-if="instance.is_complete">{[{ instance.update_date }]}</span>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end>
+                            <td colspan="4" style="background-color: white;">
+                                <div style="padding-left: 10px;">
+                                    <ul class="list-inline">
+                                        <li class="label label-success"> {[{ instance.name }]} </li>
+                                        <li> -> </li>
+                                        <li tooltips
+                                            data-tooltip="{[{step.auditor_name}]}"
+                                            data-ng-repeat-start="step in instance.steps"
+                                            data-ng-class="stepClass(instance, step)">
+                                            {[{ step.name }]}
+                                        </li>
+                                        <li data-ng-repeat-end> -> </li>
+                                        <li data-ng-class="endStepClass(instance)">
+                                            {[{ 'workflow.step_end'| i18next }]}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div data-ng-if="isRejected(instance)">
+                                    {[{ 'workflow.reject_reason' | i18next }]}：　
+                                    <pre style="border: 0px; background-color: white; width: 50em;">{[{ instance.reject_reason }]}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+

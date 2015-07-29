@@ -600,7 +600,7 @@ CloudApp.controller('InstanceCreateController',
             }
             CommonHttpService.post("/api/instances/create/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
-                    ToastrService.success($i18next("instance.create_success_and_waiting"), $i18next("success"));
+                    ToastrService.success(data.msg, $i18next("success"));
                     instance_table.reload();
                 }
                 else if (data.OPERATION_STATUS == 2) {

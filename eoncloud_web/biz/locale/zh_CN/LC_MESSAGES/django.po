@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 11:28+0800\n"
+"POT-Creation-Date: 2015-08-03 17:00+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,11 +153,11 @@ msgstr "通知"
 
 #: account/models.py:253
 msgid "Feed"
-msgstr ""
+msgstr "种子"
 
 #: account/models.py:254
 msgid "Feeds"
-msgstr ""
+msgstr "种子"
 
 #: account/settings.py:7
 msgid "Personal"
@@ -168,7 +168,7 @@ msgid "Company"
 msgstr "企业"
 
 #: account/settings.py:12 account/settings.py:22 backup/models.py:22
-#: instance/models.py:51 instance/models.py:52
+#: instance/models.py:51 instance/models.py:52 workflow/models.py:76
 msgid "Instance"
 msgstr "云主机"
 
@@ -283,8 +283,6 @@ msgid "detach router"
 msgstr "离开路由器"
 
 #: account/settings.py:63
-#, fuzzy
-#| msgid "Operation"
 msgid "Information"
 msgstr "通知"
 
@@ -349,8 +347,6 @@ msgid "The original password is not correct!"
 msgstr "原始密码不对！"
 
 #: account/views.py:281
-#, fuzzy
-#| msgid "Password has been changed!"
 msgid "Password has been changed! Please login in again."
 msgstr "密码修改成功"
 
@@ -383,8 +379,6 @@ msgid "Notification is sent successfully!"
 msgstr "消息发布成功！"
 
 #: account/views.py:421
-#, fuzzy
-#| msgid "Notification is sent successfully!"
 msgid "Announcement is sent successfully!"
 msgstr "消息发布成功！"
 
@@ -896,190 +890,209 @@ msgstr ""
 msgid "Flavor"
 msgstr "规格"
 
-#: instance/settings.py:24 instance/settings.py:47
+#: instance/settings.py:26 instance/settings.py:51
 msgid "Instance Waiting"
 msgstr "等待调度"
 
-#: instance/settings.py:25 instance/settings.py:48
+#: instance/settings.py:27 instance/settings.py:52
 msgid "Instance Running"
 msgstr "运行中"
 
-#: instance/settings.py:26 instance/settings.py:49
+#: instance/settings.py:28 instance/settings.py:53
 msgid "Instance Booting"
 msgstr "启动中"
 
-#: instance/settings.py:27 instance/settings.py:50
+#: instance/settings.py:29 instance/settings.py:54
 msgid "Instance Rebooting"
 msgstr "重启中"
 
-#: instance/settings.py:28 instance/settings.py:51
+#: instance/settings.py:30 instance/settings.py:55
 msgid "Instance Paused"
 msgstr "暂停中"
 
-#: instance/settings.py:29 instance/settings.py:52 instance/settings.py:80
-#: instance/settings.py:103
+#: instance/settings.py:31 instance/settings.py:56 instance/settings.py:86
+#: instance/settings.py:109
 msgid "Instance Power Off"
 msgstr "已关机"
 
-#: instance/settings.py:30 instance/settings.py:53
+#: instance/settings.py:32 instance/settings.py:57
 msgid "Instance Shutting Down"
 msgstr "正在关机"
 
-#: instance/settings.py:31 instance/settings.py:54
+#: instance/settings.py:33 instance/settings.py:58
 msgid "Instance Deploying"
 msgstr "部署中"
 
-#: instance/settings.py:32 instance/settings.py:55
+#: instance/settings.py:34 instance/settings.py:59
 msgid "Instance Deploy Failed"
 msgstr "部署失败"
 
-#: instance/settings.py:33 instance/settings.py:56
+#: instance/settings.py:35 instance/settings.py:60
 msgid "Instance Locked"
 msgstr "已锁定"
 
-#: instance/settings.py:34 instance/settings.py:57
+#: instance/settings.py:36 instance/settings.py:61
 msgid "Instance Delete"
 msgstr "已删除"
 
-#: instance/settings.py:35 instance/settings.py:58
+#: instance/settings.py:37 instance/settings.py:62
 msgid "Instance Error"
 msgstr "错误"
 
-#: instance/settings.py:36 instance/settings.py:59
+#: instance/settings.py:38 instance/settings.py:63
 msgid "Instance Backuping"
 msgstr "备份中"
 
-#: instance/settings.py:37 instance/settings.py:60
+#: instance/settings.py:39 instance/settings.py:64
 msgid "Instance Restoring"
 msgstr "恢复中"
 
-#: instance/settings.py:38 instance/settings.py:61
+#: instance/settings.py:40 instance/settings.py:65
 msgid "Instance Resizing"
 msgstr "调整规格"
 
-#: instance/settings.py:39 instance/settings.py:62
+#: instance/settings.py:41 instance/settings.py:66
 msgid "Instance Expired"
 msgstr "已过期"
 
-#: instance/settings.py:40 instance/settings.py:63
+#: instance/settings.py:42 instance/settings.py:67
 msgid "Instance Deleting"
 msgstr "删除中"
 
-#: instance/settings.py:78
+#: instance/settings.py:43 instance/settings.py:68
+msgid "Auditing"
+msgstr "审核中"
+
+#: instance/settings.py:44 instance/settings.py:69
+msgid "Rejected"
+msgstr "申请被拒绝"
+
+#: instance/settings.py:84
 msgid "Instance Active"
 msgstr "开机"
 
-#: instance/settings.py:79
+#: instance/settings.py:85
 msgid "Instance Build"
 msgstr "构建"
 
-#: instance/settings.py:81
+#: instance/settings.py:87
 msgid "Instance Pause"
 msgstr "暂停"
 
-#: instance/settings.py:82
+#: instance/settings.py:88
 msgid "Instance Lock"
 msgstr "锁定"
 
-#: instance/settings.py:83
+#: instance/settings.py:89
 msgid "Instance Resize"
 msgstr "调整规则"
 
-#: instance/settings.py:84 instance/settings.py:101
+#: instance/settings.py:90 instance/settings.py:107
 msgid "Instance Reboot"
 msgstr "重启"
 
-#: instance/settings.py:85
+#: instance/settings.py:91
 msgid "Instance Restore"
 msgstr "恢复"
 
-#: instance/settings.py:102
+#: instance/settings.py:108
 msgid "Instance Power On"
 msgstr "开机"
 
-#: instance/settings.py:104
+#: instance/settings.py:110
 msgid "Instance VNC"
 msgstr "VNC远程桌面"
 
-#: instance/settings.py:105
+#: instance/settings.py:111
 msgid "Instance Bind Floating"
 msgstr "绑定公网IP"
 
-#: instance/settings.py:106
+#: instance/settings.py:112
 msgid "Instance Unbind Floating"
 msgstr "解绑公网IP"
 
-#: instance/settings.py:107
+#: instance/settings.py:113
 msgid "Instance Change Firewall"
 msgstr "修改防火墙"
 
-#: instance/settings.py:108
+#: instance/settings.py:114
 msgid "Instance Attach Volume"
 msgstr "挂载磁盘"
 
-#: instance/settings.py:109
+#: instance/settings.py:115
 msgid "Instance Detach Volume"
 msgstr "卸载磁盘"
 
-#: instance/settings.py:110
+#: instance/settings.py:116
 msgid "Instance Terminate"
 msgstr "删除"
 
-#: instance/settings.py:111
+#: instance/settings.py:117
 msgid "Instance Launch"
 msgstr "创建云主机"
 
-#: instance/settings.py:157
+#: instance/settings.py:163
 msgid "Second"
 msgstr "秒"
 
-#: instance/settings.py:158
+#: instance/settings.py:164
 msgid "Minute"
 msgstr "分"
 
-#: instance/settings.py:159
+#: instance/settings.py:165
 msgid "Hourly"
 msgstr "时"
 
-#: instance/settings.py:160
+#: instance/settings.py:166
 msgid "Daily"
 msgstr "天"
 
-#: instance/settings.py:161
+#: instance/settings.py:167
 msgid "Weekly"
 msgstr "周"
 
-#: instance/settings.py:162
+#: instance/settings.py:168
 msgid "Monthly"
 msgstr "月"
 
-#: instance/settings.py:163
+#: instance/settings.py:169
 msgid "Yearly"
 msgstr "年"
 
-#: instance/views.py:85
+#: instance/views.py:87
 msgid "Flavor is created successfully!"
 msgstr "规格创建成功！"
 
-#: instance/views.py:88 instance/views.py:107
+#: instance/views.py:90 instance/views.py:109
 msgid "Flavor data is not valid!"
 msgstr "规格数据有错误！"
 
-#: instance/views.py:93
+#: instance/views.py:95
 msgid "Failed to create flavor for unknown reason."
 msgstr "未知错误导致规格创建失败．"
 
-#: instance/views.py:104
+#: instance/views.py:106
 msgid "Flavor is updated successfully!"
 msgstr "规格更新成功"
 
-#: instance/views.py:112
+#: instance/views.py:114
 msgid "Failed to update flavor for unknown reason."
 msgstr "规格更新失败"
 
-#: instance/views.py:119
+#: instance/views.py:121
 msgid "Flavors have been deleted!"
 msgstr "规格已删除"
+
+#: instance/views.py:137
+#, python-format
+msgid ""
+"Your application for instance \"%(instance_name)s\" is successful, please "
+"waiting for approval result!"
+msgstr "您的云主机\"%(instance_name)s\"申请已生成，请等待审核结果！"
+
+#: instance/views.py:141
+msgid "Your instance is created, please wait for instance booting."
+msgstr "您的云主机已经创建，请等待启动．"
 
 #: lbaas/models.py:11
 msgid "Pool UUID"
@@ -1464,8 +1477,6 @@ msgid "BUILD"
 msgstr "构建中"
 
 #: network/views.py:42
-#, fuzzy
-#| msgid "Network deleted success"
 msgid "Network address exists"
 msgstr "私有网络删除成功"
 
@@ -1498,20 +1509,16 @@ msgid "Network deleted success"
 msgstr "私有网络删除成功"
 
 #: network/views.py:101
-#, fuzzy
-#| msgid "Network deleted success"
 msgid "Network deleted error"
-msgstr "私有网络删除成功"
+msgstr "私有网络删除失败"
 
 #: network/views.py:103
 msgid "The selected network does not exist"
 msgstr "私有网络不存在"
 
 #: network/views.py:125 network/views.py:131
-#, fuzzy
-#| msgid "Unknown volume action"
 msgid "Unkown operation"
-msgstr "未知的磁盘操作"
+msgstr "未知的操作"
 
 #: network/views.py:141
 msgid "Unkown router"
@@ -1526,10 +1533,8 @@ msgid "Link router success"
 msgstr "加入路由器成功"
 
 #: network/views.py:166
-#, fuzzy
-#| msgid "Link router success"
 msgid "Link router error"
-msgstr "加入路由器成功"
+msgstr "加入路由器失败"
 
 #: network/views.py:182 network/views.py:187
 msgid "Network operation error"
@@ -1624,8 +1629,6 @@ msgid "Volume Available"
 msgstr "可用"
 
 #: volume/settings.py:24 volume/settings.py:43
-#, fuzzy
-#| msgid "Volume Attaching"
 msgid "Volume Backing Up"
 msgstr "挂载中"
 
@@ -1642,14 +1645,10 @@ msgid "Volume Error"
 msgstr "错误"
 
 #: volume/settings.py:28 volume/settings.py:47
-#, fuzzy
-#| msgid "Volume Error_deleting"
 msgid "Volume Error Deleting"
 msgstr "删除失败"
 
 #: volume/settings.py:29 volume/settings.py:48
-#, fuzzy
-#| msgid "Volume Error_deleting"
 msgid "Volume Error Restoring"
 msgstr "恢复失败"
 
@@ -1658,20 +1657,16 @@ msgid "Volume In Use"
 msgstr "使用中"
 
 #: volume/settings.py:31 volume/settings.py:50
-#, fuzzy
-#| msgid "Volume Creating"
 msgid "Volume Restoring Backup"
-msgstr "创建中"
+msgstr "恢复磁盘中"
 
 #: volume/settings.py:32 volume/settings.py:51
 msgid "Volume Unrecognized"
 msgstr "未知"
 
 #: volume/settings.py:33 volume/settings.py:52
-#, fuzzy
-#| msgid "Volume uploading"
 msgid "Volume Uploading"
-msgstr "更新中"
+msgstr "磁盘上传中"
 
 #: volume/settings.py:57
 msgid "Capacity"
@@ -1714,20 +1709,16 @@ msgid "Attaching volume"
 msgstr "挂载中"
 
 #: volume/views.py:119
-#, fuzzy
-#| msgid "Attaching volume"
 msgid "Attach volume error"
-msgstr "挂载中"
+msgstr "挂载磁盘失败"
 
 #: volume/views.py:127
 msgid "Detaching volume"
 msgstr "卸载中"
 
 #: volume/views.py:132
-#, fuzzy
-#| msgid "Deleting Volume error"
 msgid "Detach volume error"
-msgstr "删除磁盘失败"
+msgstr "卸载磁盘失败"
 
 #: volume/views.py:137
 #, python-format
@@ -1742,20 +1733,92 @@ msgstr "删除中"
 msgid "Deleting Volume error"
 msgstr "删除磁盘失败"
 
-#~ msgid "The user is not founded!"
-#~ msgstr "没有该用户！"
+#: workflow/migrations/0002_add_instance_create_work_flow.py:17
+msgid "Instance Creation"
+msgstr "创建云主机"
 
-#~ msgid "Default network not allow operation"
-#~ msgstr "默认私有网络不支持此操作"
+#: workflow/models.py:11
+msgid "Flow Name"
+msgstr "流程名称"
 
-#~ msgid "Network not add subnet ,not operation "
-#~ msgstr "请将私有网络先加入路由器"
+#: workflow/models.py:12
+msgid "Content Type"
+msgstr "内容"
 
-#~ msgid "full"
-#~ msgstr "全量备份"
+#: workflow/models.py:18 workflow/models.py:19
+msgid "Workflow"
+msgstr "工作流"
 
-#~ msgid "increment"
-#~ msgstr "增量备份"
+#: workflow/models.py:32 workflow/models.py:61 workflow/models.py:130
+msgid "Work Flow"
+msgstr "工作流"
 
-#~ msgid "Wating Backup"
-#~ msgstr "等待备份"
+#: workflow/models.py:33 workflow/models.py:131
+msgid "Step Name"
+msgstr "名称"
+
+#: workflow/models.py:34 workflow/models.py:132
+msgid "Auditor"
+msgstr "审核人"
+
+#: workflow/models.py:35 workflow/models.py:133
+msgid "Step No."
+msgstr "步骤编号"
+
+#: workflow/models.py:44 workflow/models.py:142
+msgid "Workflow Step"
+msgstr "工作流步骤"
+
+#: workflow/models.py:45 workflow/models.py:143
+msgid "Workflow Steps"
+msgstr "工作流步骤"
+
+#: workflow/models.py:62
+msgid "Current Step"
+msgstr "当前步骤"
+
+#: workflow/models.py:63
+msgid "Reject Reason"
+msgstr "拒绝原因"
+
+#: workflow/models.py:64
+msgid "Completed"
+msgstr "已完成"
+
+#: workflow/models.py:65
+msgid "Extra Data"
+msgstr "其他数据"
+
+#: workflow/models.py:71
+msgid "Workflow Instance"
+msgstr "工作流实例"
+
+#: workflow/models.py:72
+msgid "Workflow Instances"
+msgstr "工作流实例"
+
+#: workflow/models.py:100
+msgid "Apply Instance"
+msgstr "申请云主机"
+
+#: workflow/views.py:71
+msgid "Instance create flow is saved."
+msgstr "云主机创建流程已保存!"
+
+#: workflow/views.py:113
+#, python-format
+msgid "Your application for instance \"%(instance_name)s\" is approved! "
+msgstr "您申请的云主机\"%(instance_name)s\"已被批准！"
+
+#: workflow/views.py:117
+msgid "This process is transfer to next phrase successfully!"
+msgstr "该流程成功进入下一审核环节！"
+
+#: workflow/views.py:133
+#, python-format
+msgid "Your application for instance \"%(instance_name)s\" is rejected! "
+msgstr "您申请的云主机\"%(instance_name)s\"被驳回！"
+
+#: workflow/views.py:137
+msgid "Application is rejected."
+msgstr "申请被驳回."

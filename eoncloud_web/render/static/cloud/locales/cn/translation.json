@@ -290,13 +290,19 @@
     "backup": "备份",
     "market_management": "运营管理",
     "operation_support": "运营支持",
-    "notifications": "通知"
+    "notifications": "通知",
+    "workflow_management": "流程管理",
+    "instance_create_flow": "云主机创建流程",
+    "workflow": "工作流",
+    "workflow_audit": "流程审批",
+    "my_workflow": "我的流程"
   },
 
   "overview": {
     "quota_usage": "配额使用情况",
     "contract_info": "合同详情",
-    "new_message_tip": "您有<strong>__num__</strong> 条未读消息! 点击 <a class=\"alert-link\" href=\"#/notification/\"> 这里 </a> 查看．"
+    "new_message_tip": "您有<strong>__num__</strong> 条未读消息! 点击 <a class=\"alert-link\" href=\"#/notification/\"> 这里 </a> 查看．",
+    "new_workflow_tip": "您有<strong>__num__</strong> 待审批申请! 点击 <a class=\"alert-link\" href=\"#/workflow-audit/\"> 这里 </a> 查看．"
   },
 
   "quota": {
@@ -563,5 +569,26 @@
         "one_hour": "一小时内",
         "time_range": "时间段"
     }
+  },
+
+  "workflow": {
+      "step_name": "环节",
+      "auditor": "审批人",
+      "applier": "申请人",
+      "select_auditor": "选择审批人",
+      "same_auditor": "审核人重复!",
+      "audit": "流程审批",
+      "flow_instance_name": "事项",
+      "resource_info": "具体信息",
+      "approve": "通过",
+      "reject": "驳回",
+      "process": "进展",
+      "status": "状态",
+      "status_complete": "完成",
+      "status_auditing": "审核中",
+      "reject_reason": "驳回原因",
+      "step_end": "结束",
+      "apply_start_date": "申请日期",
+      "apply_end_date": "结束日期"
   }
 }

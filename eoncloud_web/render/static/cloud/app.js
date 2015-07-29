@@ -136,6 +136,9 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     },
                     feedStatus: function (Feed){
                         return Feed.status().$promise;
+                    },
+                    workflowStatus: function(FlowInstance){
+                        return FlowInstance.status().$promise;
                     }
                 }
             })
@@ -489,6 +492,45 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     }],
                     status_desc: function(CommonHttpService){
                         return CommonHttpService.get("/api/backup/status/");
+                    }
+                }
+            })
+
+            .state("workflow-audit", {
+                url: "/workflow-audit/",
+                templateUrl: "/static/cloud/views/workflow_audit.html",
+                data: {pageTitle: 'Workflow Audit'},
+                controller: "WorkflowAuditController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/workflow_audit_ctrl.js'
+                            ]
+                        });
+                    }]
+                }
+            })
+
+            .state("my-workflow", {
+                url: "/my-workflow/",
+                templateUrl: "/static/cloud/views/my_workflow.html",
+                data: {pageTitle: 'My Workflow'},
+                controller: "MyWorkflowController",
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'CloudApp',
+                            insertBefore: '#ng_load_plugins_before',
+                            files: [
+                                '/static/cloud/controllers/my_workflow_ctrl.js'
+                            ]
+                        });
+                    }],
+                    instanceCreateFlow: function(CommonHttpService){
+                        return CommonHttpService.get("/api/workflows/instance-create/");
                     }
                 }
             })

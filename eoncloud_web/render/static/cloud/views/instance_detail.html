@@ -39,7 +39,11 @@
             				<div data-ng-include="'/static/cloud/views/instance_detail_log.html'"></div>
                         </div>
                         <div class="tab-pane fade" id="tab_instance_monitor" data-ng-if="monitorSettings.enabled">
-            				<div data-ng-include="'/static/cloud/views/instance_detail_monitor.html'"></div>
+                            <div style="border: 1px solid gray; margin-bottom: 1em;"
+                                data-ng-repeat="monitor in monitors"
+                                eon-monitor
+                                data-uuid="instance.uuid" data-title="monitor.title"
+                                data-url="monitor.url" data-intervals="monitorIntervals"></div>
                         </div>
                     </div>
                     </div>

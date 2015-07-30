@@ -21,16 +21,16 @@ VOLUME_STATES = (
     (VOLUME_STATE_CREATING, _("Volume Creating")), #0
     (VOLUME_STATE_ATTACHING, _("Volume Attaching")), #1
     (VOLUME_STATE_AVAILABLE, _("Volume Available")), #2
-    (VOLUME_STATE_BACKING_UP, _("Volume Backing_up")),#3
+    (VOLUME_STATE_BACKING_UP, _("Volume Backing Up")),#3
     (VOLUME_STATE_DELETING, _("Volume Deleting")), #4
     (VOLUME_STATE_DOWNLOADING, _("Volume Downloading")),#5
     (VOLUME_STATE_ERROR, _("Volume Error")),
-    (VOLUME_STATE_ERROR_DELETING, _("Volume Error_deleting")),
-    (VOLUME_STATE_ERROR_RESTORING, _("Volume Error_restoring")),
+    (VOLUME_STATE_ERROR_DELETING, _("Volume Error Deleting")),
+    (VOLUME_STATE_ERROR_RESTORING, _("Volume Error Restoring")),
     (VOLUME_STATE_IN_USE, _("Volume In Use")),
-    (VOLUME_STATE_RESTORING_BACKUP, _("Volume Restoring_backup")),
+    (VOLUME_STATE_RESTORING_BACKUP, _("Volume Restoring Backup")),
     (VOLUME_STATE_UNRECOGNIZED, _("Volume Unrecognized")),
-    (VOLUME_STATE_UPLOADING, _("Volume uploading")),
+    (VOLUME_STATE_UPLOADING, _("Volume Uploading")),
 )
 
 
@@ -40,16 +40,16 @@ VOLUME_STATES_DICT = {
     VOLUME_STATE_CREATING: (_("Volume Creating"), 0),
     VOLUME_STATE_ATTACHING: (_("Volume Attaching"), 0),
     VOLUME_STATE_AVAILABLE: (_("Volume Available"), 1),
-    VOLUME_STATE_BACKING_UP: (_("Volume Backing_up"), 1),
+    VOLUME_STATE_BACKING_UP: (_("Volume Backing Up"), 1),
     VOLUME_STATE_DELETING: (_("Volume Deleting"), 0),
     VOLUME_STATE_DOWNLOADING: (_("Volume Downloading"), 0),
     VOLUME_STATE_ERROR: (_("Volume Error"), 1),
-    VOLUME_STATE_ERROR_DELETING: (_("Volume Error_deleting"), 0),
-    VOLUME_STATE_ERROR_RESTORING: (_("Volume Error_restoring"), 0),
+    VOLUME_STATE_ERROR_DELETING: (_("Volume Error Deleting"), 0),
+    VOLUME_STATE_ERROR_RESTORING: (_("Volume Error Restoring"), 0),
     VOLUME_STATE_IN_USE: (_("Volume In Use"), 1),
-    VOLUME_STATE_RESTORING_BACKUP: (_("Volume Restoring_backup"), 0),
+    VOLUME_STATE_RESTORING_BACKUP: (_("Volume Restoring Backup"), 0),
     VOLUME_STATE_UNRECOGNIZED: (_("Volume Unrecognized"), 1),
-    VOLUME_STATE_UPLOADING: (_("Volume uploading"), 0),
+    VOLUME_STATE_UPLOADING: (_("Volume Uploading"), 0),
 }
 VOLUME_TYPE_VOLUME = 0
 VOLUME_TYPE_PERFORMANCE = 1

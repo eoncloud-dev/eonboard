@@ -4,24 +4,31 @@
 	
 The instance monitor configuration is located at eoncloud_web/local/local_settings.py. Here is a sample:
 
-	MONITOR_CONFIG = {
-    "ENABLED": True,
-    "BASE_URL": "http://14.14.14.101:5601",
-    'URLS': {
-        'CPU': "/#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "DISK": "/#/visualize/edit/disk?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.disk_gb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:timestamp,interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "INCOMING_BYTES": "/#/visualize/edit/instance.incoming.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:network.incoming.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "OUTGOING_BYTES": "/#/visualize/edit/instance.outgoing.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{ uuid }]}!'')),vis:(aggs:!((id:'1',params:(field:network.outgoing.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "MEMORY": "/#/visualize/edit/Memory?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.memory_mb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))"
-    },
-    'INTERVAL_OPTIONS': ['second', 'minute', 'hour', 'day', 'week', 'month']
-}
+    MONITOR_CONFIG = {
+        "enabled": True,
+        "base_url": "http://14.14.14.101:5601",
+        'monitors': [
+            {
+                "title": u"CPU",
+                "url": "/#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))"
+            },
+            {
+                "title": u"磁盘",
+                "url": "#/visualize/edit/disk?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}')),vis:(aggs:!((id:'1',params:(field:disk.read.bytes),schema:metric,type:avg),(id:'2',params:(field:disk.write.bytes),schema:metric,type:avg),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))"
+            },
+            {
+                "title": u"网络",
+                "url": "#/visualize/edit/network?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}')),vis:(aggs:!((id:'1',params:(field:network.incoming.bytes.rate),schema:metric,type:avg),(id:'2',params:(field:network.outgoing.bytes.rate),schema:metric,type:avg),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))"
+            }
+        ],
+        'intervals': ['second', 'minute', 'hour', 'day', 'week', 'month']
+    }
 
 ## Config Kibana URL
 
-Monitor function is based on kibana, to protect kibana from attack, we put a proxy before kibana server to filter requests. Set your kibana url to MONITOR_CONFIG.BASE_URL.
+Monitor function is based on kibana, to protect kibana from attack, we put a proxy before kibana server to filter requests. Set your kibana url to MONITOR_CONFIG.base_url.
 
-## Config Monitor Target Url
+## Config Monitor Url
 
 1. Get visualize share link. Take cpu line chart as example, the share link is :
  
@@ -44,4 +51,4 @@ will display a different page.
 	* interval (eg. `interval:auto,min_doc_count`). Change auto to `{[{ interval }]}`
 6. The final link looks like this:
 
-			#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{ uuid }]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:max),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))
+        #/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{ uuid }]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:max),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))

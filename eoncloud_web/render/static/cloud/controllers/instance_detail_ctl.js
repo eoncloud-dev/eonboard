@@ -9,17 +9,14 @@ CloudApp.controller('InstanceDetailController',
             Metronic.initAjax();
         });
 
-        $scope.$on('$includeContentLoaded', function(){
-            DatePicker.initDatePickers();
-        });
-
         $rootScope.settings.layout.pageBodySolid = true;
         $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.instance = instance;
         $scope.status_desc = status_desc;
         $scope.monitorSettings = monitorSettings;
-        $scope.monitorIntervals = monitorSettings.INTERVAL_OPTIONS;
+        $scope.monitorIntervals = monitorSettings.intervals;
+        $scope.monitors = monitorSettings.monitors;
 
         $scope.log_load_status = false;
         // load instance log
@@ -35,36 +32,29 @@ CloudApp.controller('InstanceDetailController',
                     $scope.log_load_status = true;
                 });
             }
-        }
-
+        };
     })
-    .controller('CpuMonitorController', MonitorControllerFactory('CPU'))
-    .controller('DiskMonitorController', MonitorControllerFactory('DISK'))
-    .controller('MemoryMonitorController', MonitorControllerFactory('MEMORY'))
-    .controller('IncomingBytesMonitorController', MonitorControllerFactory('INCOMING_BYTES'))
-    .controller('OutgoingBytesMonitorController', MonitorControllerFactory('OUTGOING_BYTES'));
+    .directive('eonMonitor', function(){
 
-function MonitorControllerFactory(urlName){
+        var controller = function($scope, $sce, $interpolate){
 
-    return function($rootScope, $scope, $sce, $interpolate){
-
-            var instance = $scope.instance,
-                monitorSettings = $scope.monitorSettings;
+            var uuid = $scope.uuid,
+                urlTemplate = $scope.url;
 
             $scope.mode = 'quick';
 
             var currentConfig = {
-                    uuid: instance.uuid,
+                    uuid: uuid,
                     interval: 'second',
                     mode:'quick',
                     from: 'now-1h',
                     to: 'now'
                 },
-                urlTemplate = $interpolate(monitorSettings.URLS[urlName]
-                    + '&_g=(time:(from:{[{ from }]},mode:{[{ mode }]},to:{[{ to }]}))'),
                 cancelWatchTimeRange = null,
                 format = 'YYYY-MM-DD',
                 iso8601Format = 'YYYY-MM-DDTHH:mm:ss.SSS';
+
+            urlTemplate = $interpolate(urlTemplate + '&_g=(time:(from:{[{ from }]},mode:{[{ mode }]},to:{[{ to }]}))');
 
             $scope.changeInterval = function(interval){
                 currentConfig.interval = interval;
@@ -116,6 +106,25 @@ function MonitorControllerFactory(urlName){
             };
 
             loadMonitor();
-    };
-}
+        };
 
+        return {
+            restrict: 'A',
+            templateUrl: '/static/cloud/views/monitor_partial.html',
+            scope: {
+                uuid: '=',
+                title: '=',
+                intervals: '=',
+                url: '='
+            },
+            controller: controller,
+            link: function(scope, element, attrs){
+                element.find('.date-picker').datepicker({
+                    rtl: Metronic.isRTL(),
+                    orientation: "left",
+                    format: 'yyyy-mm-dd',
+                    autoclose: true
+                });
+            }
+        }
+    });

@@ -76,14 +76,21 @@ SITE_CONFIG = {
 }
 
 MONITOR_CONFIG = {
-    "ENABLED": True,
-    "BASE_URL": "http://14.14.14.101:5601",
-    'URLS': {
-        'CPU': "/#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "DISK": "/#/visualize/edit/disk?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.disk_gb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:timestamp,interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "INCOMING_BYTES": "/#/visualize/edit/instance.incoming.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:network.incoming.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "OUTGOING_BYTES": "/#/visualize/edit/instance.outgoing.bytes.rate?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{ uuid }]}!'')),vis:(aggs:!((id:'1',params:(field:network.outgoing.bytes.rate),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))",
-        "MEMORY": "/#/visualize/edit/Memory?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:resource_metadata.memory_mb),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))"
-    },
-    'INTERVAL_OPTIONS': ['second', 'minute', 'hour', 'day', 'week', 'month']
+    "enabled": True,
+    "base_url": "http://14.14.14.101:5601",
+    'monitors': [
+        {
+            "title": u"CPU",
+            "url": "/#/visualize/edit/cpu?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:!'{[{uuid}]}!'')),vis:(aggs:!((id:'1',params:(field:cpu_util),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:{[{ interval }]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!f,addTooltip:!f,defaultYExtents:!f,shareYAxis:!t),type:line))"
+        },
+        {
+            "title": u"磁盘",
+            "url": "#/visualize/edit/disk?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}')),vis:(aggs:!((id:'1',params:(field:disk.read.bytes),schema:metric,type:avg),(id:'2',params:(field:disk.write.bytes),schema:metric,type:avg),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))"
+        },
+        {
+            "title": u"网络",
+            "url": "#/visualize/edit/network?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'resource_id:{[{uuid}]}')),vis:(aggs:!((id:'1',params:(field:network.incoming.bytes.rate),schema:metric,type:avg),(id:'2',params:(field:network.outgoing.bytes.rate),schema:metric,type:avg),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:{[{interval}]},min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t),type:line))"
+        }
+    ],
+    'intervals': ['second', 'minute', 'hour', 'day', 'week', 'month']
 }

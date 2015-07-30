@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet solid">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart-o"></i>{[{ title }]}
+                </div>
+                <div class="actions">
+                    <div style="position: relative; float: left; margin-right: 10px;"
+                         data-ng-show="mode == 'absolute'">
+                        <div style="float: left">
+                            <input id="from" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.from">
+                        </div>
+                        <span style="float: left; margin-left:1em; margin-right: 1em; padding-top: 5px;"> ~ </span>
+                        <div style="float: left;">
+                            <input id="to" readonly size="8" style="height: 2em;"
+                                   class="form-control date-picker"
+                                   data-ng-model="timeRange.to">
+                        </div>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm active" data-ng-click="changeMode('quick')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.one_hour' | i18next }]}
+                        </label>
+                        <label class="btn grey-steel btn-sm" data-ng-click="changeMode('absolute')">
+                            <input type="radio" class="toggle" name="mode"> {[{ 'monitor.modes.time_range' | i18next }]}
+                        </label>
+                    </div>
+                    <div data-toggle="buttons" class="btn-group">
+                        <label class="btn grey-steel btn-sm"
+                               data-ng-class="{active: $index == 0}"
+                               data-ng-click="changeInterval(interval.key)"
+                               data-ng-repeat="interval in intervals">
+                            <input type="radio" class="toggle" name="options">{[{ interval.label }]}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <iframe frameBorder="0" data-ng-src="{[{ monitorUrl }]}" height="300" width="100%"></iframe>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>

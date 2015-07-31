@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="portlet-body">
-                                <div class="scroller" style="height:500px;">
+                                <div class="scroller" style="height:600px;">
                                     <a class="btn btn-primary" href="javascript:void(0);"
                                        ng-click="create_forum_model();">
                                         <i class="fa fa-plus"></i>{[{ 'forum.create_new' | i18next }]}
@@ -42,22 +42,22 @@
                             </div>
                         </div>
                         <div class="col-md-7">
-                            <div class="tab-content scroller" style="height:500px;">
+                            <div class="tab-content scroller" style="height:600px;">
                                 <div id="ajax_forum_add" class="well"
                                      ng-if="current_forum !='' && current_forum !=undefined " style="margin-bottom: 0px;">
-                                    <div class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
-                                        <p class="font_16">{[{current_forum.title}]}</p>
+                                    <div class="alert no-margin bg_4 margin-top-10 mar_l10 clear">
+                                        <h3>{[{current_forum.title}]}</h3>
 
                                         <div>
                                             <p class="hei_60 fl col-md-9" style="padding-left:0">
-                                                {[{current_forum.create_date}]}</p>
+                                               {[{ 'forum.submit_date' |i18next}]}{[{current_forum.create_date}]}</p>
 
                                             <p ng-if="!current_forum.closed" class="btn btn-primary cursor fl"
                                                href="javascript:void(0);" ng-click="close_forum(current_forum)">
                                                 <i class="fa fa-remove"></i>{[{ 'forum.close_forum' | i18next }]}
                                             </p>
 
-                                            <p ng-if="current_forum.status" class="prompt_news bg_5">
+                                            <p ng-if="current_forum.closed" class="prompt_news bg_5">
                                                 {[{ 'forum.closed_forum' | i18next }]}
                                             </p>
                                         </div>
@@ -65,12 +65,12 @@
                                         <p style="word-wrap: break-word; word-break: break-all;">
                                             {[{current_forum.content}]}</p>
                                     </div>
-                                    <div ng-repeat="reply in forum_reply_list"
-                                         class="alert alert-info no-margin bg_4 margin-top-10 mar_l10 clear">
+                                    <div ng-repeat="reply in forum_reply_list" ng-class="{'alert-info':reply.username==current_user.user,'alert-warning':reply.username !=current_user.user}"
+                                         class=" alert no-margin bg_4 margin-top-10 mar_l10 clear">
                                         <p>
                                             {[{reply.reply_content}]}
                                         </p>
-
+                                        <p class="hei_30">{[{reply.username}]}</p>
                                         <p class="hei_30">{[{reply.create_date}]}</p>
                                     </div>
                                     <div ng-if="!current_forum.closed">

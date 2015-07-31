@@ -30,10 +30,17 @@
         <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off"
                placeholder="{{ pwd_str }}" name="password"/>
     </div>
+    {% if LDAP_AUTH_ENABLED %}
+    <div class="form-group">
+        <label class="control-label">{% trans "Login validation using LDAP" %}</label>
+    </div>
+    {% endif %}
+
     <div class="form-actions">
         <button type="submit" class="btn btn-success uppercase"><i class="fa fa-key"></i> {% trans "Login" %}</button>
         <!--a href="/find-password/" class="forget-password">{% trans 'Forgot Password' %}</a-->
     </div>
+
     <div class="create-account">
         <!--p>
             <a href="/signup/" class="uppercase">{% trans "Create an account" %}</a>

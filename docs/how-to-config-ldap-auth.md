@@ -1,10 +1,11 @@
 #	安装python和django相关ladp插件：
-python-ldap    https://pypi.python.org/pypi/python-ldap/
-django-auth-ldap   https://pypi.python.org/pypi/django-auth-ldap/
+
+	pip install python-ldap 2.4.20
+	pip install django-auth-ldap 1.2.6
+
 #	在Django项目下添加ladp相关配置：
 Example：
-<pre>
-	<code>
+```python
 	Import ldap
 	from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
@@ -53,11 +54,11 @@ Example：
 	    'django_auth_ldap.backend.LDAPBackend',
 	    'django.contrib.auth.backends.ModelBackend',
 	)
-	</code>
-</pre>
+```
 #	修改自定义登陆方法：
 	通过开关控制使用ladp验证、系统自带验证或两者均存在
 	首先通过用户名去本地用户信息，调用django-ladp 验证接口，
-	验证成功：1、如果本地存在用户，执行后续操作
-		      2、如果不存在，通过验证返回信息创建本地用户，执行注册流程，创建对应openstack用户。
+	验证成功：
+    	1. 如果本地存在用户，执行后续操作  
+    	2. 如果不存在，通过验证返回信息创建本地用户，执行注册流程，创建对应openstack用户。
 

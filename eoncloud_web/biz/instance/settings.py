@@ -19,6 +19,8 @@ INSTANCE_STATE_RESTORING = 13
 INSTANCE_STATE_RESIZING = 14
 INSTANCE_STATE_EXPIRED = 15
 INSTANCE_STATE_DELETING = 16
+INSTANCE_STATE_AUDITING = 17
+INSTANCE_STATE_REJECTED = 18
 
 INSTANCE_STATES = (
     (INSTANCE_STATE_WAITING, _("Instance Waiting")), #0
@@ -37,7 +39,9 @@ INSTANCE_STATES = (
     (INSTANCE_STATE_RESTORING, _("Instance Restoring")),
     (INSTANCE_STATE_RESIZING, _("Instance Resizing")),
     (INSTANCE_STATE_EXPIRED, _("Instance Expired")),
-    (INSTANCE_STATE_DELETING, _("Instance Deleting"))
+    (INSTANCE_STATE_DELETING, _("Instance Deleting")),
+    (INSTANCE_STATE_AUDITING, _("Auditing")),
+    (INSTANCE_STATE_REJECTED, _("Rejected"))
 )
 
 
@@ -60,7 +64,9 @@ INSTANCE_STATES_DICT = {
     INSTANCE_STATE_RESTORING: (_("Instance Restoring"), 0),
     INSTANCE_STATE_RESIZING: (_("Instance Resizing"), 0),
     INSTANCE_STATE_EXPIRED: (_("Instance Expired"), 1),
-    INSTANCE_STATE_DELETING: (_("Instance Deleting"), 0)
+    INSTANCE_STATE_DELETING: (_("Instance Deleting"), 0),
+    INSTANCE_STATE_AUDITING: (_("Auditing"), 0),
+    INSTANCE_STATE_REJECTED: (_("Rejected"), 1),
 }
 
 INSTANCE_ACTIVE = 0

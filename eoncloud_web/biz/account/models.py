@@ -228,7 +228,7 @@ for value, name in NOTIFICATION_KEY_METHODS:
 
         def action(cls, receiver, title, content):
             notification = cls.objects.create(title=title, content=content, level=level)
-            Feed.objects.create(receiver=receiver, notificaiton=notification)
+            Feed.objects.create(receiver=receiver, notification=notification)
 
             return notification
 

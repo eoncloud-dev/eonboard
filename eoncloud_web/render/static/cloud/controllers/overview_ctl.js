@@ -1,7 +1,8 @@
 'use strict';
 
 CloudApp.controller('OverviewController',
-    function ($rootScope, $scope, Operation, feedStatus, contract, quota) {
+    function ($rootScope, $scope, Operation,
+              feedStatus, workflowStatus, contract, quota) {
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
@@ -12,6 +13,7 @@ CloudApp.controller('OverviewController',
         $scope.notificationNum = feedStatus.num;
         $scope.contract = contract;
         $scope.quota = quota;
+        $scope.flowToAuditNum = workflowStatus.num;
 
         $scope.operation_icon = function (op) {
             var op_icon_mapping = {

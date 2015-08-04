@@ -142,7 +142,8 @@ angular.module('cloud.services', [])
             $(selector).validate(config);
 
             return $(selector);
-        }
+        },
+        addValidator: $.validator.addMethod
     }
 })
 

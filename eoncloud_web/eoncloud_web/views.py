@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 
 from biz.idc.models import DataCenter, UserDataCenter as UDC
 from biz.account.models import Notification
+from biz.workflow.models import Step
 from eoncloud_web.decorators import superuser_required
 
 
@@ -73,9 +74,11 @@ def current_user(request):
         udc_id = request.session["UDC_ID"]
         data_center_names = DataCenter.objects.filter(userdatacenter__pk=udc_id)
         cc_name = data_center_names[0].name if data_center_names else u'N/A'
+        is_auditor = Step.objects.filter(auditor__pk=request.user.pk).exists()
 
         return JsonResponse({'result': {'logged': True},
                             'user': request.user.username,
-                            'datacenter': cc_name})
+                            'datacenter': cc_name,
+                            'is_auditor': is_auditor})
     else:
         return JsonResponse({'result': {'logged': False}})

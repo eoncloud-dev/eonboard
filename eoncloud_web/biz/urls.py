@@ -15,6 +15,7 @@ from biz.account import views as account_view
 from biz.idc import views as idc_views
 from biz.overview import views as overview_views
 from biz.backup import views as backup_view
+from biz.workflow import views as workflow_view
 
 # various options and configurations
 urlpatterns = [
@@ -219,3 +220,14 @@ urlpatterns += format_suffix_patterns(
         url(r'^backup/action/$', backup_view.backup_action_view),
     ]
 )
+
+
+# workflow
+urlpatterns += [
+    url(r'^workflows/instance-create/$', workflow_view.instance_create_flow),
+    url(r'^workflows/instance-create/update/$', workflow_view.update_instance_create_flow),
+    url(r'^workflow-instances/$', workflow_view.flow_instances),
+    url(r'^workflow-instances/approve/$', workflow_view.approve),
+    url(r'^workflow-instances/rejected/$', workflow_view.reject),
+    url(r'^workflow-instances/status/$', workflow_view.workflow_status),
+]

@@ -1,0 +1,77 @@
+<div>
+    <div class="col-md-12">
+        <!-- BEGIN INSTANCE  -->
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" ng-click="table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table ng-table="table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tr ng-repeat="instance in $data">
+                            <td data-title="'workflow.applier' | i18next">
+                                {[{ instance.owner_name }]}
+                            </td>
+                            <td data-title="'workflow.flow_instance_name' | i18next">
+                                {[{ instance.name }]}
+                            </td>
+                            <td data-title="'workflow.resource_info' | i18next">
+                              {[{ instance.resource_info.name }]}/ {[{ instance.resource_info.cpu }]}CPU/ {[{ instance.resource_info.memory }]}MB/ {[{ instance.resource_info.sys_disk }]}GB
+                            </td>
+                            <td data-title="'workflow.apply_start_date' | i18next">
+                                {[{ instance.create_date }]}
+                            </td>
+                            <td data-title="'actions' | i18next">
+                                <div class="btn-group">
+                                    <button class="btn btn-default"
+                                            type="button" ng-click="reject(instance)">
+                                        {[{ 'workflow.reject' | i18next }]}
+                                    </button>
+                                    <button class="btn btn-default"
+                                            type="button" ng-click="approve(instance)">
+                                        {[{ 'workflow.approve' | i18next }]}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END INSTANCE  -->
+    </div>
+</div>
+
+<!-- BEGIN TEMPLATE REJECT -->
+<script type="text/ng-template" id="reject.html">
+    <div class="modal-header">
+       <div id="updateTitle" class="modal-title"> {[{ 'workflow.reject' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="rejectForm" role="form" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="reason">{[{ 'workflow.reject_reason' | i18next }]} </label>
+                <div class="col-md-6">
+                    <textarea id="reason" name="reason" rows="10" class="form-control"
+                          data-rule-required="true"
+                          data-ng-model="reason"
+                          data-rule-required="true"
+                          data-rule-maxlength="256">
+                    </textarea>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="submit()"> {[{ 'submit' | i18next }]}</a>
+    </div>
+</script>

@@ -101,21 +101,22 @@
                 </span>
             </a>
         </li>
-        <li class="heading">
+        <li class="heading" data-ng-if-start="site_config.WORKFLOW_ENABLED">
             <h3 class="uppercase">
                 {[{ 'sidebar.workflow' | i18next }]}
             </h3>
         </li>
+
         <li id="workflow"
-            data-ng-if="current_user.is_auditor">
-            <a href="#/workflow-audit/">
+            data-ng-if="current_user.is_approver">
+            <a href="#/workflow-process/">
                 <i class="fa fa-gavel"></i>
                 <span class="title">
-                    {[{ 'sidebar.workflow_audit' | i18next }]}
+                    {[{ 'sidebar.workflow_process' | i18next }]}
                 </span>
             </a>
         </li>
-        <li id="workflow">
+        <li id="workflow" data-ng-if-end>
             <a href="#/my-workflow/">
                 <i class="fa fa-tasks"></i>
                 <span class="title">

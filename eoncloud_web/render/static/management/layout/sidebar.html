@@ -90,16 +90,16 @@
                 </span>
             <span class="selected"></span></a>
         </li>
-        <li class="heading">
+        <li class="heading" data-ng-if-start="site_config.WORKFLOW_ENABLED">
             <h3 class="uppercase">
                 {[{ 'sidebar.workflow_management' | i18next }]}
             </h3>
         </li>
-        <li>
-            <a href="#/instance-create-flow/">
+        <li data-ng-if-end>
+            <a href="#/workflow/">
                 <i class="fa fa-desktop"></i>
                 <span class="title">
-                    {[{ 'sidebar.instance_create_flow' | i18next }]}
+                    {[{ 'sidebar.workflow_definition' | i18next }]}
                 </span>
             <span class="selected"></span></a>
         </li>

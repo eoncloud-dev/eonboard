@@ -3,8 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-
-from biz.floating.settings import FLOATING_STATUS, FLOATING_AVAILABLE, RESOURCE_TYPE
+from biz.account.models import Notification
+from biz.floating.settings import (FLOATING_STATUS, FLOATING_AVAILABLE,
+                                   RESOURCE_TYPE, FLOATING_REJECTED,
+                                   FLOATING_ALLOCATE, FLOATING_ERROR)
 
 
 class Floating(models.Model):
@@ -28,6 +30,12 @@ class Floating(models.Model):
     delete_date = models.DateTimeField(_("Delete Date"), null=True, blank=True)
     deleted = models.BooleanField(_("Deleted"), default=False)
 
+    class Meta:
+        db_table = "floating"
+        ordering = ['-create_date']
+        verbose_name = _('Floating')
+        verbose_name_plural = _('Floating')
+
     @property
     def resource_info(self):
         resource_dict = dict(RESOURCE_TYPE)
@@ -45,8 +53,40 @@ class Floating(models.Model):
         except Exception as e:
             return {}
 
-    class Meta:
-        db_table = "floating"
-        ordering = ['-create_date']
-        verbose_name = _('Floating')
-        verbose_name_plural = _('Floating') 
+    @property
+    def workflow_info(self):
+        return _("Floating IP: %d Mbps") % (self.bandwidth,)
+
+    def workflow_approve_callback(self, flow_instance):
+        from cloud.tasks import allocate_floating_task
+
+        try:
+            allocate_floating_task.delay(self)
+
+            self.status = FLOATING_ALLOCATE
+            self.save()
+
+            content = title = _('Your application for %(bandwidth)d Mbps floating IP is approved! ') \
+                % {'bandwidth': self.bandwidth}
+            Notification.info(flow_instance.owner, title, content, is_auto=True)
+        except:
+
+            self.status = FLOATING_ERROR
+            self.save()
+
+            title = _('Error happened to your application for floating IP')
+
+            content = _('Your application for %(bandwidth)d Mbps floating ip is approved, '
+                        'but an error happened when creating it.') % {'bandwidth': self.bandwidth}
+
+            Notification.error(flow_instance.owner, title, content, is_auto=True)
+
+    def workflow_reject_callback(self, flow_instance):
+
+        self.status = FLOATING_REJECTED
+        self.save()
+
+        content = title = _('Your application for %(bandwidth)d floating IP is rejected! ') \
+            % {'bandwidth': self.bandwidth}
+        Notification.error(flow_instance.owner, title, content, is_auto=True)
+

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 17:00+0800\n"
+"POT-Creation-Date: 2015-08-06 09:50+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,21 +52,21 @@ msgstr "结束日期"
 
 #: account/models.py:76 account/models.py:99 backup/models.py:30
 #: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
-#: floating/models.py:29 forum/models.py:11 forum/models.py:28
+#: floating/models.py:31 forum/models.py:11 forum/models.py:28
 #: instance/models.py:44 lbaas/models.py:23 lbaas/models.py:46
 #: lbaas/models.py:76 lbaas/models.py:104 network/models.py:15
 #: network/models.py:56 network/models.py:74 network/models.py:90
-#: volume/models.py:17
+#: volume/models.py:19
 msgid "Deleted"
 msgstr "已删除"
 
 #: account/models.py:77 account/models.py:100 account/models.py:118
 #: backup/models.py:28 backup/models.py:137 firewall/models.py:14
-#: firewall/models.py:37 floating/models.py:27 forum/models.py:12
+#: firewall/models.py:37 floating/models.py:29 forum/models.py:12
 #: forum/models.py:29 image/models.py:25 instance/models.py:26
-#: instance/models.py:82 lbaas/models.py:22 lbaas/models.py:45
+#: instance/models.py:122 lbaas/models.py:22 lbaas/models.py:45
 #: lbaas/models.py:75 lbaas/models.py:103 network/models.py:16
-#: network/models.py:57 network/models.py:75 volume/models.py:16
+#: network/models.py:57 network/models.py:75 volume/models.py:18
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -90,7 +90,7 @@ msgstr "配额"
 msgid "Quota"
 msgstr "配额"
 
-#: account/models.py:113 backup/models.py:125 floating/models.py:22
+#: account/models.py:113 backup/models.py:125 floating/models.py:24
 msgid "Resource"
 msgstr "资源"
 
@@ -119,43 +119,43 @@ msgstr "%(resource)s:%(resource_name)s 执行了 %(action)s 操作"
 msgid "Operation"
 msgstr "操作日志"
 
-#: account/models.py:174
+#: account/models.py:175
 msgid "just now"
 msgstr "刚刚"
 
-#: account/models.py:177
+#: account/models.py:178
 #, python-format
 msgid "%(minutes)d minutes ago"
 msgstr "%(minutes)d分钟前"
 
-#: account/models.py:180
+#: account/models.py:181
 #, python-format
 msgid "%(hours)d hours ago"
 msgstr "%(hours)d小时前"
 
-#: account/models.py:183
+#: account/models.py:184
 #, python-format
 msgid "%(days)d days ago"
 msgstr "%(days)d天前"
 
-#: account/models.py:186
+#: account/models.py:187
 #, python-format
 msgid "%(years)d years ago"
 msgstr "%(years)d年前"
 
-#: account/models.py:190
+#: account/models.py:191
 msgid "Notification"
 msgstr "通知"
 
-#: account/models.py:191
+#: account/models.py:192
 msgid "Notifications"
 msgstr "通知"
 
-#: account/models.py:253
+#: account/models.py:254
 msgid "Feed"
 msgstr "种子"
 
-#: account/models.py:254
+#: account/models.py:255
 msgid "Feeds"
 msgstr "种子"
 
@@ -168,7 +168,8 @@ msgid "Company"
 msgstr "企业"
 
 #: account/settings.py:12 account/settings.py:22 backup/models.py:22
-#: instance/models.py:51 instance/models.py:52 workflow/models.py:76
+#: instance/models.py:51 instance/models.py:52 workflow/models.py:92
+#: workflow/settings.py:22
 msgid "Instance"
 msgstr "云主机"
 
@@ -188,12 +189,12 @@ msgstr "磁盘(GB)"
 msgid "Volume Count"
 msgstr "磁盘数量"
 
-#: account/settings.py:17
+#: account/settings.py:17 workflow/settings.py:23
 msgid "Floating IP"
 msgstr "公网IP"
 
 #: account/settings.py:23 account/settings.py:27 volume/models.py:29
-#: volume/models.py:30
+#: volume/models.py:30 workflow/settings.py:24
 msgid "Volume"
 msgstr "磁盘"
 
@@ -382,7 +383,7 @@ msgstr "消息发布成功！"
 msgid "Announcement is sent successfully!"
 msgstr "消息发布成功！"
 
-#: backup/models.py:16 idc/models.py:14 instance/models.py:78
+#: backup/models.py:16 idc/models.py:14 instance/models.py:118
 msgid "Name"
 msgstr "名称"
 
@@ -394,14 +395,14 @@ msgstr "备份类型"
 msgid "Volumes"
 msgstr "磁盘"
 
-#: backup/models.py:29 backup/models.py:138 floating/models.py:28
+#: backup/models.py:29 backup/models.py:138 floating/models.py:30
 msgid "Delete Date"
 msgstr "删除日期"
 
-#: backup/models.py:31 backup/models.py:140 floating/models.py:17
+#: backup/models.py:31 backup/models.py:140 floating/models.py:19
 #: instance/models.py:24 lbaas/models.py:21 lbaas/models.py:44
 #: lbaas/models.py:73 network/models.py:11 network/models.py:53
-#: network/models.py:71 volume/models.py:15
+#: network/models.py:71 volume/models.py:17
 msgid "Status"
 msgstr "状态"
 
@@ -542,7 +543,7 @@ msgstr "创建防火墙"
 msgid "Firewall create error"
 msgstr "创建"
 
-#: firewall/views.py:41 network/views.py:63 volume/views.py:63
+#: firewall/views.py:41 network/views.py:63 volume/views.py:60
 msgid "Data valid error"
 msgstr "数据格式错误"
 
@@ -602,65 +603,112 @@ msgstr "规则删除成功"
 msgid "Firewall rule delete error"
 msgstr "规则删除失败"
 
-#: floating/models.py:13 instance/models.py:42
+#: floating/models.py:15 instance/models.py:42
 msgid "Public IP"
 msgstr "公网IP"
 
-#: floating/models.py:19
+#: floating/models.py:21
 msgid "Bandwidth MB"
 msgstr "带宽 MB"
 
-#: floating/models.py:23
+#: floating/models.py:25
 msgid "Resource type"
 msgstr "资源类型"
 
-#: floating/models.py:51 floating/models.py:52
+#: floating/models.py:36 floating/models.py:37
 msgid "Floating"
 msgstr "公网IP"
 
-#: floating/settings.py:15 floating/settings.py:27
+#: floating/models.py:58
+#, python-format
+msgid "Floating IP: %d Mbps"
+msgstr "公网IP: %dMpbs"
+
+#: floating/models.py:69
+#, python-format
+msgid "Your application for %(bandwidth)d Mbps floating IP is approved! "
+msgstr "您申请的%(bandwidth)dMpbs公网IP已通过审核！"
+
+#: floating/models.py:77
+msgid "Error happened to your application for floating IP"
+msgstr "有错误发生在您的公网IP申请流程"
+
+#: floating/models.py:79
+#, python-format
+msgid ""
+"Your application for %(bandwidth)d Mbps floating ip is approved, but an "
+"error happened when creating it."
+msgstr "您申请的%(bandwidth)dMpbs公网IP已通过审核，但在创建时发生了错误．"
+
+#: floating/models.py:89
+#, python-format
+msgid "Your application for %(bandwidth)d floating IP is rejected! "
+msgstr "您的%(bandwidth)dMpbs公网IP申请被驳回！"
+
+#: floating/settings.py:17 floating/settings.py:32
 msgid "Floating ERROR"
 msgstr "错误"
 
-#: floating/settings.py:16 floating/settings.py:28
+#: floating/settings.py:18 floating/settings.py:33
 msgid "Floating Allocate"
 msgstr "分配中"
 
-#: floating/settings.py:17 floating/settings.py:29
+#: floating/settings.py:19 floating/settings.py:34 instance/settings.py:43
+#: instance/settings.py:68 volume/settings.py:36 volume/settings.py:57
+msgid "Applying"
+msgstr "申请中"
+
+#: floating/settings.py:20 floating/settings.py:35 instance/settings.py:44
+#: instance/settings.py:69 volume/settings.py:37 volume/settings.py:58
+msgid "Rejected"
+msgstr "申请被拒绝"
+
+#: floating/settings.py:21 floating/settings.py:36
 msgid "Floating Avaiable"
 msgstr "可用"
 
-#: floating/settings.py:18 floating/settings.py:30
+#: floating/settings.py:22 floating/settings.py:37
 msgid "Floating Binded"
 msgstr "已绑定"
 
-#: floating/settings.py:19 floating/settings.py:31
+#: floating/settings.py:23 floating/settings.py:38
 msgid "Floating Binding"
 msgstr "绑定中"
 
-#: floating/settings.py:20 floating/settings.py:32
+#: floating/settings.py:24 floating/settings.py:39
 msgid "Floating Released"
 msgstr "已释放"
 
-#: floating/settings.py:21 floating/settings.py:33
+#: floating/settings.py:25 floating/settings.py:26 floating/settings.py:40
 msgid "Floating Releasing"
 msgstr "释放中"
 
-#: floating/settings.py:44
+#: floating/settings.py:51
 msgid "allocate"
-msgstr "申请"
+msgstr "分配"
 
-#: floating/settings.py:45
+#: floating/settings.py:52
 msgid "release"
 msgstr "释放"
 
-#: floating/settings.py:46
+#: floating/settings.py:53
 msgid "associate"
 msgstr "绑定云主机"
 
-#: floating/settings.py:47
+#: floating/settings.py:54
 msgid "disassociate"
 msgstr "解绑云主机"
+
+#: floating/views.py:51
+#, python-format
+msgid ""
+"Your application for %(bandwidth)d Mbps floating ip is successful, please "
+"waiting for approval result!"
+msgstr "您的%(bandwidth)d Mpbs公网IP申请已生成，请等待审核结果！"
+
+#: floating/views.py:54
+msgid "Your operation is successful, please wait for allocation."
+msgstr "您的操作已成功，请等待资源分配．"
 
 #: forum/models.py:7
 msgid "title"
@@ -858,7 +906,7 @@ msgstr ""
 msgid "Terminate Date"
 msgstr ""
 
-#: instance/models.py:28 instance/models.py:79
+#: instance/models.py:28 instance/models.py:119
 msgid "Cpu Cores"
 msgstr ""
 
@@ -878,15 +926,43 @@ msgstr ""
 msgid "Private IP"
 msgstr ""
 
-#: instance/models.py:80
+#: instance/models.py:74
+#, python-format
+msgid "Instance: %(name)s / %(cpu)s CPU/ %(memory)s MB/ %(sys_disk)d GB"
+msgstr "云主机: %(name)s / %(cpu)s CPU/ %(memory)s MB/ %(sys_disk)d GB"
+
+#: instance/models.py:90
+#, python-format
+msgid "Your application for instance \"%(instance_name)s\" is approved! "
+msgstr "您申请的云主机\"%(instance_name)s\"已通过审核！"
+
+#: instance/models.py:98
+#, python-format
+msgid "Error happened to your application for %(instance_name)s"
+msgstr "您的云主机%(instance_name)s申请发生错误！"
+
+#: instance/models.py:101
+#, python-format
+msgid ""
+"Your application for instance \"%(instance_name)s\" is approved, but an "
+"error happened when creating instance."
+msgstr ""
+"您申请的云主机\"%(instance_name)s\"已通过审核，但在创建过程中发生了错误"
+
+#: instance/models.py:111
+#, python-format
+msgid "Your application for instance \"%(instance_name)s\" is rejected! "
+msgstr "您申请的云主机\"%(instance_name)s\"被驳回！"
+
+#: instance/models.py:120
 msgid "Memory MB"
 msgstr ""
 
-#: instance/models.py:81
+#: instance/models.py:121
 msgid "Price"
 msgstr ""
 
-#: instance/models.py:87 instance/models.py:88
+#: instance/models.py:127 instance/models.py:128
 msgid "Flavor"
 msgstr "规格"
 
@@ -958,14 +1034,6 @@ msgstr "已过期"
 #: instance/settings.py:42 instance/settings.py:67
 msgid "Instance Deleting"
 msgstr "删除中"
-
-#: instance/settings.py:43 instance/settings.py:68
-msgid "Auditing"
-msgstr "审核中"
-
-#: instance/settings.py:44 instance/settings.py:69
-msgid "Rejected"
-msgstr "申请被拒绝"
 
 #: instance/settings.py:84
 msgid "Instance Active"
@@ -1059,38 +1127,38 @@ msgstr "月"
 msgid "Yearly"
 msgstr "年"
 
-#: instance/views.py:87
+#: instance/views.py:88
 msgid "Flavor is created successfully!"
 msgstr "规格创建成功！"
 
-#: instance/views.py:90 instance/views.py:109
+#: instance/views.py:91 instance/views.py:110
 msgid "Flavor data is not valid!"
 msgstr "规格数据有错误！"
 
-#: instance/views.py:95
+#: instance/views.py:96
 msgid "Failed to create flavor for unknown reason."
 msgstr "未知错误导致规格创建失败．"
 
-#: instance/views.py:106
+#: instance/views.py:107
 msgid "Flavor is updated successfully!"
 msgstr "规格更新成功"
 
-#: instance/views.py:114
+#: instance/views.py:115
 msgid "Failed to update flavor for unknown reason."
 msgstr "规格更新失败"
 
-#: instance/views.py:121
+#: instance/views.py:122
 msgid "Flavors have been deleted!"
 msgstr "规格已删除"
 
-#: instance/views.py:137
+#: instance/views.py:141
 #, python-format
 msgid ""
 "Your application for instance \"%(instance_name)s\" is successful, please "
 "waiting for approval result!"
 msgstr "您的云主机\"%(instance_name)s\"申请已生成，请等待审核结果！"
 
-#: instance/views.py:141
+#: instance/views.py:145
 msgid "Your instance is created, please wait for instance booting."
 msgstr "您的云主机已经创建，请等待启动．"
 
@@ -1600,225 +1668,252 @@ msgstr "创建规格失败"
 msgid "Flavors are initialized successfully!"
 msgstr "规格更新成功"
 
-#: volume/models.py:10
+#: volume/models.py:12
 msgid "Volume name"
 msgstr "名称"
 
-#: volume/models.py:11
+#: volume/models.py:13
 msgid "OS Volume UUID"
 msgstr "OS UUID"
 
-#: volume/models.py:13
+#: volume/models.py:15
 msgid "Volume size"
 msgstr "磁盘容量"
 
-#: volume/models.py:14
+#: volume/models.py:16
 msgid "Volume Type"
 msgstr "磁盘类型"
 
-#: volume/settings.py:21 volume/settings.py:40
+#: volume/models.py:34
+#, python-format
+msgid "Volume: %(name)s / %(size)d GB"
+msgstr "磁盘：%(name)s / %(size)d GB"
+
+#: volume/models.py:45
+#, python-format
+msgid "Your application for %(size)d GB volume named %(name)s is approved! "
+msgstr "您的%(size)dGB磁盘%(name)s申请已通过审核!"
+
+#: volume/models.py:52
+msgid "Error happened to your application for volume"
+msgstr "您的磁盘申请出现了错误"
+
+#: volume/models.py:54
+#, python-format
+msgid ""
+"Your application for %(size)d GB volume named %(name)s is approved, but an "
+"error happened when creating it."
+msgstr ""
+"您申请的%(size)dGB磁盘%(name)s已通过审核，但在创建磁盘的过程中出现了错误."
+
+#: volume/models.py:64
+#, python-format
+msgid ""
+"Your application for %(disk_size)d GB volume named %(name)s is rejected! "
+msgstr "您的%(disk_size)dGB磁盘%(name)s申请被驳回！"
+
+#: volume/settings.py:23 volume/settings.py:44
 msgid "Volume Creating"
 msgstr "创建中"
 
-#: volume/settings.py:22 volume/settings.py:41
+#: volume/settings.py:24 volume/settings.py:45
 msgid "Volume Attaching"
 msgstr "挂载中"
 
-#: volume/settings.py:23 volume/settings.py:42
+#: volume/settings.py:25 volume/settings.py:46
 msgid "Volume Available"
 msgstr "可用"
 
-#: volume/settings.py:24 volume/settings.py:43
+#: volume/settings.py:26 volume/settings.py:47
 msgid "Volume Backing Up"
 msgstr "挂载中"
 
-#: volume/settings.py:25 volume/settings.py:44
+#: volume/settings.py:27 volume/settings.py:48
 msgid "Volume Deleting"
 msgstr "删除中"
 
-#: volume/settings.py:26 volume/settings.py:45
+#: volume/settings.py:28 volume/settings.py:49
 msgid "Volume Downloading"
 msgstr "下载中"
 
-#: volume/settings.py:27 volume/settings.py:46
+#: volume/settings.py:29 volume/settings.py:50
 msgid "Volume Error"
 msgstr "错误"
 
-#: volume/settings.py:28 volume/settings.py:47
+#: volume/settings.py:30 volume/settings.py:51
 msgid "Volume Error Deleting"
 msgstr "删除失败"
 
-#: volume/settings.py:29 volume/settings.py:48
+#: volume/settings.py:31 volume/settings.py:52
 msgid "Volume Error Restoring"
 msgstr "恢复失败"
 
-#: volume/settings.py:30 volume/settings.py:49
+#: volume/settings.py:32 volume/settings.py:53
 msgid "Volume In Use"
 msgstr "使用中"
 
-#: volume/settings.py:31 volume/settings.py:50
+#: volume/settings.py:33 volume/settings.py:54
 msgid "Volume Restoring Backup"
 msgstr "恢复磁盘中"
 
-#: volume/settings.py:32 volume/settings.py:51
+#: volume/settings.py:34 volume/settings.py:55
 msgid "Volume Unrecognized"
 msgstr "未知"
 
-#: volume/settings.py:33 volume/settings.py:52
+#: volume/settings.py:35 volume/settings.py:56
 msgid "Volume Uploading"
 msgstr "磁盘上传中"
 
-#: volume/settings.py:57
+#: volume/settings.py:63
 msgid "Capacity"
 msgstr "容量型"
 
-#: volume/settings.py:58
+#: volume/settings.py:64
 msgid "Performance"
 msgstr "性能型"
 
-#: volume/views.py:56
+#: volume/views.py:74
+#, python-format
+msgid ""
+"Your application for %(size)d GB volume is successful, please waiting for "
+"approval result!"
+msgstr "您的%(size)dGB磁盘申请已生成，请等待审核结果！"
+
+#: volume/views.py:80
 msgid "Creating Volume"
 msgstr "创建中"
 
-#: volume/views.py:61 volume/views.py:66
+#: volume/views.py:85 volume/views.py:88
 msgid "Volume create error"
 msgstr "创建磁盘失败"
 
-#: volume/views.py:78
+#: volume/views.py:100
 msgid "Volume update success"
 msgstr "更新磁盘成功"
 
-#: volume/views.py:80
+#: volume/views.py:102
 msgid "No select Volume "
 msgstr "请选择磁盘"
 
-#: volume/views.py:83
+#: volume/views.py:105
 msgid "Volume update error"
 msgstr "更新磁盘失败"
 
-#: volume/views.py:95
+#: volume/views.py:117
 msgid "Unknown volume action"
 msgstr "未知的磁盘操作"
 
-#: volume/views.py:98
+#: volume/views.py:120
 msgid "Volume action error"
 msgstr "操作失败"
 
-#: volume/views.py:114
+#: volume/views.py:136
 msgid "Attaching volume"
 msgstr "挂载中"
 
-#: volume/views.py:119
+#: volume/views.py:141
 msgid "Attach volume error"
 msgstr "挂载磁盘失败"
 
-#: volume/views.py:127
+#: volume/views.py:149
 msgid "Detaching volume"
 msgstr "卸载中"
 
-#: volume/views.py:132
+#: volume/views.py:154
 msgid "Detach volume error"
 msgstr "卸载磁盘失败"
 
-#: volume/views.py:137
+#: volume/views.py:159
 #, python-format
 msgid "Volume attached to instance,instance:%(instance)s"
 msgstr "磁盘已挂载到云主机:%(instance)s"
 
-#: volume/views.py:145 volume/views.py:154
+#: volume/views.py:167 volume/views.py:176
 msgid "Deleting Volume"
 msgstr "删除中"
 
-#: volume/views.py:150
+#: volume/views.py:172
 msgid "Deleting Volume error"
 msgstr "删除磁盘失败"
 
-#: workflow/migrations/0002_add_instance_create_work_flow.py:17
-msgid "Instance Creation"
-msgstr "创建云主机"
-
-#: workflow/models.py:11
+#: workflow/models.py:17
 msgid "Flow Name"
 msgstr "流程名称"
 
-#: workflow/models.py:12
-msgid "Content Type"
-msgstr "内容"
-
-#: workflow/models.py:18 workflow/models.py:19
+#: workflow/models.py:25 workflow/models.py:26
 msgid "Workflow"
 msgstr "工作流"
 
-#: workflow/models.py:32 workflow/models.py:61 workflow/models.py:130
+#: workflow/models.py:47 workflow/models.py:76 workflow/models.py:166
 msgid "Work Flow"
 msgstr "工作流"
 
-#: workflow/models.py:33 workflow/models.py:131
+#: workflow/models.py:48 workflow/models.py:167
 msgid "Step Name"
 msgstr "名称"
 
-#: workflow/models.py:34 workflow/models.py:132
+#: workflow/models.py:49 workflow/models.py:168
 msgid "Auditor"
 msgstr "审核人"
 
-#: workflow/models.py:35 workflow/models.py:133
+#: workflow/models.py:50 workflow/models.py:169
 msgid "Step No."
 msgstr "步骤编号"
 
-#: workflow/models.py:44 workflow/models.py:142
+#: workflow/models.py:59 workflow/models.py:178
 msgid "Workflow Step"
 msgstr "工作流步骤"
 
-#: workflow/models.py:45 workflow/models.py:143
+#: workflow/models.py:60 workflow/models.py:179
 msgid "Workflow Steps"
 msgstr "工作流步骤"
 
-#: workflow/models.py:62
+#: workflow/models.py:77
 msgid "Current Step"
 msgstr "当前步骤"
 
-#: workflow/models.py:63
+#: workflow/models.py:79
 msgid "Reject Reason"
 msgstr "拒绝原因"
 
-#: workflow/models.py:64
+#: workflow/models.py:80
 msgid "Completed"
 msgstr "已完成"
 
-#: workflow/models.py:65
+#: workflow/models.py:81
 msgid "Extra Data"
 msgstr "其他数据"
 
-#: workflow/models.py:71
+#: workflow/models.py:87
 msgid "Workflow Instance"
 msgstr "工作流实例"
 
-#: workflow/models.py:72
+#: workflow/models.py:88
 msgid "Workflow Instances"
 msgstr "工作流实例"
 
-#: workflow/models.py:100
-msgid "Apply Instance"
-msgstr "申请云主机"
+#: workflow/views.py:76
+msgid "Workflow is saved."
+msgstr "工作流定义已被保存"
 
-#: workflow/views.py:71
-msgid "Instance create flow is saved."
-msgstr "云主机创建流程已保存!"
+#: workflow/views.py:94
+#, python-format
+msgid "%(name)s is the default workflow for %(resource)s now."
+msgstr "%(name)s现在是申请%(resource)s的默认工作流"
 
 #: workflow/views.py:113
 #, python-format
-msgid "Your application for instance \"%(instance_name)s\" is approved! "
-msgstr "您申请的云主机\"%(instance_name)s\"已被批准！"
+msgid "%(name)s is not default workflow anymore."
+msgstr "%(name)s不再是默认流程"
 
-#: workflow/views.py:117
-msgid "This process is transfer to next phrase successfully!"
+#: workflow/views.py:130
+msgid "Workflow %(name)s is deleted."
+msgstr "流程%(name)s已删除"
+
+#: workflow/views.py:170
+msgid "This process is transferred to next phrase successfully!"
 msgstr "该流程成功进入下一审核环节！"
 
-#: workflow/views.py:133
-#, python-format
-msgid "Your application for instance \"%(instance_name)s\" is rejected! "
-msgstr "您申请的云主机\"%(instance_name)s\"被驳回！"
-
-#: workflow/views.py:137
+#: workflow/views.py:182
 msgid "Application is rejected."
 msgstr "申请被驳回."

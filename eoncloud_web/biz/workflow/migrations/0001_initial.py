@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('order', models.PositiveSmallIntegerField(verbose_name='Step No.')),
                 ('create_date', models.DateTimeField(auto_now_add=True)),
                 ('update_date', models.DateTimeField(auto_now=True, auto_now_add=True)),
-                ('auditor', models.ForeignKey(related_name='+', verbose_name='Auditor', to=settings.AUTH_USER_MODEL)),
+                ('approver', models.ForeignKey(related_name='+', verbose_name='Auditor', to=settings.AUTH_USER_MODEL)),
                 ('next', models.OneToOneField(related_query_name=b'previous', related_name='previous', null=True, to='workflow.Step')),
             ],
             options={
@@ -60,9 +60,9 @@ class Migration(migrations.Migration):
                 ('order', models.PositiveSmallIntegerField(verbose_name='Step No.')),
                 ('create_date', models.DateTimeField(auto_now_add=True)),
                 ('update_date', models.DateTimeField(auto_now=True, auto_now_add=True)),
-                ('auditor', models.ForeignKey(related_name='+', verbose_name='Auditor', to=settings.AUTH_USER_MODEL)),
+                ('approver', models.ForeignKey(related_name='+', verbose_name='Auditor', to=settings.AUTH_USER_MODEL)),
                 ('next', models.OneToOneField(related_query_name=b'previous', related_name='previous', null=True, to='workflow.StepInstance')),
-                ('workflow', models.ForeignKey(related_query_name=b'step', related_name='step_set', verbose_name='Work Flow', to='workflow.FlowInstance')),
+                ('workflow', models.ForeignKey(related_query_name=b'step', related_name='step_set', db_constraint=False, verbose_name='Work Flow', to='workflow.FlowInstance')),
             ],
             options={
                 'ordering': ('order',),
@@ -77,9 +77,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, verbose_name='Flow Name')),
+                ('resource_type', models.CharField(max_length=30)),
+                ('is_default', models.BooleanField(default=False)),
                 ('create_date', models.DateTimeField(auto_now_add=True)),
                 ('update_date', models.DateTimeField(auto_now=True, auto_now_add=True)),
-                ('content_type', models.ForeignKey(related_name='+', verbose_name='Content Type', to='contenttypes.ContentType')),
             ],
             options={
                 'db_table': 'workflow',
@@ -97,7 +98,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='flowinstance',
             name='current_step',
-            field=models.ForeignKey(related_name='+', verbose_name='Current Step', to='workflow.StepInstance', null=True),
+            field=models.ForeignKey(related_name='+', db_constraint=False, verbose_name='Current Step', to='workflow.StepInstance', null=True),
             preserve_default=True,
         ),
         migrations.AddField(

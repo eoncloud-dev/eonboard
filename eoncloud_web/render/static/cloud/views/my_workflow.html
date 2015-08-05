@@ -13,12 +13,12 @@
                 <div id="" class="dataTables_wrapper no-footer">
                     <table ng-table="table"
                            class="table table-striped table-bordered table-advance">
-                        <tr ng-repeat-start="instance in $data">
+                        <tr data-ng-repeat-start="instance in $data">
                             <td data-title="'workflow.flow_instance_name' | i18next">
                                 {[{ instance.name }]}
                             </td>
                             <td data-title="'workflow.resource_info' | i18next">
-                               <b>{[{ instance.resource_info.name }]}/ {[{ instance.resource_info.cpu }]} CPU/ {[{ instance.resource_info.memory }]}MB/ {[{ instance.resource_info.sys_disk }]}GB</b>
+                               <b>{[{ instance.resource_info }]}</b>
                             </td>
                             <td data-title="'workflow.apply_start_date' | i18next">
                                 {[{ instance.create_date }]}
@@ -27,14 +27,14 @@
                                 <span data-ng-if="instance.is_complete">{[{ instance.update_date }]}</span>
                             </td>
                         </tr>
-                        <tr ng-repeat-end>
+                        <tr data-ng-repeat-end>
                             <td colspan="4" style="background-color: white;">
                                 <div style="padding-left: 10px;">
                                     <ul class="list-inline">
-                                        <li class="label label-success"> {[{ instance.name }]} </li>
+                                        <li class="label label-success"> {[{ 'workflow.status_start' | i18next }]} </li>
                                         <li> -> </li>
                                         <li tooltips
-                                            data-tooltip="{[{step.auditor_name}]}"
+                                            data-tooltip="{[{step.approver_name}]}"
                                             data-ng-repeat-start="step in instance.steps"
                                             data-ng-class="stepClass(instance, step)">
                                             {[{ step.name }]}

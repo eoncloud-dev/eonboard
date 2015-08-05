@@ -6,44 +6,134 @@
 
 'use strict';
 
-CloudApp.controller('InstanceCreateFlowController',
-    function ($rootScope, $scope, $i18next, lodash,
+CloudApp.controller('WorkflowManagementController',
+    function ($rootScope, $scope, $i18next, $ngBootbox, $modal, lodash, ngTableParams,
+              CommonHttpService, ToastrService, ngTableHelper, Workflow) {
+
+        $scope.workflows = [];
+
+        $scope.table = new ngTableParams({
+            page: 1,
+            count: 10
+        },{
+            counts: [],
+            getData: function ($defer, params) {
+                Workflow.query(function (data) {
+                    $scope.workflows = ngTableHelper.paginate(data, $defer, params);
+                });
+            }
+        });
+
+         $scope.openWorkflowModal = function(workflow){
+
+            workflow = workflow || {steps: [{}]};
+
+            $modal.open({
+                templateUrl: 'define.html',
+                controller: 'WorkflowDefineController',
+                backdrop: "static",
+                size: 'lg',
+                resolve: {
+                    workflow: function(){
+                        return workflow;
+                    },
+                    resourceTypes: function(CommonHttpService){
+                        return CommonHttpService.get('/api/settings/resource_types/');
+                    },
+                    users: function(User){
+                        return User.query().$promise;
+                    }
+                }
+            }).result.then(function(){
+                $scope.table.reload();
+            });
+        };
+
+        $scope.setAsDefault = function(workflow){
+
+            $ngBootbox.confirm($i18next("workflow.default_workflow_confirm")).then(function(){
+
+                var params = {
+                    id: workflow.id,
+                    resource_type: workflow.resource_type
+                };
+
+                CommonHttpService.post("/api/workflows/set-default/", params).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        $scope.table.reload();
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
+            });
+        };
+
+        $scope.cancelDefault = function(workflow){
+
+            $ngBootbox.confirm($i18next("workflow.cancel_default_confirm")).then(function(){
+
+                CommonHttpService.post("/api/workflows/cancel-default/", {id: workflow.id}).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        $scope.table.reload();
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
+            });
+        };
+
+        $scope.delete = function(workflow){
+            $ngBootbox.confirm($i18next("workflow.confirm_delete")).then(function(){
+
+                CommonHttpService.post("/api/workflows/delete/", {id: workflow.id}).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        $scope.table.reload();
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
+            });
+        };
+    })
+
+    .controller('WorkflowDefineController', function($rootScope, $scope, $i18next, lodash,
               CommonHttpService, ToastrService, ValidationTool,
-              users, workflow) {
+              $modalInstance, workflow, users, resourceTypes){
 
         var form;
 
-        function init(){
+        workflow = angular.copy(workflow);
+        $scope.workflow = workflow;
+        $scope.users = users;
+        $scope.resourceTypes = [];
+        $scope.cancel = $modalInstance.dismiss;
 
-            $scope.workflow = workflow;
-            $scope.users = users;
+        var init = function(){
 
-            if(workflow.steps.length == 0){
-                workflow.steps.push({});
-            }
+            $modalInstance.rendered.then(function(){
+                form = ValidationTool.init("#workflowForm");
+            });
 
-            ValidationTool.addValidator('uniqueAuditor', function(value, element){
+            ValidationTool.addValidator('uniqueApprover', function(value, element){
 
                 value = parseInt(value);
                 var user = users[value];
 
-                var countResult = lodash.chain(workflow.steps).map('auditor').countBy(function(n){
+                var countResult = lodash.chain(workflow.steps).map('approver').countBy(function(n){
                     return n;
                 }).value();
 
                 return countResult[user.id] == 1;
 
-            }, $i18next('workflow.same_auditor'));
+            }, $i18next('workflow.same_approver'));
 
-            $scope.$on('$viewContentLoaded', function () {
-                Metronic.initAjax();
-                form = ValidationTool.init("#workflowForm");
-            });
-
-            $rootScope.settings.layout.pageBodySolid = true;
-            $rootScope.settings.layout.pageSidebarClosed = false;
-
-        }
+            for(var attr in resourceTypes){
+                $scope.resourceTypes.push({key: attr, label: resourceTypes[attr]});
+            }
+        };
 
         var switchSteps = function(i, j){
 
@@ -93,24 +183,26 @@ CloudApp.controller('InstanceCreateFlowController',
             }
 
             var params = {
-                workflow_id: workflow.id,
+                id: workflow.id,
+                name: workflow.name,
+                resource_type: workflow.resource_type,
                 step_ids: [],
                 step_names: [],
-                step_auditors: []
+                step_approvers: []
             };
 
             angular.forEach(workflow.steps, function(step){
                 params.step_ids.push(step.id);
                 params.step_names.push(step.name);
-                params.step_auditors.push(step.auditor);
+                params.step_approvers.push(step.approver);
             });
 
-            CommonHttpService.post('/api/workflows/instance-create/update/', params)
+            CommonHttpService.post('/api/workflows/define/', params)
                 .then(function(result){
 
                 if (result.success) {
                     ToastrService.success(result.msg, $i18next("success"));
-                    workflow = $scope.workflow = result.data;
+                    $modalInstance.close();
                 } else {
                     ToastrService.error(result.msg, $i18next("op_failed"));
                 }

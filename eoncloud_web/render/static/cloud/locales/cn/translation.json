@@ -292,9 +292,9 @@
     "operation_support": "运营支持",
     "notifications": "通知",
     "workflow_management": "流程管理",
-    "instance_create_flow": "云主机创建流程",
+    "workflow_definition": "流程定义",
     "workflow": "工作流",
-    "workflow_audit": "流程审批",
+    "workflow_process": "流程审批",
     "my_workflow": "我的流程"
   },
 
@@ -302,7 +302,7 @@
     "quota_usage": "配额使用情况",
     "contract_info": "合同详情",
     "new_message_tip": "您有<strong>__num__</strong> 条未读消息! 点击 <a class=\"alert-link\" href=\"#/notification/\"> 这里 </a> 查看．",
-    "new_workflow_tip": "您有<strong>__num__</strong> 待审批申请! 点击 <a class=\"alert-link\" href=\"#/workflow-audit/\"> 这里 </a> 查看．"
+    "new_workflow_tip": "您有<strong>__num__</strong> 待审批申请! 点击 <a class=\"alert-link\" href=\"#/workflow-process/\"> 这里 </a> 查看．"
   },
 
   "quota": {
@@ -572,23 +572,37 @@
   },
 
   "workflow": {
+      "name": "名称",
+      "resource": "资源",
+      "create_date": "创建日期",
+      "update_date": "更新日期",
+      "default_workflow": "默认流程",
+      "default_workflow_confirm": "同一种资源只能有一个默认流程，设置该流程为默认流程会使当前默认流程失效, 确定执行该操作吗？",
+      "cancel_default_confirm": "取消后该资源将没有默认流程，用户可以直接创建相关资源．确认执行该操作吗？",
+      "define_workflow": "定义流程",
+      "set_default": "设为默认流程",
+      "cancel_default": "取消默认流程",
       "step_name": "环节",
-      "auditor": "审批人",
+      "approver": "审批人",
       "applier": "申请人",
-      "select_auditor": "选择审批人",
-      "same_auditor": "审核人重复!",
-      "audit": "流程审批",
-      "flow_instance_name": "事项",
+      "select_approver": "选择审批人",
+      "same_approver": "审核人重复!",
+      "process": "流程审批",
+      "flow_instance_name": "流程名称",
       "resource_info": "具体信息",
       "approve": "通过",
       "reject": "驳回",
       "process": "进展",
       "status": "状态",
       "status_complete": "完成",
-      "status_auditing": "审核中",
+      "status_processing": "审核中",
       "reject_reason": "驳回原因",
       "step_end": "结束",
       "apply_start_date": "申请日期",
-      "apply_end_date": "结束日期"
+      "apply_end_date": "结束日期",
+      "resource_select": "请选择资源",
+      "confirm_delete": "确认要删除该流程吗？",
+      "confirm_approve": "确定要通过__applier__的申请吗？",
+      "status_start": "开始"
   }
 }

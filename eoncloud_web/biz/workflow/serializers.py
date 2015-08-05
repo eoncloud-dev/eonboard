@@ -10,7 +10,7 @@ from biz.workflow.models import Workflow, Step, FlowInstance
 
 
 class WorkflowStepSerializer(serializers.ModelSerializer):
-    auditor_name = serializers.ReadOnlyField()
+    approver_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Step
@@ -18,13 +18,16 @@ class WorkflowStepSerializer(serializers.ModelSerializer):
 
 class WorkflowSerializer(serializers.ModelSerializer):
     steps = WorkflowStepSerializer(many=True, read_only=True)
+    create_date = serializers.DateTimeField(format="%Y-%m-%d", read_only=True)
+    update_date = serializers.DateTimeField(format="%Y-%m-%d", read_only=True)
+    resource_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Workflow
 
 
 class StepInstanceSerializer(serializers.ModelSerializer):
-    auditor_name = serializers.ReadOnlyField()
+    approver_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Step

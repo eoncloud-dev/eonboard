@@ -13,7 +13,7 @@ CloudApp.controller('OverviewController',
         $scope.notificationNum = feedStatus.num;
         $scope.contract = contract;
         $scope.quota = quota;
-        $scope.flowToAuditNum = workflowStatus.num;
+        $scope.flowToProcessNum = workflowStatus.num;
 
         $scope.operation_icon = function (op) {
             var op_icon_mapping = {

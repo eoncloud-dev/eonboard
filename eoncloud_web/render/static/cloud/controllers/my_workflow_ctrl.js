@@ -20,11 +20,11 @@ CloudApp.controller('MyWorkflowController',
         $scope.instances = [];
         $scope.table = new ngTableParams({
             page: 1,
-            count: 10
+            count: 5
         },{
             counts: [],
             getData: function ($defer, params) {
-                FlowInstance.query({role: 'owner'}, function (data) {
+                FlowInstance.query({role: 'applier'}, function (data) {
                     $scope.instances = ngTableHelper.paginate(data, $defer, params);
                 });
             }

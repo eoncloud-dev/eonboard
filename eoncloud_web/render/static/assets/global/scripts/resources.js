@@ -87,4 +87,8 @@ angular.module('cloud.resources', [])
     return $resource("/api/workflow-instances/:id/:action/",
         {id: '@id'},
         {status: {isArray: false, params: {action: 'status'}}});
+}])
+
+.factory('Workflow', ['$resource', function ($resource){
+    return $resource("/api/workflows/:id/:action/", {id: '@id'});
 }]);

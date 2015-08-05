@@ -75,12 +75,12 @@ def current_user(request):
         udc_id = request.session["UDC_ID"]
         data_center_names = DataCenter.objects.filter(userdatacenter__pk=udc_id)
         cc_name = data_center_names[0].name if data_center_names else u'N/A'
-        is_auditor = Step.objects.filter(auditor__pk=request.user.pk).exists()
+        is_approver = Step.objects.filter(approver__pk=request.user.pk).exists()
 
         return JsonResponse({'result': {'logged': True},
                             'user': request.user.username,
                             'datacenter': cc_name,
-                            'is_auditor': is_auditor})
+                            'is_approver': is_approver})
     else:
         return JsonResponse({'result': {'logged': False}})
 

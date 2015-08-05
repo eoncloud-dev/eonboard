@@ -19,7 +19,8 @@ from biz.workflow import views as workflow_view
 
 # various options and configurations
 urlpatterns = [
-    url(r'^settings/monitor/$', instance_view.monitor_settings)
+    url(r'^settings/monitor/$', instance_view.monitor_settings),
+    url(r'^settings/resource_types/$', workflow_view.resource_types)
 ]
 
  # instance&flavor
@@ -224,8 +225,11 @@ urlpatterns += format_suffix_patterns(
 
 # workflow
 urlpatterns += [
-    url(r'^workflows/instance-create/$', workflow_view.instance_create_flow),
-    url(r'^workflows/instance-create/update/$', workflow_view.update_instance_create_flow),
+    url(r'^workflows/$', workflow_view.workflow_list),
+    url(r'^workflows/define/$', workflow_view.define_workflow),
+    url(r'^workflows/delete/$', workflow_view.delete_workflow),
+    url(r'^workflows/set-default/$', workflow_view.set_default_workflow),
+    url(r'^workflows/cancel-default/$', workflow_view.cancel_default_workflow),
     url(r'^workflow-instances/$', workflow_view.flow_instances),
     url(r'^workflow-instances/approve/$', workflow_view.approve),
     url(r'^workflow-instances/rejected/$', workflow_view.reject),

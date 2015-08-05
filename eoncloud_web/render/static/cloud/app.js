@@ -16,6 +16,7 @@ var CloudApp = angular.module("CloudApp", [
     "ngTable",
     "ngResource",
     "ngCookies",
+    "ngBootbox",
     "jm.i18next",
     "cloud.services",
     "cloud.resources",
@@ -496,18 +497,18 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                 }
             })
 
-            .state("workflow-audit", {
-                url: "/workflow-audit/",
-                templateUrl: "/static/cloud/views/workflow_audit.html",
-                data: {pageTitle: 'Workflow Audit'},
-                controller: "WorkflowAuditController",
+            .state("workflow-process", {
+                url: "/workflow-process/",
+                templateUrl: "/static/cloud/views/workflow_process.html",
+                data: {pageTitle: 'Workflow Process'},
+                controller: "WorkflowProcessController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load({
                             name: 'CloudApp',
                             insertBefore: '#ng_load_plugins_before',
                             files: [
-                                '/static/cloud/controllers/workflow_audit_ctrl.js'
+                                '/static/cloud/controllers/workflow_process_ctrl.js'
                             ]
                         });
                     }]
@@ -528,10 +529,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/cloud/controllers/my_workflow_ctrl.js'
                             ]
                         });
-                    }],
-                    instanceCreateFlow: function(CommonHttpService){
-                        return CommonHttpService.get("/api/workflows/instance-create/");
-                    }
+                    }]
                 }
             })
         ;

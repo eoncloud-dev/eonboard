@@ -7,8 +7,9 @@
 
 'use strict';
 
-CloudApp.controller('WorkflowAuditController',
-    function ($rootScope, $scope, $i18next, $modal, ngTableParams,
+CloudApp.controller('WorkflowProcessController',
+    function ($rootScope, $scope, $i18next, $ngBootbox,
+              $modal, ngTableParams,
               CommonHttpService, ToastrService,
               ngTableHelper, FlowInstance) {
 
@@ -27,7 +28,7 @@ CloudApp.controller('WorkflowAuditController',
         },{
             counts: [],
             getData: function ($defer, params) {
-                FlowInstance.query({role: 'auditor'}, function (data) {
+                FlowInstance.query({role: 'approver'}, function (data) {
                     $scope.instances = ngTableHelper.paginate(data, $defer, params);
                 });
             }
@@ -50,7 +51,11 @@ CloudApp.controller('WorkflowAuditController',
         };
 
         $scope.approve = function(instance){
-            CommonHttpService.post(
+
+            var msg = $i18next("workflow.confirm_approve", {applier: instance.owner_name});
+
+            $ngBootbox.confirm(msg).then(function(){
+                CommonHttpService.post(
                 '/api/workflow-instances/approve/', {id: instance.id}).then(function(result){
                      if (result.success) {
                         ToastrService.success(result.msg, $i18next("success"));
@@ -59,6 +64,7 @@ CloudApp.controller('WorkflowAuditController',
                         ToastrService.error(result.msg, $i18next("op_failed"));
                     }
                 });
+            });
         };
     })
 

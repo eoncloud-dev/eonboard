@@ -145,7 +145,8 @@ def subnet_create_task(subnet=None):
                      "name": "subnet-%s" % subnet.id,
                      "cidr": subnet.address,
                      "ip_version": subnet.ip_version,
-                     "enable_dhcp": True}
+                     "enable_dhcp": True,
+                     "dns_nameservers": settings.DNS_NAMESERVERS}
 
     try:
         sub = neutron.subnet_create(rc, **subnet_params)

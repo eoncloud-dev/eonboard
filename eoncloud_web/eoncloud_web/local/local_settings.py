@@ -13,6 +13,7 @@ MULTI_ROUTER_ENABLED = False
 # site brand
 BRAND = "EonCloud"
 ICP_NUMBER = u"冀ICP备15016515号-1"
+DNS_NAMESERVERS = ["8.8.4.4", "114.114.114.114"]
 
 MCC = {
     "1": u"金融",

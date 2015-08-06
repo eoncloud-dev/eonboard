@@ -192,3 +192,9 @@ from eoncloud_web.local.celery_settings import *
 LDAP_AUTH_ENABLED = False
 if LDAP_AUTH_ENABLED:
     from eoncloud_web.local.ladp_settings import *
+
+
+try:
+    from eoncloud_web.local.dev_settings import *
+except:
+    pass

@@ -20,3 +20,4 @@ pylint.txt
 reports
 .idea
 *.iml
+dev_settings.py

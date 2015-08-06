@@ -50,8 +50,6 @@ INSTALLED_APPS = (
     'biz.backup',
 )
 
-#AUTHENTICATION_BACKENDS = ('biz.cloud_auth.backend.ComputeCenterBackend',) 
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -187,3 +185,10 @@ logging.config.dictConfig(LOG_CONFIG)
 from eoncloud_web.local.local_settings import *
 from eoncloud_web.local.db_settings import *
 from eoncloud_web.local.celery_settings import *
+
+
+# ldap auth setting
+
+LDAP_AUTH_ENABLED = False
+if LDAP_AUTH_ENABLED:
+    from eoncloud_web.local.ladp_settings import *

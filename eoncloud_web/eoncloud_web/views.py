@@ -5,9 +5,10 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
+
+from biz.account.models import Notification
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
-
 from biz.idc.models import DataCenter, UserDataCenter as UDC
 from biz.account.models import Notification
 from biz.workflow.models import Step
@@ -36,7 +37,6 @@ def login(request, template_name="login.html"):
         authenticationForm = AuthenticationForm(data=request.POST)
         if authenticationForm.is_valid():
             user = authenticationForm.get_user()
-
             auth_login(request, user)
 
             if user.is_superuser:
@@ -56,7 +56,8 @@ def login(request, template_name="login.html"):
         "authenticationForm": authenticationForm,
         "error": authenticationForm.errors.get('__all__', None),
         "BRAND": settings.BRAND,
-        "ICP_NUMBER": settings.ICP_NUMBER
+        "ICP_NUMBER": settings.ICP_NUMBER,
+        "LDAP_AUTH_ENABLED": settings.LDAP_AUTH_ENABLED
     }))
 
 
@@ -82,3 +83,4 @@ def current_user(request):
                             'is_auditor': is_auditor})
     else:
         return JsonResponse({'result': {'logged': False}})
+

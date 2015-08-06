@@ -189,8 +189,8 @@ def network_router_link_operation(subnet, action, router_id=None):
 
 @api_view(['GET'])
 def subnet_list_view(request):
-    query_set = Subnet.objects.filter(deleted=False, user=request.user, user_data_center=request.session["UDC_ID"],
-                                          status=NETWORK_STATE_ACTIVE)
+    query_set = Subnet.objects.filter(deleted=False, network__deleted=False, user=request.user,
+                                      user_data_center=request.session["UDC_ID"], status=NETWORK_STATE_ACTIVE)
 
     serializer = SubnetSerializer(query_set, many=True)
     return Response(serializer.data)

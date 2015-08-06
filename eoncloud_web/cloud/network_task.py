@@ -145,6 +145,7 @@ def subnet_create_task(subnet=None):
                      "name": "subnet-%s" % subnet.id,
                      "cidr": subnet.address,
                      "ip_version": subnet.ip_version,
+                     "dns_nameservers": settings.DNS_NAMESERVERS,
                      "enable_dhcp": True}
 
     try:

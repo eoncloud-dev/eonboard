@@ -21,14 +21,14 @@
                                 {[{ instance.name }]}
                             </td>
                             <td data-title="'workflow.resource_info' | i18next">
-                              {[{ instance.resource_info.name }]}/ {[{ instance.resource_info.cpu }]}CPU/ {[{ instance.resource_info.memory }]}MB/ {[{ instance.resource_info.sys_disk }]}GB
+                              {[{ instance.resource_info }]}
                             </td>
                             <td data-title="'workflow.apply_start_date' | i18next">
                                 {[{ instance.create_date }]}
                             </td>
                             <td data-title="'actions' | i18next">
                                 <div class="btn-group">
-                                    <button class="btn btn-default"
+                                    <button class="btn btn-default" style="margin-right: 20px;"
                                             type="button" ng-click="reject(instance)">
                                         {[{ 'workflow.reject' | i18next }]}
                                     </button>

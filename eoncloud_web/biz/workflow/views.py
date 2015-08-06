@@ -2,44 +2,49 @@
 import logging
 
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.contenttypes.models import ContentType
 from rest_framework.response import Response
-
+from rest_framework import status
 
 from eoncloud_web.decorators import require_GET, require_POST
 from biz.workflow.models import Workflow, Step, FlowInstance
-from biz.account.models import UserProxy, Notification
+from biz.account.models import UserProxy
 from biz.workflow.serializers import WorkflowSerializer, BasicFlowInstanceSerializer
-from cloud.instance_task import instance_create_task
-from biz.instance.settings import INSTANCE_STATE_WAITING, INSTANCE_STATE_REJECTED
+from biz.workflow.settings import ResourceType
+
+from eoncloud_web.shortcuts import retrieve_params, retrieve_list_params
 
 
 @require_GET
-def instance_create_flow(request):
-
-    instance_type = ContentType.objects.get(app_label="instance", model="instance")
-
-    workflow = Workflow.objects.get(content_type=instance_type)
-
-    return Response(WorkflowSerializer(workflow).data)
+def workflow_list(request):
+    serializer = WorkflowSerializer(Workflow.objects.all(), many=True)
+    return Response(serializer.data)
 
 
 @require_POST
-def update_instance_create_flow(request):
+def define_workflow(request):
 
-    workflow_id = request.data['workflow_id']
-    step_ids = request.data.getlist('step_ids[]')
-    step_names = request.data.getlist('step_names[]')
-    step_auditors = request.data.getlist('step_auditors[]')
+    workflow_id, name, resource_type = retrieve_params(
+        request.data, 'id', 'name', 'resource_type')
 
-    workflow = Workflow.objects.get(pk=workflow_id)
+    step_ids, step_names, step_approvers = retrieve_list_params(
+        request.data, 'step_ids[]', 'step_names[]', 'step_approvers[]')
+
+    if workflow_id:
+        workflow = Workflow.objects.get(pk=workflow_id)
+    else:
+        workflow = Workflow(is_default=False)
+
+    workflow.name = name
+    workflow.resource_type = resource_type
+    workflow.save()
+
     original_steps, new_steps = workflow.steps.all(), []
     step_orders = range(len(step_ids))
 
     last_step = None
     for index in step_orders:
 
-        pk, name, auditor_id = step_ids[index], step_names[index], step_auditors[index]
+        pk, name, approver_id = step_ids[index], step_names[index], step_approvers[index]
 
         if pk:
             step = Step.objects.get(pk=pk)
@@ -49,7 +54,7 @@ def update_instance_create_flow(request):
 
         step.name = name
         step.order = index
-        step.auditor = UserProxy.normal_users.get(pk=auditor_id)
+        step.approver = UserProxy.normal_users.get(pk=approver_id)
         step.save()
 
         if last_step:
@@ -65,11 +70,66 @@ def update_instance_create_flow(request):
         if step not in new_steps:
             step.delete()
 
-    workflow = Workflow.objects.get(pk=workflow_id)
+    workflow = Workflow.objects.get(pk=workflow.pk)
 
     return Response({"success": True,
-                     "msg": _('Instance create flow is saved.'),
+                     "msg": _('Workflow is saved.'),
                      "data": WorkflowSerializer(workflow).data})
+
+
+@require_POST
+def set_default_workflow(request):
+
+    workflow_id, resource_type = retrieve_params(request.data, 'id', 'resource_type')
+
+    try:
+        workflow = Workflow.objects.get(pk=workflow_id)
+    except Workflow.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        Workflow.objects.filter(resource_type=resource_type).update(is_default=False)
+        workflow.is_default = True
+        workflow.save()
+
+    msg = _("%(name)s is the default workflow for %(resource)s now.") \
+        % {'name': workflow.name, 'resource': workflow.resource_name}
+
+    return Response({"success": True, "msg": msg}, status=status.HTTP_200_OK)
+
+
+@require_POST
+def cancel_default_workflow(request):
+
+    workflow_id = request.data['id']
+
+    try:
+        workflow = Workflow.objects.get(pk=workflow_id)
+    except Workflow.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        workflow.is_default = False
+        workflow.save()
+
+    msg = _("%(name)s is not default workflow anymore.") \
+        % {'name': workflow.name, 'resource': workflow.resource_name}
+
+    return Response({"success": True, "msg": msg}, status=status.HTTP_200_OK)
+
+
+@require_POST
+def delete_workflow(request):
+
+    workflow_id = request.data['id']
+
+    workflow = Workflow.objects.get(pk=workflow_id)
+
+    workflow.steps.all().delete()
+
+    workflow.delete()
+
+    msg = _("Workflow %(name)s is deleted.") % {'name': workflow.name}
+
+    return Response({"success": True, "msg": msg}, status=status.HTTP_200_OK)
 
 
 @require_GET
@@ -77,13 +137,15 @@ def flow_instances(request):
 
     role = request.query_params['role']
 
-    if role == 'owner':
-        instances = FlowInstance.objects.filter(owner=request.user)
+    if role == 'applier':
+        instances = FlowInstance.objects.\
+            filter(owner=request.user).order_by('-create_date')[0:20]
     else:
-        instances = FlowInstance.objects.filter(current_step__auditor=request.user,
-                                                is_complete=False)
+        instances = FlowInstance.objects. \
+            filter(current_step__approver=request.user,
+                   is_complete=False).order_by('-create_date')
 
-    serializer = BasicFlowInstanceSerializer(instances.order_by('-create_date'), many=True)
+    serializer = BasicFlowInstanceSerializer(instances, many=True)
     return Response(serializer.data)
 
 
@@ -102,19 +164,10 @@ def approve(request):
     instance.save()
 
     if instance.is_complete:
-        content_object = instance.content_object
+        instance.execute_predefined_action()
 
-        instance_create_task.delay(instance.content_object,
-                                   password=instance.extra_data)
-
-        content_object.status = INSTANCE_STATE_WAITING
-        content_object.save()
-
-        content = title = _('Your application for instance "%(instance_name)s" is approved! ') \
-            % {'instance_name': content_object.name}
-        Notification.info(instance.owner, title, content)
     return Response({"success": True,
-                     "msg": _('This process is transfer to next phrase successfully!')})
+                     "msg": _('This process is transferred to next phrase successfully!')})
 
 
 @require_POST
@@ -123,22 +176,19 @@ def reject(request):
     pk, reason = request.data['id'], request.data['reason']
 
     instance = FlowInstance.objects.get(pk=pk)
-    instance.reject_reason = reason
-    instance.is_complete = True
-    instance.save()
 
-    instance.content_object.status = INSTANCE_STATE_REJECTED
-    instance.content_object.save()
+    instance.reject(reason)
 
-    content = title = _('Your application for instance "%(instance_name)s" is rejected! ') \
-        % {'instance_name': instance.content_object.name}
-    Notification.error(instance.owner, title, content)
-    return Response({"success": True,
-                     "msg": _('Application is rejected.')})
+    return Response({"success": True, "msg": _('Application is rejected.')})
 
 
 @require_GET
 def workflow_status(request):
-    num = FlowInstance.objects.filter(current_step__auditor=request.user,
+    num = FlowInstance.objects.filter(current_step__approver=request.user,
                                       is_complete=False).count()
     return Response({'num': num})
+
+
+@require_GET
+def resource_types(request):
+    return Response(ResourceType.NAME_MAP)

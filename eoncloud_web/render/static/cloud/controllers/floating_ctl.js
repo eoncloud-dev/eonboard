@@ -218,7 +218,7 @@ CloudApp.controller('FloatCreateController',
             var post_data = {"bandwidth": floating.size};
             CommonHttpService.post("/api/floatings/create/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
-                    ToastrService.success($i18next("floatingIP.create_success_and_waiting"), $i18next("success"));
+                    ToastrService.success(data.msg, $i18next("success"));
                     floating_table.reload();
                 }
                 else {

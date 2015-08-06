@@ -285,11 +285,11 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             })
 
             // workflow
-            .state("instance_create_flow", {
-                url: "/instance-create-flow/",
-                templateUrl: "/static/management/views/instance_creation_flow.html",
-                data: {pageTitle: 'Instance Creation Flow'},
-                controller: "InstanceCreateFlowController",
+            .state("workflow", {
+                url: "/workflow/",
+                templateUrl: "/static/management/views/workflow.html",
+                data: {pageTitle: 'Workflow Definition'},
+                controller: "WorkflowManagementController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                         return $ocLazyLoad.load({
@@ -299,13 +299,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/management/controllers/workflow_ctrl.js'
                             ]
                         });
-                    }],
-                    users: function(User){
-                        return User.query().$promise;
-                    },
-                    workflow: function(CommonHttpService){
-                        return CommonHttpService.get('/api/workflows/instance-create/')
-                    }
+                    }]
                 }
             });
     }]);

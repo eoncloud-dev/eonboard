@@ -1,19 +1,26 @@
 #-*- coding=utf-8 -*-
 
 import logging
+
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Volume
+
 from biz.instance.models import Instance
 from biz.account.models import Operation
+from biz.volume.models import Volume
+from biz.workflow.models import Workflow, FlowInstance, ResourceType
+
 from .serializer import VolumeSerializer
-from .settings import VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING, VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE, \
-    VOLUME_STATE_DELETING, VOLUME_STATE_ERROR, VOLUME_STATE_IN_USE
+from .settings import (VOLUME_STATES_DICT, VOLUME_STATE_ATTACHING,
+                       VOLUME_STATE_DOWNLOADING, VOLUME_STATE_AVAILABLE,
+                       VOLUME_STATE_DELETING, VOLUME_STATE_ERROR,
+                       VOLUME_STATE_IN_USE, VOLUME_STATE_APPLYING)
 
 from cloud.volume_task import volume_create_task,volume_delete_action_task, volume_get
 from cloud.instance_task import volume_attach_or_detach_task
-from django.utils.translation import ugettext_lazy as _
 
 from biz.account.utils import check_quota
 
@@ -43,24 +50,39 @@ def volume_list_view_by_instance(request, format=None):
         serializer = VolumeSerializer(volume_set, many=True)
         return Response(serializer.data)
 
+
 @check_quota(["volume", "volume_size"])
 @api_view(['POST'])
-def volume_create_view(request, format=None):
+def volume_create_view(request):
     try:
         serializer = VolumeSerializer(data=request.data, context={"request": request})
-        if serializer.is_valid():
-            volume = serializer.save()
+        if not serializer.is_valid():
+            return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
+
+        volume = serializer.save()
+
+        Operation.log(volume, obj_name=volume.name, action="create", result=1)
+
+        workflow = Workflow.get_default(ResourceType.VOLUME)
+
+        if settings.SITE_CONFIG['WORKFLOW_ENABLED'] and workflow:
+
+            volume.status = VOLUME_STATE_APPLYING
+            volume.save()
+
+            FlowInstance.create(volume, request.user, workflow, None)
+            msg = _("Your application for %(size)d GB volume is successful, "
+                    "please waiting for approval result!") % {'size': volume.size}
+            return Response({"OPERATION_STATUS": 1, "MSG": msg}, status=status.HTTP_200_OK)
+        else:
             try:
                 volume_create_task.delay(volume)
-                Operation.log(volume, obj_name=volume.name, action="create", result=1)
                 return Response({"OPERATION_STATUS": 1, "MSG": _('Creating Volume')}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 LOG.error(e)
                 volume.status = VOLUME_STATE_ERROR
                 volume.save()
                 return Response({"OPERATION_STATUS": 0, "MSG": _('Volume create error')})
-        else:
-            return Response({"OPERATION_STATUS": 0, "MSG": _('Data valid error')}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         LOG.error("create volume  error ,msg:[%s]" % e)
         return Response({"OPERATION_STATUS": 0, "MSG": _('Volume create error')})

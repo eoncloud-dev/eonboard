@@ -602,6 +602,7 @@ CloudApp.controller('InstanceCreateController',
                 if (data.OPERATION_STATUS == 1) {
                     ToastrService.success(data.msg, $i18next("success"));
                     instance_table.reload();
+                    $modalInstance.dismiss();
                 }
                 else if (data.OPERATION_STATUS == 2) {
                     ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
@@ -609,7 +610,6 @@ CloudApp.controller('InstanceCreateController',
                 else {
                     ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
                 }
-                $modalInstance.dismiss();
             });
         };
 

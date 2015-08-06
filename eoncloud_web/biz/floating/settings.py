@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 FLOATING_ERROR = 0
 FLOATING_ALLOCATE = 1
+FLOATING_APPLYING = 2
+FLOATING_REJECTED = 3
 FLOATING_AVAILABLE = 10
 FLOATING_BINDED = 20
 FLOATING_BINDING = 21
@@ -14,11 +16,14 @@ FLOATING_RELEASING = 91
 FLOATING_STATUS = (
     (FLOATING_ERROR, _("Floating ERROR")),
     (FLOATING_ALLOCATE, _("Floating Allocate")),
-    (FLOATING_AVAILABLE, _("Floating Avaiable")), 
+    (FLOATING_APPLYING, _("Applying")),
+    (FLOATING_REJECTED, _("Rejected")),
+    (FLOATING_AVAILABLE, _("Floating Avaiable")),
     (FLOATING_BINDED, _("Floating Binded")), 
     (FLOATING_BINDING, _("Floating Binding")), 
     (FLOATING_RELEASED, _("Floating Released")), 
-    (FLOATING_RELEASING, _("Floating Releasing")), 
+    (FLOATING_RELEASING, _("Floating Releasing")),
+    (FLOATING_RELEASING, _("Floating Releasing")),
 )
 
 
@@ -26,7 +31,9 @@ FLOATING_STATUS = (
 FLOATING_STATUS_DICT = {
     FLOATING_ERROR: (_("Floating ERROR"), 1),
     FLOATING_ALLOCATE: (_("Floating Allocate"), 0),
-    FLOATING_AVAILABLE: (_("Floating Avaiable"), 1), 
+    FLOATING_APPLYING: (_("Applying"), 0),
+    FLOATING_REJECTED: (_("Rejected"), 1),
+    FLOATING_AVAILABLE: (_("Floating Avaiable"), 1),
     FLOATING_BINDED: (_("Floating Binded"), 1), 
     FLOATING_BINDING: (_("Floating Binding"), 0), 
     FLOATING_RELEASED: (_("Floating Released"), 1), 

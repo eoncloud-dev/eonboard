@@ -73,6 +73,7 @@ SITE_CONFIG = {
     "MULTI_ROUTER_ENABLED": MULTI_ROUTER_ENABLED,
     "BRAND": BRAND,
     "ICP_NUMBER": ICP_NUMBER,
+    "WORKFLOW_ENABLED": True
 }
 
 MONITOR_CONFIG = {
@@ -95,4 +96,3 @@ MONITOR_CONFIG = {
     'intervals': ['second', 'minute', 'hour', 'day', 'week', 'month']
 }
 
-WORKFLOW_ENABLED = True

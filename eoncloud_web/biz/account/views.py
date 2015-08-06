@@ -426,7 +426,7 @@ class NotificationList(generics.ListAPIView):
     serializer_class = NotificationSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().order_by('-create_date')
+        queryset = self.get_queryset().filter(is_auto=False).order_by('-create_date')
         return Response(self.serializer_class(queryset, many=True).data)
 
 

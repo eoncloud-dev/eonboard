@@ -1,0 +1,184 @@
+
+<div>
+    <div class="col-md-12">
+        <div class="portlet">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <a class="btn btn-icon-only btn-default" href="#" data-ng-click="table.reload();">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" data-ng-click="openWorkflowModal()" role="button">
+                        <i class="fa fa-plus"></i>
+                        {[{ 'action.create' | i18next }]}
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="" class="dataTables_wrapper no-footer">
+                    <table data-ng-table="table"
+                           class="table table-striped table-bordered table-advance table-hover">
+                        <tbody>
+                            <tr data-ng-repeat="workflow in $data">
+                                <td data-title="'workflow.name' | i18next">
+                                    <span> {[{ workflow.name }]} </span>
+                                </td>
+                                <td data-title="'workflow.resource' | i18next">
+                                    <span> {[{ workflow.resource_name }]} </span>
+                                </td>
+                                <td data-title="'workflow.default_workflow' | i18next">
+                                    <i class="fa fa-check" data-ng-if="workflow.is_default"></i>
+                                    <i class="fa fa-ban" data-ng-if="!workflow.is_default"></i>
+                                </td>
+                                <td data-title="'workflow.create_date' | i18next">
+                                    <span> {[{ workflow.create_date }]} </span>
+                                </td>
+                                <td data-title="'workflow.update_date' | i18next">
+                                    <span> {[{ workflow.update_date }]} </span>
+                                </td>
+                                <td data-title="'actions' | i18next">
+                                    <div class="btn-group">
+                                        <button class="btn btn-default"
+                                                type="button" ng-click="openWorkflowModal(workflow)">
+                                            <i class="fa fa-edit"></i>
+                                            {[{ 'edit' | i18next }]}
+                                        </button>
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                                type="button" aria-expanded="false">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul role="menu" class="dropdown-menu">
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   data-ng-if="!workflow.is_default"
+                                                   data-ng-click="setAsDefault(workflow)">
+                                                    <i class="fa fa-star"></i>
+                                                    {[{ 'workflow.set_default' | i18next }]} </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   data-ng-click="cancelDefault(workflow)"
+                                                   data-ng-if="workflow.is_default">
+
+                                                    <i class="fa fa-star-o"></i>
+                                                    {[{ 'workflow.cancel_default' | i18next }]} </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   data-ng-click="delete(workflow)"
+                                                   data-ng-if="!workflow.is_default">
+
+                                                    <i class="fa fa-trash"></i>
+                                                    {[{ 'action.delete' | i18next }]} </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MAIN CONTENT -->
+
+<!-- BEGIN TEMPLATE WORKFLOW_DEFINE -->
+<script type="text/ng-template" id="define.html">
+    <div class="modal-header">
+       <div class="modal-title"> {[{ 'workflow.define_workflow' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="workflowForm" role="form" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="name">
+                    {[{ 'workflow.name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input id="name" name="name" class="form-control input-medium required"
+                        data-ng-model="workflow.name">
+                </div>
+            </div>
+            <div class="form-group" >
+                <label class="col-md-3 control-label" for="resource">
+                    {[{ 'workflow.resource' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <select id="user" name="user"
+                            data-ng-if="workflow.id == undefined"
+                            data-ng-model="workflow.resource_type"
+                            class="form-control input-medium"
+                            data-ng-options="type.key as type.label for type in resourceTypes"
+                            data-rule-required="true">
+                        <option value="">{[{ 'workflow.resource_select' | i18next }]}</option>
+                    </select>
+                    <p data-ng-if="workflow.id != undefined" style="padding-top: 8px;">
+                        {[{ workflow.resource_name }]}
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <table class="table table-striped table-advance table-hover table-bordered"
+                       style="width: 680px; margin-left: 2em;">
+                    <tr>
+                        <td>{[{ 'workflow.step_name' | i18next }]}</td>
+                        <td>{[{ 'workflow.approver' | i18next }]}</td>
+                        <td></td>
+                    </tr>
+                    <tr data-ng-repeat="step in workflow.steps">
+                        <td  style="width: 200px;" class="form-group">
+                            <input name="step_name-{[{$index}]}" style="width: 100%;"
+                               class="form-control input-medium required"
+                               data-ng-model="step.name"
+                               data-rule-required="true"
+                               data-rule-minlength="2"
+                               data-rule-maxlength="25">
+                        </td>
+                        <td style="width: 200px;" class="form-group">
+                            <select name="approver_{[{ $index }]}"
+                                    class="form-control input-medium required"
+                                    data-ng-model="step.approver"
+                                    data-ng-options="user.id as user.username for user in users"
+                                    data-rule-required="true"
+                                    data-rule-uniqueapprover="true">
+                                <option value="">{[{ 'workflow.select_approver' | i18next }]}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-icon-only btn-default" href="#"
+                                   data-ng-show="$first == false"
+                                   data-ng-click="up($index)">
+                                    <i class="fa fa-arrow-up"></i>
+                                </a>
+                                <a class="btn btn-icon-only btn-default" href="#"
+                                    data-ng-click="down($index)"
+                                    data-ng-show="$last == false">
+                                    <i class="fa fa-arrow-down"></i>
+                                </a>
+                                <a class="btn btn-icon-only btn-default" href="#"
+                                   data-ng-click="insertAfter(step)">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                                <a class="btn btn-icon-only btn-default" href="#"
+                                   data-ng-show="workflow.steps.length > 1"
+                                   data-ng-click="removeStep(step)">
+                                    <i class="fa fa-minus"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="submit()"> {[{ 'submit' | i18next }]}</a>
+    </div>
+</script>
+<!-- END TEMPLATE WORKFLOW_DEFINE -->

@@ -165,6 +165,7 @@ class Notification(models.Model):
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
     is_announcement = models.BooleanField(default=False)
+    is_auto = models.BooleanField(default=False)
 
     @property
     def time_ago(self):
@@ -226,8 +227,8 @@ for value, name in NOTIFICATION_KEY_METHODS:
 
     def bind(level):
 
-        def action(cls, receiver, title, content):
-            notification = cls.objects.create(title=title, content=content, level=level)
+        def action(cls, receiver, title, content, is_auto=False):
+            notification = cls.objects.create(title=title, content=content, level=level, is_auto=is_auto)
             Feed.objects.create(receiver=receiver, notification=notification)
 
             return notification

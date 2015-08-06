@@ -1,21 +1,28 @@
 #coding=utf-8
 
 
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from biz.account.models import Operation
 from biz.idc.models import UserDataCenter
 from biz.floating.models import Floating
 from biz.floating.serializer import FloatingSerializer
-from biz.floating.settings import FLOATING_STATUS_DICT, FLOATING_ALLOCATE
-from biz.floating.utils import allocate_floating, floating_action
+from biz.floating.settings import FLOATING_STATUS_DICT, FLOATING_ALLOCATE, FLOATING_APPLYING
+from biz.floating.utils import floating_action
 from biz.account.utils import check_quota
+from biz.workflow.settings import ResourceType
+from biz.workflow.models import Workflow, FlowInstance
+from cloud.tasks import allocate_floating_task
+
 
 @api_view(["GET"])
 def list_view(request):
     floatings = Floating.objects.filter(user=request.user,
                                         user_data_center=request.session["UDC_ID"],
-                                        deleted=0)
+                                        deleted=False)
     serializer = FloatingSerializer(floatings, many=True)
     return Response(serializer.data)
 
@@ -26,11 +33,29 @@ def create_view(request):
     floating = Floating.objects.create(
         ip="N/A",
         status=FLOATING_ALLOCATE,
-        bandwidth=request.POST["bandwidth"],
+        bandwidth=int(request.POST["bandwidth"]),
         user=request.user,
         user_data_center=UserDataCenter.objects.get(pk=request.session["UDC_ID"])
     )
-    return Response(allocate_floating(floating))
+
+    Operation.log(floating, obj_name=floating.ip, action='allocate', result=1)
+
+    workflow = Workflow.get_default(ResourceType.FLOATING)
+
+    if settings.SITE_CONFIG['WORKFLOW_ENABLED'] and workflow:
+
+        floating.status = FLOATING_APPLYING
+        floating.save()
+
+        FlowInstance.create(floating, request.user, workflow, None)
+        msg = _("Your application for %(bandwidth)d Mbps floating ip is successful, "
+                "please waiting for approval result!") % {'bandwidth': floating.bandwidth}
+    else:
+        msg = _("Your operation is successful, please wait for allocation.")
+        allocate_floating_task.delay(floating)
+
+    return Response({"OPERATION_STATUS": 1, 'msg': msg})
+
 
 @api_view(["POST"])
 def floating_action_view(request):

@@ -19,8 +19,8 @@ def get_instance_vnc_console(instance):
     vnc = instance_get_vnc_console(instance) 
     if vnc and vnc.url:
         return {"OPERATION_STATUS": OPERATION_SUCCESS,
-                        "vnc_url": "%s&instance_name=%s(%s)" % (vnc.url,
-                                    instance.name, instance.uuid)}
+                "vnc_url": "%s&instance_name=%s&instance_id=%s" % (
+                            vnc.url, instance.name, instance.uuid)}
     else:
         return {"OPERATION_STATUS": OPERATION_FAILED}
 

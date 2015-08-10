@@ -39,7 +39,10 @@ class InstanceList(generics.ListCreateAPIView):
 
     def list(self, request):
         try:
-            queryset = self.get_queryset().filter(user=request.user)
+            udc_id = request.session["UDC_ID"]
+            queryset = self.get_queryset().filter(
+                            user=request.user,
+                            user_data_center__pk=udc_id)
             serializer = InstanceSerializer(queryset, many=True)
             return Response(serializer.data)
         except Exception as e:

@@ -39,6 +39,7 @@ urlpatterns += patterns('',
                                 name="find_password"),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^current_user/$', views.current_user, name='current_user'),
+    url(r'^switch-idc/(?P<dc_id>[\d]+)$', views.switch_idc, name='switch_idc'),
     #url(r'^password-reset-complete/$',
     #                views.password_reset_complete,
     #                name="password_reset_complete")

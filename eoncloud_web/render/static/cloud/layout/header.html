@@ -42,6 +42,14 @@
 				<span class="username username-hide-on-mobile">
 				{[{ "idc" | i18next }]}: {[{ current_user.datacenter }]}</span>
 				</a>
+				<ul class="dropdown-menu dropdown-menu-default" ng-show="data_center_list.length">
+						<li ng-repeat="dc in data_center_list">
+							<a href="/switch-idc/{[{dc.id}]}">
+								{[{ dc.name }]}
+								<span class="badge badge-success" > {[{ 'data_center.switch' | i18next }]} </span>
+							</a>
+						</li>
+				</ul>
 			</li>
 
 			<li class="dropdown dropdown-user">

@@ -1,16 +1,17 @@
-#-*-coding=utf-8-*-
+#-*- coding=utf-8 -*-
 from django.conf import settings
+from django.views.generic import View
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.utils.translation import ugettext_lazy as _
 
 from biz.account.models import Notification
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from biz.idc.models import DataCenter, UserDataCenter as UDC
-from biz.account.models import Notification
 from biz.workflow.models import Step
 from eoncloud_web.decorators import superuser_required
 
@@ -29,36 +30,48 @@ def management(request):
     return render(request, 'management.html', {'inited': DataCenter.objects.exists()})
 
 
-def login(request, template_name="login.html"):
+class LoginView(View):
 
-    if request.method == "GET":
-        authenticationForm = AuthenticationForm()
-    elif request.method == "POST":
-        authenticationForm = AuthenticationForm(data=request.POST)
-        if authenticationForm.is_valid():
-            user = authenticationForm.get_user()
-            auth_login(request, user)
+    def get(self, request):
+        return self.response(request)
 
-            if user.is_superuser:
-                return redirect('management')
+    def post(self, request):
+        form = AuthenticationForm(data=request.POST)
 
-            ucc = UDC.objects.filter(user=user)
-            if ucc:
-                request.session["UDC_ID"] = ucc[0].id
-            else:
-                raise Exception("User has not register to any SDDC")
+        if not form.is_valid():
+            return self.response(request, form)
 
-            Notification.pull_announcements(user)
+        user = form.get_user()
+        auth_login(request, user)
 
-            return HttpResponseRedirect(reverse("cloud"))
+        if user.is_superuser:
+            return redirect('management')
 
-    return render_to_response(template_name, RequestContext(request, {
-        "authenticationForm": authenticationForm,
-        "error": authenticationForm.errors.get('__all__', None),
-        "BRAND": settings.BRAND,
-        "ICP_NUMBER": settings.ICP_NUMBER,
-        "LDAP_AUTH_ENABLED": settings.LDAP_AUTH_ENABLED
-    }))
+        ucc = UDC.objects.filter(user=user)
+        if ucc:
+            request.session["UDC_ID"] = ucc[0].id
+        else:
+            raise Exception("User has not register to any SDDC")
+
+        Notification.pull_announcements(user)
+
+        return HttpResponseRedirect(reverse("cloud"))
+
+    def response(self, request, form=None):
+
+        if form is None:
+            form = AuthenticationForm(initial={'username': ''})
+            error = False
+        else:
+            error = True
+
+        return render_to_response('login.html', RequestContext(request, {
+            "form": form,
+            "error": error,
+            "BRAND": settings.BRAND,
+            "ICP_NUMBER": settings.ICP_NUMBER,
+            "LDAP_AUTH_ENABLED": settings.LDAP_AUTH_ENABLED
+        }))
 
 
 def logout(request):

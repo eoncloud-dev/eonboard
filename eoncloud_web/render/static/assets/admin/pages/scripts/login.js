@@ -7,27 +7,12 @@ var Login = function() {
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
             rules: {
-                username: {
-                    required: true,
-                    email: true
-                },
-                password: {
-                    required: true,
-                    minlength: 6
-                }
-            },
-
-            messages: {
-                username: {
-                    required: "Username is required."
-                },
-                password: {
-                    required: "Password is required."
-                }
+                username: 'required',
+                password: 'required'
             },
 
             invalidHandler: function(event, validator) {
-                $("#errorMsg").html($("#errorMsg2").html());
+                $("#errorMsg").html($("#loginError").html());
                 $('.alert-danger', $('.login-form')).show();
             },
 
@@ -58,7 +43,7 @@ var Login = function() {
                 return false;
             }
         });
-    }
+    };
 
     var handleForgetPassword = function() {
         $('.forget-form').validate({

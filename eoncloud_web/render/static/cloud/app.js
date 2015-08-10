@@ -79,6 +79,10 @@ CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', '$inte
             $rootScope.current_user = data;
         });
 
+        $http({"method": "GET", "url": "/api/settings/data-centers/switch/"}).success(function (data) {
+            $scope.data_center_list = data.DataCenterList;
+        });
+
         var checkFeeds = function(){
             Feed.status(function(status){
                 $scope.num = status.num;

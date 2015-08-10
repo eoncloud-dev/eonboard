@@ -27,18 +27,19 @@ urlpatterns = [
 
 
 urlpatterns += patterns('',
-    url(r'^$', views.login, name="index"),
+    url(r'^$', views.LoginView.as_view(), name="index"),
     url(r'^cloud/$', views.cloud, name="cloud"),
     url(r'^management/$', views.management, name="management"),
 
     # account
-    url(r'^login/$', views.login, name='login'),
+    url(r'^login/$', views.LoginView.as_view(), name='login'),
     url(r'^signup/$', 'biz.account.views.signup', name='signup'),
     url(r'^signup/success/$', 'biz.account.views.signup_success', name='signup_success'),
     url(r'^find-password/$', 'biz.account.views.find_password',
                                 name="find_password"),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^current_user/$', views.current_user, name='current_user'),
+    url(r'^switch-idc/(?P<dc_id>[\d]+)$', views.switch_idc, name='switch_idc'),
     #url(r'^password-reset-complete/$',
     #                views.password_reset_complete,
     #                name="password_reset_complete")

@@ -1,4 +1,7 @@
 #-*- coding=utf-8 -*-
+
+import logging
+
 from django.conf import settings
 from django.views.generic import View
 from django.shortcuts import render_to_response, render, redirect
@@ -12,8 +15,11 @@ from biz.account.models import Notification
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 from biz.idc.models import DataCenter, UserDataCenter as UDC
+
 from biz.workflow.models import Step
 from eoncloud_web.decorators import superuser_required
+
+LOG = logging.getLogger(__name__)
 
 
 def index(request, template_name="index.html"):
@@ -23,6 +29,27 @@ def index(request, template_name="index.html"):
 @login_required
 def cloud(request, template_name="cloud.html"):
     return render_to_response(template_name, RequestContext(request, {}))
+
+
+@login_required
+def switch_idc(request, dc_id):
+    try:
+        dc = DataCenter.objects.get(pk=dc_id)
+        udc = UDC.objects.filter(data_center=dc,
+                                user=request.user)
+        if len(udc) < 1:
+            from cloud.tasks import link_user_to_dc_task
+            u = link_user_to_dc_task(request.user, dc)
+        
+        udc = UDC.objects.filter(data_center=dc,
+                                user=request.user)
+        if len(udc) == 1:
+            request.session["UDC_ID"] = udc[0].id
+
+    except Exception as ex:
+        LOG.exception(ex)
+
+    return HttpResponseRedirect(reverse("cloud"))
 
 
 @superuser_required

@@ -20,10 +20,12 @@ from biz.workflow import views as workflow_view
 # various options and configurations
 urlpatterns = [
     url(r'^settings/monitor/$', instance_view.monitor_settings),
-    url(r'^settings/resource_types/$', workflow_view.resource_types)
+    url(r'^settings/resource_types/$', workflow_view.resource_types),
+    url(r'^settings/data-centers/switch/$', idc_views.switch_list),
 ]
 
- # instance&flavor
+
+# instance&flavor
 urlpatterns += [
         url(r'^management-summary/$', overview_views.summary),
         url(r'^init/data_center/$', overview_views.init_data_center),

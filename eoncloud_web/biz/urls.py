@@ -16,9 +16,11 @@ from biz.idc import views as idc_views
 from biz.overview import views as overview_views
 from biz.backup import views as backup_view
 
+
 # various options and configurations
 urlpatterns = [
-    url(r'^settings/monitor/$', instance_view.monitor_settings)
+    url(r'^settings/monitor/$', instance_view.monitor_settings),
+    url(r'^settings/data-centers/switch/$', idc_views.switch_list),
 ]
 
  # instance&flavor
@@ -219,3 +221,5 @@ urlpatterns += format_suffix_patterns(
         url(r'^backup/action/$', backup_view.backup_action_view),
     ]
 )
+
+

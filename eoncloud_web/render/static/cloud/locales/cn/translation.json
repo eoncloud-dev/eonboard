@@ -394,7 +394,10 @@
     "title_create": "创建数据中心",
     "title_update": "更新数据中心",
     "confirm_delete": "确认删除数据中心?",
-    "host_is_used": "该地址已被使用！"
+    "host_is_used": "该地址已被使用！",
+    "switch": "切换",
+    "activate": "已激活",
+    "deactivate": "未激活"
   },
 
   "udc": {

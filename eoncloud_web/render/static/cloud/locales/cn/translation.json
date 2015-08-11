@@ -447,7 +447,10 @@
     "no": "否",
     "deactivate": "禁止",
     "activate": "激活",
-    "view_detail": "明细"
+    "view_detail": "明细",
+    "is_initialized": "已初始化",
+    "initialize": "初始化",
+    "confirm_initialize": "确定要为该用户分配数据中心吗？"
   },
 
   "notification": {

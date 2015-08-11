@@ -15,7 +15,10 @@ angular.module('cloud.resources', [])
 }])
 
 .factory('User', ['$resource', function($resource){
-    return $resource("/api/users/:id", {id: '@id'})
+    return $resource("/api/users/:id/:action/", {id: '@id'},
+        {
+            getActiveUsers: {isArray: true,  params: {action: 'active'}}
+        });
 }])
 
 .factory('Contract', ['$resource', function($resource){

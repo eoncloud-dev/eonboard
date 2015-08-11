@@ -114,7 +114,8 @@ def is_host_unique(request):
     pk = request.query_params.get('id', None)
     queryset = DataCenter.objects.filter(host=host)
 
-    # If pk is not empty, then user must be editing other than creating a data center
+    # If pk is not empty, then user must be editing
+    # other than creating a data center
     if pk:
         queryset = queryset.exclude(pk=pk)
 

@@ -2,9 +2,7 @@
 
 from rest_framework import serializers
 
-from django.contrib.auth.models import User
-
-from biz.account.models import Contract, Quota, Operation, UserProxy, Notification, Feed
+from biz.account.models import Contract, Quota, Operation, UserProxy, Notification, Feed, UserProfile
 
 from biz.idc.serializer import DetailedUserDataCenterSerializer
 
@@ -40,9 +38,10 @@ class OperationSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    has_udc = serializers.ReadOnlyField()
 
     class Meta:
-        model = User
+        model = UserProxy
 
 
 class DetailedUserSerializer(serializers.ModelSerializer):

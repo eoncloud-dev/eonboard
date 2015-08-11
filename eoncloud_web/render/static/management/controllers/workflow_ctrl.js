@@ -41,7 +41,7 @@ CloudApp.controller('WorkflowManagementController',
                         return CommonHttpService.get('/api/settings/resource_types/');
                     },
                     users: function(User){
-                        return User.query().$promise;
+                        return User.getActiveUsers().$promise;
                     }
                 }
             }).result.then(function(){

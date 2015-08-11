@@ -1,4 +1,4 @@
-# -*-coding=utf-8-*-
+#-*- coding=utf-8 -*-
 
 # sync instance status interval
 INSTANCE_SYNC_INTERVAL_SECOND = 10
@@ -79,7 +79,7 @@ SITE_CONFIG = {
 
 MONITOR_CONFIG = {
     "enabled": True,
-    "base_url": "http://14.14.14.101:5601",
+    "base_url": "http://127.0.0.1:5601",
     'monitors': [
         {
             "title": u"CPU",

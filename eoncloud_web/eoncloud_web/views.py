@@ -9,7 +9,6 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
-from django.utils.translation import ugettext_lazy as _
 
 from biz.account.models import Notification
 from django.http import HttpResponseRedirect, JsonResponse
@@ -22,8 +21,12 @@ from eoncloud_web.decorators import superuser_required
 LOG = logging.getLogger(__name__)
 
 
-def index(request, template_name="index.html"):
-    return render_to_response(template_name, RequestContext(request, {}))
+@login_required
+def index(request):
+    if request.user.is_superuser:
+        return redirect('management')
+    else:
+        return  redirect("cloud")
 
 
 @login_required
@@ -54,7 +57,8 @@ def switch_idc(request, dc_id):
 
 @superuser_required
 def management(request):
-    return render(request, 'management.html', {'inited': DataCenter.objects.exists()})
+    return render(request, 'management.html',
+                  {'inited': DataCenter.objects.exists()})
 
 
 class LoginView(View):
@@ -69,16 +73,18 @@ class LoginView(View):
             return self.response(request, form)
 
         user = form.get_user()
+
         auth_login(request, user)
 
         if user.is_superuser:
             return redirect('management')
 
-        ucc = UDC.objects.filter(user=user)
-        if ucc:
-            request.session["UDC_ID"] = ucc[0].id
+        udc_set = UDC.objects.filter(user=user)
+
+        if udc_set.exists():
+            request.session["UDC_ID"] = udc_set[0].id
         else:
-            raise Exception("User has not register to any SDDC")
+            return redirect('no_udc')
 
         Notification.pull_announcements(user)
 
@@ -124,3 +130,13 @@ def current_user(request):
     else:
         return JsonResponse({'result': {'logged': False}})
 
+
+@login_required
+def no_udc(request):
+
+    login_via_ldap = hasattr(request.user, 'ldap_user')
+
+    return render_to_response('no_udc.html', RequestContext(request, {
+        "BRAND": settings.BRAND,
+        "login_via_ldap": login_via_ldap
+    }))

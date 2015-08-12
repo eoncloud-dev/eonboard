@@ -28,6 +28,7 @@ import netaddr
 from django.conf import settings
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
+from keystoneclient import exceptions as keystone_exceptions
 from neutronclient.common import exceptions as neutron_exc
 from neutronclient.v2_0 import client as neutron_client
 
@@ -986,7 +987,7 @@ def _server_get_addresses(request, server, ports, floating_ips, network_names):
     return dict(addresses)
 
 
-@memoized
+#@memoized
 def list_extensions(request):
     extensions_list = neutronclient(request).list_extensions()
     if 'extensions' in extensions_list:
@@ -995,7 +996,7 @@ def list_extensions(request):
         return {}
 
 
-@memoized
+#@memoized
 def is_extension_supported(request, extension_alias):
     extensions = list_extensions(request)
 
@@ -1136,3 +1137,15 @@ def get_feature_permission(request, feature, operation=None):
 
     # If all checks are passed, now a given feature is allowed.
     return True
+
+
+def is_neutron_enabled(request):
+    result = True
+    try:
+        nets = network_list(request)
+    except keystone_exceptions.EndpointNotFound as e:
+        result = False
+    except Exception as e:
+        pass
+
+    return result

@@ -26,15 +26,16 @@ from cloud.api import nova
 
 class NetworkClient(object):
     def __init__(self, request):
-        neutron_enabled = True #base.is_service_enabled(request, 'network')
+        #neutron_enabled = base.is_service_enabled(request, 'network')
+        neutron_enabled = neutron.is_neutron_enabled(request)
 
         if neutron_enabled:
             self.floating_ips = neutron.FloatingIpManager(request)
         else:
             self.floating_ips = nova.FloatingIpManager(request)
 
-        if (neutron_enabled and True):
-                #neutron.is_extension_supported(request, 'security-group')):
+        if (neutron_enabled and 
+                neutron.is_extension_supported(request, 'security-group')):
             self.secgroups = neutron.SecurityGroupManager(request)
         else:
             self.secgroups = nova.SecurityGroupManager(request)

@@ -307,9 +307,9 @@ def network_link_router_task(router=None, subnet=None, router_interface=None):
 def allocate_floating_task(floating=None):
     rc = create_rc_by_floating(floating)
     LOG.info("Begin to allocate floating, [%s]" % floating.id);
-    search_opts = {'router:external': True}
-    networks = neutron.network_list(rc, **search_opts)
-    ext_net = filter(lambda n: n.name.lower() == floating.user_data_center.data_center.ext_net, networks)
+    pools = network.floating_ip_pools_list(rc)
+    ext_net = filter(lambda n: n.name.lower() == \
+                    floating.user_data_center.data_center.ext_net, pools)
     ext_net_id = None
     if ext_net and len(ext_net) > 0:
         ext_net_id = ext_net[0].id
@@ -327,6 +327,8 @@ def allocate_floating_task(floating=None):
             LOG.exception(e);
             LOG.info("End to allocate floating, [%s][exception]" % floating.id);
     else:
+        floating.status = FLOATING_ERROR
+        floating.save();
         LOG.info("End to allocate floating, [%s][---]" % floating.id);
 
 
@@ -350,10 +352,14 @@ def floating_associate(floating, **kwargs):
         rc = create_rc_by_floating(floating)
         ports = None
         resource_obj = None
+
         if resource_type_dict[str(resource_type)] == 'INSTANCE':
             ins = Instance.objects.get(pk=resource)
             resource_obj = ins
-            ports = network.floating_ip_target_get_by_instance(rc, ins.uuid)
+            if neutron.is_neutron_enabled(rc):
+                ports = network.floating_ip_target_get_by_instance(rc, ins.uuid)
+            else:
+                ports = ins.uuid
         elif resource_type_dict[resource_type] == 'LOADBALANCER':
             pool = BalancerPool.objects.get(pk=resource)
             if not pool or not pool.vip:
@@ -362,16 +368,21 @@ def floating_associate(floating, **kwargs):
                 return None
             resource_obj = pool
             ports = pool.vip.port_id+"_"+pool.vip.address
+
         if not ports:
             LOG.info("floating action, resourceType[%s],[%s][associate][ins:%s] ports is None" % (resource_type_dict[resource_type], floating.id, resource));
             floating.status = FLOATING_AVAILABLE
             floating.save()
             return
+
         LOG.info("floating action, [%s][associate][ins:%s][ports:%s]" % (
                             floating.id, resource, ports))
         try:
             network.floating_ip_associate(rc, floating.uuid, ports)
-            port, fixed_ip = ports.split('_')
+            if len(ports.split('_')) > 1:
+                port, fixed_ip = ports.split('_')
+            else:
+                port, fixed_ip = ports, ports
             floating.resource = resource
             floating.resource_type = resource_type
             floating.status = FLOATING_BINDED
@@ -386,7 +397,7 @@ def floating_associate(floating, **kwargs):
                 vip.public_address = floating.ip
                 vip.save()
         except Exception as e:
-            LOG.error(e)
+            LOG.exception(e)
             floating.status = FLOATING_AVAILABLE
             floating.save()
     else:

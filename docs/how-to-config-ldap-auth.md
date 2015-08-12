@@ -129,3 +129,7 @@ django-auth-ldap有２个方式来获取用户的DN
     # 是否允许更新ladp用户
     AUTH_LDAP_ALWAYS_UPDATE_USER = False
 ```
+
+### install python-ldap
+
+    > apt-get install libldap2-dev libsasl2-dev

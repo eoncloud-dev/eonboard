@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-13 09:21+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: forms.py:16
+msgid "A user with that email already exists."
+msgstr "邮箱地址已被其他用户使用"
+
+#: forms.py:19
+msgid "Email"
+msgstr "邮箱"
+
+#: forms.py:20
+msgid "Mobile"
+msgstr "手机号"
+
+#: views.py:150
+msgid ""
+"Your registration successed, we send you one activate email, please check "
+"your input box."
+msgstr "您已注册成功！我们向您的邮箱发送了一封激活邮件，请查看您的收件箱．"
+
+#: views.py:154
+msgid "Your registration successed!"
+msgstr "您已注册成功！"
+
+#: views.py:182 views.py:188
+msgid "This activate url is not valid, you can resend activate email."
+msgstr "该链接已无效，您可以尝试重新发送激活邮件．"
+
+#: views.py:195
+msgid "Failed to activate your account, you can try later."
+msgstr "您的帐号激活失败，请稍后再尝试"
+
+#: views.py:200
+msgid "Your account is activated successfully, please login."
+msgstr "您的账户已激活，请登录"
+
+#: views.py:213
+msgid "No account found."
+msgstr "没有帐号"
+
+#: views.py:216
+msgid "Password is not correct."
+msgstr "密码不对"
+
+#: views.py:221
+msgid "Your activate email is sent, please check your input box."
+msgstr "您的激活邮件已发送，请查看你的收件箱"
+
+#: views.py:255
+#, python-format
+msgid "%(site_name)s - Activate Account"
+msgstr "%(site_name)s - 帐号激活"

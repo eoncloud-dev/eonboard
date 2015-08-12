@@ -106,7 +106,7 @@ var Login = function() {
             jQuery('.forget-form').hide();
         });
 
-    }
+    };
 
     var handleRegister = function() {
 
@@ -132,12 +132,15 @@ var Login = function() {
             ignore: "",
             rules: {
                 username: {
+                    required: true
+                },
+                email: {
                     required: true,
                     email: true
                 },
-
                 mobile: {
                     required: true,
+                    digits: true,
                     minlength:11,
                     maxlength:11
                 },
@@ -145,7 +148,8 @@ var Login = function() {
                     required: true
                 },
                 password1: {
-                    required: true
+                    required: true,
+                    complexPassword: true
                 },
                 password2: {
                     required: true,

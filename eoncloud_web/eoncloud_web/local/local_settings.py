@@ -1,5 +1,6 @@
 #-*- coding=utf-8 -*-
 
+from datetime import timedelta
 # sync instance status interval
 INSTANCE_SYNC_INTERVAL_SECOND = 10
 # max loop count for sync instance status
@@ -97,3 +98,9 @@ MONITOR_CONFIG = {
     'intervals': ['second', 'minute', 'hour', 'day', 'week', 'month']
 }
 
+# After user signup, send a email instead of create udc directly
+REGISTER_ACTIVATE_EMAIL_ENABLED = True
+
+EXTERNAL_URL = 'http://127.0.0.1:8000/'
+
+ACTIVATE_EMAIL_EXPIRE_DAYS = timedelta(30)

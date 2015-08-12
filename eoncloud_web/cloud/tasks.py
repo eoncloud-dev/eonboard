@@ -6,3 +6,4 @@ from cloud.volume_task import *
 from cloud.keystone_task import *
 from cloud.backup_task import *
 from cloud.loadbalancer_task import *
+from cloud.notify_task import *

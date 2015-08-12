@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-06 09:50+0800\n"
+"POT-Creation-Date: 2015-08-12 13:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,39 +18,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: account/forms.py:15
-msgid "email address format error"
-msgstr "电子邮件地址格式不正确"
+#: account/forms.py:21
+msgid "A user with that email already exists."
+msgstr "该email地址已被人使用"
 
-#: account/models.py:19
+#: account/forms.py:24
+msgid "Email"
+msgstr ""
+
+#: account/forms.py:25 account/models.py:25
 msgid "Mobile"
 msgstr "手机号"
 
-#: account/models.py:20
+#: account/forms.py:68
+msgid "Activate account"
+msgstr ""
+
+#: account/models.py:26
 msgid "User Type"
 msgstr "用户类型"
 
-#: account/models.py:29 account/models.py:30
+#: account/models.py:35 account/models.py:36
 msgid "UserProfile"
 msgstr "用户设置"
 
-#: account/models.py:72
+#: account/models.py:82
 msgid "Contract name"
 msgstr "合同名称"
 
-#: account/models.py:73
+#: account/models.py:83
 msgid "Customer name"
 msgstr "客户名称"
 
-#: account/models.py:74
+#: account/models.py:84
 msgid "Start Date"
 msgstr "开始日期"
 
-#: account/models.py:75
+#: account/models.py:85
 msgid "End Date"
 msgstr "结束日期"
 
-#: account/models.py:76 account/models.py:99 backup/models.py:30
+#: account/models.py:86 account/models.py:109 backup/models.py:30
 #: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
 #: floating/models.py:31 forum/models.py:11 forum/models.py:28
 #: instance/models.py:44 lbaas/models.py:23 lbaas/models.py:46
@@ -60,7 +68,7 @@ msgstr "结束日期"
 msgid "Deleted"
 msgstr "已删除"
 
-#: account/models.py:77 account/models.py:100 account/models.py:118
+#: account/models.py:87 account/models.py:110 account/models.py:128
 #: backup/models.py:28 backup/models.py:137 firewall/models.py:14
 #: firewall/models.py:37 floating/models.py:29 forum/models.py:12
 #: forum/models.py:29 image/models.py:25 instance/models.py:26
@@ -70,94 +78,102 @@ msgstr "已删除"
 msgid "Create Date"
 msgstr "创建日期"
 
-#: account/models.py:78 account/models.py:101
+#: account/models.py:88 account/models.py:111
 msgid "Update Date"
 msgstr "修改日期"
 
-#: account/models.py:91 account/models.py:92 account/settings.py:30
+#: account/models.py:101 account/models.py:102 account/settings.py:30
 msgid "Contract"
 msgstr "合同"
 
-#: account/models.py:97
+#: account/models.py:107
 msgid "Resouce"
 msgstr "资源"
 
-#: account/models.py:98
+#: account/models.py:108
 msgid "Limit"
 msgstr "配额"
 
-#: account/models.py:105 account/models.py:106
+#: account/models.py:115 account/models.py:116
 msgid "Quota"
 msgstr "配额"
 
-#: account/models.py:113 backup/models.py:125 floating/models.py:24
+#: account/models.py:123 backup/models.py:125 floating/models.py:24
 msgid "Resource"
 msgstr "资源"
 
-#: account/models.py:114 backup/models.py:121
+#: account/models.py:124 backup/models.py:121
 msgid "Resource ID"
 msgstr "资源 ID"
 
-#: account/models.py:115 backup/models.py:127
+#: account/models.py:125 backup/models.py:127
 msgid "Resource Name"
 msgstr "资源名称"
 
-#: account/models.py:116
+#: account/models.py:126
 msgid "Action"
 msgstr "操作"
 
-#: account/models.py:117
+#: account/models.py:127
 msgid "Result"
 msgstr "结果"
 
-#: account/models.py:140
+#: account/models.py:150
 #, python-format
 msgid "%(resource)s:%(resource_name)s execute %(action)s operation"
 msgstr "%(resource)s:%(resource_name)s 执行了 %(action)s 操作"
 
-#: account/models.py:158 account/models.py:159
+#: account/models.py:168 account/models.py:169
 msgid "Operation"
 msgstr "操作日志"
 
-#: account/models.py:175
+#: account/models.py:185
 msgid "just now"
 msgstr "刚刚"
 
-#: account/models.py:178
+#: account/models.py:188
 #, python-format
 msgid "%(minutes)d minutes ago"
 msgstr "%(minutes)d分钟前"
 
-#: account/models.py:181
+#: account/models.py:191
 #, python-format
 msgid "%(hours)d hours ago"
 msgstr "%(hours)d小时前"
 
-#: account/models.py:184
+#: account/models.py:194
 #, python-format
 msgid "%(days)d days ago"
 msgstr "%(days)d天前"
 
-#: account/models.py:187
+#: account/models.py:197
 #, python-format
 msgid "%(years)d years ago"
 msgstr "%(years)d年前"
 
-#: account/models.py:191
+#: account/models.py:201
 msgid "Notification"
 msgstr "通知"
 
-#: account/models.py:192
+#: account/models.py:202
 msgid "Notifications"
 msgstr "通知"
 
-#: account/models.py:254
+#: account/models.py:264
 msgid "Feed"
 msgstr "种子"
 
-#: account/models.py:255
+#: account/models.py:265
 msgid "Feeds"
 msgstr "种子"
+
+#: account/models.py:285
+msgid "Activate Url"
+msgstr ""
+
+#: account/models.py:286
+msgid "Activate Urls"
+msgstr ""
 
 #: account/settings.py:7
 msgid "Personal"
@@ -303,85 +319,89 @@ msgstr "警告"
 msgid "Danger"
 msgstr "危险"
 
-#: account/views.py:168
+#: account/views.py:126
 msgid "Contract is created successfully!"
 msgstr "合同创建成功！"
 
-#: account/views.py:172
+#: account/views.py:130
 msgid "Contract data is not valid!"
 msgstr "合同数据不对！"
 
-#: account/views.py:177
+#: account/views.py:135
 msgid "Failed to create contract for unknown reason."
 msgstr "未知错误导致合同创建失败."
 
-#: account/views.py:195
+#: account/views.py:153
 msgid "Contract is updated successfully!"
 msgstr "合同更新成功！"
 
-#: account/views.py:200
+#: account/views.py:158
 msgid "Failed to update contract for unknown reason."
 msgstr "未知错误导致合同更新失败."
 
-#: account/views.py:217
+#: account/views.py:175
 msgid "Contracts have been deleted!"
 msgstr "合同删除成功！"
 
-#: account/views.py:221
+#: account/views.py:179
 msgid "Failed to delete contracts for unknown reason."
 msgstr "未知错误导致合同删除失败．"
 
-#: account/views.py:250
+#: account/views.py:215
 msgid "User has been deactivated!"
 msgstr "用户已禁用，将不能登录"
 
-#: account/views.py:261
+#: account/views.py:226
 msgid "User has been activated!"
 msgstr "用户已激活，可以正常使用"
 
-#: account/views.py:273
+#: account/views.py:238
 msgid "The new password doesn't match confirm password!"
 msgstr "两次密码输入密码不匹配"
 
-#: account/views.py:276
+#: account/views.py:241
 msgid "The original password is not correct!"
 msgstr "原始密码不对！"
 
-#: account/views.py:281
+#: account/views.py:246
 msgid "Password has been changed! Please login in again."
 msgstr "密码修改成功"
 
-#: account/views.py:331
+#: account/views.py:296
 msgid "Quotas have been saved successfully!"
 msgstr "配额已保存成功！"
 
-#: account/views.py:335
+#: account/views.py:300
 msgid "Failed to save quotas for unknown reason."
 msgstr "未知错误导致配额保存失败．"
 
-#: account/views.py:353
+#: account/views.py:318
 msgid "Quota have been saved successfully!"
 msgstr "配额保存成功！"
 
-#: account/views.py:358
+#: account/views.py:323
 msgid "Failed to save quota for unknown reason."
 msgstr "未知错误导致配额保存失败．"
 
-#: account/views.py:367
+#: account/views.py:332
 msgid "Quota have been deleted successfully!"
 msgstr "配额删除成功"
 
-#: account/views.py:371
+#: account/views.py:336
 msgid "Failed to create quota for unknown reason."
 msgstr "配额创建失败"
 
-#: account/views.py:397 account/views.py:412
+#: account/views.py:362 account/views.py:377
 msgid "Notification is sent successfully!"
 msgstr "消息发布成功！"
 
-#: account/views.py:421
+#: account/views.py:386
 msgid "Announcement is sent successfully!"
 msgstr "消息发布成功！"
+
+#: account/views.py:441
+msgid "Initialization is successful."
+msgstr "初始化成功！"
 
 #: backup/models.py:16 idc/models.py:14 instance/models.py:118
 msgid "Name"
@@ -806,31 +826,31 @@ msgstr ""
 msgid "UserDataCenter"
 msgstr "用户数据中心"
 
-#: idc/views.py:68
+#: idc/views.py:59
 msgid "Data Center is created successfully!"
 msgstr "数据中心创建成功！"
 
-#: idc/views.py:72
+#: idc/views.py:63
 msgid "Data Center data is not valid!"
 msgstr "提交的数据有错误！"
 
-#: idc/views.py:77 idc/views.py:104
+#: idc/views.py:69 idc/views.py:94
 msgid "Failed to create data center for unknown reason."
 msgstr "未知错误导致数据中心创建失败．"
 
-#: idc/views.py:89
+#: idc/views.py:80
 msgid "This host has been used by other data center."
 msgstr "该节点ＩＰ已被其他数据中心使用."
 
-#: idc/views.py:100
+#: idc/views.py:89
 msgid "Data Center is updated successfully!"
 msgstr "数据中心更新成功！"
 
-#: idc/views.py:115
+#: idc/views.py:103
 msgid "Data centers have been deleted!"
 msgstr "数据中心删除成功！"
 
-#: idc/views.py:119
+#: idc/views.py:108
 msgid "Failed to delete data centers for unknown reason."
 msgstr "数据中心删除失败"
 
@@ -1127,38 +1147,38 @@ msgstr "月"
 msgid "Yearly"
 msgstr "年"
 
-#: instance/views.py:88
+#: instance/views.py:91
 msgid "Flavor is created successfully!"
 msgstr "规格创建成功！"
 
-#: instance/views.py:91 instance/views.py:110
+#: instance/views.py:94 instance/views.py:113
 msgid "Flavor data is not valid!"
 msgstr "规格数据有错误！"
 
-#: instance/views.py:96
+#: instance/views.py:99
 msgid "Failed to create flavor for unknown reason."
 msgstr "未知错误导致规格创建失败．"
 
-#: instance/views.py:107
+#: instance/views.py:110
 msgid "Flavor is updated successfully!"
 msgstr "规格更新成功"
 
-#: instance/views.py:115
+#: instance/views.py:118
 msgid "Failed to update flavor for unknown reason."
 msgstr "规格更新失败"
 
-#: instance/views.py:122
+#: instance/views.py:125
 msgid "Flavors have been deleted!"
 msgstr "规格已删除"
 
-#: instance/views.py:141
+#: instance/views.py:144
 #, python-format
 msgid ""
 "Your application for instance \"%(instance_name)s\" is successful, please "
 "waiting for approval result!"
 msgstr "您的云主机\"%(instance_name)s\"申请已生成，请等待审核结果！"
 
-#: instance/views.py:145
+#: instance/views.py:148
 msgid "Your instance is created, please wait for instance booting."
 msgstr "您的云主机已经创建，请等待启动．"
 
@@ -1907,6 +1927,7 @@ msgid "%(name)s is not default workflow anymore."
 msgstr "%(name)s不再是默认流程"
 
 #: workflow/views.py:130
+#, python-format
 msgid "Workflow %(name)s is deleted."
 msgstr "流程%(name)s已删除"
 
@@ -1917,3 +1938,6 @@ msgstr "该流程成功进入下一审核环节！"
 #: workflow/views.py:182
 msgid "Application is rejected."
 msgstr "申请被驳回."
+
+#~ msgid "email address format error"
+#~ msgstr "电子邮件地址格式不正确"

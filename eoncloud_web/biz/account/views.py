@@ -9,16 +9,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from django.conf import settings
-from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.contrib.auth.models import check_password
 
-from biz.account.forms import CloudUserCreateForm
+
 from biz.account.settings import QUOTA_ITEM, NotificationLevel
 from biz.account.models import (Contract, Operation, Quota,
                                 UserProxy, Notification, Feed)
@@ -30,46 +26,8 @@ from biz.idc.models import DataCenter
 from eoncloud_web.pagination import PagePagination
 from eoncloud_web.decorators import require_POST, require_GET
 from eoncloud_web.shortcuts import retrieve_params
-from cloud.tasks import link_user_to_dc_task
 
 LOG = logging.getLogger(__name__)
-
-
-def signup(request, template_name="signup.html"):
-    if request.method == "GET":
-        userCreationForm = CloudUserCreateForm()
-    elif request.method == "POST":
-        user = User()
-        userCreationForm = CloudUserCreateForm(data=request.POST, instance=user)
-        if userCreationForm.is_valid():
-            userCreationForm.save()
-            return HttpResponseRedirect(reverse("signup_success"))
-
-    if userCreationForm.errors.has_key("__all__"):
-        error = userCreationForm.errors['__all__']
-    else:
-        error = userCreationForm.errors
-
-    return render_to_response(template_name, RequestContext(request, {
-        "MCC": settings.MCC,
-        "SOURCE": settings.SOURCE,
-        "USER_TYPE": settings.USER_TYPE,
-        "BRAND": settings.BRAND,
-        "userCreationForm": userCreationForm,
-        "error": error,
-    }))
-
-
-def signup_success(request, template_name="signup_success.html"):
-    return render_to_response(template_name, RequestContext(request, {
-        "BRAND": settings.BRAND,
-    }))
-
-
-def find_password(request, template_name="find_password.html"):
-    return render_to_response(template_name, RequestContext(request, {
-        "BRAND": settings.BRAND,
-    }))
 
 
 @api_view(["GET"])

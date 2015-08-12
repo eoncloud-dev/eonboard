@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}
+<title> {{ BRAND }} | {% trans "No Data Center Assigned" %} </title>
+{% endblock %}
+
+{% block page_content %}
+
+<p style="width: 380px;">
+{%  if login_via_ldap %}
+    {% trans "You don't have any data center assigned, please contact your administrator to finish your initialization." %}
+{% else %}
+    {% trans "You don't have any data center assigned, maybe an error happened during your initialization, please contact your administrator to fix it." %}
+{% endif %}
+</p>
+
+{% endblock %}
+
+{% block page_script %}
+<script type="text/javascript">
+    // init background slide images
+    $.backstretch([
+                "{{ STATIC_URL }}assets/admin/pages/media/bg/2.jpg"
+            ], {
+                fade: 1000,
+                duration: 8000
+            }
+    );
+</script>
+{% endblock %}

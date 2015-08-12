@@ -36,6 +36,10 @@
                                     <span ng-if="user.is_active">{[{ 'user.yes' | i18next }]}</span>
                                     <span ng-if="!user.is_active">{[{ 'user.no' | i18next }]}</span>
                                 </td>
+                                <td data-title="'user.is_initialized' | i18next">
+                                    <span ng-if="user.has_udc">{[{ 'user.yes' | i18next }]}</span>
+                                    <span ng-if="!user.has_udc">{[{ 'user.no' | i18next }]}</span>
+                                </td>
                                 <td data-title="'user.date_joined' | i18next">
                                     <span> {[{ user.date_joined }]} </span>
                                 </td>
@@ -43,7 +47,7 @@
                                     <span> {[{ user.last_login }]} </span>
                                 </td>
                                 <td data-title="'actions' | i18next">
-                                    <div class="btn-group">
+                                    <div class="btn-group" data-ng-if="user.has_udc">
                                         <button class="btn btn-default" data-ng-if="user.is_active"
                                                 type="button" data-ng-click="deactivate(user)">
                                             <i class="fa fa-lock"></i> {[{ 'user.deactivate' | i18next }]}
@@ -68,6 +72,11 @@
                                                 </a>
                                             </li>
                                         </ul>
+                                    </div>
+                                    <div class="btn-group" data-ng-if="!user.has_udc">
+                                        <button class="btn btn-default" type="button" data-ng-click="initialize(user)">
+                                            <i class="fa fa-magic"></i> {[{ 'user.initialize' | i18next }]}
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -102,9 +111,6 @@
                     </td>
                     <td data-title="'udc.keystone_user' | i18next">
                         <span> {[{ udc.keystone_user}]} </span>
-                    </td>
-                    <td data-title="'udc.keystone_password' | i18next">
-                        <span> {[{ udc.keystone_password }]} </span>
                     </td>
                 </tr>
             </tbody>

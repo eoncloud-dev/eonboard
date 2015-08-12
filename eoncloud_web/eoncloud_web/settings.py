@@ -188,13 +188,17 @@ from eoncloud_web.local.celery_settings import *
 
 
 # ldap auth setting
+from eoncloud_web.local.ladp_settings import *
 
 LDAP_AUTH_ENABLED = False
-if LDAP_AUTH_ENABLED:
-    from eoncloud_web.local.ladp_settings import *
-
 
 try:
     from eoncloud_web.local.dev_settings import *
 except:
     pass
+
+if LDAP_AUTH_ENABLED:
+    AUTHENTICATION_BACKENDS = (
+        'django_auth_ldap.backend.LDAPBackend',
+        'django.contrib.auth.backends.ModelBackend'
+    )

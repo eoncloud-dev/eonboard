@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from biz.account.settings import USER_TYPE_CHOICES, QUOTA_ITEM, NotificationLevel, TimeUnit
 
 from biz.account.mixins import LivingDeadModel
+from biz.idc.models import UserDataCenter
 
 LOG = logging.getLogger(__name__)
 
@@ -54,6 +55,10 @@ class UserProxy(User):
     @property
     def user_data_centers(self):
         return self.userdatacenter_set.all()
+
+    @property
+    def has_udc(self):
+        return UserDataCenter.objects.filter(user=self).exists()
 
 
 class LivingManager(models.Manager):

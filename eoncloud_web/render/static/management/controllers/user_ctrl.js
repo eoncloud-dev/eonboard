@@ -5,7 +5,7 @@
  **/
 
 CloudApp.controller('UserController',
-    function($rootScope, $scope, $filter, $modal, $i18next,
+    function($rootScope, $scope, $filter, $modal, $i18next, $ngBootbox,
              CommonHttpService, ToastrService, ngTableParams,
              CheckboxGroup, ngTableHelper, User){
 
@@ -137,6 +137,20 @@ CloudApp.controller('UserController',
                         return CommonHttpService.get('/api/notifications/options/');
                     }
                 }
+            });
+        };
+
+        $scope.initialize = function(user){
+
+            $ngBootbox.confirm($i18next("user.confirm_initialize")).then(function(){
+                CommonHttpService.post("/api/users/initialize/", {user_id: user.id}).then(function(data){
+                    if (data.success) {
+                        ToastrService.success(data.msg, $i18next("success"));
+                        $scope.user_table.reload();
+                    } else {
+                        ToastrService.error(data.msg, $i18next("op_failed"));
+                    }
+                });
             });
         };
     })

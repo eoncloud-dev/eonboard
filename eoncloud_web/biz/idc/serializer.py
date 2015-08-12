@@ -24,3 +24,4 @@ class DetailedUserDataCenterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserDataCenter
+        fields = ['data_center', 'tenant_name', 'tenant_uuid', 'keystone_user']

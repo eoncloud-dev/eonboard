@@ -1,6 +1,11 @@
 #coding=utf-8
 
 import logging
+import hashlib
+import urlparse
+import random
+
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -267,3 +272,29 @@ class Feed(LivingDeadModel):
     def fake_delete(self):
         self.deleted = True
         self.mark_read()
+
+
+class ActivateUrl(models.Model):
+    user = models.ForeignKey('auth.User')
+    code = models.CharField(max_length=128, unique=True)
+    expire_date = models.DateTimeField()
+    create_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "activate_url"
+        verbose_name = _("Activate Url")
+        verbose_name_plural = _("Activate Urls")
+
+    @classmethod
+    def generate(cls, user):
+
+        content = "%s-%d" % (user.username, random.randint(0, 10000))
+
+        code = hashlib.md5(content).hexdigest()
+        expire_date = timezone.now() + settings.ACTIVATE_EMAIL_EXPIRE_DAYS
+        return cls.objects.create(user=user, code=code, expire_date=expire_date)
+
+    @property
+    def url(self):
+        url = reverse('first_activate_user', kwargs={'code': self.code})
+        return urlparse.urljoin(settings.EXTERNAL_URL, url)

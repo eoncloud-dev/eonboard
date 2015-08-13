@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}
+<title>{{ BRAND }} | {% trans "Resend Activate Email" %} </title>
+{% endblock %}
+
+{% block page_content %}
+    {% trans "Account" as account %}
+    {% trans "Password" as pwd %}
+
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    <form class="resend-form" action="{%  url 'resend_activate_email' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+        <label class="control-label visible-ie8 visible-ie9">{% trans "Username" %}</label>
+        <input name="username" value="{{ form.username.value }}" placeholder="{{ account }}"
+               class="form-control form-control-solid placeholder-no-fix" autocomplete="off" />
+    </div>
+    <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">{% trans "Password" %}</label>
+        <input name="password" placeholder="{{ pwd }}"
+               class="form-control form-control-solid placeholder-no-fix"
+               type="password" autocomplete="off" />
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-success uppercase pull-right">
+            {% trans "Resend" %}
+        </button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block page_script %}
+<script type="text/javascript">
+    // init background slide images
+    $.backstretch([
+                "{{ STATIC_URL }}assets/admin/pages/media/bg/2.jpg"
+            ], {
+                fade: 1000,
+                duration: 8000
+            }
+    );
+</script>
+
+<script id="loginError" type="text/msg">
+{% trans "Enter any username and password." %}
+</script>
+{% endblock %}

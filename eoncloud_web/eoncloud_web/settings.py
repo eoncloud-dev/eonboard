@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'biz.workflow',
     'cloud',
     'render',
+    'frontend',
     'biz.firewall',
     'biz.forum',
     'biz.backup',
@@ -178,10 +179,22 @@ LOG_CONFIG = {
     }
 }
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'eoncloud_web.context_processors.eoncloud'
+)
+
 
 logging.config.dictConfig(LOG_CONFIG)
 
 
+from eoncloud_web.local.email_settings import *
 from eoncloud_web.local.local_settings import *
 from eoncloud_web.local.db_settings import *
 from eoncloud_web.local.celery_settings import *

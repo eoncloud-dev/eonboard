@@ -18,7 +18,7 @@ from django.contrib import admin
 
 admin.autodiscover()
 
-import views
+from frontend import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -26,18 +26,24 @@ urlpatterns = [
 ]
 
 
-urlpatterns += patterns('',
+urlpatterns += patterns(
+    '',
     url(r'^$', views.index, name="index"),
     url(r'^cloud/$', views.cloud, name="cloud"),
     url(r'^management/$', views.management, name="management"),
 
     # account
     url(r'^login/$', views.LoginView.as_view(), name='login'),
-    url(r'^signup/$', 'biz.account.views.signup', name='signup'),
-    url(r'^signup/success/$', 'biz.account.views.signup_success',
-        name='signup_success'),
-    url(r'^find-password/$', 'biz.account.views.find_password',
-                                name="find_password"),
+    url(r'^signup/$', views.signup, name='signup'),
+
+    url(r'^accounts/activate/(?P<code>.+)/$',
+        views.first_activate_user,
+        name='first_activate_user'),
+    url(r'^accounts/resend-activate-email/$',
+        views.resend_activate_email,
+        name='resend_activate_email'),
+
+    url(r'^find-password/$', views.find_password, name="find_password"),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^current_user/$', views.current_user, name='current_user'),
     url(r'^no-udc/$', views.no_udc, name='no_udc'),

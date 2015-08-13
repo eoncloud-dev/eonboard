@@ -1,0 +1,39 @@
+{% load i18n %}
+<script type="text/javascript">
+    jQuery.extend(jQuery.validator.messages, {
+        required: "{% trans 'This field is required.' %}",
+        remote: "{% trans 'Please fix this field.' %}",
+        email: "{% trans 'Please enter a valid email address.' %}",
+        url: "{% trans 'Please enter a valid URL.' %}",
+        date: "{% trans 'Please enter a valid date.' %}",
+        dateISO: "{% trans 'Please enter a valid date (ISO).' %}",
+        number: "{% trans 'Please enter a valid number.' %}",
+        digits: "{% trans 'Please enter only digits.' %}",
+        creditcard: "{% trans 'Please enter a valid credit card number.' %}",
+        equalTo: "{% trans 'Please enter the same value again.' %}",
+        accept: "{% trans 'Please enter a value with a valid extension.' %}",
+        maxlength: jQuery.validator.format("{% trans 'Please enter no more than {0} characters.' %}"),
+        minlength: jQuery.validator.format("{% trans 'Please enter at least {0} characters.' %}"),
+        range: jQuery.validator.format("{% trans 'Please enter a value between {0} and {1}.' %}"),
+        max: jQuery.validator.format("{% trans 'Please enter a value less than or equal to {0}.' %}"),
+        min: jQuery.validator.format("{% trans 'Please enter a value greater than or equal to {0}.' %}")
+    });
+
+    jQuery.validator.addMethod('ip',
+            function(value, element){
+                    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value);
+            }, "{% trans 'Please enter a valid IP.' %}");
+
+    {% trans "Use strong passwords that combine upper and lowercase letters, numbers, and symbols." as password_tip %}
+    jQuery.validator.addMethod('complexPassword',
+            function(value, element){
+                if(value.length < 8){
+                    return false;
+                }
+
+                return /[a-z]+/.test(value) && /[A-Z]+/.test(value) && /[0-9]+/.test(value) && /[^a-zA-Z0-9\s]+/.test(value);
+            }, "{{ password_tip }}");
+
+    bootbox.setDefaults("locale", "zh_CN");
+
+</script>

@@ -23,6 +23,7 @@ from frontend import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include('biz.urls')),
+    url(r'^captcha/', include('captcha.urls')),
 ]
 
 

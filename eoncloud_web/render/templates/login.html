@@ -46,15 +46,16 @@
     {% endif %}
 
     <div class="form-actions">
-        <button type="submit" class="btn btn-success uppercase"><i class="fa fa-key"></i> {% trans "Login" %}</button>
+        {% if SIGNUP_ENABLED %}
+         <a class="btn green" href="/signup/">{% trans "Sign Up" %}</a>
+        {% endif %}
+        <button type="submit" class="btn btn-default pull-right">{% trans "Login" %}</button>
     </div>
-    {%  comment %}
 
+    {%  comment %}
      <a href="/find-password/" class="forget-password">{% trans 'Forgot Password' %}</a>
-     <div class="create-account">
-         <p> <a href="/signup/" class="uppercase">{% trans "Create an account" %}</a> </p>
-     </div>
     {% endcomment %}
+
 </form>
 
 {% endblock %}

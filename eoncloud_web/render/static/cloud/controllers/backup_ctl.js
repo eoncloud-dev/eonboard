@@ -7,9 +7,6 @@ CloudApp.controller('BackupController',
             Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.status_desc = status_desc;
 
         $scope.backup_table = new ngTableParams({

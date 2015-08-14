@@ -5,8 +5,6 @@ CloudApp.controller('LoadBalancerController', function ($rootScope, $scope, $fil
         Metronic.initAjax();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
     $scope.status_desc = status_desc;
     //监控资源切换
     $scope.pools_tab = true;
@@ -671,8 +669,6 @@ CloudApp.controller('LoadBalancerInfoController', function ($rootScope, $scope, 
     $scope.$on('$viewContentLoaded', function () {
         Metronic.initAjax();
     });
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
     $scope.status_desc = status_desc;
     CommonHttpService.get("/api/lbs/"+balancer_id+"/").then(function(data){
         $scope.balancer = data;

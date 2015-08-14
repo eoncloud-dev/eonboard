@@ -5,9 +5,6 @@ CloudApp.controller('ImageController', function($rootScope, $scope, $filter, $ti
         Metronic.initAjax();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-
     $scope.image_table = new ngTableParams({
         page: 1,
         count: 10

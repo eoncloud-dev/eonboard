@@ -5,8 +5,6 @@ CloudApp.controller('FloatingController',
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
 
         $scope.current_floating_data = [];
         $scope.status_desc = status_desc;

@@ -9,7 +9,7 @@ angular.module('cloud.services', [])
     var settings = {
         layout: {
             pageSidebarClosed: false, // sidebar menu state
-            pageBodySolid: false, // solid body color state
+            pageBodySolid: true, // solid body color state
             pageAutoScrollOnLoad: 1000 // auto scroll to top on page load
         },
         layoutImgPath: Metronic.getAssetsPath() + 'admin/layout/img/',

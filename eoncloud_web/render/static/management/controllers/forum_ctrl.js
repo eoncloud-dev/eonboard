@@ -9,9 +9,6 @@ CloudApp.controller('ForumController',
         loadForums();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-
     $scope.forum_list = [];
     $scope.forum_reply_list = [];
 

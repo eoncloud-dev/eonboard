@@ -7,10 +7,6 @@ CloudApp.controller('RouterController',
             Metronic.initAjax();
         });
 
-
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.status_desc = status_desc;
         $scope.current_router_data = [];
 

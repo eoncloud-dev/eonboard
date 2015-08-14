@@ -13,9 +13,6 @@ CloudApp.controller('FlavorController',
                 Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.flavors = [];
         var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.flavors);
 

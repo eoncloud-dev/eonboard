@@ -5,9 +5,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         Metronic.initAjax();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-    $scope.status_desc = status_desc
+    $scope.status_desc = status_desc;
 
     $scope.current_network_data = [];
     $scope.network_table = new ngTableParams({
@@ -308,10 +306,6 @@ CloudApp.controller('NetworkTopologyController', function($rootScope, $scope,$i1
     $scope.$on('$viewContentLoaded', function() {
         Metronic.initAjax();
     });
-
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-
 
     CommonHttpService.get("/api/networks/topology").then(function (data) {
         horizon.network_topology.model = data;

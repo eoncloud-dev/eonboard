@@ -16,9 +16,6 @@ CloudApp.controller('ContractController',
             Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.contracts = [];
 
         $scope.contract_table = new ngTableParams({

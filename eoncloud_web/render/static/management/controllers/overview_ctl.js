@@ -6,9 +6,6 @@ CloudApp.controller('OverviewController',
             Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.summary =  summary;
 
     });

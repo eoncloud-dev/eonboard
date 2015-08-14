@@ -1,38 +1,40 @@
 #-*-coding-utf-8-*-
 
-from datetime import datetime
 import logging
 
+from datetime import datetime
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.contrib.auth.models import check_password
 
-
 from biz.account.settings import QUOTA_ITEM, NotificationLevel
 from biz.account.models import (Contract, Operation, Quota,
                                 UserProxy, Notification, Feed)
 from biz.account.serializer import (ContractSerializer, OperationSerializer,
-                                    UserSerializer, QuotaSerializer, FeedSerializer,
-                                    DetailedUserSerializer, NotificationSerializer)
+                                    UserSerializer, QuotaSerializer,
+                                    FeedSerializer, DetailedUserSerializer,
+                                    NotificationSerializer)
 from biz.account.utils import get_quota_usage
 from biz.idc.models import DataCenter
-from eoncloud_web.pagination import PagePagination
-from eoncloud_web.decorators import require_POST, require_GET
-from eoncloud_web.shortcuts import retrieve_params
+from biz.common.pagination import PagePagination
+from biz.common.decorators import require_POST, require_GET
+from biz.common.utils import retrieve_params
+from cloud.tasks import link_user_to_dc_task
+
 
 LOG = logging.getLogger(__name__)
 
 
 @api_view(["GET"])
 def contract_view(request):
-    c = Contract.objects.filter(user=request.user, udc__id=request.session["UDC_ID"])[0]
+    c = Contract.objects.filter(user=request.user,
+                                udc__id=request.session["UDC_ID"])[0]
     s = ContractSerializer(c)
     return Response(s.data)
 

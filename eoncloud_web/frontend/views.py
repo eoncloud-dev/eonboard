@@ -23,7 +23,7 @@ from biz.account.models import Notification, ActivateUrl
 from frontend.forms import CloudUserCreateForm
 from biz.idc.models import DataCenter, UserDataCenter as UDC
 from biz.workflow.models import Step
-from eoncloud_web.decorators import superuser_required
+from biz.common.decorators import superuser_required
 from cloud.tasks import link_user_to_dc_task, send_mail
 
 LOG = logging.getLogger(__name__)

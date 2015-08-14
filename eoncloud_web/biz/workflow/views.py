@@ -1,17 +1,15 @@
-
-import logging
-
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.response import Response
 from rest_framework import status
 
-from eoncloud_web.decorators import require_GET, require_POST
+from biz.common.decorators import require_GET, require_POST
 from biz.workflow.models import Workflow, Step, FlowInstance
 from biz.account.models import UserProxy
-from biz.workflow.serializers import WorkflowSerializer, BasicFlowInstanceSerializer
+from biz.workflow.serializers import (WorkflowSerializer,
+                                      BasicFlowInstanceSerializer)
 from biz.workflow.settings import ResourceType
 
-from eoncloud_web.shortcuts import retrieve_params, retrieve_list_params
+from biz.common.utils import retrieve_params, retrieve_list_params
 
 
 @require_GET

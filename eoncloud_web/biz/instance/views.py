@@ -27,7 +27,7 @@ from biz.account.models import Operation
 from biz.workflow.models import Workflow, FlowInstance
 from biz.workflow.settings import ResourceType
 
-from eoncloud_web.decorators import require_GET
+from biz.common.decorators import require_GET
 from cloud.instance_task import instance_create_task, instance_get_console_log, instance_get
 
 LOG = logging.getLogger(__name__)

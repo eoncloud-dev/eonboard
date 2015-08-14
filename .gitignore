@@ -21,3 +21,11 @@ reports
 .idea
 *.iml
 dev_settings.py
+db.sqlite3
+*.log
+*.json
+*.vim
+test_email.py
+*_ldap.py
+venv
+.ropeproject

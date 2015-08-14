@@ -219,6 +219,47 @@ CloudApp.controller('UserController',
             }
     })
 
+    .controller('DataCenterBroadcastController',
+        function($scope, $modalInstance, $i18next, ngTableParams,
+                CommonHttpService, ValidationTool, ToastrService,
+                DataCenter, notificationOptions){
+
+        var INFO = 1, form = null, options = [];
+
+        angular.forEach(notificationOptions, function(option){
+            options.push({key: option[0], label: [option[1]]});
+        });
+
+        $scope.options = options;
+        $scope.cancel = $modalInstance.dismiss;
+        $scope.notification = {title: '', content: '', level: INFO};
+        $scope.data_centers = DataCenter.query(function(data_centers){
+            $scope.notification.data_center = data_centers[0].id;
+        });
+
+        $modalInstance.rendered.then(function(){
+            form = ValidationTool.init('#notificationForm');
+        });
+
+        $scope.broadcast = function(notification){
+
+            if(!form.valid()){
+                return;
+            }
+
+            var params = angular.copy(notification);
+
+            CommonHttpService.post('/api/notifications/data-center-broadcast/', params).then(function(result){
+                if(result.success){
+                    ToastrService.success(result.msg, $i18next("success"));
+                    $modalInstance.close();
+                } else {
+                    ToastrService.error(result.msg, $i18next("op_failed"));
+                }
+            });
+        }
+    })
+
     .controller('AnnounceController',
         function($scope, $modalInstance, $i18next,
                  CommonHttpService, ValidationTool, ToastrService,

@@ -12,5 +12,6 @@ def eoncloud(request):
         "BRAND": settings.BRAND,
         "ICP_NUMBER": settings.ICP_NUMBER,
         "LDAP_AUTH_ENABLED": settings.LDAP_AUTH_ENABLED,
-        "EXTERNAL_URL": settings.EXTERNAL_URL
+        "EXTERNAL_URL": settings.EXTERNAL_URL,
+        "SIGNUP_ENABLED": settings.SIGNUP_ENABLED
     }

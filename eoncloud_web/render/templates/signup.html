@@ -49,6 +49,9 @@
                    value="{{ form.mobile.value }}"
                    placeholder="{% trans 'Mobile' %}" name="mobile"/>
         </div>
+        <div class="form-group">
+            {{ form.captcha }}
+        </div>
 
         {% comment %}
         <div class="form-group">
@@ -103,8 +106,8 @@
             </div>
         </div>
         <div class="form-actions">
-            <a href="/login/" class="btn btn-default">{% trans 'Login' %}</a>
-            <button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right disabled">{% trans 'Sign Up' %}</button>
+            <a href="/login/" class="btn green">{% trans 'Login' %}</a>
+            <button type="submit" id="register-submit-btn" class="btn btn-default pull-right disabled">{% trans 'Sign Up' %}</button>
         </div>
     </form>
 {% endblock %}
@@ -125,6 +128,16 @@
                 duration: 8000
             }
     );
+
+    $('.captcha-refresh').click(function(){
+        var parent = $(this).parent();
+        $.getJSON("/captcha/refresh/", {}, function(json) {
+            parent.find('input[name="captcha_0"]').val(json.key);
+            parent.find('img.captcha').attr('src', json.image_url);
+            console.log(parent.find('img.captcha'));
+        });
+        return false;
+    });
 </script>
 {% endblock %}
 

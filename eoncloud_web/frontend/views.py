@@ -5,7 +5,9 @@ import logging
 from django.conf import settings
 from django.views.generic import View
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import (HttpResponseRedirect,
+                         JsonResponse,
+                         HttpResponseForbidden)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
@@ -169,6 +171,14 @@ class SignupView(View):
         }
 
         return render(request, 'signup.html', context)
+
+    def dispatch(self, request, *args, **kwargs):
+
+        if settings.SIGNUP_ENABLED:
+            return super(SignupView, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
 
 signup = SignupView.as_view()
 

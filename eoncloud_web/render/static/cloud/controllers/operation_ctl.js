@@ -9,9 +9,6 @@ CloudApp.controller('OperationController',
         DatePicker.initDatePickers();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-
     $scope.condition = {operator: "", start_date: "", end_date: ""};
     var table = $scope.operation_table = new ngTableParams({
         page: 1,

@@ -17,9 +17,6 @@ CloudApp.controller('WorkflowProcessController',
             Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.instances = [];
 
         $scope.table = new ngTableParams({

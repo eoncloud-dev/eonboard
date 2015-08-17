@@ -13,9 +13,6 @@ CloudApp.controller('UserController',
                 Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.users = [];
         var checkboxGroup = $scope.checkboxGroup = CheckboxGroup.init($scope.users);
 

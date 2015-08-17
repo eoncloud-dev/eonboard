@@ -21,8 +21,6 @@ CloudApp.controller('InitWizardController',
                 validator = InitWizardValidator.init();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
         $scope.step = 'data_center';
         $scope.os_types = [{key: 1, label: 'Windows'}, {key: 2, label: 'Linux'}];
 

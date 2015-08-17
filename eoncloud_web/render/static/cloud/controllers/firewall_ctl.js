@@ -5,9 +5,7 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
         Metronic.initAjax();
     });
 
-    $rootScope.settings.layout.pageBodySolid = true;
-    $rootScope.settings.layout.pageSidebarClosed = false;
-    $scope.current_firewall_data = []
+    $scope.current_firewall_data = [];
 
 
     $scope.firewall_table = new ngTableParams({
@@ -153,9 +151,7 @@ CloudApp.controller('FirewallController', function($rootScope, $scope, $filter, 
          Metronic.initAjax();
      });
      $scope.firewall_id = firewall_id;
-     $rootScope.settings.layout.pageBodySolid = true;
-     $rootScope.settings.layout.pageSidebarClosed = false;
-     $scope.current_firewall_rules_data = []
+     $scope.current_firewall_rules_data = [];
 
      $scope.firewall_rules_table = new ngTableParams({
          page: 1,

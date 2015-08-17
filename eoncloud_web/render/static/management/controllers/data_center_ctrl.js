@@ -15,9 +15,6 @@ CloudApp.controller('DataCenterController',
                 Metronic.initAjax();
         });
 
-        $rootScope.settings.layout.pageBodySolid = true;
-        $rootScope.settings.layout.pageSidebarClosed = false;
-
         $scope.data_centers = [];
 
         $scope.data_center_table = new ngTableParams({

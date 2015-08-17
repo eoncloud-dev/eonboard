@@ -296,7 +296,9 @@
     <div class="modal-footer">
         <button href="javascript:;" class="btn" ng-click="cancel()">
             {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary"  ng-click="submit_balancer_click(balancer)">{[{ 'confirm' | i18next }]}</button>
+        <button class="btn btn-primary"
+                ng-click="submit_balancer_click(balancer)"
+                data-nap-after-click>{[{ 'confirm' | i18next }]}</button>
     </div>
 </script>
 <!--修改负载均衡资源 -->
@@ -478,7 +480,7 @@
     <div class="modal-footer">
         <button href="javascript:;" class="btn" ng-click="cancel()">
             {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary"  ng-click="submit_click(monitor)">{[{ 'confirm' | i18next }]}</button>
+        <button class="btn btn-primary"  ng-click="submit_click(monitor)" data-nap-after-click>{[{ 'confirm' | i18next }]}</button>
     </div>
 </script>
 <!--修改负载监听器 -->

@@ -64,4 +64,27 @@ angular.module('cloud.directives', [])
       elem.dropdownHover();
     }
   };  
+})
+
+.directive('napAfterClick', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, elem, attrs) {
+
+            var duration = parseInt(attrs.napAfterClick);
+
+            if(isNaN(duration)){
+                duration = 2;
+            }
+
+            duration *= 1000;
+
+            elem.on('click', function(){
+                elem.addClass('disabled');
+                $timeout(function(){
+                    elem.removeClass('disabled');
+                }, duration);
+            });
+        }
+    };
 });

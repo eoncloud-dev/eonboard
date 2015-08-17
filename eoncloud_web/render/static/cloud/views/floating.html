@@ -129,8 +129,10 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-default" ng-click="cancel()">{[{ 'floatingIP.cancel' | i18next }]}</a>
-            <a class="btn btn-primary" ng-click="create(floatingIP)" ng-class="{'disabled': check_can_submit()}">{[{
-                'floatingIP.ensure' | i18next }]}</a>
+            <a class="btn btn-primary"
+               ng-click="create(floatingIP)"
+               ng-class="{'disabled': check_can_submit()}"
+               data-nap-after-click>{[{'floatingIP.ensure' | i18next }]}</a>
         </div>
     </div>
 </script>

@@ -179,7 +179,10 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-click="volume_submit(volume,'create')" ng-class="{'disabled': check_can_submit() || !flag}"> {[{ 'submit' | i18next
+        <button type="button" class="btn btn-primary"
+                ng-click="volume_submit(volume,'create')"
+                ng-class="{'disabled': check_can_submit() || !flag}"
+                data-nap-after-click> {[{ 'submit' | i18next
             }]}
         </button>
     </div>

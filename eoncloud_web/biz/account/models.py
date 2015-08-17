@@ -41,12 +41,14 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 class NormalUserManager(models.Manager):
     def get_queryset(self):
-        return super(NormalUserManager, self).get_queryset().filter(is_superuser=False)
+        return super(NormalUserManager, self).get_queryset().filter(
+            is_superuser=False)
 
 
 class SuperUserManager(models.Manager):
     def get_queryset(self):
-        return super(SuperUserManager, self).get_queryset().filter(is_superuser=True)
+        return super(SuperUserManager, self).get_queryset().filter(
+            is_superuser=True)
 
 
 class UserProxy(User):
@@ -85,7 +87,8 @@ class Contract(LivingDeadModel):
     end_date = models.DateTimeField(_("End Date"), null=False)
     deleted = models.BooleanField(_("Deleted"), default=False)
     create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
-    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True, auto_now=True)
+    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True,
+                                       auto_now=True)
 
     def __unicode__(self):
         return self.name
@@ -104,11 +107,13 @@ class Contract(LivingDeadModel):
 
 class Quota(LivingDeadModel):
     contract = models.ForeignKey(Contract, related_name="quotas")
-    resource = models.CharField(_("Resouce"), max_length=128, choices=QUOTA_ITEM, null=False)
+    resource = models.CharField(_("Resouce"), max_length=128,
+                                choices=QUOTA_ITEM, null=False)
     limit = models.IntegerField(_("Limit"), default=0)
     deleted = models.BooleanField(_("Deleted"), default=False)
     create_date = models.DateTimeField(_("Create Date"), auto_now_add=True)
-    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True, auto_now=True)
+    update_date = models.DateTimeField(_("Update Date"), auto_now_add=True,
+                                       auto_now=True)
 
     class Meta:
         db_table = "user_quota"
@@ -147,7 +152,8 @@ class Operation(models.Model):
         return _(self.resource)
 
     def get_desc(self):
-        desc_format = _("%(resource)s:%(resource_name)s execute %(action)s operation")
+        desc_format = _(
+            "%(resource)s:%(resource_name)s execute %(action)s operation")
         desc = desc_format % {
             "resource": _(self.resource),
             "resource_name": self.resource_name,
@@ -170,7 +176,8 @@ class Operation(models.Model):
 
 
 class Notification(models.Model):
-    level = models.IntegerField(choices=NotificationLevel.OPTIONS, default=NotificationLevel.INFO)
+    level = models.IntegerField(choices=NotificationLevel.OPTIONS,
+                                default=NotificationLevel.INFO)
     title = models.CharField(max_length=100)
     content = models.TextField()
     create_date = models.DateTimeField(auto_now_add=True)
@@ -179,7 +186,8 @@ class Notification(models.Model):
 
     @property
     def time_ago(self):
-        time_delta = (timezone.now() - self.create_date).total_seconds() * TimeUnit.SECOND
+        time_delta = (timezone.now() -
+                      self.create_date).total_seconds() * TimeUnit.SECOND
 
         if time_delta < TimeUnit.MINUTE:
             return _("just now")
@@ -204,7 +212,8 @@ class Notification(models.Model):
     @classmethod
     def broadcast(cls, receivers, title, content, level):
 
-        notification = cls.objects.create(title=title, content=content, level=level)
+        notification = cls.objects.create(title=title, content=content,
+                                          level=level)
         for receiver in receivers:
             Feed.objects.create(receiver=receiver, notification=notification)
 
@@ -212,33 +221,37 @@ class Notification(models.Model):
     def pull_announcements(cls, receiver):
 
         try:
-            for notification in Notification.objects.filter(is_announcement=True).\
-                    exclude(feed=Feed.objects.filter(receiver=receiver)):
-
-                Feed.objects.create(notification=notification, receiver=receiver)
+            for notification in Notification.objects.filter(
+                is_announcement=True). \
+                exclude(feed=Feed.objects.filter(receiver=receiver)):
+                Feed.objects.create(notification=notification,
+                                    receiver=receiver)
         except:
-            LOG.exception("Failed to pull announcement for user: %s", receiver.username)
+            LOG.exception("Failed to pull announcement for user: %s",
+                          receiver.username)
 
 
 NOTIFICATION_KEY_METHODS = ((NotificationLevel.INFO, 'info'),
-                            (NotificationLevel.SUCCESS, 'success'), (NotificationLevel.ERROR, 'error'),
-                            (NotificationLevel.WARNING, 'warning'), (NotificationLevel.DANGER, 'danger'))
+                            (NotificationLevel.SUCCESS, 'success'),
+                            (NotificationLevel.ERROR, 'error'),
+                            (NotificationLevel.WARNING, 'warning'),
+                            (NotificationLevel.DANGER, 'danger'))
 
 # This loop will create some is_xxx(eg, is_info, is_success..) property
 for value, name in NOTIFICATION_KEY_METHODS:
     def bind(level):
-        setattr(Notification, 'is_' + name, property(lambda self: self.level == level))
+        setattr(Notification, 'is_' + name,
+                property(lambda self: self.level == level))
 
     bind(value)
 
 # This loop will create some action method, user can create notification like this way:
 # Notification.info(receiver, title, content)
 for value, name in NOTIFICATION_KEY_METHODS:
-
     def bind(level):
-
-        def action(cls, receiver, title, content, is_auto=False):
-            notification = cls.objects.create(title=title, content=content, level=level, is_auto=is_auto)
+        def action(cls, receiver, title, content, is_auto=True):
+            notification = cls.objects.create(title=title, content=content,
+                                              level=level, is_auto=is_auto)
             Feed.objects.create(receiver=receiver, notification=notification)
 
             return notification
@@ -249,7 +262,6 @@ for value, name in NOTIFICATION_KEY_METHODS:
 
 
 class Feed(LivingDeadModel):
-
     is_read = models.BooleanField(default=False)
     receiver = models.ForeignKey(User, related_name="notifications",
                                  related_query_name='notification')
@@ -257,7 +269,8 @@ class Feed(LivingDeadModel):
     create_date = models.DateTimeField(auto_now_add=True)
     read_date = models.DateTimeField(null=True)
     deleted = models.BooleanField(default=False)
-    notification = models.ForeignKey(Notification, related_name="feeds", related_query_name="feed")
+    notification = models.ForeignKey(Notification, related_name="feeds",
+                                     related_query_name="feed")
 
     class Meta:
         db_table = "user_feed"
@@ -287,7 +300,6 @@ class ActivateUrl(models.Model):
 
     @classmethod
     def generate(cls, user):
-
         content = "%s-%d" % (user.username, random.randint(0, 10000))
 
         code = hashlib.md5(content).hexdigest()

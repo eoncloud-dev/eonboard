@@ -3,6 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+
 from biz.network.models import Network
 from biz.instance.settings import (INSTANCE_STATE_WAITING,
                                    INSTANCE_STATES, INSTANCE_STATE_REJECTED, INSTANCE_STATE_ERROR)

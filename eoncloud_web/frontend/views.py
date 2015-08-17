@@ -265,10 +265,5 @@ def _send_activate_email(user):
     subject = _("%(site_name)s - Activate Account") \
         % {'site_name': settings.BRAND}
 
-    sender = "%(site_name)s <%(email)s>" \
-             % {'site_name': settings.BRAND,
-                'email': settings.DEFAULT_FROM_EMAIL}
-
     send_mail.delay(subject, '',
-                    sender,
                     user.email, html_message=html)

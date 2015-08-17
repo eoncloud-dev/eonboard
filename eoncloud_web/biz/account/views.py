@@ -25,7 +25,8 @@ from biz.idc.models import DataCenter
 from biz.common.pagination import PagePagination
 from biz.common.decorators import require_POST, require_GET
 from biz.common.utils import retrieve_params
-from cloud.tasks import link_user_to_dc_task
+from cloud.tasks import (link_user_to_dc_task, send_notifications,
+                         send_notifications_by_data_center)
 
 
 LOG = logging.getLogger(__name__)
@@ -83,7 +84,8 @@ class OperationList(generics.ListAPIView):
             if operator_pk:
                 queryset = queryset.filter(user__pk=operator_pk)
         else:
-            queryset = queryset.filter(user=request.user, udc__id=request.session["UDC_ID"])
+            queryset = queryset.filter(user=request.user,
+                                       udc__id=request.session["UDC_ID"])
 
         return queryset.order_by('-create_date')
 
@@ -119,10 +121,12 @@ class ContractDetail(generics.RetrieveAPIView):
 @api_view(['POST'])
 def create_contract(request):
     try:
-        serializer = ContractSerializer(data=request.data, context={"request": request})
+        serializer = ContractSerializer(data=request.data,
+                                        context={"request": request})
         if serializer.is_valid():
             contract = serializer.save()
-            Operation.log(contract, contract.name, 'create', udc=contract.udc, user=request.user)
+            Operation.log(contract, contract.name, 'create', udc=contract.udc,
+                          user=request.user)
 
             return Response({'success': True,
                              "msg": _('Contract is created successfully!')},
@@ -134,7 +138,8 @@ def create_contract(request):
                             status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         LOG.error("Failed to create contract, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to create contract for unknown reason.')})
+        return Response({"success": False, "msg": _(
+            'Failed to create contract for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -146,18 +151,23 @@ def update_contract(request):
         contract = Contract.objects.get(pk=pk)
         contract.name = request.data['name']
         contract.customer = request.data['customer']
-        contract.start_date = datetime.strptime(request.data['start_date'], '%Y-%m-%d %H:%M:%S')
-        contract.end_date = datetime.strptime(request.data['end_date'], '%Y-%m-%d %H:%M:%S')
+        contract.start_date = datetime.strptime(request.data['start_date'],
+                                                '%Y-%m-%d %H:%M:%S')
+        contract.end_date = datetime.strptime(request.data['end_date'],
+                                              '%Y-%m-%d %H:%M:%S')
 
         contract.save()
-        Operation.log(contract, contract.name, 'update', udc=contract.udc, user=request.user)
+        Operation.log(contract, contract.name, 'update', udc=contract.udc,
+                      user=request.user)
 
-        return Response({'success': True, "msg": _('Contract is updated successfully!')},
-                        status=status.HTTP_201_CREATED)
+        return Response(
+            {'success': True, "msg": _('Contract is updated successfully!')},
+            status=status.HTTP_201_CREATED)
 
     except Exception as e:
         LOG.error("Failed to update contract, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to update contract for unknown reason.')})
+        return Response({"success": False, "msg": _(
+            'Failed to update contract for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -170,15 +180,20 @@ def delete_contracts(request):
             contract = Contract.objects.get(pk=contract_id)
             contract.deleted = True
             contract.save()
-            Quota.living.filter(contract__pk=contract_id).update(deleted=True, update_date=timezone.now())
+            Quota.living.filter(contract__pk=contract_id).update(deleted=True,
+                                                                 update_date=timezone.now())
 
-            Operation.log(contract, contract.name, 'delete', udc=contract.udc, user=request.user)
+            Operation.log(contract, contract.name, 'delete', udc=contract.udc,
+                          user=request.user)
 
-        return Response({'success': True, "msg": _('Contracts have been deleted!')}, status=status.HTTP_201_CREATED)
+        return Response(
+            {'success': True, "msg": _('Contracts have been deleted!')},
+            status=status.HTTP_201_CREATED)
 
     except Exception as e:
         LOG.error("Failed to delete contracts, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to delete contracts for unknown reason.')})
+        return Response({"success": False, "msg": _(
+            'Failed to delete contracts for unknown reason.')})
 
 
 class UserList(generics.ListAPIView):
@@ -214,7 +229,8 @@ def deactivate_user(request):
     user.is_active = False
     user.save()
 
-    return Response({"success": True, "msg": _('User has been deactivated!')}, status=status.HTTP_200_OK)
+    return Response({"success": True, "msg": _('User has been deactivated!')},
+                    status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -225,27 +241,30 @@ def activate_user(request):
     user.is_active = True
     user.save()
 
-    return Response({"success": True, "msg": _('User has been activated!')}, status=status.HTTP_200_OK)
+    return Response({"success": True, "msg": _('User has been activated!')},
+                    status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def change_password(request):
-
     user = request.user
     old_password = request.data['old_password']
     new_password = request.data['new_password']
     confirm_password = request.data['confirm_password']
 
     if new_password != confirm_password:
-        return Response({"success": False, "msg": _("The new password doesn't match confirm password!")})
+        return Response({"success": False, "msg": _(
+            "The new password doesn't match confirm password!")})
 
     if not check_password(old_password, user.password):
-        return Response({"success": False, "msg": _("The original password is not correct!")})
+        return Response({"success": False,
+                         "msg": _("The original password is not correct!")})
 
     user.set_password(new_password)
     user.save()
 
-    return Response({"success": True, "msg": _("Password has been changed! Please login in again.")})
+    return Response({"success": True, "msg": _(
+        "Password has been changed! Please login in again.")})
 
 
 class QuotaList(generics.ListAPIView):
@@ -256,7 +275,8 @@ class QuotaList(generics.ListAPIView):
         queryset = self.get_queryset()
 
         if 'contract_id' in request.query_params:
-            queryset = queryset.filter(contract__id=request.query_params['contract_id'])
+            queryset = queryset.filter(
+                contract__id=request.query_params['contract_id'])
 
         return Response(self.serializer_class(queryset, many=True).data)
 
@@ -284,12 +304,14 @@ def create_quotas(request):
 
             resource, limit = resources[index], limits[index]
 
-            if quota_id and Quota.living.filter(contract=contract, pk=quota_id).exists():
+            if quota_id and Quota.living.filter(contract=contract,
+                                                pk=quota_id).exists():
                 Quota.objects.filter(pk=quota_id).update(resource=resource,
                                                          limit=limit,
                                                          update_date=timezone.now())
             else:
-                Quota.objects.create(resource=resource, limit=limit, contract=contract)
+                Quota.objects.create(resource=resource, limit=limit,
+                                     contract=contract)
 
         Operation.log(contract, contract.name + " quota", 'update',
                       udc=contract.udc, user=request.user)
@@ -299,7 +321,8 @@ def create_quotas(request):
                         status=status.HTTP_201_CREATED)
     except Exception as e:
         LOG.error("Failed to save quotas, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to save quotas for unknown reason.')})
+        return Response({"success": False,
+                         "msg": _('Failed to save quotas for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -314,7 +337,9 @@ def create_quota(request):
             quota.limit = limit
             quota.save()
         else:
-            quota = Quota.objects.create(resource=resource, limit=limit, contract=contract)
+            quota = Quota.objects.create(resource=resource,
+                                         limit=limit,
+                                         contract=contract)
 
         return Response({'success': True,
                          "msg": _('Quota have been saved successfully!'),
@@ -322,7 +347,8 @@ def create_quota(request):
                         status=status.HTTP_201_CREATED)
     except Exception as e:
         LOG.error("Failed to save quota, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to save quota for unknown reason.')})
+        return Response({"success": False,
+                         "msg": _('Failed to save quota for unknown reason.')})
 
 
 @api_view(['POST'])
@@ -335,7 +361,10 @@ def delete_quota(request):
                         status=status.HTTP_201_CREATED)
     except Exception as e:
         LOG.error("Failed to create quota, msg:[%s]" % e)
-        return Response({"success": False, "msg": _('Failed to create quota for unknown reason.')})
+        return Response(
+            {"success": False,
+             "msg": _('Failed to create quota for unknown reason.')}
+        )
 
 
 @api_view(["GET"])
@@ -354,11 +383,7 @@ def broadcast(request):
     level, title, content = retrieve_params(request.data,
                                             'level', 'title', 'content')
 
-    receivers = UserProxy.normal_users.filter(is_active=True)
-    if receiver_ids:
-        receivers = UserProxy.normal_users.filter(pk__in=receiver_ids)
-
-    Notification.broadcast(receivers, title, content, level)
+    send_notifications.delay(title, content, level, receiver_ids)
 
     return Response({"success": True,
                      "msg": _('Notification is sent successfully!')})
@@ -366,14 +391,12 @@ def broadcast(request):
 
 @require_POST
 def data_center_broadcast(request):
+    level, title, content = retrieve_params(
+        request.data, 'level', 'title', 'content')
 
-    dc_id, level, title, content = retrieve_params(
-        request.data, 'data_center', 'level', 'title', 'content')
+    dc_ids = request.data.getlist('data_centers[]')
 
-    receivers = UserProxy.normal_users.filter(
-        userdatacenter__data_center__pk=dc_id, is_active=True)
-
-    Notification.broadcast(receivers, title, content, level)
+    send_notifications_by_data_center.delay(title, content, level, dc_ids)
 
     return Response({"success": True,
                      "msg": _('Notification is sent successfully!')})
@@ -381,8 +404,10 @@ def data_center_broadcast(request):
 
 @require_POST
 def announce(request):
-    level, title, content = retrieve_params(request.data, 'level', 'title', 'content')
-    Notification.objects.create(title=title, content=content, level=level, is_announcement=True)
+    level, title, content = retrieve_params(request.data, 'level', 'title',
+                                            'content')
+    Notification.objects.create(title=title, content=content,
+                                level=level, is_announcement=True)
 
     return Response({"success": True,
                      "msg": _('Announcement is sent successfully!')})
@@ -393,7 +418,8 @@ class NotificationList(generics.ListAPIView):
     serializer_class = NotificationSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(is_auto=False).order_by('-create_date')
+        queryset = self.get_queryset().filter(is_auto=False).order_by(
+            '-create_date')
         return Response(self.serializer_class(queryset, many=True).data)
 
 
@@ -407,7 +433,8 @@ class FeedList(generics.ListAPIView):
     serializer_class = FeedSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(receiver=request.user).order_by('-create_date')
+        queryset = self.get_queryset().filter(receiver=request.user).order_by(
+            '-create_date')
         return Response(self.serializer_class(queryset, many=True).data)
 
 
@@ -434,7 +461,6 @@ def mark_read(request, pk):
 
 @require_POST
 def initialize_user(request):
-
     user_id = request.data['user_id']
     user = User.objects.get(pk=user_id)
     link_user_to_dc_task(user, DataCenter.get_default())

@@ -89,4 +89,3 @@ class Floating(models.Model):
         content = title = _('Your application for %(bandwidth)d floating IP is rejected! ') \
             % {'bandwidth': self.bandwidth}
         Notification.error(flow_instance.owner, title, content, is_auto=True)
-

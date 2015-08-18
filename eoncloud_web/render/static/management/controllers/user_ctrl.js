@@ -229,7 +229,7 @@ CloudApp.controller('UserController',
 
         $scope.options = options;
         $scope.cancel = $modalInstance.dismiss;
-        $scope.notification = {title: '', content: '', level: INFO};
+        $scope.notification = {title: '', content: '', data_centers: [], level: INFO};
         $scope.data_centers = DataCenter.query(function(data_centers){
             $scope.notification.data_center = data_centers[0].id;
         });

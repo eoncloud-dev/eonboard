@@ -14,7 +14,6 @@ from biz.instance.settings import INSTANCE_STATE_RUNNING, \
             INSTANCE_STATE_DELETE, INSTANCE_STATE_POWEROFF, INSTANCE_STATE_PAUSED
 from biz.volume.settings import VOLUME_STATE_AVAILABLE, VOLUME_STATE_IN_USE,\
             VOLUME_STATE_ERROR
-from biz.network.models import Network, Subnet
 from biz.firewall.models import Firewall
 from biz.image.settings import WINDOWS, LINUX
 
@@ -147,6 +146,7 @@ def instance_deleted_release_resource(instance):
                     instance.id, instance.name, item.backup.name))
         item.backup.mark_delete()
         backup_task.backup_action_task(item.backup, "delete")
+
 
 @app.task
 def instance_create_task(instance, **kwargs):

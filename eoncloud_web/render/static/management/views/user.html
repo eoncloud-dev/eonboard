@@ -13,10 +13,6 @@
                        data-ng-click="openDataCenterBroadcastModal();">
                         <i class="fa  fa-bullhorn"></i> {[{ 'notification.data_center_broadcast' | i18next }]}
                     </a>
-                    <a class="btn btn-info" href="javascript:void(0)"
-                       data-ng-click="openAnnounceModal();">
-                        <i class="fa  fa-bullhorn"></i> {[{ 'notification.announce' | i18next }]}
-                    </a>
                 </div>
                 </div>
             </div>
@@ -202,9 +198,9 @@
                     {[{ 'notification.data_center' | i18next }]}
                 </label>
                 <div class="col-md-9">
-                    <select id="data_center" name="data_center"
+                    <select id="data_center" name="data_center" multiple="true"
                             class="form-control input-medium"
-                            data-ng-model="notification.data_center"
+                            data-ng-model="notification.data_centers"
                             data-ng-options="dc.id as dc.name for dc in data_centers"
                             data-rule-required="true">
                     </select>

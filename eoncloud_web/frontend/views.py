@@ -25,6 +25,8 @@ from biz.idc.models import DataCenter, UserDataCenter as UDC
 from biz.workflow.models import Step
 from biz.common.decorators import superuser_required
 from cloud.tasks import link_user_to_dc_task, send_mail
+from cloud.api import neutron
+from cloud.cloud_utils import create_rc_by_dc
 
 LOG = logging.getLogger(__name__)
 
@@ -128,6 +130,8 @@ def current_user(request):
         return JsonResponse({'result': {'logged': True},
                             'user': request.user.username,
                             'datacenter': cc_name,
+                            'sdn_enabled': neutron.is_neutron_enabled(
+                                    create_rc_by_dc(data_center_names[0])),
                             'is_approver': is_approver})
     else:
         return JsonResponse({'result': {'logged': False}})

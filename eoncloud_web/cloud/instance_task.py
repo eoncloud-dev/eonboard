@@ -23,6 +23,7 @@ from cloud import volume_task
 from cloud import backup_task
 
 from api import nova
+from api import neutron
 
 LOG = logging.getLogger("cloud.tasks")
 
@@ -57,6 +58,10 @@ def instance_create(instance, password):
     user_data = user_data_format % password
     rc = create_rc_by_instance(instance)
     try:
+        nics = None
+        if neutron.is_neutron_enabled(rc):
+            nics = [{"net-id": instance.network.network_id, "v4-fixed-ip": ""}]
+        
         if instance.image.os_type ==  LINUX:
             server = nova.server_create(rc,
                     name=instance.name,
@@ -64,8 +69,8 @@ def instance_create(instance, password):
                     flavor=instance.flavor_id,
                     key_name=None,
                     security_groups=[],
-                    nics = [{"net-id": instance.network.network_id, "v4-fixed-ip": ""}],
-                    user_data = user_data
+                    nics = nics,
+                    user_data = user_data,
                 ) 
         elif instance.image.os_type == WINDOWS:
             server = nova.server_create(rc,
@@ -75,13 +80,15 @@ def instance_create(instance, password):
                     key_name=None,
                     user_data=None,
                     security_groups=[],
-                    nics = [{"net-id": instance.network.network_id, "v4-fixed-ip": ""}],
+                    nics = nics,
                     meta = {"admin_pass": password},
                 )
         else:
             raise Exception("unknown image os type.")
         return server
     except Exception as e:
+        instance.status = INSTANCE_STATE_ERROR
+        instance.save()
         LOG.exception(e)
         return False
 
@@ -157,6 +164,8 @@ def instance_create_task(instance, **kwargs):
     LOG.info('begin to start create instance:[%s][%s][pwd:%s]' % (
                     instance.id, instance.name, password))
      
+    rc = create_rc_by_instance(instance)
+    
     # create flavor
     flavor = flavor_create(instance)
     if not flavor:
@@ -166,9 +175,11 @@ def instance_create_task(instance, **kwargs):
     
     instance.flavor_id = flavor.id
     LOG.info('flavor ok instance:[%s][%s]' % (instance.id, instance.name))
- 
+
+    neutron_enabled = neutron.is_neutron_enabled(rc)
+    
     # get default private network
-    if instance.network_id == 0:
+    if instance.network_id == 0 and neutron_enabled:
         network = create_default_private_network(instance)
         instance.network_id = network.id
 
@@ -198,11 +209,20 @@ def instance_create_task(instance, **kwargs):
         time.sleep(settings.INSTANCE_SYNC_INTERVAL_SECOND)
         srv = instance_get(instance)
         st = srv.status.upper()
-        LOG.info('server status rsync instance:[%s][%s][status: %s]' % (instance.id, instance.name, st))
+        LOG.info('server status rsync instance:[%s][%s][status: %s]' % (
+                                        instance.id, instance.name, st))
         if st == "ACTIVE":
             instance.status = INSTANCE_STATE_RUNNING
-            instance.private_ip = srv.addresses["network-%s" % instance.network.id][0].\
-                                        get("addr", "---")
+            try:
+                if neutron_enabled:
+                    private_net = "network-%s" % instance.network.id
+                else:
+                    private_net = "private"
+                instance.private_ip = srv.addresses.\
+                            get(private_net)[0].get("addr", "---")
+            except Exception as ex:
+                LOG.exception(ex)
+                pass
             instance.save()
             count = settings.MAX_COUNT_SYNC + 1
         elif st == "ERROR":

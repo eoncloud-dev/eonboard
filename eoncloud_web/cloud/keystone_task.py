@@ -19,6 +19,13 @@ LOG = logging.getLogger("cloud.tasks")
 @app.task
 def link_user_to_dc_task(user, datacenter):
     LOG.info("New user: Start action [%s]" % user.username)
+    registered_udc = UserDataCenter.objects.filter(user=user,
+                                data_center=datacenter)
+    if len(registered_udc) > 0:
+        LOG.info("New user: has registere to datacenter [%s][%s]" % (
+                                user.username, datacenter.name))
+        return True
+
     rc = create_rc_by_dc(datacenter)
     tenant_name = "%s-%04d" % (settings.OS_NAME_PREFIX, user.id)
     try:

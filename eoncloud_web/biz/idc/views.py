@@ -128,7 +128,8 @@ def switch_list(request):
     try: 
         current_udc_id = request.session["UDC_ID"]
         udc = UserDataCenter.objects.filter(user=request.user)
-        dc = DataCenter.objects.filter(~Q(id=current_udc_id))
+        current_udc = UserDataCenter.objects.get(pk=current_udc_id)
+        dc = DataCenter.objects.filter(~Q(id=current_udc.data_center.id))
         
         for d in dc:
             result["DataCenterList"].append(

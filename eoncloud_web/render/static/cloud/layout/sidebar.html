@@ -69,7 +69,7 @@
                 </span>
             </a>
         </li>
-        <li id="privateNetwork">
+        <li id="privateNetwork" ng-show="current_user.sdn_enabled">
             <a href="#/network/">
                 <i class="fa fa-rss"></i>
                 <span class="title">
@@ -77,7 +77,7 @@
                 </span>
             </a>
         </li>
-        <li id="router">
+        <li id="router" ng-show="current_user.sdn_enabled">
             <a href="#/router/">
                 <i class="fa fa-life-ring"></i>
                 <span class="title">
@@ -85,7 +85,7 @@
                 </span>
             </a>
         </li>
-        <li id="lbaas">
+        <li id="lbaas" ng-show="current_user.sdn_enabled">
             <a href="#/lbaas/">
                 <i class="fa fa-sitemap"></i>
                 <span class="title">
@@ -93,7 +93,7 @@
                 </span>
             </a>
         </li>
-        <li id="networkTopology">
+        <li id="networkTopology" ng-show="current_user.sdn_enabled">
             <a href="#/topology/">
                 <i class="fa fa-slack"></i>
                 <span class="title">

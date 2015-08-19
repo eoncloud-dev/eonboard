@@ -157,6 +157,9 @@ var Login = function() {
                 },
                 tnc: {
                     required: true
+                },
+                captcha_1: {
+                    required: true
                 }
             },
 

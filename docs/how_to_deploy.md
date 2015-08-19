@@ -44,7 +44,7 @@
 
     # if is all in one environment
     apt-get install mysql-server rabbitmq-server
-    
+
 ## 5. config eoncloud_web
 >cp eoncloud_web.tar.gz /var/www/
 
@@ -63,7 +63,7 @@
 	│   └── render
 	├── README
 	└── requirements.txt
-	
+
 	root@zhangh-ubuntu:/var/www/eoncloud_web# virtualenv .venv
 	root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/pip install -r requirements.txt
 
@@ -77,6 +77,10 @@
 
 >flush privileges;
 
+### generate local_settings.py
+
+> root@zhangh-ubuntu:/var/www/eoncloud_web# cp eoncloud_web/eoncloud_web/local_settings.py.example \
+> eoncloud_web/eoncloud_web/local_settings.py
 
 ### migrate db
 >root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py migrate
@@ -101,20 +105,20 @@
 
 	<VirtualHost *:80>
 	        ServerAdmin zhanghui@eoncloud.com.cn.
-	
+
 	        WSGIScriptAlias / /var/www/eoncloud_web/eoncloud_web/eoncloud.wsgi
 	        WSGIDaemonProcess eoncloud user=eoncloud group=eoncloud processes=3 threads=10 python-path=/var/www/eoncloud_web/.venv/lib/python2.7/site-packages
 	        WSGIProcessGroup eoncloud
-	
-	
+
+
 	        Alias /static/admin /var/www/eoncloud_web/.venv/lib/python2.7/site-packages/django/contrib/admin/static/admin
 	        Alias /static/rest_framework /var/www/eoncloud_web/.venv/lib/python2.7/site-packages/rest_framework/static/rest_framework
 	        Alias /static /var/www/eoncloud_web/eoncloud_web/render/static
-	
+
 	        ErrorLog ${APACHE_LOG_DIR}/eoncloud_error.log
 	        CustomLog ${APACHE_LOG_DIR}/eoncloud_access.log combined
 	</VirtualHost>
-	
+
 	# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 
 
@@ -132,5 +136,5 @@
 	$ ../.venv/bin/celery multi start eoncloud_worker -A cloud --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid --logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
 
 	$ ../.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid
-	
+
 ## 8. integrity test

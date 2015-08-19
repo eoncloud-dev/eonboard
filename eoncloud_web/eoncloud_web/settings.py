@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'cloud',
     'render',
     'frontend',
+    'eoncloud_web',
     'biz.firewall',
     'biz.forum',
     'biz.backup',
@@ -195,24 +196,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 logging.config.dictConfig(LOG_CONFIG)
 
 
-from eoncloud_web.local.email_settings import *
 from eoncloud_web.local.local_settings import *
-from eoncloud_web.local.db_settings import *
-from eoncloud_web.local.celery_settings import *
 
-
-# ldap auth setting
-from eoncloud_web.local.ladp_settings import *
-
-LDAP_AUTH_ENABLED = False
-
-try:
-    from eoncloud_web.local.dev_settings import *
-except:
-    pass
+CAPTCHA_IMAGE_BEFORE_FIELD = False
 
 if LDAP_AUTH_ENABLED:
     AUTHENTICATION_BACKENDS = (
         'django_auth_ldap.backend.LDAPBackend',
         'django.contrib.auth.backends.ModelBackend'
     )
+
+SITE_CONFIG = {
+    "QUOTA_CHECK": QUOTA_CHECK,
+    "MULTI_ROUTER_ENABLED": MULTI_ROUTER_ENABLED,
+    "BRAND": BRAND,
+    "ICP_NUMBER": ICP_NUMBER,
+    "WORKFLOW_ENABLED": WORKFLOW_ENABLED
+}

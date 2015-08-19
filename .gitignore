@@ -29,3 +29,4 @@ test_email.py
 *_ldap.py
 venv
 .ropeproject
+local_settings.py

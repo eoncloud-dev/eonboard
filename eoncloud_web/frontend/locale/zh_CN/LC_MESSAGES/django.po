@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-13 09:21+0800\n"
+"POT-Creation-Date: 2015-08-18 18:04+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,53 +18,61 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: forms.py:16
+#: forms.py:32
 msgid "A user with that email already exists."
 msgstr "邮箱地址已被其他用户使用"
 
-#: forms.py:19
+#: forms.py:33
+msgid "A user with that mobile already exists."
+msgstr "手机号已被其他用户使用"
+
+#: forms.py:36
 msgid "Email"
 msgstr "邮箱"
 
-#: forms.py:20
+#: forms.py:37
 msgid "Mobile"
 msgstr "手机号"
 
-#: views.py:150
+#: forms.py:41
+msgid "Captcha"
+msgstr "验证码"
+
+#: views.py:156
 msgid ""
 "Your registration successed, we send you one activate email, please check "
 "your input box."
 msgstr "您已注册成功！我们向您的邮箱发送了一封激活邮件，请查看您的收件箱．"
 
-#: views.py:154
+#: views.py:160
 msgid "Your registration successed!"
 msgstr "您已注册成功！"
 
-#: views.py:182 views.py:188
+#: views.py:196 views.py:202
 msgid "This activate url is not valid, you can resend activate email."
 msgstr "该链接已无效，您可以尝试重新发送激活邮件．"
 
-#: views.py:195
+#: views.py:209
 msgid "Failed to activate your account, you can try later."
 msgstr "您的帐号激活失败，请稍后再尝试"
 
-#: views.py:200
+#: views.py:214
 msgid "Your account is activated successfully, please login."
 msgstr "您的账户已激活，请登录"
 
-#: views.py:213
+#: views.py:227
 msgid "No account found."
 msgstr "没有帐号"
 
-#: views.py:216
+#: views.py:230
 msgid "Password is not correct."
 msgstr "密码不对"
 
-#: views.py:221
+#: views.py:235
 msgid "Your activate email is sent, please check your input box."
 msgstr "您的激活邮件已发送，请查看你的收件箱"
 
-#: views.py:255
+#: views.py:269
 #, python-format
 msgid "%(site_name)s - Activate Account"
 msgstr "%(site_name)s - 帐号激活"

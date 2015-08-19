@@ -13,12 +13,13 @@
         <div class="alert alert-danger">
             <button class="close" data-close="alert"></button>
             <div id="errorMsg">
+                <ul>
                 {% for field in form %}
                     {% if field.errors %}
-                        {{ field.label_tag }}
-                        {{ field.errors }}
+                    <li> {{ field.label }}: {{ field.errors|first }} </li>
                     {% endif %}
                 {% endfor %}
+                </ul>
             </div>
         </div>
         {% endif %}
@@ -49,9 +50,11 @@
                    value="{{ form.mobile.value }}"
                    placeholder="{% trans 'Mobile' %}" name="mobile"/>
         </div>
+        {% if CAPTCHA_ENABLED %}
         <div class="form-group">
             {{ form.captcha }}
         </div>
+        {% endif %}
 
         {% comment %}
         <div class="form-group">

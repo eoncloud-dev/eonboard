@@ -287,13 +287,14 @@ def network_and_subnet_create_task(network,subnet):
 def router_remove_interface_task(router=None, subnet=None, router_interface=None):
     rc = create_rc_by_router(router)
     try:
+        LOG.info("begin to router remove instance task")
         neutron.router_remove_interface(rc, router.router_id, subnet.subnet_id, router_interface.os_port_id)
         router.status = NETWORK_STATE_ACTIVE
         router.save()
     except Exception as e:
+        LOG.exception(e);
         router_interface.deleted = False
         router_interface.save()
-        LOG.error("detach network to router error,msg:[%S]" % e)
         router.status = NETWORK_STATE_ACTIVE
         router.save()
 

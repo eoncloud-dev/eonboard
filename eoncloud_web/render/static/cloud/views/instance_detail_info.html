@@ -32,7 +32,7 @@
                     {[{ 'instance.status' | i18next }]}
                 </td>
                 <td class="col-md-3">
-                    <span class="">{[{ status_desc[instance.status][0] }]} </span>
+                    <span class="">{[{ instance.status_text }]} </span>
                 </td>
             </tr>
             <tr>
@@ -46,8 +46,7 @@
                     {[{ 'instance.flavor' | i18next }]}
                 </td>
                 <td class="col-md-3">
-                    {[{ instance.cpu }]}CPU/ {[{ instance.memory
-                    }]}MB/ {[{ instance.sys_disk }]}GB
+                    {[{ instance.cpu }]}CPU/ {[{ instance.memory }]}MB/ {[{ instance.sys_disk }]}GB
                 </td>
             </tr>
             <tr>
@@ -77,7 +76,9 @@
                     {[{ 'instance.volume' | i18next }]}
                 </td>
                 <td class="col-md-3">
-                    <div ng-repeat="volume in instance.volume_list">{[{'volume.name' | i18next}]}:{[{volume.name}]},{[{'volume.size' | i18next}]}:{[{volume.size}]}GB</div>
+                    <div ng-repeat="volume in instance.volume_list">
+                        {[{'volume.name' | i18next}]}:{[{volume.name}]},{[{'volume.size' | i18next}]}:{[{volume.size}]}GB
+                    </div>
                 </td>
             </tr>
             </tbody>

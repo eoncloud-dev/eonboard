@@ -3,14 +3,15 @@
 
 CloudApp.controller('InstanceDetailController',
     function ($rootScope, $scope, $sce, $interpolate,
-              CommonHttpService, DatePicker, instance, status_desc, monitorSettings) {
+              CommonHttpService, DatePicker, InstanceState,
+              instance, monitorSettings) {
 
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
 
+        InstanceState.process(instance);
         $scope.instance = instance;
-        $scope.status_desc = status_desc;
         $scope.monitorSettings = monitorSettings;
         $scope.monitorIntervals = monitorSettings.intervals;
         $scope.monitors = monitorSettings.monitors;

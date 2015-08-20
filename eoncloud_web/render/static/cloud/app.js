@@ -165,12 +165,8 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/cloud/controllers/instance_ctl.js'
                             ]
                         });
-                    }],
-                    status_desc: function (CommonHttpService) {
-                        return CommonHttpService.get("/api/instances/status/")
-                    }
+                    }]
                 }
-
             })
 
             // instance.detail
@@ -197,9 +193,6 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                     },
                     monitorSettings: function (CommonHttpService) {
                         return CommonHttpService.get("/api/settings/monitor/");
-                    },
-                    status_desc: function (CommonHttpService) {
-                        return CommonHttpService.get("/api/instances/status/")
                     }
                 }
             })

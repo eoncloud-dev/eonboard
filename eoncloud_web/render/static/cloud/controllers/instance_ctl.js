@@ -1,23 +1,20 @@
 'use strict';
-/*
- CloudApp.controller('InstanceController', ['$rootScope', '$scope', '$state', '$filter', '$interval', '$modal', '$i18next', 'ngTableParams',
- 'ToastrService', 'CommonHttpService', 'Instance', 'Image', 'Flavor', 'Network', 'status_desc',
- */
-CloudApp.controller('InstanceController',
-    function ($rootScope, $scope, $state, $filter, $interval, $modal, $i18next, ngTableParams, ToastrService,
-              CommonHttpService, Instance, Image, Flavor, Network, status_desc) {
+
+angular.module("CloudApp")
+    .controller('InstanceController',
+    function ($rootScope, $scope, $state, $filter, $interval, $modal, $i18next,
+              ngTableParams, ToastrService, CommonHttpService, ngTableHelper,
+              Instance, InstanceState) {
+
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initAjax();
         });
 
         //检测主机是否可用
-        $scope.check_instance_is_use = function(instance){
-            if(instance.uuid){
-                return true
-            }
-            return false
-        }
-        $scope.status_desc = status_desc;
+        $scope.is_available = function(instance){
+            return !!instance.uuid;
+        };
+
         $scope.current_instance_data = [];
 
         $scope.go_detail = function(ins){
@@ -31,21 +28,18 @@ CloudApp.controller('InstanceController',
             counts: [],
             getData: function ($defer, params) {
                 Instance.query(function (data) {
-                    var data_list = params.sorting() ?
-                        $filter('orderBy')(data, params.orderBy()) : name;
-                    params.total(data_list.length);
-                    $scope.current_instance_data = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                    $defer.resolve($scope.current_instance_data);
+                    $scope.current_instance_data = ngTableHelper.paginate(data, $defer, params);
+                    InstanceState.processList($scope.current_instance_data);
                 });
             }
         });
 
         var previous_refresh = false;
-        var timer = $interval(function () {
+        $rootScope.setInterval(function () {
             var list = $scope.current_instance_data;
             var need_refresh = false;
             for (var i = 0; i < list.length; i++) {
-                if (status_desc[list[i].status][1] == 0) {
+                if (list[i].isUnstable) {
                     need_refresh = true;
                     break;
                 }
@@ -62,10 +56,6 @@ CloudApp.controller('InstanceController',
             }
 
         }, 5000);
-        //$rootScope.cleanTimerWhenLeave(timer);
-        $rootScope.executeWhenLeave(function(){
-            $interval.cancel(timer);
-        });
 
         $scope.modal_create_instance = function () {
             $modal.open({
@@ -84,8 +74,6 @@ CloudApp.controller('InstanceController',
             });
         };
 
-
-        /////////////////////////
         $scope.checkboxes = {'checked': false, items: {}};
 
         // watch for check all checkbox
@@ -118,7 +106,6 @@ CloudApp.controller('InstanceController',
             // grayed checkbox
             angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
         }, true);
-        ////////////////////////
 
         var need_confirm = true;
         var no_confirm = false;
@@ -127,7 +114,8 @@ CloudApp.controller('InstanceController',
             var post_data = {
                 "action": action,
                 "instance": ins.id
-            }
+            };
+
             CommonHttpService.post("/api/instances/" + ins.id + "/action/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
                     $scope.instance_table.reload();
@@ -169,12 +157,11 @@ CloudApp.controller('InstanceController',
             do_instance_action(ins, "power_off", need_confirm);
         };
 
-
         var instance_vnc_console = function (ins) {
             var post_data = {
                 "action": "vnc_console",
                 "instance": ins.id
-            }
+            };
             $modal.open({
                 templateUrl: 'vnc_console.html',
                 controller: 'InstanceVNCController',
@@ -190,7 +177,7 @@ CloudApp.controller('InstanceController',
         };
 
         var instance_floating_ip = function (ins, action) {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'floating.html',
                 controller: 'InstanceFloatingController',
                 backdrop: "static",
@@ -210,21 +197,18 @@ CloudApp.controller('InstanceController',
                 }
             });
 
-            modalInstance.result.then(function (result) {
-            }, function (result) {
-            });
         };
 
         var instance_bind_floating = function (ins) {
             instance_floating_ip(ins, 'bind');
-        }
+        };
 
         var instance_unbind_floating = function (ins) {
             instance_floating_ip(ins, 'unbind');
-        }
+        };
 
         var instance_change_firewall = function (ins) {
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'firewall.html',
                 controller: 'InstanceChangeFirewallController',
                 backdrop: "static",
@@ -242,9 +226,6 @@ CloudApp.controller('InstanceController',
                 }
             });
 
-            modalInstance.result.then(function (result) {
-            }, function (result) {
-            });
         };
 
         var instance_volume = function (ins, action) {
@@ -254,18 +235,16 @@ CloudApp.controller('InstanceController',
                 CommonHttpService.get("/api/volumes/search/").then(function (data) {
                     $scope.volumes = data;
                 });
-            }
-            else {
+            } else {
                 //卸载硬盘
-                var post_data = {
-                    'instance_id': ins.id
-                }
-                CommonHttpService.post("/api/volumes/search/", post_data).then(function (data) {
+                CommonHttpService.post("/api/volumes/search/",
+                    {'instance_id': ins.id} ).then(function (data) {
                     $scope.volumes = data;
                 });
             }
+
             $scope.instance = ins;
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'volume.html',
                 controller: 'InstanceVolumeController',
                 backdrop: "static",
@@ -279,11 +258,7 @@ CloudApp.controller('InstanceController',
                     }
                 }
             });
-
-            modalInstance.result.then(function (result) {
-            }, function (result) {
-            });
-        }
+        };
 
         var instance_attach_volume = function (ins) {
             instance_volume(ins, "attach");
@@ -294,7 +269,7 @@ CloudApp.controller('InstanceController',
         };
 
         var instance_backup = function(ins){
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'backup.html',
                 controller: 'InstanceBackupController',
                 backdrop: "static",
@@ -313,14 +288,10 @@ CloudApp.controller('InstanceController',
                     }
                 }
             });
-
-            modalInstance.result.then(function (result) {
-            }, function (result) {
-            });
         };
 
         var instance_restore = function(ins){
-            var modalInstance = $modal.open({
+            $modal.open({
                 templateUrl: 'restore.html',
                 controller: 'InstanceRestoreController',
                 backdrop: "static",
@@ -345,11 +316,11 @@ CloudApp.controller('InstanceController',
             "terminate": instance_terminate,
             "backup": instance_backup,
             "restore": instance_restore
-        }
+        };
 
         $scope.instance_action = function (ins, action) {
             action_func[action](ins);
-        }
+        };
 
         $scope.batch_action = function (action) {
             bootbox.confirm($i18next("instance.confirm_" + action), function (confirm) {
@@ -366,26 +337,30 @@ CloudApp.controller('InstanceController',
             });
         }
 
-    });
+    })
 
-CloudApp.controller('InstanceVNCController', function ($rootScope, $scope, $sce, $modalInstance, vnc_console) {
-    $scope.vnc_console = vnc_console;
-    $scope.vnc_sce_url = function (vnc_console) {
-        return $sce.trustAsResourceUrl(vnc_console.vnc_url);
-    };
+    .controller('InstanceVNCController', function ($rootScope, $scope, $sce,
+                                                   $modalInstance, vnc_console){
+        $scope.vnc_console = vnc_console;
+        $scope.vnc_sce_url = function (vnc_console) {
+            return $sce.trustAsResourceUrl(vnc_console.vnc_url);
+        };
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss();
-    };
-});
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+    })
 
-CloudApp.controller('InstanceFloatingController',
-    function ($rootScope, $scope, $modalInstance, $i18next, $state, ToastrService, CommonHttpService, floating_ips, type, instance_table, instance) {
+    .controller('InstanceFloatingController',
+        function ($rootScope, $scope, $modalInstance, $i18next, $state,
+                  ToastrService, CommonHttpService, floating_ips,
+                  type, instance_table, instance) {
+
         $scope.is_bind = type == "bind";
 
         $scope.cancel = function () {
             $modalInstance.dismiss();
-        }
+        };
 
         $scope.instance = instance;
         $scope.has_error = false;
@@ -429,12 +404,16 @@ CloudApp.controller('InstanceFloatingController',
                 $scope.selected_ip = false;
             }
         }
-    });
-CloudApp.controller('InstanceChangeFirewallController',
-    function ($rootScope, $scope, $modalInstance, $i18next, $state, ToastrService, CommonHttpService, firewalls, instance_table, instance) {
+    })
+
+    .controller('InstanceChangeFirewallController',
+        function ($rootScope, $scope, $modalInstance, $i18next, $state,
+                  ToastrService, CommonHttpService, firewalls,
+                  instance_table, instance){
+
         $scope.cancel = function () {
             $modalInstance.dismiss();
-        }
+        };
 
         $scope.instance = instance;
         $scope.has_error = false;
@@ -470,50 +449,53 @@ CloudApp.controller('InstanceChangeFirewallController',
                 $scope.selected_firewall = false;
             }
         }
-    });
+    })
 
+    .controller('InstanceVolumeController',
+        function ($rootScope, $scope, $modalInstance, $i18next,
+                  ToastrService, type, instance_table, CommonHttpService){
 
-CloudApp.controller('InstanceVolumeController', function ($rootScope, $scope, $modalInstance, $i18next, ToastrService, type, instance_table, CommonHttpService) {
-    $scope.is_attach = type == "attach";
+            $scope.is_attach = type == "attach";
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss();
-    }
+            $scope.cancel =  $modalInstance.dismiss;
 
-    $scope.has_error = false;
-    $scope.selected_volume = false;
+            $scope.has_error = false;
+            $scope.selected_volume = false;
 
-    $scope.attach = function (volume) {
-        if (volume) {
-            var post_data = {
-                "volume_id": volume.id,
-                "instance_id": $scope.instance.id,
-                "action": type
-            }
-            CommonHttpService.post("/api/volumes/action/", post_data).then(function (data) {
-                if (data.OPERATION_STATUS == 1) {
-                    ToastrService.success($i18next("volume.update_success"), $i18next("success"));
-                }
-                else if (data.OPERATION_STATUS == 2) {
-                    ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+            $scope.attach = function (volume) {
+                if (volume) {
+                    var post_data = {
+                        "volume_id": volume.id,
+                        "instance_id": $scope.instance.id,
+                        "action": type
+                    };
+
+                    CommonHttpService.post("/api/volumes/action/", post_data).then(function (data) {
+                        if (data.OPERATION_STATUS == 1) {
+                            ToastrService.success($i18next("volume.update_success"), $i18next("success"));
+                        }
+                        else if (data.OPERATION_STATUS == 2) {
+                            ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                        }
+                        else {
+                            ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
+                        }
+                        $modalInstance.dismiss();
+                    });
                 }
                 else {
-                    ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
+                    $scope.has_error = true;
+                    $scope.selected_volume = false;
                 }
-                $modalInstance.dismiss();
-            });
-        }
-        else {
-            $scope.has_error = true;
-            $scope.selected_volume = false;
-        }
-    }
-});
+            }
+        })
 
 
-CloudApp.controller('InstanceCreateController',
-    function ($rootScope, $scope, $state, $filter, $interval, $modalInstance, $i18next, ngTableParams, ToastrService,
-              CommonHttpService, Instance, Image, Flavor, Network, instance_table, quota) {
+    .controller('InstanceCreateController',
+        function ($rootScope, $scope, $state, $filter, $interval,
+                  $modalInstance, $i18next, ngTableParams, ToastrService,
+                  CommonHttpService, Instance, Image,
+                  Flavor, Network, instance_table, quota) {
 
         $scope.instance_config = {
             "instance": 1
@@ -594,7 +576,7 @@ CloudApp.controller('InstanceCreateController',
                 "sys_disk": instance_config.select_image.disk_size,
                 "password": instance_config.password
 
-            }
+            };
             CommonHttpService.post("/api/instances/create/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
                     ToastrService.success(data.msg, $i18next("success"));
@@ -622,7 +604,7 @@ CloudApp.controller('InstanceCreateController',
         };
         $scope.resource_persent = function(resource){
             return $scope.calcuate_resource_persent(resource) + "%";
-        }
+        };
         $scope.resource_persent_desc = function (resource) {
             var str = "";
                 str += (quota[resource + "_used"] + $scope.instance_config[resource] ) + "/";
@@ -646,48 +628,52 @@ CloudApp.controller('InstanceCreateController',
             }
             return false;
         }
+    })
+
+    .controller("InstanceBackupController",
+        function($rootScope, $scope, $state, $filter,
+                 $interval, $modalInstance, $i18next,
+                 ngTableParams, ToastrService, CommonHttpService,
+                 instance_table, instance, volumes){
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss();
+            };
+
+            $scope.instance = instance;
+            $scope.volumes = volumes;
+            $scope.backup_config = {
+                "name": "",
+                "is_full": true,
+                "volumes": {},
+                "has_error": false
+            };
+
+            $scope.action = function (backup_config) {
+                if(backup_config.name == "" || backup_config.name.trim() == "") {
+                    backup_config.has_error = true;
+                    return false;
+                }
+                else{
+                    var post_data = {
+                        "name": backup_config.name.trim(),
+                        "backup_type": backup_config.is_full ? 1 : 2,
+                        "volumes": Object.keys(backup_config.volumes).join(','),
+                        "instance": instance.id
+                    };
+                    CommonHttpService.post("/api/backup/create/", post_data).then(function(data){
+                        if (data.OPERATION_STATUS == 1) {
+                            ToastrService.success($i18next("backup.create_success_and_waiting"), $i18next("success"));
+                            $state.go("backup");
+                        }
+                        else if (data.OPERATION_STATUS == 2) {
+                            ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                        }
+                        else {
+                            ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
+                        }
+                        $modalInstance.dismiss();
+                    });
+                }
+            };
     });
-
-CloudApp.controller("InstanceBackupController",
-    function($rootScope, $scope, $state, $filter, $interval, $modalInstance, $i18next, ngTableParams, ToastrService,
-              CommonHttpService, instance_table, instance, volumes){
-        $scope.cancel = function () {
-            $modalInstance.dismiss();
-        };
-        $scope.instance = instance;
-        $scope.volumes = volumes;
-        $scope.backup_config = {
-            "name": "",
-            "is_full": true,
-            "volumes": {},
-            "has_error": false
-        };
-
-        $scope.action = function (backup_config) {
-            if(backup_config.name == "" || backup_config.name.trim() == "") {
-                backup_config.has_error = true;
-                return false;
-            }
-            else{
-                var post_data = {
-                    "name": backup_config.name.trim(),
-                    "backup_type": backup_config.is_full ? 1 : 2,
-                    "volumes": Object.keys(backup_config.volumes).join(','),
-                    "instance": instance.id
-                };
-                CommonHttpService.post("/api/backup/create/", post_data).then(function(data){
-                    if (data.OPERATION_STATUS == 1) {
-                        ToastrService.success($i18next("backup.create_success_and_waiting"), $i18next("success"));
-                        $state.go("backup");
-                    }
-                    else if (data.OPERATION_STATUS == 2) {
-                        ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
-                    }
-                    else {
-                        ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
-                    }
-                    $modalInstance.dismiss();
-                });
-            }
-        };
-});

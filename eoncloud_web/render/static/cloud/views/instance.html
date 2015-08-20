@@ -48,92 +48,107 @@
                             </td>
                             <td width="50" data-title="'ID'">{[{ instance.id}]}</td>
                             <td width="100" data-title="'instance.name' | i18next">
-                                <a class="btn default blue-stripe btn-xs" ng-if="check_instance_is_use(instance)" ng-click="go_detail(instance)">
-                                    <i class="fa fa-desktop"></i> {[{ instance.name }]} </a>
-                                <span ng-if="!check_instance_is_use(instance)">{[{ instance.name }]} </span>
+                                <a class="btn default blue-stripe btn-xs"
+                                   data-ng-if="is_available(instance)"
+                                   data-ng-click="go_detail(instance)">
+                                    <i class="fa fa-desktop"></i> {[{ instance.name }]}
+                                </a>
+                                <span data-ng-if="is_available(instance) == false">{[{ instance.name }]} </span>
                             </td>
                             <td data-title="'instance.image' | i18next">
-                                <a class="btn default yellow-stripe btn-xs" ng-href="#/image/">
-                                    <i class="fa fa-circle-thin"></i> {[{ instance.image_info.name }]} </a>
+                                <a class="btn default yellow-stripe btn-xs" data-ng-href="#/image/">
+                                    <i class="fa fa-circle-thin"></i> {[{ instance.image_info.name }]}
+                                </a>
                             </td>
-                            <td data-title="'instance.flavor' | i18next">{[{ instance.cpu }]}CPU/ {[{ instance.memory
-                                }]}MB/ {[{ instance.sys_disk }]}GB
+                            <td data-title="'instance.flavor' | i18next">
+                                {[{ instance.cpu }]}CPU/ {[{ instance.memory }]}MB/ {[{ instance.sys_disk }]}GB
                             </td>
                             <td data-title="'instance.private_ip' | i18next">{[{ instance.private_ip }]}</td>
                             <td data-title="'instance.public_ip' | i18next">
-                                <a class="btn default blue-stripe btn-xs" ng-href="#/floating/" ng-if="instance.floating_info">
-                                    <i class="fa fa-share"></i> {[{ instance.floating_info}]} </a>
+                                <a class="btn default blue-stripe btn-xs"
+                                   data-ng-href="#/floating/"
+                                   data-ng-if="instance.floating_info">
+                                    <i class="fa fa-share"></i> {[{ instance.floating_info}]}
+                                </a>
                             </td>
                             <td width="160" data-title="'instance.status' | i18next">
-                                <span class="" ng-if="status_desc[instance.status][1] == 1">{[{ status_desc[instance.status][0] }]} </span>
-                                <div ng-if="status_desc[instance.status][1] == 0"
+                                <span data-ng-if="instance.isStable">{[{ instance.status_text }]} </span>
+                                <div data-ng-if="instance.isUnstable"
                                      class="progress progress-striped active"
                                      style="width:140px; margin-bottom:0px;">
-                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
+                                    <div class="progress-bar progress-bar-success"
+                                         role="progressbar" aria-valuenow="20"
                                          aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                        <span class="">{[{ status_desc[instance.status][0] }]} </span>
+                                        <span class="">{[{ instance.status_text }]} </span>
                                     </div>
                                 </div>
                             </td>
-                            <td data-title="'create_at' | i18next">{[{ instance.create_date }]}
-                            </td>
+                            <td data-title="'create_at' | i18next">{[{ instance.create_date }]} </td>
                             <td data-title="'actions' | i18next">
-                                <div class="btn-group" ng-if="instance.status != 16 && instance.status != 0">
-                                    <button class="btn btn-default" ng-class="{disabled:instance.status != 1 }"
-                                            type="button" ng-click="instance_action(instance, 'reboot')">
+                                <div class="btn-group" data-ng-if="!(instance.is_deleting || instance.is_waiting)">
+                                    <button class="btn btn-default" type="button"
+                                            data-ng-class="{disabled: !instance.is_running}"
+                                            data-ng-click="instance_action(instance, 'reboot')">
                                         <i class="fa fa-power-off"></i>
                                         {[{ 'instance.reboot' | i18next }]}
                                     </button>
-                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
-                                            aria-expanded="false"><i class="fa fa-angle-down"></i></button>
+                                    <button data-toggle="dropdown"  class="btn btn-default dropdown-toggle"
+                                            type="button" aria-expanded="false">
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
                                     <ul role="menu" class="dropdown-menu">
-                                        <li ng-if="instance.status == 5 || instance.status == 11">
+                                        <li data-ng-if="instance.is_poweroff || instance.is_error">
                                             <a href="#" ng-click="instance_action(instance, 'power_on')">
                                                 <i class="fa fa-play"></i>
-                                                {[{ 'instance.power_on' | i18next }]} </a>
+                                                {[{ 'instance.power_on' | i18next }]}
+                                            </a>
                                         </li>
-                                        <li ng-if="instance.status == 1">
+                                        <li data-ng-if="instance.is_running">
                                             <a href="#" ng-click="instance_action(instance, 'power_off')">
                                                 <i class="fa fa-stop"></i>
-                                                {[{ 'instance.power_off' | i18next }]} </a>
+                                                {[{ 'instance.power_off' | i18next }]}
+                                            </a>
                                         </li>
-                                        <li ng-if="instance.status == 1">
-                                            <a href="#" ng-click="instance_action(instance, 'backup')">
+                                        <li data-ng-if="instance.is_running">
+                                            <a href="#"
+                                               data-ng-click="instance_action(instance, 'backup')">
                                                 <i class="fa fa-copy"></i>
-                                                {[{ 'instance.backup' | i18next }]} </a>
+                                                {[{ 'instance.backup' | i18next }]}
+                                            </a>
                                         </li>
-                                        <li ng-if="instance.status == 5">
+                                        <li data-ng-if="instance.is_poweroff">
                                             <a href="#/backup/">
                                                 <i class="fa fa-history"></i>
-                                                {[{ 'backup.restore' | i18next }]} </a>
+                                                {[{ 'backup.restore' | i18next }]}
+                                            </a>
                                         </li>
-                                        <li ng-if="instance.status == 1">
+                                        <li data-ng-if-start="instance.is_running">
                                             <a href="#" ng-click="instance_action(instance, 'vnc_console')">
                                                 <i class="fa fa-desktop"></i>
                                                 {[{ 'instance.vnc_console' | i18next }]} </a>
                                         </li>
                                         <li>
-                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'bind_floating')">
+                                            <a ng-click="instance_action(instance, 'bind_floating')">
                                                 <i class="fa fa-cloud-upload"></i>
                                                 {[{ 'instance.bind_floating' | i18next }]} </a>
                                         </li>
                                         <li>
-                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'unbind_floating')">
+                                            <a ng-click="instance_action(instance, 'unbind_floating')">
                                                 <i class="fa fa-cloud-download"></i>
                                                 {[{ 'instance.unbind_floating' | i18next }]} </a>
                                         </li>
                                         <li>
-                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'change_firewall')">
+                                            <a ng-click="instance_action(instance, 'change_firewall')">
                                                 <i class="fa fa-warning"></i>
                                                 {[{ 'instance.change_firewall' | i18next }]} </a>
                                         </li>
                                         <li>
-                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'attach_volume')">
+                                            <a ng-click="instance_action(instance, 'attach_volume')">
                                                 <i class="fa fa-hdd-o"></i>
                                                 {[{ 'instance.attach_volume' | i18next }]} </a>
                                         </li>
-                                        <li>
-                                            <a ng-if="instance.status == 1" ng-click="instance_action(instance, 'detach_volume')">
+                                        <li data-ng-if-end >
+                                            <a ng-click="instance_action(instance, 'detach_volume')">
                                                 <i class="fa fa-times"></i>
                                                 {[{ 'instance.detach_volume' | i18next }]} </a>
                                         </li>

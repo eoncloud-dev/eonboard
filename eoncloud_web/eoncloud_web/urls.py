@@ -32,6 +32,8 @@ urlpatterns += patterns(
     url(r'^$', views.index, name="index"),
     url(r'^cloud/$', views.cloud, name="cloud"),
     url(r'^management/$', views.management, name="management"),
+    url(r'^state-service.js$', 'biz.common.views.state_service',
+        name="state_service"),
 
     # account
     url(r'^login/$', views.LoginView.as_view(), name='login'),

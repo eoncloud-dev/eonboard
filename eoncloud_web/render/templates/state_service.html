@@ -1,0 +1,58 @@
+
+{% for module in modules %}
+ angular.module('cloud.services').factory('{{ module.name }}', function(){
+
+    var module = {};
+
+    var valueLabels = {};
+
+    var stableStates = [];
+    var unstableStates = [];
+    {% for state in module.stable_states %}
+     stableStates.push({{ state }});
+    {% endfor %}
+
+    {% for state in module.unstable_states %}
+        unstableStates.push({{ state }});
+    {% endfor %}
+
+    {% for value, label in module.value_labels %}
+    valueLabels[{{ value }}] = "{{ label }}";
+    {% endfor %}
+
+    {% for key, value in module.key_values %}
+    module.is_{{ key|lower }} = function(obj){
+        return obj.status == {{ value }};
+    };
+    {% endfor %}
+
+    module.text = function(obj){
+        return valueLabels[obj.status];
+    };
+
+    module.isStable = function(obj){
+        return stableStates.indexOf(obj.status) != -1;
+    }
+
+    module.isUnstable = function(obj){
+        return unstableStates.indexOf(obj.status) != -1;
+    };
+
+    module.process = function(obj){
+        for(var attr in module){
+            if(attr.startsWith('is')){
+                obj[attr] = module[attr](obj);
+            }
+        }
+
+        obj.status_text = module.text(obj);
+    };
+
+    module.processList = function(objects){
+        angular.forEach(objects, module.process);
+    }
+    return module;
+});
+
+{% endfor %}
+

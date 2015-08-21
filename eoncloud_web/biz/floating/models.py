@@ -1,5 +1,7 @@
 #coding=utf-8
 
+import logging
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,6 +9,8 @@ from biz.account.models import Notification
 from biz.floating.settings import (FLOATING_STATUS, FLOATING_AVAILABLE,
                                    RESOURCE_TYPE, FLOATING_REJECTED,
                                    FLOATING_ALLOCATE, FLOATING_ERROR)
+
+LOG = logging.getLogger(__name__)
 
 
 class Floating(models.Model):
@@ -56,6 +60,22 @@ class Floating(models.Model):
     @property
     def workflow_info(self):
         return _("Floating IP: %d Mbps") % (self.bandwidth,)
+
+    @classmethod
+    def get_instance_ip(cls, instance_id):
+
+        floating = None
+        try:
+            floating = cls.objects.get(resource_type='INSTANCE',
+                                       resource=instance_id,
+                                       deleted=False)
+        except Floating.DoesNotExist:
+            pass
+        except Floating.MultipleObjectsReturned:
+            LOG.error("There is multiple floating binded to instance: %s",
+                      instance_id)
+
+        return floating
 
     def workflow_approve_callback(self, flow_instance):
         from cloud.tasks import allocate_floating_task

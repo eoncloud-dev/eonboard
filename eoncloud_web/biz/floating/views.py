@@ -17,6 +17,9 @@ from biz.workflow.settings import ResourceType
 from biz.workflow.models import Workflow, FlowInstance
 from cloud.tasks import allocate_floating_task
 
+from biz.instance.models import Instance
+from biz.lbaas.models import BalancerPool
+
 
 @api_view(["GET"])
 def list_view(request):
@@ -70,20 +73,23 @@ def floating_status_view(request):
 
 @api_view(['GET'])
 def floating_ip_target_list_view(request):
-    from biz.instance.models import Instance
-    instance_set = Instance.objects.filter(public_ip=None,
-                    deleted=False, user=request.user,
-                    user_data_center=request.session["UDC_ID"])
 
-    from biz.lbaas.models import BalancerPool
-    pool_set = BalancerPool.objects.filter(vip__public_address=None, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
+    instance_set = Instance.objects.filter(
+        public_ip=None, deleted=False,  user=request.user,
+        user_data_center=request.session["UDC_ID"])
+    pool_set = BalancerPool.objects.filter(
+        vip__public_address=None, deleted=False, user=request.user,
+        user_data_center=request.session["UDC_ID"])
 
-    instance_reource = []
-    if len(instance_set) >0 :
-        for instance in instance_set:
-            instance_reource.append({"name": "server:" + instance.name, "id": instance.id, "resource_type": "INSTANCE"})
-    if len(pool_set) > 0:
-        for pool in pool_set:
-            instance_reource.append({"name": "lb-vip:"+pool.name, "id": pool.id, "resource_type": "LOADBALANCER"})
+    resources = []
+    for instance in instance_set:
+        resources.append({"name": "server:" + instance.name,
+                          "id": instance.id,
+                          "resource_type": "INSTANCE"})
 
-    return Response(instance_reource)
+    for pool in pool_set:
+        resources.append({"name": "lb-vip:" + pool.name,
+                          "id": pool.id,
+                          "resource_type": "LOADBALANCER"})
+
+    return Response(resources)

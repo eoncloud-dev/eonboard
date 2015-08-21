@@ -209,7 +209,7 @@
     "status": "状态",
     "related_resources": "关联资源",
     "name_prompt": "请输入公网IP名称",
-    "breadth": "宽带",
+    "bandwidth": "宽带",
     "current_ip": "公网IP",
     "resource_list": "资源列表",
     "ensure": "确定",

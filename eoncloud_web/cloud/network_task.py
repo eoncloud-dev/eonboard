@@ -338,10 +338,17 @@ def floating_release(floating, **kwargs):
     result = True
     if floating.uuid:
         result = network.tenant_floating_ip_release(rc, floating.uuid)
+        LOG.info("release floating associate instance, [%s]" % result)
+    
     floating.status = FLOATING_RELEASED
     floating.deleted = 1
     floating.delete_date = datetime.datetime.now()
     floating.save()
+
+    if floating.ip:
+        ins = Instance.objects.filter(public_ip=floating.ip)
+        ins.update(public_ip=None)
+
     LOG.info("floating action, [%s][relese][%s]" % (floating.id, result));
 
 

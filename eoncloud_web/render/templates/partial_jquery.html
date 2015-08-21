@@ -34,6 +34,10 @@
                 return /[a-z]+/.test(value) && /[A-Z]+/.test(value) && /[0-9]+/.test(value) && /[^a-zA-Z0-9\s]+/.test(value);
             }, "{{ password_tip }}");
 
-    bootbox.setDefaults("locale", "zh_CN");
+    try {
+        bootbox.setDefaults("locale", "zh_CN");
+    }
+    catch(ex){
 
+    }
 </script>

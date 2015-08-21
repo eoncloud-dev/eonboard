@@ -71,7 +71,10 @@ def floating_status_view(request):
 @api_view(['GET'])
 def floating_ip_target_list_view(request):
     from biz.instance.models import Instance
-    instance_set = Instance.objects.filter(public_ip=None, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
+    instance_set = Instance.objects.filter(public_ip=None,
+                    deleted=False, user=request.user,
+                    user_data_center=request.session["UDC_ID"])
+
     from biz.lbaas.models import BalancerPool
     pool_set = BalancerPool.objects.filter(vip__public_address=None, deleted=False, user=request.user, user_data_center=request.session["UDC_ID"])
 

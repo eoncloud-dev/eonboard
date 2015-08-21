@@ -20,7 +20,7 @@
                         <i class="fa fa-plus"></i>
                         {[{ 'volume.create_new' | i18next }]}
                     </a>
-                    <a class="btn btn-danger" ng-click="batch_action('delete')"
+                    <a class="btn btn-danger" ng-click="batchDelete()"
                        ng-class="{'disabled-link disabled ': checked_count <= 0}">
                         <i class="fa fa-trash"></i>
                         {[{ 'volume.terminate' | i18next }]}
@@ -36,19 +36,19 @@
                         <tbody>
                         <tr ng-repeat="volume in $data">
                             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
-                                <input type="checkbox" ng-class="{'disabled': status_desc[volume.status][1] == 0}" ng-model="checkboxes.items[volume.id]"/>
+                                <input type="checkbox"  data-ng-class="{'disabled': volume.isUnstable}" data-ng-model="checkboxes.items[volume.id]"/>
                             </td>
                             <td width="40" data-title="'ID'">{[{ volume.id}]}</td>
                             <td width="100" data-title="'volume.name' | i18next">{[{ volume.name}]}</td>
                             <td width="160" data-title="'volume.status' | i18next">
-                                <span class="" ng-if="status_desc[volume.status][1] == 1">{[{ status_desc[volume.status][0] }]} </span>
+                                <span class="" data-ng-if="volume.isStable">{[{ volume.status_text }]} </span>
 
-                                <div ng-if="status_desc[volume.status][1] == 0"
+                                <div data-ng-if="volume.isUnstable"
                                      class="progress progress-striped active"
                                      style="width:140px; margin-bottom:0px;">
                                     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
                                          aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                        <span class="">{[{ status_desc[volume.status][0] }]} </span>
+                                        <span class="">{[{ volume.status_text }]} </span>
                                     </div>
                                 </div>
                             </td>
@@ -65,20 +65,32 @@
                                         <i class="fa fa-edit"></i>
                                         {[{ 'edit' | i18next }]}
                                     </button>
-                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
-                                            aria-expanded="false"><i class="fa fa-angle-down"></i></button>
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                            type="button" aria-expanded="false"
+                                            data-ng-if="volume.is_available || volume.is_in_use">
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
                                     <ul role="menu" class="dropdown-menu">
-                                        <li ng-class="{'disabled-link': volume.status !=2}">
-                                            <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=2}"
-                                               ng-click="modal_attach_to_instance(volume)">
-                                                <i class="fa fa-hdd-o"></i>
-                                                {[{ 'volume.attach_to_instance' | i18next }]} </a>
+                                        <li data-ng-if="volume.isStable">
+                                            <a href="javascript:void(0);"
+                                               data-ng-click="delete(volume)">
+                                                <i class="fa fa-trash"></i>
+                                                {[{ 'action.delete' | i18next }]}
+                                            </a>
                                         </li>
-                                        <li ng-class="{'disabled-link': volume.status !=9}">
-                                            <a href="javascript:void(0);" ng-class="{'disabled': volume.status!=9}"
-                                               ng-click="modal_detach_from_instance(volume)">
+                                        <li data-ng-if="volume.is_available">
+                                            <a href="javascript:void(0);"
+                                               data-ng-click="openAttachModal(volume)">
+                                                <i class="fa fa-hdd-o"></i>
+                                                {[{ 'volume.attach_to_instance' | i18next }]}
+                                            </a>
+                                        </li>
+                                        <li data-ng-if="volume.is_in_use">
+                                            <a href="javascript:void(0);"
+                                               data-ng-click="detach(volume)">
                                                 <i class="fa fa-times"></i>
-                                                {[{ 'volume.detach_from_instance' | i18next }]}</a>
+                                                {[{ 'volume.detach_from_instance' | i18next }]}
+                                            </a>
                                         </li>
                                         <!--
                                         <li >
@@ -122,11 +134,10 @@
                     </label>
 
                     <div class="col-md-9">
-
                         <div class="input-inline input-large">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                <i class="fa fa-openid"></i>
+                                    <i class="fa fa-openid"></i>
                                 </span>
 
                                 <input type="text" class="form-control" name="name"
@@ -152,23 +163,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="quota.volume > 0 || quota.volume_size > 0">
+                <div class="form-group" data-ng-if="quota.volume > 0 || quota.volume_size > 0">
                     <label class="col-md-3 control-label">{[{ 'constant.quota' | i18next }]}</label>
 
                     <div class="col-md-7">
                         <div class="progress" style="margin-bottom: 0px;margin-top: 8px;">
                             <div class="progress-bar progress-bar-success" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100"
-                                 ng-style="{'width': resource_persent('volume')}"
-                                 ng-class="{'progress-bar-danger': calcuate_resource_persent('volume')>100 }">
-                                <span>{[{ quota.volume_used + 1 }]}/ {[{ quota.volume }]}</span>
+                                 ng-style="{'width': usageRatio('volume')}"
+                                 ng-class="{'progress-bar-danger': isExhausted('volume')}">
+                                <span>{[{ quota.volume_used + 1}]}/ {[{ quota.volume }]}</span>
                             </div>
                         </div>
                         <div class="progress" style="margin-bottom: 0px;margin-top: 8px;">
                             <div class="progress-bar progress-bar-success" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100"
-                                 ng-style="{'width': resource_persent('volume_size')}"
-                                 ng-class="{'progress-bar-danger': calcuate_resource_persent('volume_size')>100 }">
+                                 ng-style="{'width': usageRatio('volume_size')}"
+                                 ng-class="{'progress-bar-danger': isExhausted('volume_size')}">
                                 <span>{[{ quota.volume_size_used + volume.size }]} GB</span>
                             </div>
                         </div>
@@ -244,15 +255,15 @@
     </div>
 </script>
 <!--挂在硬盘到主机-->
-<script type="text/ng-template" id="instance.html">
+<script type="text/ng-template" id="attach.html">
     <div class="modal-header">
-        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
+        <button type="button" class="close" aria-hidden="true" data-ng-click="cancel()"></button>
         <h4 class="modal-title">{[{ 'volume.attach_to_instance' | i18next }]}</h4>
     </div>
     <div class="modal-body">
         <form role="form" class="form-horizontal">
             <div class="form-body">
-                <div class="form-group" ng-class="{'has-error': has_error && selected_instance == false}">
+                <div class="form-group" data-ng-class="{'has-error': has_error}">
                     <label class="col-md-3 control-label"> {[{ 'volume.instance' | i18next }]}
                         <span class="required" aria-required="true"> * </span>
                     </label>
@@ -260,16 +271,13 @@
                     <div class="col-md-9">
                         <div class="input-inline input-large">
                             <div class="input-group">
-                                <span class="input-group-addon">
-                                <i class="fa fa-desktop"></i>
-                                </span>
-
-                                <select class="form-control" ng-options="v.name  for v in instances track by v.id"
-                                        ng-model="selected_instance">
+                                <span class="input-group-addon"> <i class="fa fa-desktop"></i> </span>
+                                <select class="form-control" data-ng-options="v.name  for v in instances track by v.id"
+                                        data-ng-model="target_instance">
                                     <option value="-1" selected>-----</option>
                                 </select>
                             </div>
-                            <span ng-if="has_error && selected_instance == false" class="help-block help-block-error">
+                            <span data-ng-if="has_error" class="help-block help-block-error">
                                 {[{ 'volume.unselect_instance_error' | i18next }]}
                             </span>
                         </div>
@@ -279,39 +287,11 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="attach_or_detach(selected_instance,'attach')"> {[{
-            'volume.attach' | i18next }]}
-        </button>
-    </div>
-</script>
-<!--卸载提示-->
-<script type="text/ng-template" id="detach.html">
-    <div class="modal-header">
-        <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
-        <h4 class="modal-title">{[{ 'volume.detach_from_instance' | i18next }]}</h4>
-    </div>
-    <div class="modal-body">
-        <form role="form" class="form-horizontal">
-            <div class="form-body">
-                <div class="form-group">
-                    <label class="col-md-2 control-label">
-                    </label>
-
-                    <div class="col-md-9">
-                        <div class="input-inline input-large">
-                            {[{ operation_tip }]}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
-        <button type="button" class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="attach_or_detach('','detach')"> {[{ 'volume.detach' |
-            i18next }]}
+        <button type="button" class="btn" data-ng-click="cancel()">{[{ 'cancel' | i18next }]}</button>
+        <button type="button" class="btn btn-primary"
+                data-ng-class="{'disabled': !target_instance}"
+                data-ng-click="attach()">
+            {[{ 'volume.attach' | i18next }]}
         </button>
     </div>
 </script>

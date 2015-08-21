@@ -18,6 +18,7 @@ var CloudApp = angular.module("CloudApp", [
     "ngCookies",
     "ngBootbox",
     "jm.i18next",
+    "ngLodash",
     "cloud.services",
     "cloud.resources",
     "cloud.directives"
@@ -231,10 +232,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/cloud/controllers/volume_ctl.js'
                             ]
                         });
-                    }],
-                    status_desc: function (CommonHttpService) {
-                        return CommonHttpService.get("/api/volumes/status/")
-                    }
+                    }]
                 }
             })
 

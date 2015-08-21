@@ -64,16 +64,13 @@ class Instance(models.Model):
         
     @property
     def floating_ip(self):
-        fs = Floating.objects.filter(resource=self.id, deleted=0)
-        floating = None
-        if len(fs) > 0:
-            floating = fs[0]
-        
+        floating = Floating.get_instance_ip(self.id)
         return floating.ip if floating else None
 
     @property
     def workflow_info(self):
-        return  _("Instance: %(name)s / %(cpu)s CPU/ %(memory)s MB/ %(sys_disk)d GB") \
+        return  _("Instance: %(name)s / %(cpu)s "
+                  "CPU/ %(memory)s MB/ %(sys_disk)d GB") \
             % {'name': self.name, 'cpu': self.cpu,
                'memory': self.memory, 'sys_disk': self.sys_disk}
 

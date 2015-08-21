@@ -320,16 +320,16 @@ def allocate_floating_task(floating=None):
             floating.ip = fip.ip
             floating.status = FLOATING_AVAILABLE
             floating.uuid = fip.id
-            floating.save();
+            floating.save()
             LOG.info("End to allocate floating, [%s][%s]" % (floating.id, fip.ip));
         except Exception as e:
             floating.status = FLOATING_ERROR
-            floating.save();
-            LOG.exception(e);
+            floating.save()
+            LOG.exception(e)
             LOG.info("End to allocate floating, [%s][exception]" % floating.id);
     else:
         floating.status = FLOATING_ERROR
-        floating.save();
+        floating.save()
         LOG.info("End to allocate floating, [%s][---]" % floating.id);
 
 

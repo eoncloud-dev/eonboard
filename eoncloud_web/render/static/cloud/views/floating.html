@@ -33,19 +33,17 @@
                            class="table table-striped table-bordered table-advance table-hover">
                         <tbody>
                         <tr ng-repeat="floating in $data">
-                            <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
-                                <input type="checkbox" ng-model="checkboxes.items[floating.id]"/>
-                            </td>
                             <td data-title="'floatingIP.ipAddress' | i18next">{[{ floating.ip}]}</td>
+                            <td data-title="'floatingIP.bandwidth' | i18next">{[{ floating.bandwidth}]} Mpbs</td>
                             <td data-title="'floatingIP.status' | i18next">
-                                <span class="" ng-if="status_desc[floating.status][1] == 1">{[{ status_desc[floating.status][0] }]} </span>
+                                <span class="" data-ng-if="floating.isStable">{[{ floating.status_text }]} </span>
 
-                                <div ng-if="status_desc[floating.status][1] == 0"
+                                <div data-ng-if="floating.isUnstable"
                                      class="progress progress-striped active"
                                      style="width:140px; margin-bottom:0px;">
                                     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
                                          aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                        <span class="">{[{ status_desc[floating.status][0] }]} </span>
+                                        <span class="">{[{ floating.status_text }]} </span>
                                     </div>
                                 </div>
                             </td>
@@ -103,7 +101,7 @@
             <form id="inputForm" class="form-horizontal">
                 <div class="form-body">
                     <div class="form-group" ng-class="{'has-error': has_error}">
-                        <label class="col-md-3 control-label">{[{ 'floatingIP.breadth' | i18next }]}
+                        <label class="col-md-3 control-label">{[{ 'floatingIP.bandwidth' | i18next }]}
                             <span class="required" aria-required="true"> *</span>
                         </label>
 
@@ -111,15 +109,15 @@
                             <floatslider data="floatingIP"></floatslider>
                         </div>
                     </div>
-                    <div class="form-group" ng-if="quota.floating_ip > 0">
+                    <div class="form-group" data-ng-if="quota.floating_ip > 0">
                         <label class="col-md-3 control-label">{[{ 'constant.quota' | i18next }]}</label>
                         <div class="col-md-7">
                             <div class="progress" style="margin-bottom: 0px;margin-top: 8px;">
                                 <div class="progress-bar progress-bar-success" role="progressbar"
                                      aria-valuemin="0" aria-valuemax="100"
-                                     ng-style="{'width': resource_persent('floating_ip')}"
-                                     ng-class="{'progress-bar-danger': calcuate_resource_persent('flating_ip')>100 }">
-                                    <span>{[{ quota.floating_ip_used + 1 }]}/ {[{ quota.floating_ip }]}</span>
+                                     ng-style="{'width': usageRatio}"
+                                     ng-class="{'progress-bar-danger': isQuotaExhausted}">
+                                    <span>{[{ quota.floating_ip_used }]} / {[{ quota.floating_ip }]}</span>
                                 </div>
                             </div>
                         </div>
@@ -131,15 +129,12 @@
             <a class="btn btn-default" ng-click="cancel()">{[{ 'floatingIP.cancel' | i18next }]}</a>
             <a class="btn btn-primary"
                ng-click="create(floatingIP)"
-               ng-class="{'disabled': check_can_submit()}"
+               ng-class="{'disabled': isQuotaExhausted}"
                data-nap-after-click>{[{'floatingIP.ensure' | i18next }]}</a>
         </div>
     </div>
 </script>
 
-<script type="text/ng-template" id="ng-table/headers/checkbox.html">
-    <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/>
-</script>
 <!--滑动条-->
 <script type="text/ng-template" id="slider.html">
     <div id="slider-range-max"
@@ -203,7 +198,7 @@
                 <input type="hidden" name="networkId" id="updateNetworkId">
 
                 <div class="form-group">
-                    <label class="col-md-3 control-label">{[{ 'floatingIP.breadth' | i18next }]}</label>
+                    <label class="col-md-3 control-label">{[{ 'floatingIP.bandwidth' | i18next }]}</label>
 
                     <div class="col-md-5">
                         <floatslider data="floatingIP"></floatslider>

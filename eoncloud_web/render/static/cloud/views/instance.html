@@ -214,7 +214,6 @@
                                 </span>
 
                                 <select class="form-control" ng-options="f.ip for f in floating_ips track by f.id" ng-model="selected_ip">
-                                    <option value="-1" selected>-----</option>
                                 </select>
                             </div>
                             <span ng-if="has_error && selected_ip == false" id="name-error" class="help-block help-block-error">

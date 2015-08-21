@@ -86,8 +86,10 @@
 
                                     <div class="clearfix">
                                         <h4 class="block">{[{ 'instance.network' | i18next }]}</h4>
-                                        <select class="form-control" ng-if="network_list.length > 0">
-                                            <option ng-repeat="network in network_list">{[{ network.name }]}</option>
+                                        <select class="form-control" ng-if="network_list.length > 0"
+                                                ng-options="network as network.name for network in network_list"
+                                                ng-model="instance_config.network"
+                                                >
                                         </select>
 
                                         <div class="note note-warning" ng-if="network_list.length <= 0">

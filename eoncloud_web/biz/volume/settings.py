@@ -17,43 +17,46 @@ VOLUME_STATE_UPLOADING = 11
 VOLUME_STATE_UNRECOGNIZED = 12
 VOLUME_STATE_APPLYING = 13
 VOLUME_STATE_REJECTED = 14
+VOLUME_STATE_DETACHING = 15
 
 
 VOLUME_STATES = (
-    (VOLUME_STATE_CREATING, _("Volume Creating")), #0
-    (VOLUME_STATE_ATTACHING, _("Volume Attaching")), #1
-    (VOLUME_STATE_AVAILABLE, _("Volume Available")), #2
-    (VOLUME_STATE_BACKING_UP, _("Volume Backing Up")),#3
-    (VOLUME_STATE_DELETING, _("Volume Deleting")), #4
-    (VOLUME_STATE_DOWNLOADING, _("Volume Downloading")),#5
-    (VOLUME_STATE_ERROR, _("Volume Error")),
-    (VOLUME_STATE_ERROR_DELETING, _("Volume Error Deleting")),
-    (VOLUME_STATE_ERROR_RESTORING, _("Volume Error Restoring")),
-    (VOLUME_STATE_IN_USE, _("Volume In Use")),
-    (VOLUME_STATE_RESTORING_BACKUP, _("Volume Restoring Backup")),
-    (VOLUME_STATE_UNRECOGNIZED, _("Volume Unrecognized")),
-    (VOLUME_STATE_UPLOADING, _("Volume Uploading")),
+    (VOLUME_STATE_CREATING, _("Creating")),
+    (VOLUME_STATE_ATTACHING, _("Attaching")),
+    (VOLUME_STATE_AVAILABLE, _("Available")),
+    (VOLUME_STATE_BACKING_UP, _("Backing Up")),
+    (VOLUME_STATE_DELETING, _("Deleting")),
+    (VOLUME_STATE_DOWNLOADING, _("Downloading")),
+    (VOLUME_STATE_ERROR, _("Error")),
+    (VOLUME_STATE_ERROR_DELETING, _("Delete Failure")),
+    (VOLUME_STATE_ERROR_RESTORING, _("Restore Failure")),
+    (VOLUME_STATE_IN_USE, _("In Use")),
+    (VOLUME_STATE_RESTORING_BACKUP, _("Restoring Backup")),
+    (VOLUME_STATE_UNRECOGNIZED, _("Unrecognized")),
+    (VOLUME_STATE_UPLOADING, _("Uploading")),
     (VOLUME_STATE_APPLYING, _("Applying")),
     (VOLUME_STATE_REJECTED, _("Rejected")),
+    (VOLUME_STATE_DETACHING, _("Detaching"))
 )
 
 
 #volume 的状态描述字典,  其中包含描述信息和该状态是否稳定的标识信息
 #0表示不稳定，1表示稳定
 VOLUME_STATES_DICT = {
-    VOLUME_STATE_CREATING: (_("Volume Creating"), 0),
-    VOLUME_STATE_ATTACHING: (_("Volume Attaching"), 0),
-    VOLUME_STATE_AVAILABLE: (_("Volume Available"), 1),
-    VOLUME_STATE_BACKING_UP: (_("Volume Backing Up"), 1),
-    VOLUME_STATE_DELETING: (_("Volume Deleting"), 0),
-    VOLUME_STATE_DOWNLOADING: (_("Volume Downloading"), 0),
-    VOLUME_STATE_ERROR: (_("Volume Error"), 1),
-    VOLUME_STATE_ERROR_DELETING: (_("Volume Error Deleting"), 0),
-    VOLUME_STATE_ERROR_RESTORING: (_("Volume Error Restoring"), 0),
-    VOLUME_STATE_IN_USE: (_("Volume In Use"), 1),
-    VOLUME_STATE_RESTORING_BACKUP: (_("Volume Restoring Backup"), 0),
-    VOLUME_STATE_UNRECOGNIZED: (_("Volume Unrecognized"), 1),
-    VOLUME_STATE_UPLOADING: (_("Volume Uploading"), 0),
+    VOLUME_STATE_CREATING: (_("Creating"), 0),
+    VOLUME_STATE_ATTACHING: (_("Attaching"), 0),
+    VOLUME_STATE_DETACHING: (_("Detaching"), 0),
+    VOLUME_STATE_AVAILABLE: (_("Available"), 1),
+    VOLUME_STATE_BACKING_UP: (_("Backing Up"), 1),
+    VOLUME_STATE_DELETING: (_("Deleting"), 0),
+    VOLUME_STATE_DOWNLOADING: (_("Downloading"), 0),
+    VOLUME_STATE_ERROR: (_("Error"), 1),
+    VOLUME_STATE_ERROR_DELETING: (_("Delete Failure"), 0),
+    VOLUME_STATE_ERROR_RESTORING: (_("Restore Failure"), 0),
+    VOLUME_STATE_IN_USE: (_("In Use"), 1),
+    VOLUME_STATE_RESTORING_BACKUP: (_("Restoring Backup"), 0),
+    VOLUME_STATE_UNRECOGNIZED: (_("Unrecognized"), 1),
+    VOLUME_STATE_UPLOADING: (_("Uploading"), 0),
     VOLUME_STATE_APPLYING: (_("Applying"), 0),
     VOLUME_STATE_REJECTED: (_("Rejected"), 1),
 }

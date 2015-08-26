@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-21 17:16+0800\n"
+"POT-Creation-Date: 2015-08-27 17:15+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,21 +48,21 @@ msgstr "结束日期"
 
 #: account/models.py:88 account/models.py:113 backup/models.py:30
 #: backup/models.py:139 firewall/models.py:15 firewall/models.py:36
-#: floating/models.py:31 forum/models.py:11 forum/models.py:28
+#: floating/models.py:35 forum/models.py:11 forum/models.py:28
 #: instance/models.py:46 lbaas/models.py:23 lbaas/models.py:46
-#: lbaas/models.py:76 lbaas/models.py:104 network/models.py:15
-#: network/models.py:56 network/models.py:74 network/models.py:90
+#: lbaas/models.py:76 lbaas/models.py:104 network/models.py:16
+#: network/models.py:78 network/models.py:96 network/models.py:125
 #: volume/models.py:19
 msgid "Deleted"
 msgstr "已删除"
 
 #: account/models.py:89 account/models.py:114 account/models.py:133
 #: backup/models.py:28 backup/models.py:137 firewall/models.py:14
-#: firewall/models.py:37 floating/models.py:29 forum/models.py:12
+#: firewall/models.py:37 floating/models.py:33 forum/models.py:12
 #: forum/models.py:29 image/models.py:25 instance/models.py:28
-#: instance/models.py:124 lbaas/models.py:22 lbaas/models.py:45
-#: lbaas/models.py:75 lbaas/models.py:103 network/models.py:16
-#: network/models.py:57 network/models.py:75 volume/models.py:18
+#: instance/models.py:121 lbaas/models.py:22 lbaas/models.py:45
+#: lbaas/models.py:75 lbaas/models.py:103 network/models.py:17
+#: network/models.py:79 network/models.py:97 volume/models.py:18
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -86,7 +86,7 @@ msgstr "配额"
 msgid "Quota"
 msgstr "配额"
 
-#: account/models.py:128 backup/models.py:125 floating/models.py:24
+#: account/models.py:128 backup/models.py:125 floating/models.py:28
 msgid "Resource"
 msgstr "资源"
 
@@ -202,16 +202,16 @@ msgstr "公网IP"
 msgid "Volume"
 msgstr "磁盘"
 
-#: account/settings.py:24 instance/models.py:37 network/models.py:36
-#: network/models.py:37 network/models.py:89
+#: account/settings.py:24 instance/models.py:37 network/models.py:21
+#: network/models.py:22 network/models.py:124
 msgid "Network"
 msgstr "私有网络"
 
-#: account/settings.py:25 network/models.py:61 network/models.py:62
+#: account/settings.py:25 network/models.py:83 network/models.py:84
 msgid "Subnet"
 msgstr "子网"
 
-#: account/settings.py:26 network/models.py:80 network/models.py:81
+#: account/settings.py:26 network/models.py:102 network/models.py:103
 msgid "Router"
 msgstr "路由器"
 
@@ -391,7 +391,7 @@ msgstr "消息发布成功！"
 msgid "Initialization is successful."
 msgstr "初始化成功！"
 
-#: backup/models.py:16 idc/models.py:14 instance/models.py:120
+#: backup/models.py:16 idc/models.py:14 instance/models.py:117
 msgid "Name"
 msgstr "名称"
 
@@ -403,14 +403,14 @@ msgstr "备份类型"
 msgid "Volumes"
 msgstr "磁盘"
 
-#: backup/models.py:29 backup/models.py:138 floating/models.py:30
+#: backup/models.py:29 backup/models.py:138 floating/models.py:34
 msgid "Delete Date"
 msgstr "删除日期"
 
-#: backup/models.py:31 backup/models.py:140 floating/models.py:19
+#: backup/models.py:31 backup/models.py:140 floating/models.py:23
 #: instance/models.py:26 lbaas/models.py:21 lbaas/models.py:44
-#: lbaas/models.py:73 network/models.py:11 network/models.py:53
-#: network/models.py:71 volume/models.py:17
+#: lbaas/models.py:73 network/models.py:12 network/models.py:73
+#: network/models.py:93 volume/models.py:17
 msgid "Status"
 msgstr "状态"
 
@@ -478,31 +478,6 @@ msgstr "待恢复"
 msgid "Backup Deleting"
 msgstr "删除中"
 
-#: common/signals.py:27
-#, python-format
-msgid "Instance \"%(name)s\" state changed!"
-msgstr "云主机\"%(name)s\"状态已改变"
-
-#: common/signals.py:28
-#, python-format
-msgid "State: %(status)s"
-msgstr "状态: %(status)s"
-
-#: common/signals.py:32
-#, python-format
-msgid "%(bandwidth)d Mbps floating state changed!"
-msgstr "%(bandwidth)d Mpbs 公网IP状态改变"
-
-#: common/signals.py:33 common/signals.py:38
-#, python-format
-msgid "State:　%(status)s"
-msgstr "状态: %(status)s"
-
-#: common/signals.py:37
-#, python-format
-msgid "Volume \"%(name)s\" state changed!"
-msgstr "磁盘\"%(name)s\"状态改变"
-
 #: common/utils.py:28
 msgid "Operation failed. Unknown error happened!"
 msgstr "操作失败！ 未知错误"
@@ -519,8 +494,8 @@ msgstr "Firewall UUID"
 msgid "Firewall desc"
 msgstr "防火墙描述"
 
-#: firewall/models.py:11 firewall/models.py:33 network/models.py:12
-#: network/models.py:76
+#: firewall/models.py:11 firewall/models.py:33 network/models.py:13
+#: network/models.py:98
 msgid "Default"
 msgstr "默认"
 
@@ -580,7 +555,7 @@ msgstr "创建防火墙"
 msgid "Firewall create error"
 msgstr "创建"
 
-#: firewall/views.py:41 network/views.py:63
+#: firewall/views.py:41
 msgid "Data valid error"
 msgstr "数据格式错误"
 
@@ -640,44 +615,44 @@ msgstr "规则删除成功"
 msgid "Firewall rule delete error"
 msgstr "规则删除失败"
 
-#: floating/models.py:15 instance/models.py:44
+#: floating/models.py:19 instance/models.py:44
 msgid "Public IP"
 msgstr "公网IP"
 
-#: floating/models.py:21
+#: floating/models.py:25
 msgid "Bandwidth MB"
 msgstr "带宽 MB"
 
-#: floating/models.py:25
+#: floating/models.py:29
 msgid "Resource type"
 msgstr "资源类型"
 
-#: floating/models.py:36 floating/models.py:37
+#: floating/models.py:40 floating/models.py:41
 msgid "Floating"
 msgstr "公网IP"
 
-#: floating/models.py:58
+#: floating/models.py:62
 #, python-format
 msgid "Floating IP: %d Mbps"
 msgstr "公网IP: %dMpbs"
 
-#: floating/models.py:69
+#: floating/models.py:89
 #, python-format
 msgid "Your application for %(bandwidth)d Mbps floating IP is approved! "
 msgstr "您申请的%(bandwidth)dMpbs公网IP已通过审核！"
 
-#: floating/models.py:77
+#: floating/models.py:97
 msgid "Error happened to your application for floating IP"
 msgstr "有错误发生在您的公网IP申请流程"
 
-#: floating/models.py:79
+#: floating/models.py:99
 #, python-format
 msgid ""
 "Your application for %(bandwidth)d Mbps floating ip is approved, but an "
 "error happened when creating it."
 msgstr "您申请的%(bandwidth)dMpbs公网IP已通过审核，但在创建时发生了错误．"
 
-#: floating/models.py:89
+#: floating/models.py:109
 #, python-format
 msgid "Your application for %(bandwidth)d floating IP is rejected! "
 msgstr "您的%(bandwidth)dMpbs公网IP申请被驳回！"
@@ -736,14 +711,14 @@ msgstr "绑定云主机"
 msgid "disassociate"
 msgstr "解绑云主机"
 
-#: floating/views.py:51
+#: floating/views.py:54
 #, python-format
 msgid ""
 "Your application for %(bandwidth)d Mbps floating ip is successful, please "
 "waiting for approval result!"
 msgstr "您的%(bandwidth)d Mpbs公网IP申请已生成，请等待审核结果！"
 
-#: floating/views.py:54
+#: floating/views.py:57
 msgid "Your operation is successful, please wait for allocation."
 msgstr "您的操作已成功，请等待资源分配．"
 
@@ -943,7 +918,7 @@ msgstr ""
 msgid "Terminate Date"
 msgstr ""
 
-#: instance/models.py:30 instance/models.py:121
+#: instance/models.py:30 instance/models.py:118
 msgid "Cpu Cores"
 msgstr ""
 
@@ -963,22 +938,22 @@ msgstr ""
 msgid "Private IP"
 msgstr ""
 
-#: instance/models.py:76
+#: instance/models.py:72
 #, python-format
 msgid "Instance: %(name)s / %(cpu)s CPU/ %(memory)s MB/ %(sys_disk)d GB"
 msgstr "云主机: %(name)s / %(cpu)s CPU/ %(memory)s MB/ %(sys_disk)d GB"
 
-#: instance/models.py:92
+#: instance/models.py:89
 #, python-format
 msgid "Your application for instance \"%(instance_name)s\" is approved! "
 msgstr "您申请的云主机\"%(instance_name)s\"已通过审核！"
 
-#: instance/models.py:100
+#: instance/models.py:97
 #, python-format
 msgid "Error happened to your application for %(instance_name)s"
 msgstr "您的云主机%(instance_name)s申请发生错误！"
 
-#: instance/models.py:103
+#: instance/models.py:100
 #, python-format
 msgid ""
 "Your application for instance \"%(instance_name)s\" is approved, but an "
@@ -986,20 +961,20 @@ msgid ""
 msgstr ""
 "您申请的云主机\"%(instance_name)s\"已通过审核，但在创建过程中发生了错误"
 
-#: instance/models.py:113
+#: instance/models.py:110
 #, python-format
 msgid "Your application for instance \"%(instance_name)s\" is rejected! "
 msgstr "您申请的云主机\"%(instance_name)s\"被驳回！"
 
-#: instance/models.py:122
+#: instance/models.py:119
 msgid "Memory MB"
 msgstr ""
 
-#: instance/models.py:123
+#: instance/models.py:120
 msgid "Price"
 msgstr ""
 
-#: instance/models.py:129 instance/models.py:130
+#: instance/models.py:126 instance/models.py:127
 msgid "Flavor"
 msgstr "规格"
 
@@ -1537,43 +1512,43 @@ msgstr "删除监听器成功"
 msgid "Balancer monitor no exist"
 msgstr "监听器不存在"
 
-#: network/models.py:9 network/models.py:46
+#: network/models.py:10 network/models.py:62
 msgid "Network Name"
 msgstr "名称"
 
-#: network/models.py:10
+#: network/models.py:11
 msgid "OS Network UUID"
 msgstr ""
 
-#: network/models.py:48
+#: network/models.py:65
 msgid "OS Subnet UUID"
 msgstr ""
 
-#: network/models.py:50
+#: network/models.py:68
 msgid "IPv4 CIDR"
 msgstr ""
 
-#: network/models.py:51
+#: network/models.py:70
 msgid "IP Version"
 msgstr "IP 版本"
 
-#: network/models.py:67
+#: network/models.py:89
 msgid "Router Name"
 msgstr "名称"
 
-#: network/models.py:68 network/models.py:69
+#: network/models.py:90 network/models.py:91
 msgid "OS Router UUID"
 msgstr "Router UUID"
 
-#: network/models.py:70
+#: network/models.py:92
 msgid "Whether to open the gateway"
 msgstr ""
 
-#: network/models.py:86
+#: network/models.py:121
 msgid "Port"
 msgstr "端口"
 
-#: network/models.py:97 network/models.py:98
+#: network/models.py:132 network/models.py:133
 msgid "RouterInterface"
 msgstr "路由器端口"
 
@@ -1581,109 +1556,111 @@ msgstr "路由器端口"
 msgid "BUILD"
 msgstr "构建中"
 
-#: network/views.py:42
+#: network/views.py:52
 msgid "Network address exists"
-msgstr "私有网络删除成功"
+msgstr "地址已被占用"
 
-#: network/views.py:56
-msgid "Create network success"
-msgstr "创建私有网络成功"
+#: network/views.py:59
+msgid "The data is not valid"
+msgstr "数据有错误！"
 
-#: network/views.py:61
-msgid "Create network error"
-msgstr "创建私有网络失败"
+#: network/views.py:77
+msgid "Unkown error happened"
+msgstr "出现未知错误"
 
-#: network/views.py:67
+#: network/views.py:82
+msgid "Creating network"
+msgstr "正在创建网络"
+
+#: network/views.py:94
 msgid "The selected network not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:72
+#: network/views.py:100
 msgid "Update network success"
 msgstr "更新私有网络成功"
 
-#: network/views.py:82
-msgid "Default network can not be deleted"
-msgstr "默认的私有网络不允许删除"
-
-#: network/views.py:85
-msgid "Was unable to delete the use of the network"
-msgstr "使用中的私有网络不允许删除"
-
-#: network/views.py:89 network/views.py:96
-msgid "Network deleted success"
-msgstr "私有网络删除成功"
-
-#: network/views.py:101
-msgid "Network deleted error"
-msgstr "私有网络删除失败"
-
-#: network/views.py:103
+#: network/views.py:111
+#, fuzzy
+#| msgid "The selected network not exist"
 msgid "The selected network does not exist"
 msgstr "私有网络不存在"
 
-#: network/views.py:125 network/views.py:131
-msgid "Unkown operation"
-msgstr "未知的操作"
+#: network/views.py:116
+msgid "Default network can not be deleted"
+msgstr "默认的私有网络不允许删除"
 
-#: network/views.py:141
+#: network/views.py:122
+msgid "This network is being used!"
+msgstr "该网络正在使用中！"
+
+#: network/views.py:132
+msgid "Network deleted error"
+msgstr "私有网络删除失败"
+
+#: network/views.py:137
+msgid "Network deleted success"
+msgstr "私有网络删除成功"
+
+#: network/views.py:157
 msgid "Unkown router"
 msgstr "未知的路由器"
 
-#: network/views.py:144
+#: network/views.py:164
 msgid "network exist address , not operation"
 msgstr "子网地址已经存在"
 
-#: network/views.py:160
+#: network/views.py:175
 msgid "Link router success"
 msgstr "加入路由器成功"
 
-#: network/views.py:166
+#: network/views.py:178
 msgid "Link router error"
 msgstr "加入路由器失败"
 
-#: network/views.py:182 network/views.py:187
-msgid "Network operation error"
-msgstr "操作异常"
-
-#: network/views.py:184
+#: network/views.py:194
 msgid "Leave router success "
 msgstr "离开路由器成功"
 
-#: network/views.py:253
+#: network/views.py:231
 msgid "Create router success"
 msgstr "创建路由器成功"
 
-#: network/views.py:255
+#: network/views.py:233
 msgid "Valid Router fail"
 msgstr "数据提交异常"
 
-#: network/views.py:258
+#: network/views.py:236
 msgid "Create router fail"
 msgstr "创建路由器失败"
 
-#: network/views.py:262
+#: network/views.py:240
 msgid "The selected router not exist"
 msgstr "路由器不存在"
 
-#: network/views.py:276
+#: network/views.py:254
 msgid "Update router success"
 msgstr "路由器更新成功"
 
-#: network/views.py:286
+#: network/views.py:262
+msgid "Cannot delete router under single router mode."
+msgstr "唯一路由模式下不能删除路由器"
+
+#: network/views.py:271
+msgid "The selected router does not exist"
+msgstr "路由器不存在"
+
+#: network/views.py:275
 msgid "Default Router can not be deleted"
 msgstr "默认路由器不允许删除"
 
-#: network/views.py:291
-msgid "Router used can not deleted"
-msgstr "使用中的路由器不允许删除"
+#: network/views.py:279
+msgid "This router is being used."
+msgstr "该路由器正在使用中！"
 
-#: network/views.py:296
+#: network/views.py:285
 msgid "Router deleted success"
 msgstr "路由器删除成功"
-
-#: network/views.py:298
-msgid "The selected router does not exist"
-msgstr "路由器不存在"
 
 #: overview/views.py:43
 msgid "The host IP is used by other Data Center, Please check your host IP."
@@ -1828,33 +1805,33 @@ msgstr "更新磁盘成功"
 msgid "No volume found!"
 msgstr "没有磁盘！"
 
-#: volume/views.py:132
+#: volume/views.py:133
 msgid "Unknown volume action"
 msgstr "未知的磁盘操作"
 
-#: volume/views.py:154
+#: volume/views.py:155
 msgid "Attaching volume"
 msgstr "挂载中"
 
-#: volume/views.py:161
+#: volume/views.py:162
 msgid "Attach volume error"
 msgstr "挂载磁盘失败"
 
-#: volume/views.py:172
+#: volume/views.py:173
 msgid "Detaching volume"
 msgstr "卸载中"
 
-#: volume/views.py:183
+#: volume/views.py:184
 #, python-format
 msgid ""
 "Operation Failed. Volume %(volume)s is attached to instance:%(instance)s"
 msgstr "操作失败！磁盘%(volume)s已挂载到云主机:%(instance)s"
 
-#: volume/views.py:197
+#: volume/views.py:198
 msgid "Deleting volume"
 msgstr "删除中"
 
-#: volume/views.py:206
+#: volume/views.py:207
 msgid "Volume is deleted."
 msgstr "磁盘已删除"
 
@@ -1941,14 +1918,38 @@ msgstr "该流程成功进入下一审核环节！"
 msgid "Application is rejected."
 msgstr "申请被驳回."
 
-#~ msgid "No select Volume "
-#~ msgstr "请选择磁盘"
+#~ msgid "A user with that email already exists."
+#~ msgstr "该email地址已被人使用"
 
-#~ msgid "Volume Creating"
-#~ msgstr "创建中"
+#~ msgid "Instance \"%(name)s\" state changed!"
+#~ msgstr "云主机\"%(name)s\"状态已改变"
 
-#~ msgid "Volume Attaching"
-#~ msgstr "挂载中"
+#~ msgid "State: %(status)s"
+#~ msgstr "状态: %(status)s"
+
+#~ msgid "%(bandwidth)d Mbps floating state changed!"
+#~ msgstr "%(bandwidth)d Mpbs 公网IP状态改变"
+
+#~ msgid "State:　%(status)s"
+#~ msgstr "状态: %(status)s"
+
+#~ msgid "Volume \"%(name)s\" state changed!"
+#~ msgstr "磁盘\"%(name)s\"状态改变"
+
+#~ msgid "Unkown operation"
+#~ msgstr "未知的操作"
+
+#~ msgid "Network operation error"
+#~ msgstr "操作异常"
+
+#~ msgid "Router used can not deleted"
+#~ msgstr "使用中的路由器不允许删除"
+
+#~ msgid "Create network error"
+#~ msgstr "创建私有网络失败"
+
+#~ msgid "Create network success"
+#~ msgstr "创建私有网络成功"
 
 #~ msgid "Volume Available"
 #~ msgstr "可用"
@@ -1997,9 +1998,6 @@ msgstr "申请被驳回."
 
 #~ msgid "Detach volume error"
 #~ msgstr "卸载磁盘失败"
-
-#~ msgid "A user with that email already exists."
-#~ msgstr "该email地址已被人使用"
 
 #~ msgid "email address format error"
 #~ msgstr "电子邮件地址格式不正确"

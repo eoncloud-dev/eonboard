@@ -58,17 +58,17 @@ urlpatterns += format_suffix_patterns(
 )
 
 # network
-urlpatterns += format_suffix_patterns(
-    [
-        url(r'^networks/$', network_view.network_list_view),
-        url(r'^networks/create/$', network_view.network_create_view),
-        url(r'^networks/status/$', network_view.network_status_view),
-        url(r'^networks/subnets/$', network_view.subnet_list_view),
-        url(r'^networks/delete/$', network_view.delete_action),
-        url(r'^networks/router/action$', network_view.network_attach_router_view),
-        url(r'^networks/topology/$', network_view.network_topology_data_view),
-    ]
-)
+urlpatterns += format_suffix_patterns([
+    url(r'^networks/$', network_view.network_list_view),
+    url(r'^networks/create/$', network_view.network_create_view),
+    url(r'^networks/update/$', network_view.network_update),
+    url(r'^networks/status/$', network_view.network_status_view),
+    url(r'^networks/subnets/$', network_view.subnet_list_view),
+    url(r'^networks/delete/$', network_view.delete_network),
+    url(r'^networks/attach-router/$', network_view.attach_network_to_router),
+    url(r'^networks/detach-router/$', network_view.detach_network_from_router),
+    url(r'^networks/topology/$', network_view.network_topology_data_view),
+])
 
 # router
 urlpatterns += format_suffix_patterns(

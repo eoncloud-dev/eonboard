@@ -8,7 +8,6 @@
                 {[{'network.page_desc' | i18next}]}
             </p>
         </div>
-        <!-- BEGIN INSTANCE  -->
         <div class="portlet">
             <div class="portlet-title">
                 <div class="caption font-green-sharp">
@@ -35,7 +34,8 @@
                         <tbody>
                         <tr ng-repeat="network in $data " >
                             <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'" >
-                                <input type="checkbox" ng-class="{'disabled': status_desc[network.status][1] == 0}"  ng-model="checkboxes.items[network.id]"/>
+                                <input type="checkbox" data-ng-class="{'disabled': network.is_unstable}"
+                                       data-ng-model="checkboxes.items[network.id]"/>
                             </td>
                             <td data-title="'network.name' | i18next">{[{ network.name }]}</td>
                             <td data-title="'network.router' | i18next">
@@ -44,13 +44,13 @@
                             </td>
                             <td data-title="'network.netAddress' | i18next">{[{ network.address }]}</td>
                             <td data-title="'network.status' | i18next">
-                                <span class="" ng-if="status_desc[network.status][1] == 1">{[{ status_desc[network.status][0] }]} </span>
-                                <div ng-if="status_desc[network.status][1] == 0"
+                                <span class="" ng-if="network.is_stable">{[{ network.status_text }]} </span>
+                                <div data-ng-if="network.is_unstable"
                                      class="progress progress-striped active"
                                      style="width:140px; margin-bottom:0px;">
-                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
-                                         aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                        <span class="">{[{ status_desc[network.status][0] }]} </span>
+                                    <div class="progress-bar progress-bar-success" role="progressbar"
+                                         aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                        <span class="">{[{ network.status_text }]} </span>
                                     </div>
                                 </div>
                             </td>
@@ -67,16 +67,22 @@
                                         <i class="fa fa-edit"></i>
                                         {[{ 'edit' | i18next }]}
                                     </button>
-                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"
-                                            aria-expanded="false"><i class="fa fa-angle-down"></i></button>
-                                    <ul role="menu" class="dropdown-menu">
-                                        <li ng-class="{'disabled-link': (network.router_info !=null && network.router_info !='') || status_desc[network.status][1] == 0}" >
-                                            <a ng-class="{'disabled': (network.router_info !=null && network.router_info !='') || status_desc[network.status][1] == 0}"  href="javascript:void(0);" ng-click="modal_attach_network(network)" role="button">
+                                    <button data-toggle="dropdown" class="btn btn-default dropdown-toggle"
+                                            type="button" aria-expanded="false"
+                                            data-ng-if-start="network.is_stable">
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul role="menu" class="dropdown-menu"
+                                        data-ng-if-end>
+                                        <li data-ng-if="!network.router_info" >
+                                            <a href="javascript:void(0);" data-ng-click="modal_attach_network(network)" role="button">
+                                                <i class="fa fa-chain"></i>
                                                 {[{ 'network.attachRouter' | i18next }]}
                                             </a>
                                         </li>
-                                        <li ng-class="{'disabled-link': (network.router_info == null || network.router_info =='') || status_desc[network.status][1] == 0}" >
-                                            <a ng-class="{'disabled': (network.router_info == null || network.router_info =='') || status_desc[network.status][1] == 0 }"  href="javascript:void(0);" ng-click="detach_action(network,'detach')" role="button">
+                                        <li data-ng-if="network.router_info">
+                                            <a href="javascript:void(0);" data-ng-click="detach(network)" role="button">
+                                                <i class="fa fa-chain-broken"></i>
                                                 {[{ 'network.releaseRouter' | i18next }]}
                                             </a>
                                         </li>
@@ -89,8 +95,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- END INSTANCE  -->
     </div>
 </div>
 <!-- END MAIN CONTENT -->
@@ -101,47 +105,74 @@
 <script type="text/ng-template" id="network_create.html">
     <div class="modal-header">
         <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
-        <h4 class="modal-title" ng-if="operation =='create'">{[{ 'network.create_network_title' | i18next }]}</h4>
-        <h4 class="modal-title" ng-if="operation =='edit'">{[{ 'network.create_network_title' | i18next }]}</h4>
+        <h4 class="modal-title"> {[{ 'network.create_network_title' | i18next }]}</h4>
     </div>
     <div class="modal-body">
         <form  role="form" class="form-horizontal form-bordered">
-            <!-- <div class="me">总价格:¥0.05每小时 × 1 =  ¥0.05每小时 (合¥36.00每月)</div> -->
+            <div class="form-group" data-ng-class="{'has-error': name_error}">
+                <label class="col-md-3 control-label" for="title">
+                    {[{'network.name' | i18next }]}<span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"> <i class="fa fa-openid"></i> </span>
+                        <input type="text" style="width:300px" maxlength="20" name="name" data-ng-model="network.name"
+                               class="form-control input-medium required">
+                    </div>
+                    <span data-ng-if="name_error" class="help-block help-block-error">
+                        {[{ 'network.name_prompt' | i18next }]}
+                    </span>
+                </div>
+            </div>
+            <div class="form-group" data-ng-class="{'has-error': address_error}">
+                <label class="col-md-3 control-label">{[{ 'network.netAddress' | i18next }]}</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <div class="address" style="display: flex;">
+                            <input class="disabled form-control first" style="width:60px;" type="text" data-ng-model="cidr.first" disabled="">
+                            <span class="dot" style="margin-left: 5px;margin-right: 5px;">.</span>
+                            <input class="disabled form-control two " style="width:60px;" type="text" data-ng-model="cidr.two" disabled="">
+                            <span class="dot" style="margin-left: 5px;margin-right: 5px;">.</span>
+                            <input class="form-control ip_network three " style="width:60px;" type="text" data-ng-model="cidr.three">
+                            <span class="dot" style="margin-left: 5px;margin-right: 5px;">.</span>
+                            <input class="disabled form-control four " style="width:60px;" type="text" data-ng-model="cidr.four" disabled="">
+                            <span class="ip" style="line-height: 32px;">/<span class="five">24</span></span>
+                        </div>
+                    </div>
+                    <span data-ng-if="address_error" class="help-block help-block-error">
+                       {[{ 'network.address_error' | i18next }]}
+                    </span>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button href="javascript:;" class="btn" data-ng-click="cancel()"> {[{ 'cancel' | i18next }]} </button>
+        <button class="btn btn-primary" data-ng-click="save(network)" data-nap-after-click>
+            {[{ 'submit' | i18next  }]}
+        </button>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="edit_network.html">
+    <div class="modal-header">
+        <button type="button" class="close" aria-hidden="true" data-ng-click="cancel()"></button>
+        <h4 class="modal-title">{[{ 'network.edit_network_title' | i18next }]}</h4>
+    </div>
+    <div class="modal-body">
+        <form id="updateForm" role="form" class="form-horizontal form-bordered">
             <div class="form-group" ng-class="{'has-error': has_error}">
                 <label class="col-md-3 control-label" for="title">{[{'network.name' | i18next }]}<span class="required" aria-required="true"> * </span></label>
                 <div class="col-md-8">
                     <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-openid"></i>
-                        </span>
-                        <input type="text" style="width:300px" maxlength="20" name="name" ng-model="network_create.name"
-                               class="form-control input-medium required">
-
+                        <span class="input-group-addon"> <i class="fa fa-openid"></i> </span>
+                        <input type="text" style="width:300px" maxlength="20" name="name"
+                               data-ng-model="network.name"
+                               class="form-control input-medium required"
+                               data-rule-requried="true">
                     </div>
-                     <span ng-if="has_error" id="name-error" class="help-block help-block-error">
-                               {[{ 'network.name_prompt' | i18next }]}
-                            </span>
-                </div>
-            </div>
-            <div class="form-group" ng-if="operation =='create'" ng-class="{'has-error': address_error && cidr.three ==''}">
-                <!-- <input type="hidden"  maxlength="20" name="id" ng-model="network_create.id">-->
-                <label class="col-md-3 control-label" for="title">{[{ 'network.netAddress' | i18next }]}</label>
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <div class="address" style="display: flex;">
-                            <input class="disabled form-control first" style="width:60px;" type="text" ng-model="cidr.first" value="192" disabled="">
-                            <span class="dot " style="margin-left: 5px;margin-right: 5px;">.</span>
-                            <input class="disabled form-control two " style="width:60px;" type="text" ng-model="cidr.two" value="168" disabled="">
-                            <span class="dot" style="margin-left: 5px;margin-right: 5px;">.</span>
-                            <input class="form-control ip_network three " style="width:60px;" type="text" ng-model="cidr.three" value="100">
-                            <span class="dot" style="margin-left: 5px;margin-right: 5px;">.</span>
-                            <input class="disabled form-control four " style="width:60px;" type="text" value="0" ng-model="cidr.four" disabled="">
-                            <span class="ip" style="line-height: 32px;">/<span class="five">24</span></span>
-                        </div>
-                    </div>
-                    <span ng-if="address_error && cidr.three ==''" id="name-error" class="help-block help-block-error">
-                               {[{ 'network.address_error' | i18next }]}
-                            </span>
                 </div>
             </div>
             <div class="clear"></div>
@@ -149,16 +180,15 @@
         <div class="clear"></div>
     </div>
     <div class="modal-footer">
-        <button href="javascript:;" class="btn" ng-click="cancel()">
-            {[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary"
-                ng-click="submit_click(network_create)"
-                ng-class="{'disabled':!flag}"
-                data-nap-after-click>
+        <button href="javascript:void(0);" class="btn" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </button>
+        <button class="btn btn-primary" data-ng-click="update()"  data-nap-after-click>
             {[{ 'submit' | i18next  }]}
         </button>
     </div>
 </script>
+
 <script type="text/ng-template" id="network_attach_router.html">
     <div class="modal-header">
         <button type="button" class="close" aria-hidden="true" ng-click="cancel()"></button>
@@ -170,7 +200,9 @@
                 <label class="col-md-3 control-label" for="title">{[{ 'network.router' | i18next }]}</label>
                 <div class="col-md-8">
                     <div class="input-group">
-                        <select class="form-control required" name="router_selected" ng-options="f.name for f in routers track by f.id" ng-model="attach_data.router_selected" style="width:300px">
+                        <select class="form-control required" name="router_selected"
+                                data-ng-options="f.name for f in routers track by f.id"
+                                data-ng-model="targetRouter" style="width:300px">
                             <option value="" selected>{[{ 'please_select' | i18next }]}</option>
                         </select>
                     </div>
@@ -180,8 +212,8 @@
         <div class="clear"></div>
     </div>
     <div class="modal-footer">
-        <button  class="btn" ng-click="cancel()">{[{ 'cancel' | i18next }]} </button>
-        <button class="btn btn-primary" ng-class="{'disabled':!flag}" ng-click="submit_click(attach_data,'attach')">确定</button>
+        <button  class="btn" data-ng-click="cancel()">{[{ 'cancel' | i18next }]} </button>
+        <button class="btn btn-primary" data-ng-click="attach(attach_data)">确定</button>
     </div>
 </script>
 <!-- BEGIN MAIN JS & CSS -->

@@ -30,11 +30,11 @@
         return valueLabels[obj.status];
     };
 
-    module.isStable = function(obj){
+    module.is_stable = module.isStable = function(obj){
         return stableStates.indexOf(obj.status) != -1;
     }
 
-    module.isUnstable = function(obj){
+    module.is_unstable = module.isUnstable = function(obj){
         return unstableStates.indexOf(obj.status) != -1;
     };
 

@@ -7,25 +7,19 @@ import time
 from django.conf import settings
 
 from celery import app
-from cloud_utils import create_rc_by_network,\
-                        create_rc_by_subnet, create_rc_by_router,\
-                        create_rc_by_floating, create_rc_by_security, \
-                        create_rc_by_udc
+from cloud_utils import (create_rc_by_network, create_rc_by_subnet,
+                         create_rc_by_router, create_rc_by_floating,
+                         create_rc_by_security,  create_rc_by_udc)
+
 from biz.network.models import Network, Subnet, Router, RouterInterface
 from biz.firewall.models import Firewall, FirewallRules
-from biz.floating.settings import FLOATING_AVAILABLE, FLOATING_RELEASED, \
-                   FLOATING_BINDED, FLOATING_ERROR, RESOURCE_TYPE
-from biz.network.settings import NETWORK_STATE_ACTIVE,\
-    NETWORK_STATE_ERROR, NETWORK_STATE_UPDATING
+from biz.floating.settings import (FLOATING_AVAILABLE, FLOATING_RELEASED,
+                                   FLOATING_BINDED, FLOATING_ERROR,
+                                   RESOURCE_TYPE)
+from biz.network.settings import NETWORK_STATE_ACTIVE, NETWORK_STATE_ERROR
 from biz.instance.models import Instance
 from biz.lbaas.models import BalancerPool
 from biz.lbaas.models import BalancerVIP
-from biz.floating.models import Floating
-
-from biz.lbaas.models import BalancerPool
-from biz.lbaas.models import BalancerVIP
-
-from biz.floating.models import Floating
 
 from api import neutron
 from api import network
@@ -40,105 +34,92 @@ ERROR = 3
 def create_default_private_network(instance):
     # create network
     try:
-        network = Network.objects.get(pk=instance.network_id) 
-        return network
+        return Network.objects.get(pk=instance.network_id)
     except Network.DoesNotExist:
         pass
 
-    network = Network.objects.filter(is_default=True,
-                            status__in=[0,1],
-                            user=instance.user,
-                            user_data_center=instance.user_data_center) 
-    if len(network) > 0:
+    network = Network.objects.filter(
+        is_default=True, status__in=[0, 1], user=instance.user,
+        user_data_center=instance.user_data_center)
+
+    if network.exists():
         return network[0]
 
-    network = Network.objects.create(name=settings.DEFAULT_NETWORK_NAME,
-                        status=0,
-                        is_default=True,
-                        user=instance.user,
-                        user_data_center=instance.user_data_center)
+    network = Network.objects.create(
+        name=settings.DEFAULT_NETWORK_NAME, status=0, is_default=True,
+        user=instance.user,
+        user_data_center=instance.user_data_center)
 
-    subnet = Subnet.objects.create(name=settings.DEFAULT_SUBNET_NAME,
-                            network=network,
-                            address="172.31.0.0/24",
-                            ip_version=4,
-                            status=0,
-                            user=instance.user,
-                            user_data_center=instance.user_data_center)
+    subnet = Subnet.objects.create(
+        name=settings.DEFAULT_SUBNET_NAME, network=network,
+        address="172.31.0.0/24", ip_version=4, status=0, user=instance.user,
+        user_data_center=instance.user_data_center)
 
-  
-    router = Router.objects.create(name=settings.DEFAULT_ROUTER_NAME,
-                                status=0,
-                                is_default=True,
-                                is_gateway=True,
-                                user=instance.user,
-                                user_data_center=instance.user_data_center)
+    router = Router.objects.create(
+        name=settings.DEFAULT_ROUTER_NAME, status=0, is_default=True,
+        is_gateway=True, user=instance.user,
+        user_data_center=instance.user_data_center)
 
-    router_interface = RouterInterface.objects.create(network_id=network.id,
-                                                      router=router,
-                                                      subnet=subnet,
-                                                      user=instance.user,
-                                                      user_data_center=instance.user_data_center,
-                                                      deleted=False)
-    nt = network_create_task(network)
-    sub = subnet_create_task(subnet) 
-    rt = router_create_task(router)
-
-    # set external gateway
+    create_network(network)
+    create_subnet(subnet)
+    router_create_task(router)
     router_add_gateway_task(router)
+    attach_network_to_router(network.id, router.id, subnet.id)
 
-    # add network to router
-    router_add_interface_task(router, subnet, router_interface)
-   
-    # default security group
     return network
 
+
 @app.task
-def network_create_task(network):
+def create_network(network):
     rc = create_rc_by_network(network)
     network_params = {'name': "network-%s" % network.id, "admin_state_up": True}
-    LOG.info("start create network,id:[%s],name[%s]" % (network.id, network.name))
+    LOG.info("Start to create network, id:[%s], name[%s]",
+             network.id, network.name)
     try:
         net = neutron.network_create(rc, **network_params)
+
         network.network_id = net.id
         network.status = NETWORK_STATE_ACTIVE
         network.save()
     except Exception as ex:
         network.status = NETWORK_STATE_ERROR
         network.save()
-        LOG.info("create network error,id:[%s],name[%s],msg:[%s]" % (network.id, network.name, ex))
+        LOG.exception("Failed to create network, id:[%s], name[%s], "
+                      "exception:[%s]",
+                      network.id, network.name, ex)
         raise ex
 
     return network
 
 
 @app.task
-def network_delete_task(network):
+def delete_network(network):
     rc = create_rc_by_network(network)
-    LOG.info("delete network,id:[%s],name[%s]" % (network.id, network.name))
+    LOG.info("Start to delete network, id:[%s], name[%s]",
+             network.id, network.name)
     try:
-        # delete all subnet
-        LOG.info("delete all subnet, network id [%s] name[%s]" % (network.id, network.name))
+
         subnet_set = Subnet.objects.filter(network_id=network.id, deleted=False)
         for subnet in subnet_set:
-            subnet_delete_task(subnet)
-        # delete network
-        net = neutron.network_delete(rc, network.network_id)
+            delete_subnet(subnet)
+
+        neutron.network_delete(rc, network.network_id)
+
         network.network_id = None
         network.deleted = True
         network.save()
     except Exception as ex:
         network.status = NETWORK_STATE_ERROR
         network.save()
-        LOG.info("delete network error,id:[%s],name[%s],msg:[%s]" % (network.id, network.name, ex))
+        LOG.exception("Failed to delete network, id:[%s], name[%s], msg:[%s]",
+                      network.id, network.name, ex)
         raise ex
 
     return network
 
 
-
 @app.task
-def subnet_create_task(subnet=None):
+def create_subnet(subnet=None):
     rc = create_rc_by_subnet(subnet)
 
     subnet_params = {"network_id": subnet.network.network_id,
@@ -148,31 +129,39 @@ def subnet_create_task(subnet=None):
                      "dns_nameservers": settings.DNS_NAMESERVERS,
                      "enable_dhcp": True}
 
+    LOG.info("Start to create subnet, id[%s], name[%s]",
+             subnet.id, subnet.name)
     try:
         sub = neutron.subnet_create(rc, **subnet_params)
+
         subnet.subnet_id = sub.id
         subnet.status = NETWORK_STATE_ACTIVE
         subnet.save()
     except Exception as ex:
         subnet.status = NETWORK_STATE_ERROR
         subnet.save()
-        LOG.info("create subnet error,id:[%s], msg:[%s]" % (subnet.id, ex))
+        LOG.exception("Failed to create subnet, id:[%s], name:[%s], msg:[%s]",
+                      subnet.id, subnet.name, ex)
         raise ex
 
     return subnet
 
 
 @app.task
-def subnet_delete_task(subnet):
+def delete_subnet(subnet):
     rc = create_rc_by_subnet(subnet)
     try:
-        sub = neutron.subnet_delete(rc, subnet.subnet_id)
+        LOG.info("Start to delete subnet, id[%s], name[%s]",
+                 subnet.id, subnet.name)
+        neutron.subnet_delete(rc, subnet.subnet_id)
+
         subnet.deleted = True
         subnet.save()
     except Exception as ex:
         subnet.status = NETWORK_STATE_ERROR
         subnet.save()
-        LOG.info("delete subnet error,id:[%s], msg:[%s]" % (subnet.id, ex))
+        LOG.exception("Failed to delete subnet, id:[%s], name:[%s], msg:[%s]",
+                      subnet.id, subnet.name, ex)
         raise ex
 
     return subnet
@@ -261,47 +250,73 @@ def router_remove_gateway_task(router=None):
 
 
 @app.task
-def router_add_interface_task(router=None, subnet=None, router_interface=None):
-    rc = create_rc_by_router(router)
-    router_inf = neutron.router_add_interface(rc, router.router_id,
-                                    subnet_id=subnet.subnet_id)
-
-    router_interface.os_port_id = router_inf['port_id']
-    router_interface.save()
-    router.status = NETWORK_STATE_ACTIVE
-    router.save()
+def create_network_and_subnet(network, subnet):
+    create_network(network)
+    create_subnet(subnet)
 
 
 @app.task
-def network_and_subnet_create_task(network,subnet):
+def attach_network_to_router(network_id, router_id, subnet_id):
+
+    network = Network.objects.get(pk=network_id)
+    router = Router.objects.get(pk=router_id)
+    subnet = Subnet.objects.get(pk=subnet_id)
+
+    rc = create_rc_by_router(router)
+
+    try:
+        LOG.info("Start to attach network[%s] to router[%s]",
+                 network.name, router.name)
+        router_inf = neutron.router_add_interface(
+            rc, router.router_id, subnet_id=subnet.subnet_id)
+    except Exception as e:
+        LOG.exception("Failed to attach network[%s] to router[%s], "
+                      "exception:%s",  network.name, router.name, e)
+        network.change_status(NETWORK_STATE_ERROR)
+
+    else:
+        RouterInterface.objects.create(
+            network_id=network_id, router=router, subnet=subnet,
+            user=subnet.user, user_data_center=subnet.user_data_center,
+            os_port_id=router_inf['port_id'])
+
+        network.change_status(NETWORK_STATE_ACTIVE)
+
+
+@app.task
+def detach_network_from_router(network_id):
+
+    network = Network.objects.get(pk=network_id)
+    subnet = network.subnet_set.filter(deleted=False)[0]
     rc = create_rc_by_network(network)
-    LOG.info("Begin create network,id[%s], name[%s]" % (network.id, network.name))
+    interface_set = RouterInterface.objects.filter(network_id=network.id,
+                                                   subnet=subnet, deleted=False)
+
+    LOG.info("Start to detach network[%s]", network.name)
+
     try:
-        net = network_create_task(network)
-        LOG.info("Begin create subnet,id[%s], name[%s]" % (subnet.id, subnet.name))
-        subnet_create_task(subnet)
+        for router_interface in interface_set:
+
+            LOG.info("Start to delete router interface, router:[%s], "
+                     "subnet[%s], id:[%s], port_id:[%s]",
+                     router_interface.router.name, router_interface.subnet.name,
+                     router_interface.id, router_interface.os_port_id)
+            neutron.router_remove_interface(rc,
+                                            router_interface.router.router_id,
+                                            subnet.subnet_id,
+                                            router_interface.os_port_id)
+
+            router_interface.fake_delete()
     except Exception as e:
+        LOG.exception("Failed to delete router interface, router:[%s], "
+                      "subnet[%s], id:[%s], port_id:[%s], exception:%s",
+                      router_interface.router.name,
+                      router_interface.subnet.name,
+                      router_interface.id, router_interface.os_port_id, e)
+        network.change_status(NETWORK_STATE_ERROR)
         raise e
-
-@app.task
-def router_remove_interface_task(router=None, subnet=None, router_interface=None):
-    rc = create_rc_by_router(router)
-    try:
-        LOG.info("begin to router remove instance task")
-        neutron.router_remove_interface(rc, router.router_id, subnet.subnet_id, router_interface.os_port_id)
-        router.status = NETWORK_STATE_ACTIVE
-        router.save()
-    except Exception as e:
-        LOG.exception(e);
-        router_interface.deleted = False
-        router_interface.save()
-        router.status = NETWORK_STATE_ACTIVE
-        router.save()
-
-
-@app.task
-def network_link_router_task(router=None, subnet=None, router_interface=None):
-    router_add_interface_task(router=router, subnet=subnet, router_interface=router_interface)
+    else:
+        network.change_status(NETWORK_STATE_ACTIVE)
 
 
 @app.task

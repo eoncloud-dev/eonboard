@@ -304,7 +304,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
             .state("network", {
                 url: "/network/",
                 templateUrl: "/static/cloud/views/network.html",
-                data: {pageTitle: 'Firewall'},
+                data: {pageTitle: 'Network'},
                 controller: "NetworkController",
                 resolve: {
                     deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -315,10 +315,7 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
                                 '/static/cloud/controllers/network_ctl.js'
                             ]
                         });
-                    }],
-                    status_desc: function (CommonHttpService) {
-                        return CommonHttpService.get("/api/networks/status/")
-                    }
+                    }]
                 }
             })
 

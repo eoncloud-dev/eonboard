@@ -8,11 +8,17 @@ from biz.network.models import Network,Subnet,Router, RouterInterface
 
 
 class NetworkSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False, allow_null=True, default=None)
-    user_data_center = serializers.PrimaryKeyRelatedField(queryset=UserDataCenter.objects.all(), required=False, allow_null=True, default=None)
-    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False, allow_null=True)
-    address = serializers.CharField(source="net_address", required=False, allow_null=True, default=None, read_only=True)
-    router_info = serializers.CharField(source="router", required=False, allow_null=True, default=None, read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
+                                              required=False,
+                                              allow_null=True,
+                                              default=None)
+    user_data_center = serializers.PrimaryKeyRelatedField(
+        queryset=UserDataCenter.objects.all(), required=False,
+        allow_null=True, default=None)
+    create_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M",
+                                            required=False, allow_null=True)
+    address = serializers.ReadOnlyField(source="net_address")
+    router_info = serializers.ReadOnlyField(source="router")
 
     def validate_user(self, value):
         request = self.context.get('request', None)

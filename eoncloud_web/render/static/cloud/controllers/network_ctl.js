@@ -1,11 +1,14 @@
 'use strict';
 
-CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $timeout,$interval,$i18next, ngTableParams,$modal,CommonHttpService,ToastrService, Network,status_desc) {
+CloudApp.controller('NetworkController',
+
+    function($rootScope, $scope, $filter, $interval, $i18next, ngTableParams,
+             $modal, CommonHttpService, ToastrService, ngTableHelper,
+             Network, NetworkState) {
+
     $scope.$on('$viewContentLoaded', function() {   
         Metronic.initAjax();
     });
-
-    $scope.status_desc = status_desc;
 
     $scope.current_network_data = [];
     $scope.network_table = new ngTableParams({
@@ -15,20 +18,18 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         counts: [],
         getData: function ($defer, params) {
             Network.query(function (data) {
-                var data_list = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) : "";
-                params.total(data_list.length);
-                $scope.current_network_data = data_list.slice((params.page() - 1) * params.count(), params.page() * params.count());
-                $defer.resolve($scope.current_network_data);
+                $scope.current_network_data = ngTableHelper.paginate(data, $defer, params)
+                NetworkState.processList($scope.current_network_data);
             });
         }
     });
+
     //定时处理网络状态
-    var timer = $interval(function () {
+    $rootScope.setInterval(function () {
         var list = $scope.current_network_data;
         var need_refresh = false;
         for (var i = 0; i < list.length; i++) {
-            if (status_desc[list[i].status][1] == 0) {
+            if (list[i].is_unstable) {
                 need_refresh = true;
                 break;
             }
@@ -38,14 +39,13 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         }
 
     }, 5000);
-    $rootScope.timer_list.push(timer);
-    /////////////////////////
+
     $scope.checkboxes = {'checked': false, items: {}};
 
     // watch for check all checkbox
     $scope.$watch('checkboxes.checked', function (value) {
         angular.forEach($scope.current_network_data, function (item) {
-            if($scope.status_desc[item.status][1]==1){
+            if(item.is_stable){
                 if (angular.isDefined(item.id)) {
                     $scope.checkboxes.items[item.id] = value;
                 }
@@ -53,7 +53,6 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         });
     });
 
-    // watch for data checkboxes
     $scope.$watch('checkboxes.items', function (values) {
         $scope.checked_count = 0;
         if (!$scope.current_network_data) {
@@ -63,7 +62,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
             total = $scope.current_network_data.length;
 
         angular.forEach($scope.current_network_data, function (item) {
-            if($scope.status_desc[item.status][1]==0){
+            if(item.is_unstable){
                 $scope.checkboxes.items[item.id] = false;
             }
             checked += ($scope.checkboxes.items[item.id]) || 0;
@@ -77,7 +76,6 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
         // grayed checkbox
         angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     }, true);
-    ////////////////////////
 
     $scope.modal_create_network = function(){
         $scope.network_create = '';
@@ -86,36 +84,28 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
             templateUrl: 'network_create.html',
             controller: 'NetworkCreateController',
             backdrop: "static",
-            scope: $scope,
-            resolve: {
-                network_table: function () {
-                    return $scope.network_table;
-                }
-            }
+            scope: $scope
+        }).result.then(function(){
+            $scope.network_table.reload();
         });
-
-    }
-
+    };
 
     $scope.modal_edit_network = function(network){
-        $scope.network_create = {
-            "name":network.name,
-            "id":network.id
-        };
-        $scope.operation = 'edit';
+
         $modal.open({
-            templateUrl: 'network_create.html',
-            controller: 'NetworkCreateController',
+            templateUrl: 'edit_network.html',
+            controller: 'NetworkEditController',
             backdrop: "static",
             scope: $scope,
             resolve: {
-                network_table: function () {
-                    return $scope.network_table;
+                network: function(){
+                    return angular.copy(network);
                 }
             }
+        }).result.then(function(){
+            $scope.network_table.reload();
         });
-
-    }
+    };
 
     $scope.batch_action = function(action){
         bootbox.confirm($i18next("network.confirm_" + action), function (confirm) {
@@ -126,7 +116,7 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
                     if (items[items_key[i]]) {
                         var post_data = {
                             "network_id":items_key[i]
-                        }
+                        };
                         CommonHttpService.post("/api/networks/delete/", post_data).then(function (data) {
                             if (data.OPERATION_STATUS == 1) {
                                 $scope.network_table.reload();
@@ -140,39 +130,30 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
                 }
             }
         });
-    }
+    };
+
     //断开路由器连接
-    $scope.detach_action = function(network, action){
-        bootbox.confirm($i18next("network.confirm_" + action), function (confirm) {
+    $scope.detach = function(network){
+        bootbox.confirm($i18next("network.confirm_detach"), function (confirm) {
             if (confirm) {
-                var post_data = {
-                    "network_id":network.id,
-                    "action":action
-                }
-                CommonHttpService.post("/api/networks/router/action", post_data).then(function (data) {
+
+                var params = {"network_id": network.id};
+
+                CommonHttpService.post("/api/networks/detach-router/", params).then(function (data) {
                     if (data.OPERATION_STATUS == 1) {
                         $scope.network_table.reload();
                         ToastrService.success(data.MSG, $i18next("success"));
-                    }
-                    else {
+                    } else {
                         ToastrService.error(data.MSG, $i18next("op_failed"));
                     }
                 });
             }
         });
-    }
-    $scope.cidr = {
-        "first":"172",
-        "two":"31",
-        "three":"0",
-        "four":"0"
-    }
-    // 连接路由器
+    };
+
+
     $scope.modal_attach_network = function(network){
-        $scope.selectedNetwork=network;
-        CommonHttpService.get("/api/routers/search/").then(function (data) {
-            $scope.routers = data;
-        });
+
         $modal.open({
             templateUrl: 'network_attach_router.html',
             controller: 'NetworkAttachController',
@@ -181,37 +162,32 @@ CloudApp.controller('NetworkController', function($rootScope, $scope, $filter, $
             resolve: {
                 network_table: function () {
                     return $scope.network_table;
+                },
+                network: function(){
+                    return angular.copy(network);
+                },
+                routers: function(){
+                    return CommonHttpService.get("/api/routers/search/");
                 }
             }
         });
-
-    }
-
-    $scope.modal_release_network = function(network){
-        angular.forEach($scope.network_data, function (item) {
-            if (item==network) {
-                item.routerId="";
-                item.router="";
-                item.netAddress="";
-            }
-        });
-
-        $scope.network_table.reload();
-    }
-
+    };
 });
 
 
 CloudApp.controller('NetworkCreateController',
-    function($rootScope, $scope, $filter, $i18next,$modalInstance,network_table,CommonHttpService,ToastrService) {
+    function($rootScope, $scope, $i18next, $modalInstance,
+             CommonHttpService, ToastrService) {
 
-
-        $scope.has_error = false;
+        $scope.name_error = false;
         $scope.address_error=false;
-
-
-        $scope.cancel = function () {
-            $modalInstance.dismiss();
+        $scope.cancel =  $modalInstance.dismiss;
+        $scope.network = {};
+        $scope.cidr = {
+            "first":"172",
+            "two":"31",
+            "three":"0",
+            "four":"0"
         };
 
         $scope.$watch('cidr.three',function(value){
@@ -225,82 +201,107 @@ CloudApp.controller('NetworkCreateController',
             }
         });
 
+        $scope.save = function(network){
 
-        $scope.flag = true;
-        $scope.submit_click = function(network_create){
-            if($.trim($scope.cidr.three)==''){
-                $scope.address_error = true;
-                return false;
-            }
-            var address = $scope.cidr.first+"."+$scope.cidr.two+"."+$scope.cidr.three+"."+$scope.cidr.four+"/24";
-            if(typeof(network_create.name)==='undefined' || network_create.name == ""){
-                $scope.has_error = true;
-                return false;
+            $scope.name_error = !network.name;
+            $scope.address_error = $.trim($scope.cidr.three)=='';
+
+            if($scope.name_error || $scope.address_error){
+                return;
             }
 
-            if(!$scope.flag){
-                return
-            }
-            $scope.flag = false;
-            var post_data = {
-                "id":$scope.network_create.id,
-                "name":$scope.network_create.name,
-                "address":address
-            }
-            CommonHttpService.post("/api/networks/create/", post_data).then(function (data) {
+            var params = {
+                "id": $scope.network.id,
+                "name": $scope.network.name,
+                "address": $scope.cidr.first+"."+$scope.cidr.two+"."+$scope.cidr.three+"."+$scope.cidr.four+"/24"
+            };
+
+            CommonHttpService.post("/api/networks/create/", params).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
                     ToastrService.success(data.MSG, $i18next("success"));
-                    network_table.reload();
-                }
-                else {
+                    $modalInstance.close();
+                } else {
                     ToastrService.error(data.MSG, $i18next("op_failed"));
                 }
-                $modalInstance.dismiss();
             });
         }
 
+    });
+
+
+CloudApp.controller('NetworkEditController',
+    function($rootScope, $scope, $i18next, $modalInstance,
+             CommonHttpService, ToastrService, ValidationTool, network){
+
+        var form = null;
+
+        $scope.cancel = $modalInstance.dismiss;
+        $scope.network = network;
+
+        $modalInstance.rendered.then(function(){
+            form = ValidationTool.init("#updateForm");
+        });
+
+        $scope.update = function(){
+
+            if(form.valid() == false){
+                return;
+            }
+
+            var params = {
+                "id": network.id,
+                "name": network.name
+            };
+
+            CommonHttpService.post("/api/networks/update/", params).then(function (data) {
+                if (data.OPERATION_STATUS == 1) {
+                    ToastrService.success(data.MSG, $i18next("success"));
+                    $modalInstance.close();
+                } else {
+                    ToastrService.error(data.MSG, $i18next("op_failed"));
+                }
+            });
+        }
     });
 
 CloudApp.controller('NetworkAttachController',
-    function($rootScope, $scope, $filter, $modalInstance,network_table,CommonHttpService,ToastrService,$i18next,ValidationTool) {
+    function($rootScope, $scope, $modalInstance, $i18next,
+             CommonHttpService, ToastrService, ValidationTool,
+             network_table, network, routers) {
 
-        $scope.cancel = function () {
-            $modalInstance.dismiss();
-        };
+        var form = null;
 
-        $scope.flag = true;
-        $scope.submit_click = function(attach_data,action){
+        $modalInstance.rendered.then(function(){
+            form = $scope.form = ValidationTool.init('#attachRouterFrom');
+        });
 
-            if(!$scope.flag){
-                return
-            }
-            $scope.flag = false
-            ValidationTool.init('#attachRouterFrom', {});
-            if(!$("#attachRouterFrom").validate().form()){
-                $scope.flag = true;
+        $scope.network = network;
+        $scope.routers = routers;
+        $scope.cancel =  $modalInstance.dismiss;
+        $scope.targetRouter = null;
+
+        $scope.attach = function(){
+
+            if(form.valid() == false){
                 return;
             }
-            var post_data={
-                "network_id":$scope.selectedNetwork.id,
-                "router_id":attach_data.router_selected.id,
-                "action":action
-            }
-            CommonHttpService.post("/api/networks/router/action", post_data).then(function (data) {
+
+            var params = {
+                "network_id":network.id,
+                "router_id":$scope.targetRouter.id
+            };
+
+            CommonHttpService.post("/api/networks/attach-router/", params).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
                     ToastrService.success(data.MSG, $i18next("success"));
                     network_table.reload();
-                }
-                else {
+                    $modalInstance.close();
+                } else {
                     ToastrService.error(data.MSG, $i18next("op_failed"));
                 }
-                $modalInstance.dismiss();
             });
-        }
-
+        };
     });
-
-
-
 
 CloudApp.controller('NetworkTopologyController', function($rootScope, $scope,$i18next,$interval,CommonHttpService,ToastrService) {
     $scope.$on('$viewContentLoaded', function() {
@@ -311,7 +312,4 @@ CloudApp.controller('NetworkTopologyController', function($rootScope, $scope,$i1
         horizon.network_topology.model = data;
         horizon.network_topology.init();
     });
-
-
-
 });

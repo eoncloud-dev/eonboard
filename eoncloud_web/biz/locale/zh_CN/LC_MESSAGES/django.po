@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 17:15+0800\n"
+"POT-Creation-Date: 2015-08-28 16:14+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,89 +307,97 @@ msgstr "警告"
 msgid "Danger"
 msgstr "危险"
 
-#: account/views.py:132
+#: account/views.py:133
 msgid "Contract is created successfully!"
 msgstr "合同创建成功！"
 
-#: account/views.py:136
+#: account/views.py:137
 msgid "Contract data is not valid!"
 msgstr "合同数据不对！"
 
-#: account/views.py:142
+#: account/views.py:143
 msgid "Failed to create contract for unknown reason."
 msgstr "未知错误导致合同创建失败."
 
-#: account/views.py:164
+#: account/views.py:165
 msgid "Contract is updated successfully!"
 msgstr "合同更新成功！"
 
-#: account/views.py:170
+#: account/views.py:171
 msgid "Failed to update contract for unknown reason."
 msgstr "未知错误导致合同更新失败."
 
-#: account/views.py:190
+#: account/views.py:191
 msgid "Contracts have been deleted!"
 msgstr "合同删除成功！"
 
-#: account/views.py:196
+#: account/views.py:197
 msgid "Failed to delete contracts for unknown reason."
 msgstr "未知错误导致合同删除失败．"
 
-#: account/views.py:232
+#: account/views.py:233
 msgid "User has been deactivated!"
 msgstr "用户已禁用，将不能登录"
 
-#: account/views.py:244
+#: account/views.py:245
 msgid "User has been activated!"
 msgstr "用户已激活，可以正常使用"
 
-#: account/views.py:257
+#: account/views.py:258
 msgid "The new password doesn't match confirm password!"
 msgstr "两次密码输入密码不匹配"
 
-#: account/views.py:261
+#: account/views.py:262
 msgid "The original password is not correct!"
 msgstr "原始密码不对！"
 
-#: account/views.py:267
+#: account/views.py:268
 msgid "Password has been changed! Please login in again."
 msgstr "密码修改成功"
 
-#: account/views.py:320
+#: account/views.py:321
 msgid "Quotas have been saved successfully!"
 msgstr "配额已保存成功！"
 
-#: account/views.py:325
+#: account/views.py:326
 msgid "Failed to save quotas for unknown reason."
 msgstr "未知错误导致配额保存失败．"
 
-#: account/views.py:345
+#: account/views.py:346
 msgid "Quota have been saved successfully!"
 msgstr "配额保存成功！"
 
-#: account/views.py:351
+#: account/views.py:352
 msgid "Failed to save quota for unknown reason."
 msgstr "未知错误导致配额保存失败．"
 
-#: account/views.py:360
+#: account/views.py:361
 msgid "Quota have been deleted successfully!"
 msgstr "配额删除成功"
 
-#: account/views.py:366
+#: account/views.py:367
 msgid "Failed to create quota for unknown reason."
 msgstr "配额创建失败"
 
-#: account/views.py:389 account/views.py:402
+#: account/views.py:390 account/views.py:403
 msgid "Notification is sent successfully!"
 msgstr "消息发布成功！"
 
-#: account/views.py:413
+#: account/views.py:414
 msgid "Announcement is sent successfully!"
 msgstr "消息发布成功！"
 
-#: account/views.py:469
+#: account/views.py:470
 msgid "Initialization is successful."
 msgstr "初始化成功！"
+
+#: account/views.py:482
+msgid "Data is not valid"
+msgstr "数据有错误！"
+
+#: account/views.py:488
+msgid "User is created successfully!"
+msgstr "用户创建成功"
 
 #: backup/models.py:16 idc/models.py:14 instance/models.py:117
 msgid "Name"
@@ -1581,8 +1589,6 @@ msgid "Update network success"
 msgstr "更新私有网络成功"
 
 #: network/views.py:111
-#, fuzzy
-#| msgid "The selected network not exist"
 msgid "The selected network does not exist"
 msgstr "私有网络不存在"
 

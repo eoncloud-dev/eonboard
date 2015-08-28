@@ -6,6 +6,9 @@
                     <a class="btn btn-icon-only btn-default" href="#" ng-click="user_table.reload();">
                         <i class="fa fa-refresh"></i>
                     </a>
+                    <a class="btn btn-primary" href="#" ng-click="openNewUserModal()">
+                        <i class="fa fa-plus"></i>{[{ 'action.add' | i18next }]}
+                    </a>
                     <a class="btn btn-info" href="#" ng-click="openBroadcastModal()">
                         <i class="fa  fa-bullhorn"></i> {[{ 'notification.broadcast' | i18next }]}
                     </a>
@@ -317,3 +320,82 @@
 <script type="text/ng-template" id="checkbox-header.html">
     <input type="checkbox"  data-ng-model="checkboxGroup.checked" data-ng-change="checkboxGroup.toggleAll()"/>
 </script>
+
+
+
+<!-- BEGIN TEMPLATE NEW-USER -->
+<script type="text/ng-template" id="new-user.html">
+    <div class="modal-header">
+       <div class="modal-title"> {[{ 'user.new_user' | i18next }]}</div>
+    </div>
+    <div class="modal-body">
+        <form id="userForm" role="form" class="form-horizontal form-bordered">
+            <div class="form-group">
+                <label class="control-label col-md-3">
+                    {[{ 'user.name' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input class="form-control placeholder-no-fix" type="text"
+                           placeholder="{[{ 'user.name' | i18next }]}"
+                           name="username" data-ng-model="user.username"
+                           data-message-remote="test"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">
+                    {[{ 'user.email' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input class="form-control placeholder-no-fix" type="text"
+                           data-ng-model="user.email" name="email"
+                           placeholder="{[{ 'user.email' | i18next }]}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">
+                    {[{ 'user.mobile' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input class="form-control placeholder-no-fix" type="text"
+                           data-ng-model="user.mobile" name="mobile"
+                           placeholder="{[{ 'user.mobile' | i18next }]}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">
+                    {[{ 'user.password' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input class="form-control placeholder-no-fix" type="password"
+                           placeholder="{[{ 'user.password' | i18next }]}"
+                           name="password1" id="password1" data-ng-model="user.password1"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3">
+                    {[{ 'user.confirm_password' | i18next }]}
+                    <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-5">
+                    <input class="form-control placeholder-no-fix" type="password"
+                           placeholder="{[{ 'user.confirm_password' | i18next }]}"
+                           name="password2" data-ng-model="user.password2"/>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
+            {[{ 'cancel' | i18next }]}
+        </a>
+        <a class="btn btn-primary" data-ng-click="create()" data-nap-after-click>
+            {[{ 'submit' | i18next }]}
+        </a>
+    </div>
+</script>
+<!-- END TEMPLATE DETAIL-->

@@ -77,3 +77,9 @@ class CloudUserCreateForm(UserCreationForm):
                 mobile=self.cleaned_data['mobile'])
 
         return user
+
+
+class CloudUserCreateFormWithoutCapatcha(CloudUserCreateForm):
+    # make captcha not required, so that when validate data,
+    # captcha field won't work
+    captcha = CaptchaField(required=False)

@@ -13,7 +13,7 @@ def eoncloud(request):
         "ICP_NUMBER": settings.ICP_NUMBER,
         "LDAP_AUTH_ENABLED": settings.LDAP_AUTH_ENABLED,
         "EXTERNAL_URL": settings.EXTERNAL_URL,
-        "SIGNUP_ENABLED": settings.SIGNUP_ENABLED,
+        "REGISTER_ENABLED": settings.REGISTER_ENABLED,
         "CAPTCHA_ENABLED": settings.CAPTCHA_ENABLED,
         "THEME": settings.THEME_NAME
     }

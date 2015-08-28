@@ -33,7 +33,7 @@ QUOTA_CHECK = True
 MULTI_ROUTER_ENABLED = False
 WORKFLOW_ENABLED = False
 CAPTCHA_ENABLED = False
-SIGNUP_ENABLED = True
+REGISTER_ENABLED = False
 
 # After user signup, send a email instead of create udc directly
 REGISTER_ACTIVATE_EMAIL_ENABLED = True

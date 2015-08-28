@@ -178,7 +178,7 @@ class SignupView(View):
 
     def dispatch(self, request, *args, **kwargs):
 
-        if settings.SIGNUP_ENABLED:
+        if settings.REGISTER_ENABLED:
             return super(SignupView, self).dispatch(request, *args, **kwargs)
         else:
             return HttpResponseForbidden()

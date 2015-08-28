@@ -1,5 +1,6 @@
 #-*-coding-utf-8-*-
 
+
 import logging
 
 from datetime import datetime
@@ -15,7 +16,7 @@ from django.contrib.auth.models import check_password
 
 from biz.account.settings import QUOTA_ITEM, NotificationLevel
 from biz.account.models import (Contract, Operation, Quota,
-                                UserProxy, Notification, Feed)
+                                UserProxy, Notification, Feed, UserProfile)
 from biz.account.serializer import (ContractSerializer, OperationSerializer,
                                     UserSerializer, QuotaSerializer,
                                     FeedSerializer, DetailedUserSerializer,
@@ -27,7 +28,7 @@ from biz.common.decorators import require_POST, require_GET
 from biz.common.utils import retrieve_params
 from cloud.tasks import (link_user_to_dc_task, send_notifications,
                          send_notifications_by_data_center)
-
+from frontend.forms import CloudUserCreateFormWithoutCapatcha
 
 LOG = logging.getLogger(__name__)
 
@@ -467,3 +468,39 @@ def initialize_user(request):
 
     return Response({"success": True,
                      "msg": _("Initialization is successful.")})
+
+
+@require_POST
+def create_user(request):
+
+    user = User()
+    form = CloudUserCreateFormWithoutCapatcha(data=request.POST, instance=user)
+
+    if not form.is_valid():
+        return Response({
+            "success": False,
+            "msg": _("Data is not valid")
+        })
+
+    form.save()
+    link_user_to_dc_task.delay(user, DataCenter.get_default())
+    return Response({"success": True,
+                     "msg": _("User is created successfully!")})
+
+
+@require_GET
+def is_username_unique(request):
+    username = request.GET['username']
+    return Response(not UserProxy.objects.filter(username=username).exists())
+
+
+@require_GET
+def is_email_unique(request):
+    email = request.GET['email']
+    return Response(not UserProxy.objects.filter(email=email).exists())
+
+
+@require_GET
+def is_mobile_unique(request):
+    mobile = request.GET['mobile']
+    return Response(not UserProfile.objects.filter(mobile=mobile).exists())

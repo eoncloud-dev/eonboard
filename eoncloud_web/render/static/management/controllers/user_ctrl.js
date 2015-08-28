@@ -150,6 +150,17 @@ CloudApp.controller('UserController',
                 });
             });
         };
+
+        $scope.openNewUserModal = function(){
+            $modal.open({
+                templateUrl: 'new-user.html',
+                backdrop: "static",
+                controller: 'NewUserController',
+                size: 'lg'
+            }).result.then(function(){
+                $scope.user_table.reload();
+            });
+        };
     })
 
     .controller('UserUdcListController',
@@ -293,4 +304,98 @@ CloudApp.controller('UserController',
                     }
                 });
             }
-    });
+    })
+
+    .controller('NewUserController',
+        function($scope, $modalInstance, $i18next,
+                 CommonHttpService, ToastrService, UserForm){
+
+            var form = null;
+            $modalInstance.rendered.then(function(){
+                form = UserForm.init();
+            });
+
+            $scope.user = {};
+            $scope.cancel = $modalInstance.dismiss;
+            $scope.create = function(){
+
+                if(form.valid() == false){
+                    return;
+                }
+
+                CommonHttpService.post('/api/account/create/', $scope.user).then(function(result){
+                    if(result.success){
+                        ToastrService.success(result.msg, $i18next("success"));
+                        $modalInstance.close();
+                    } else {
+                        ToastrService.error(result.msg, $i18next("op_failed"));
+                    }
+                });
+            };
+        }
+    )
+    .factory('UserForm', ['ValidationTool', '$i18next', function(ValidationTool, $i18next) {
+        return {
+            init: function(){
+
+                var config = {
+
+                    rules: {
+                        username: {
+                            required: true,
+                            remote: {
+                                url: "/api/account/is-name-unique/",
+                                data: {
+                                    username: $("#username").val()
+                                },
+                                async: false
+                            }
+                        },
+                        email: {
+                            required: true,
+                            email: true,
+                            remote: {
+                                url: "/api/account/is-email-unique/",
+                                data: {
+                                    email: $("#email").val()
+                                },
+                                async: false
+                            }
+                        },
+                        mobile: {
+                            required: true,
+                            digits: true,
+                            minlength:11,
+                            maxlength:11,
+                            remote: {
+                                url: "/api/account/is-mobile-unique/",
+                                data: {
+                                    mobile: $("#mobile").val()
+                                },
+                                async: false
+                            }
+                        },
+                        password1: {
+                            required: true,
+                            complexPassword: true
+                        },
+                        password2: {
+                            required: true,
+                            equalTo: "#password1"
+                        }
+                    },
+                    messages: {
+                        username: {
+                            remote: $i18next('user.name_is_used')
+                        },
+                        email: {
+                            remote: $i18next('user.email_is_used')
+                        },
+                        mobile: {
+                            remote: $i18next('user.mobile_is_used')
+                        }
+                    }
+                };
+                return ValidationTool.init('#userForm', config);
+            }
+        }}]);

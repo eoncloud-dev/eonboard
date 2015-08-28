@@ -428,11 +428,13 @@
   "user": {
     "name": "用户名",
     "email": "邮箱",
+    "mobile": "手机号",
     "is_active": "活跃用户",
     "is_superuser": "超级用户",
     "date_joined": "加入时间",
     "last_login": "最近登录时间",
     "user_data_centers": "用户数据中心列表",
+    "password": "密码",
     "old_password": "原密码",
     "new_password": "新密码",
     "confirm_password": "确认密码",
@@ -449,7 +451,11 @@
     "view_detail": "明细",
     "is_initialized": "已初始化",
     "initialize": "初始化",
-    "confirm_initialize": "确定要为该用户分配数据中心吗？"
+    "confirm_initialize": "确定要为该用户分配数据中心吗？",
+    "new_user": "添加用户",
+    "name_is_used": "该帐号已被人使用",
+    "email_is_used": "该邮箱已被人使用",
+    "mobile_is_used": "该手机号已被人使用"
   },
 
   "notification": {

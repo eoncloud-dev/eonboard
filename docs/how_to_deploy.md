@@ -132,9 +132,8 @@
 >rabbitmqctl add_vhost eoncloud
 >rabbitmqctl set_permissions -p eoncloud eoncloud_web ".*" ".*" ".*"
 
-
     su eoncloud
-    ./run_celery.sh
+    run_celery.sh
 
 
 ## 8. integrity test
@@ -145,10 +144,12 @@
     1. ICP Number: local_settings.ICP_NUMBER = u"京ICP-123456YYY"
     2. 配额检查: local_settings.QUOTA_CHECK = True
     3. LDAP: local_settings.LDAP_AUTH_ENABLED = True
+        3-1. LDAP Server
     4. 流程审批: local_settings.WORKFLOW_ENABLED = True
     5. 开放注册: local_settings.REGISTER_ENABLED = True
     6. 注册需要邮件激活: local_settings.REGISTER_ACTIVATE_EMAIL_ENABLED = True
         6-1. 激活邮件回调地址： local_settings.EXTERNAL_URL = 'http://www.xxx.com/'
     7. 是否开启图形验证码: local_settings.CAPTCHA_ENABLED = True
     8. 云主机监控: local_settings.MONITOR_ENABLED = True 
+        8-1. base_url
     9. 备份

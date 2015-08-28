@@ -26,11 +26,13 @@
 ## 2. group and user
 
 >groupadd eoncloud
-
 >useradd eoncloud -g eoncloud -m -d /home/eoncloud
 
   	cat /etc/sudoers.d/eoncloud
 	eoncloud ALL=(ALL) NOPASSWD:ALL
+
+>mkdir /var/log/eoncloud
+>chown -R eoncloud:eoncloud /var/log/eoncloud
 
 ## 3. pip virtualenv
 
@@ -40,7 +42,7 @@
 
 ## 4. install system dependences
 
->apt-get install apache2 mysql-client python-dev libffi-dev libssl-dev libmysqlclient-dev libapache2-mod-wsgi
+>apt-get install apache2 mysql-client python-dev libffi-dev libssl-dev libmysqlclient-dev libapache2-mod-wsgi libldap2-dev libsasl2-dev
 
     # if is all in one environment
     apt-get install mysql-server rabbitmq-server
@@ -56,11 +58,11 @@
 	root@zhangh-ubuntu:/var/www/eoncloud_web# tree -L 2
 	.
 	├── eoncloud_web
-	│   ├── biz
-	│   ├── cloud
-	│   ├── eoncloud_web
-	│   ├── manage.py
-	│   └── render
+	│   ├── biz
+	│   ├── cloud
+	│   ├── eoncloud_web
+	│   ├── manage.py
+	│   └── render
 	├── README
 	└── requirements.txt
 
@@ -79,8 +81,8 @@
 
 ### generate local_settings.py
 
-> root@zhangh-ubuntu:/var/www/eoncloud_web# cp eoncloud_web/eoncloud_web/local_settings.py.example \
-> eoncloud_web/eoncloud_web/local_settings.py
+> root@zhangh-ubuntu:/var/www/eoncloud_web# cp eoncloud_web/eoncloud_web/local/local_settings.py.example \
+> eoncloud_web/eoncloud_web/local/local_settings.py
 
 ### migrate db
 >root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py migrate
@@ -91,6 +93,8 @@
 ### create super user
 
 >root@zhangh-ubuntu:/var/www/eoncloud_web# .venv/bin/python eoncloud_web/manage.py createsuperuser
+
+    # admin/admin@mail.com
 
 ### init flavor
 
@@ -124,17 +128,27 @@
 
 ## 7. celery worker
 
->rabbitmqctl add_user eoncloud_web pAssw0rd
-
+>rabbitmqctl add_user eoncloud_web password
 >rabbitmqctl add_vhost eoncloud
-
 >rabbitmqctl set_permissions -p eoncloud eoncloud_web ".*" ".*" ".*"
 
 
-	# sudo kill -9 `ps -ef | grep 'celery' | awk '{print $2}'`
+    su eoncloud
+    ./run_celery.sh
 
-	$ ../.venv/bin/celery multi start eoncloud_worker -A cloud --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid --logfile=/home/zhanghui/logs/eoncloud/celery_%n.log
-
-	$ ../.venv/bin/celery multi stop eoncloud_worker --pidfile=/home/zhanghui/logs/eoncloud/celery_%n.pid
 
 ## 8. integrity test
+
+## 9. Advence feature
+    
+    0. 厂商名称： local_settings.BRAND = "EonCloud"
+    1. ICP Number: local_settings.ICP_NUMBER = u"京ICP-123456YYY"
+    2. 配额检查: local_settings.QUOTA_CHECK = True
+    3. LDAP: local_settings.LDAP_AUTH_ENABLED = True
+    4. 流程审批: local_settings.WORKFLOW_ENABLED = True
+    5. 开放注册: local_settings.REGISTER_ENABLED = True
+    6. 注册需要邮件激活: local_settings.REGISTER_ACTIVATE_EMAIL_ENABLED = True
+        6-1. 激活邮件回调地址： local_settings.EXTERNAL_URL = 'http://www.xxx.com/'
+    7. 是否开启图形验证码: local_settings.CAPTCHA_ENABLED = True
+    8. 云主机监控: local_settings.MONITOR_ENABLED = True 
+    9. 备份

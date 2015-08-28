@@ -125,6 +125,8 @@ DATETIME_FORMAT="Y-m-d H:i"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 LOGIN_URL = '/login'
+
+LOG_PATH = BASE_DIR
 LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -139,7 +141,7 @@ LOG_CONFIG = {
             'level': 'DEBUG',
             'filters': None,
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/tmp/eoncloud.log',
+            'filename': '/var/log/eoncloud/eoncloud.log',
             'formatter': 'verbose'
         },
 
@@ -147,7 +149,7 @@ LOG_CONFIG = {
             'level': 'DEBUG',
             'filters': None,
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/tmp/celery_task.log',
+            'filename': '/var/log/eoncloud/celery_task.log',
             'formatter': 'verbose'
         },
         'console': {

@@ -36,7 +36,7 @@ CAPTCHA_ENABLED = False
 REGISTER_ENABLED = False
 
 # After user signup, send a email instead of create udc directly
-REGISTER_ACTIVATE_EMAIL_ENABLED = True
+REGISTER_ACTIVATE_EMAIL_ENABLED = False
 # The expire days after activate mail sent
 ACTIVATE_EMAIL_EXPIRE_DAYS = timedelta(30)
 
@@ -130,7 +130,7 @@ DNS_NAMESERVERS = ["8.8.4.4", "114.114.114.114"]
 THEME_NAME = 'darkblue'
 EXTERNAL_URL = 'http://127.0.0.1:8000/'
 
-LDAP_AUTH_ENABLED = True
+LDAP_AUTH_ENABLED = False
 # Baseline configuration.
 AUTH_LDAP_SERVER_URI = "ldap://127.0.0.1:389/"
 

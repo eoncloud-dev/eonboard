@@ -465,7 +465,6 @@ def initialize_user(request):
     user_id = request.data['user_id']
     user = User.objects.get(pk=user_id)
     link_user_to_dc_task(user, DataCenter.get_default())
-
     return Response({"success": True,
                      "msg": _("Initialization is successful.")})
 
@@ -483,7 +482,7 @@ def create_user(request):
         })
 
     form.save()
-    link_user_to_dc_task.delay(user, DataCenter.get_default())
+    link_user_to_dc_task(user, DataCenter.get_default())
     return Response({"success": True,
                      "msg": _("User is created successfully!")})
 

@@ -73,9 +73,12 @@
                                         </ul>
                                     </div>
                                     <div class="btn-group" data-ng-if="!user.has_udc">
-                                        <button class="btn btn-default" type="button" data-ng-click="initialize(user)">
+                                        <button class="btn btn-default" type="button"
+                                                data-ng-click="initialize(user)"
+                                                data-ng-if="!user.isUpdating">
                                             <i class="fa fa-magic"></i> {[{ 'user.initialize' | i18next }]}
                                         </button>
+                                        <img src="/static/assets/global/img/throbber.gif" data-ng-if="user.isUpdating"/>
                                     </div>
                                 </td>
                             </tr>
@@ -393,7 +396,10 @@
         <a href="javascript:void(0);" class="btn btn-default" data-ng-click="cancel()">
             {[{ 'cancel' | i18next }]}
         </a>
-        <a class="btn btn-primary" data-ng-click="create()" data-nap-after-click>
+        <a class="btn" data-ng-show="is_submitting">
+            <img src="/static/assets/global/img/throbber.gif"/>
+        </a>
+        <a class="btn btn-primary" data-ng-click="create()" data-ng-hide="is_submitting">
             {[{ 'submit' | i18next }]}
         </a>
     </div>

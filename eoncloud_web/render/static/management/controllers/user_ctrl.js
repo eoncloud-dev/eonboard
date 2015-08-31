@@ -140,6 +140,7 @@ CloudApp.controller('UserController',
         $scope.initialize = function(user){
 
             $ngBootbox.confirm($i18next("user.confirm_initialize")).then(function(){
+                user.isUpdating = true;
                 CommonHttpService.post("/api/users/initialize/", {user_id: user.id}).then(function(data){
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
@@ -147,6 +148,8 @@ CloudApp.controller('UserController',
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }
+                }).finally(function(){
+                    user.isUpdating = false;
                 });
             });
         };
@@ -316,6 +319,7 @@ CloudApp.controller('UserController',
             });
 
             $scope.user = {};
+            $scope.is_submitting = false;
             $scope.cancel = $modalInstance.dismiss;
             $scope.create = function(){
 
@@ -323,6 +327,7 @@ CloudApp.controller('UserController',
                     return;
                 }
 
+                $scope.is_submitting = true;
                 CommonHttpService.post('/api/account/create/', $scope.user).then(function(result){
                     if(result.success){
                         ToastrService.success(result.msg, $i18next("success"));
@@ -330,6 +335,9 @@ CloudApp.controller('UserController',
                     } else {
                         ToastrService.error(result.msg, $i18next("op_failed"));
                     }
+                    $scope.is_submitting = true;
+                }).finally(function(){
+                    $scope.is_submitting = false;
                 });
             };
         }

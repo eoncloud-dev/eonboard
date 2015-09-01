@@ -22,8 +22,11 @@ CloudApp.controller('UserController',
             },{
                 counts: [],
                 getData: function ($defer, params) {
-                    User.query(function (data) {
-                        $scope.users = ngTableHelper.paginate(data, $defer, params);
+                    var searchParams = {page: params.page(), page_size: params.count()};
+                    User.query(searchParams, function (data) {
+                        $defer.resolve(data.results);
+                        $scope.users = data.results;
+                        ngTableHelper.countPages(params, data.count);
                         checkboxGroup.syncObjects($scope.users);
                     });
                 }

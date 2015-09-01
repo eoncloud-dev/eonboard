@@ -17,16 +17,18 @@ angular.module('cloud.resources', [])
 .factory('User', ['$resource', function($resource){
     return $resource("/api/users/:id/:action/", {id: '@id'},
         {
-            getActiveUsers: {isArray: true,  params: {action: 'active'}}
+            getActiveUsers: {isArray: true,  params: {action: 'active'}},
+            query: {isArray: false},
+            all: {isArray: true, params: {action: 'all'}}
         });
 }])
 
 .factory('Contract', ['$resource', function($resource){
-    return $resource("/api/contracts/:id");
+    return $resource("/api/contracts/:id/", {id: '@id'}, {query: {isArray: false}});
 }])
 
 .factory('Quota', ['$resource', function($resource){
-    return $resource("/api/quotas/:id", {id: '@id'}) ;
+    return $resource("/api/quotas/:id/", {id: '@id'}) ;
 }])
 
 .factory('Operation', ['$resource', function ($resource) {

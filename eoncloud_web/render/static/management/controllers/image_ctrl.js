@@ -92,7 +92,7 @@ CloudApp.controller('ImageController',
                  image_table, image, Image, User, DataCenter, ImageForm,
                  $i18next, CommonHttpService, ResourceTool, ToastrService){
 
-            $scope.users = User.query();
+            $scope.users = User.getActiveUsers();
             $scope.data_centers = DataCenter.query();
             $scope.image = ResourceTool.copy_only_data(image);
             $scope.os_types = [{key: 1, label: 'Windows'}, {key: 2, label: 'Linux'}];

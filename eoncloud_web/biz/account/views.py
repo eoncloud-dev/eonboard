@@ -108,10 +108,7 @@ def operation_filters(request):
 class ContractList(generics.ListCreateAPIView):
     queryset = Contract.living.filter(deleted=False)
     serializer_class = ContractSerializer
-
-    def list(self, request, *args, **kwargs):
-        serializer = ContractSerializer(self.get_queryset(), many=True)
-        return Response(serializer.data)
+    pagination_class = PagePagination
 
 
 class ContractDetail(generics.RetrieveAPIView):
@@ -198,12 +195,9 @@ def delete_contracts(request):
 
 
 class UserList(generics.ListAPIView):
-    queryset = UserProxy.normal_users
+    queryset = UserProxy.normal_users.all()
     serializer_class = UserSerializer
-
-    def list(self, request, *args, **kwargs):
-        serializer = self.serializer_class(self.get_queryset(), many=True)
-        return Response(serializer.data)
+    pagination_class = PagePagination
 
 
 @require_GET

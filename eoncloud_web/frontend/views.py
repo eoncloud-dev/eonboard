@@ -14,6 +14,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.template.loader import get_template
@@ -271,3 +272,21 @@ def _send_activate_email(user):
 
     send_mail.delay(subject, '',
                     user.email, html_message=html)
+
+
+def not_found(request):
+    if request.path.startswith('/api'):
+        return JsonResponse({"success": False,
+                             "msg": ugettext("Data not found!")},
+                            status=404)
+
+    return render(request, '404.html')
+
+
+def server_error(request):
+    if request.path.startswith('/api'):
+        return JsonResponse({"success": False,
+                             "msg": ugettext("System Error!")},
+                            status=500)
+
+    return render(request, '500.html')

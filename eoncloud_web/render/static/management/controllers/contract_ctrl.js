@@ -24,8 +24,12 @@ CloudApp.controller('ContractController',
         },{
             counts: [],
             getData: function ($defer, params) {
-                Contract.query(function (data) {
-                    $scope.contracts = ngTableHelper.paginate(data, $defer, params);
+
+                var searchParams = {page: params.page(), page_size: params.count()};
+                Contract.query(searchParams, function (data) {
+                    $defer.resolve(data.results);
+                    $scope.contracts = data.results;
+                    ngTableHelper.countPages(params, data.count);
                 });
             }
         });
@@ -86,14 +90,9 @@ CloudApp.controller('ContractController',
 
             $modalInstance.rendered.then(ContractForm.init);
 
-            $scope.cancel = function () {
-                $modalInstance.dismiss();
-            };
+            $scope.cancel = $modalInstance.dismiss;
 
-            User.query(function(users){
-                $scope.users = users;
-            });
-
+            $scope.users = User.getActiveUsers();
             $scope.loadUdcList = function(){
                 UserDataCenter.query({user: contract.user}, function(udcList){
                     $scope.udcList = udcList;
@@ -115,7 +114,7 @@ CloudApp.controller('ContractController',
                     if (data.success) {
                         ToastrService.success(data.msg, $i18next("success"));
                         contract_table.reload();
-                        $modalInstance.dismiss();
+                        $modalInstance.close();
                     } else {
                         ToastrService.error(data.msg, $i18next("op_failed"));
                     }

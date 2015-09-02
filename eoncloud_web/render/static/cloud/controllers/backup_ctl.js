@@ -83,12 +83,18 @@ CloudApp.controller('BackupController',
         var post_func = function (backup, post_data) {
             CommonHttpService.post("/api/backup/action/", post_data).then(function (data) {
                 if (data.OPERATION_STATUS == 1) {
-                    $scope.modalInstance.dismiss();
+                    try {
+                        $scope.modalInstance.dismiss();
+                    }
+                    catch(error){}
                     $scope.backup_table.reload();
                 }
                 else if (data.OPERATION_STATUS == 2) {
                     ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
-                    $scope.modalInstance.dismiss();
+                    try {
+                        $scope.modalInstance.dismiss();
+                    }
+                    catch(error){}
                 }
                 else {
                     ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));

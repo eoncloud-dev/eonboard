@@ -54,7 +54,7 @@
                     {[{ 'instance.net_address' | i18next }]}
                 </td>
                 <td class="col-md-3">
-                    <span ng-if="instance.private_ip">{[{'instance.private_ip' | i18next}]}:{[{instance.private_ip}]}</span><br/>
+                    <span ng-if="instance.private_ip">{[{ instance.network_info.name }]}:{[{instance.private_ip}]}</span><br/>
                     <span ng-if="instance.floating_info">{[{'instance.public_ip' | i18next}]}:{[{instance.floating_info}]}</span>
                 </td>
                 <td class="col-md-2">

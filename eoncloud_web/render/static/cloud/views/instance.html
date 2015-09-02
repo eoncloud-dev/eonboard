@@ -63,7 +63,7 @@
                             <td data-title="'instance.flavor' | i18next">
                                 {[{ instance.cpu }]}CPU/ {[{ instance.memory }]}MB/ {[{ instance.sys_disk }]}GB
                             </td>
-                            <td data-title="'instance.private_ip' | i18next">{[{ instance.private_ip }]}</td>
+                            <td data-title="'instance.private_ip' | i18next">{[{instance.network_info.name}]} {[{ instance.private_ip }]}</td>
                             <td data-title="'instance.public_ip' | i18next">
                                 <a class="btn default blue-stripe btn-xs"
                                    data-ng-href="#/floating/"

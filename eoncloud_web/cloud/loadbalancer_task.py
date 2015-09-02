@@ -273,16 +273,16 @@ def pool_monitor_association_delete(pool, monitor_uuid):
 def pool_create_task(pool=None):
     if not pool:
         return False
-    LOG.info("begin create balancer pool, id[%s]" % pool.id)
+    LOG.info("Begin create balancer pool, id[%s]" % pool.id)
     p = pool_create(pool)
     if p:
-        LOG.info("create balancer pool success, id[%s],uuid[%s]" % (pool.id, p.id))
+        LOG.info("Create balancer pool success, id[%s],uuid[%s]" % (pool.id, p.id))
         pool.pool_uuid = p.id
         pool.status = POOL_ACTIVE
         pool.save()
         return True
     else:
-        LOG.info("create balancer pool fail, id[%s]" % (pool.id))
+        LOG.info("Create balancer pool fail, id[%s]" % (pool.id))
         pool.status = POOL_ERROR
         pool.save()
         return False
@@ -292,15 +292,15 @@ def pool_create_task(pool=None):
 def pool_update_task(pool=None):
     if not pool:
         return False
-    LOG.info("begin update balancer pool, id[%s]" % pool.id)
+    LOG.info("Begin update balancer pool, id[%s]" % pool.id)
     p = pool_update(pool)
     if p:
-        LOG.info("update balancer pool success, id[%s],uuid[%s]" % (pool.id, p.id))
+        LOG.info("Update balancer pool success, id[%s],uuid[%s]" % (pool.id, p.id))
         pool.status = POOL_ACTIVE
         pool.save()
         return True
     else:
-        LOG.info("update balancer pool fail, id[%s]" % (pool.id))
+        LOG.info("Update balancer pool fail, id[%s]" % (pool.id))
         pool.status = POOL_ERROR
         pool.save()
         return False
@@ -310,20 +310,16 @@ def pool_update_task(pool=None):
 def pool_delete_task(pool=None):
     if not pool:
         return False
-    LOG.info("begin delete balancer pool, id[%s],uuid[%s]" % (pool.id, pool.pool_uuid))
-    '''
-    delete member
-    '''
-    LOG.info("Begin delete pool member, id[%s]" % (pool.id))
+    LOG.info("Begin delete balancer pool, id[%s],uuid[%s]" % (pool.id, pool.pool_uuid))
+
     members = BalancerMember.objects.filter(deleted=False, pool=pool.id)
     if members:
+        LOG.info("Begin delete pool member, id[%s]" % (pool.id))
         for member in members:
             pool_member_delete(member)
             member.deleted = True
             member.save()
-    '''
-    delete vip
-    '''
+
     if pool.vip:
         LOG.info("Begin delete pool vip, pool_id[%s],vip_id[%s]" % (pool.id, pool.vip))
         vip = BalancerVIP.objects.get(pk=pool.vip.id)
@@ -331,9 +327,7 @@ def pool_delete_task(pool=None):
             pool_vip_delete(vip)
             vip.deleted = True
             vip.save()
-    '''
-    unbind monitor
-    '''
+
     LOG.info("Begin delete pool monitor, id[%s]" % (pool.id))
     pool_monitors = BalancerPoolMonitor.objects.filter(pool=pool.id)
     if pool_monitors:
@@ -350,6 +344,7 @@ def pool_delete_task(pool=None):
             pool.save()
             return True
         else:
+            LOG.info("Delete balancer pool failed, id[%s],uuid[%s]" % (pool.id, pool.pool_uuid))
             pool.status =POOL_ERROR
             pool.save()
             return False
@@ -449,6 +444,3 @@ def pool_member_delete_task(member=None):
         LOG.error("Delete balancer member fail ,id[%s]" % member.id)
         member.status = POOL_ERROR
         member.save()
-
-
-

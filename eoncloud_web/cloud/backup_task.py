@@ -124,7 +124,7 @@ def rbd_delete(backup_item):
                     % backup_items.status, BACKUP_STATE_PENDING_DELETE)
         return
 
-    backup_item.status =BACKUP_STATE_DELETING 
+    backup_item.status = BACKUP_STATE_DELETING 
     backup_item.save()
 
     img, pool = _format_pool(backup_item)
@@ -133,6 +133,7 @@ def rbd_delete(backup_item):
     args["image"] = img
     args["rbd_image"] = backup_item.rbd_image
     cmd = settings.BACKUP_DELETE_COMMAND % args
+    #TODO
     result = run(cmd)
     
     if result.return_code == 0:

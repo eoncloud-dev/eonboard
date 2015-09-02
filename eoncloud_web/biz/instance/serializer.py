@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from biz.idc.models import UserDataCenter
+from biz.network.serializer import NetworkSerializer
 from biz.image.serializer import ImageSerializer
 from biz.instance.models import Instance, Flavor
 
@@ -18,6 +19,8 @@ class InstanceSerializer(serializers.ModelSerializer):
         allow_null=True, default=None)
     image_info = ImageSerializer(source="image", required=False,
                                  allow_null=True, default=None, read_only=True)
+    network_info = NetworkSerializer(source="network", required=False,
+                                allow_null=True, default=None, read_only=True)
     floating_info = serializers.CharField(source="floating_ip", required=False,
                                           allow_null=True, default=None,
                                           read_only=True)

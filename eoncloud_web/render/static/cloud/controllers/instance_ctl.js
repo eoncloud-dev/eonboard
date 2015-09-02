@@ -473,14 +473,11 @@ angular.module("CloudApp")
                     };
 
                     CommonHttpService.post("/api/volumes/action/", post_data).then(function (data) {
-                        if (data.OPERATION_STATUS == 1) {
-                            ToastrService.success($i18next("volume.update_success"), $i18next("success"));
-                        }
-                        else if (data.OPERATION_STATUS == 2) {
-                            ToastrService.warning($i18next("op_forbid_msg"), $i18next("op_failed"));
+                        if (data.success) {
+                            ToastrService.success(data.msg, $i18next("success"));
                         }
                         else {
-                            ToastrService.error($i18next("op_failed_msg"), $i18next("op_failed"));
+                            ToastrService.error(data.msg, $i18next("op_failed"));
                         }
                         $modalInstance.dismiss();
                     });

@@ -61,18 +61,23 @@ def rbd_backup(backup_item):
     args["image"] = img
     args["mode"] = "full"
     cmd = settings.BACKUP_COMMAND % args
-    result = run(cmd)
-    
-    if result.return_code == 0:
-        backup_item.status = BACKUP_STATE_AVAILABLE
-        backup_item.rbd_image = result
-        backup_item.save()
-    else:
-        backup_item.rbd_image = "cmd error!"
+    result = None
+    try:
+        result = run(cmd)
+        
+        if result.return_code == 0:
+            backup_item.status = BACKUP_STATE_AVAILABLE
+            backup_item.rbd_image = result
+            backup_item.save()
+        else:
+            backup_item.rbd_image = "cmd error!"
+            backup_item.status = BACKUP_STATE_ERROR
+            backup_item.save()
+    except Exception as ex:
         backup_item.status = BACKUP_STATE_ERROR
         backup_item.save()
-
-
+        LOG.exception(ex)
+        
     LOG.info("BackupItem task end, [%s][%s][id:%s] action: [backup][%s]" % (
             backup_item.resource_type, backup_item.resource_name,
             backup_item.resource_id, result)) 
@@ -98,15 +103,20 @@ def rbd_restore(backup_item):
     args["image"] = img
     args["rbd_image"] = backup_item.rbd_image
     cmd = settings.BACKUP_RESTORE_COMMAND % args
-    result = run(cmd)
-    
-    if result.return_code == 0:
-        backup_item.status = BACKUP_STATE_AVAILABLE
-        backup_item.save()
-    else:
+    result = None
+    try:
+        result = run(cmd)
+        
+        if result.return_code == 0:
+            backup_item.status = BACKUP_STATE_AVAILABLE
+            backup_item.save()
+        else:
+            backup_item.status = BACKUP_STATE_ERROR
+            backup_item.save()
+    except Exception as ex:
         backup_item.status = BACKUP_STATE_ERROR
         backup_item.save()
-
+        LOG.exception(ex)
 
     LOG.info("BackupItem task end, [%s][%s][id:%s] action: [restore][%s]" % (
             backup_item.resource_type, backup_item.resource_name,
@@ -133,17 +143,21 @@ def rbd_delete(backup_item):
     args["image"] = img
     args["rbd_image"] = backup_item.rbd_image
     cmd = settings.BACKUP_DELETE_COMMAND % args
-    #TODO
-    result = run(cmd)
-    
-    if result.return_code == 0:
-        backup_item.status = BACKUP_STATE_DELETED
-        backup_item.deleted = True
-        backup_item.save()
-    else:
+    result = None
+    try:
+        result = run(cmd)
+        
+        if result.return_code == 0:
+            backup_item.status = BACKUP_STATE_DELETED
+            backup_item.deleted = True
+            backup_item.save()
+        else:
+            backup_item.status = BACKUP_STATE_ERROR
+            backup_item.save()
+    except Exception as ex:
         backup_item.status = BACKUP_STATE_ERROR
         backup_item.save()
-
+        LOG.exception(ex)
 
     LOG.info("BackupItem task end, [%s][%s][id:%s] action: [delete][%s]" % (
             backup_item.resource_type, backup_item.resource_name,
@@ -177,8 +191,9 @@ def backup_action_task(backup, action, **kwargs):
             item.save()
             LOG.exception(ex)
     else:
-        if len(backup.items.all().filter(status=BACKUP_STATE_ERROR,
-                                                deleted=False)) > 0:
+        errors = backup.items.all().filter(status=BACKUP_STATE_ERROR,
+                                            deleted=False)
+        if action != "delete" and len(errors) > 0:
             backup.status = BACKUP_STATE_ERROR
         else:
             backup.status = BACKUP_ACTION_NEXT_STATE[action]

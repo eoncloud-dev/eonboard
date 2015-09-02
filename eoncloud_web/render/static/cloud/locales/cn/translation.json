@@ -455,7 +455,14 @@
     "new_user": "添加用户",
     "name_is_used": "该帐号已被人使用",
     "email_is_used": "该邮箱已被人使用",
-    "mobile_is_used": "该手机号已被人使用"
+    "mobile_is_used": "该手机号已被人使用",
+    "data_center_is_needed": "请选择至少一个数据中心",
+    "workflow_approve": "工作流审批",
+    "approver_or_datacenter": "当用户即没有审批权限又没有分配数据中心时，将无法登录系统",
+    "assign_data_center": "分配数据中心",
+    "grant_workflow_approve": "授予工作流审批权限",
+    "revoke_workflow_approve": "取消工作流审批权限",
+    "resource_user": "资源用户"
   },
 
   "notification": {
@@ -615,5 +622,9 @@
       "confirm_delete": "确认要删除该流程吗？",
       "confirm_approve": "确定要通过__applier__的申请吗？",
       "status_start": "开始"
+  },
+
+  "resources": {
+    "data_center": "数据中心"
   }
 }

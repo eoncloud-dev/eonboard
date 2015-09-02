@@ -78,10 +78,6 @@ CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', 'passw
             Layout.initHeader(); // init header
         });
 
-        $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
-            $rootScope.current_user = data;
-        });
-
         $scope.passwordModal = passwordModal;
 }]);
 
@@ -305,10 +301,12 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
     }]);
 
 /* Init global settings and run the app */
-CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "CommonHttpService",
-    function ($rootScope, settings, $state, $http, $cookies, $interval, CommonHttpService) {
+CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "current_user", "site_config",
+    function ($rootScope, settings, $state, $http, $cookies, $interval, current_user, site_config) {
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
+        $rootScope.current_user = current_user;
+        $rootScope.site_config = site_config;
         var callbacks = [];
 
         $rootScope.executeWhenLeave = function(callback){
@@ -332,7 +330,4 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
             callbacks = [];
         });
 
-        CommonHttpService.get("/api/account/site-config/").then(function(data){
-            $rootScope.site_config = data;
-        });
     }]);

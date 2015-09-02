@@ -19,7 +19,8 @@ angular.module('cloud.resources', [])
         {
             getActiveUsers: {isArray: true,  params: {action: 'active'}},
             query: {isArray: false},
-            all: {isArray: true, params: {action: 'all'}}
+            all: {isArray: true, params: {action: 'all'}},
+            getApprovers: {isArray: true, params: {action: 'workflow-approvers'}}
         });
 }])
 

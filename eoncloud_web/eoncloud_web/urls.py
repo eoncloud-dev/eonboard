@@ -34,6 +34,8 @@ urlpatterns += patterns(
     url(r'^management/$', views.management, name="management"),
     url(r'^state-service.js$', 'biz.common.views.state_service',
         name="state_service"),
+    url(r'^site-config.js$', 'biz.common.views.site_config',
+        name="site_config"),
 
     # account
     url(r'^login/$', views.LoginView.as_view(), name='login'),
@@ -48,7 +50,6 @@ urlpatterns += patterns(
 
     url(r'^find-password/$', views.find_password, name="find_password"),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^current_user/$', views.current_user, name='current_user'),
     url(r'^no-udc/$', views.no_udc, name='no_udc'),
     url(r'^switch-idc/(?P<dc_id>[\d]+)$', views.switch_idc, name='switch_idc'),
     #url(r'^password-reset-complete/$',

@@ -65,7 +65,7 @@
                                         <p style="word-wrap: break-word; word-break: break-all;">
                                             {[{current_forum.content}]}</p>
                                     </div>
-                                    <div ng-repeat="reply in forum_reply_list" ng-class="{'alert-info':reply.username==current_user.user,'alert-warning':reply.username !=current_user.user}"
+                                    <div ng-repeat="reply in forum_reply_list" ng-class="{'alert-info':reply.username==current_user.username,'alert-warning':reply.username !=current_user.username}"
                                          class=" alert no-margin bg_4 margin-top-10 mar_l10 clear">
                                         <p>
                                             {[{reply.reply_content}]}

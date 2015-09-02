@@ -56,4 +56,6 @@ urlpatterns += patterns(
     #                name="password_reset_complete")
 )
 
+handler404 = views.not_found
+handler500 = views.server_error
 

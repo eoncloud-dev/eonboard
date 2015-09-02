@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 18:04+0800\n"
+"POT-Creation-Date: 2015-09-01 14:10+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "邮箱"
 msgid "Mobile"
 msgstr "手机号"
 
-#: forms.py:41
+#: forms.py:40
 msgid "Captcha"
 msgstr "验证码"
 
@@ -76,3 +76,11 @@ msgstr "您的激活邮件已发送，请查看你的收件箱"
 #, python-format
 msgid "%(site_name)s - Activate Account"
 msgstr "%(site_name)s - 帐号激活"
+
+#: views.py:278
+msgid "Data not found!"
+msgstr "数据丢失！"
+
+#: views.py:286
+msgid "System Error!"
+msgstr "系统错误!"

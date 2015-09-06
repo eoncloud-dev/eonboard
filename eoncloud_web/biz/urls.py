@@ -135,7 +135,6 @@ urlpatterns += format_suffix_patterns([
 urlpatterns += format_suffix_patterns([
     url(r'^account/contract/$', account_view.contract_view),
     url(r'^account/quota/$', account_view.quota_view),
-    url(r'^account/site-config/$', account_view.get_config_view),
     url(r'^account/create/$', account_view.create_user),
     url(r'^account/is-name-unique/$', account_view.is_username_unique),
     url(r'^account/is-email-unique/$', account_view.is_email_unique),
@@ -149,6 +148,9 @@ urlpatterns += format_suffix_patterns([
     url(r'^users/deactivate/$', account_view.deactivate_user),
     url(r'^users/activate/$', account_view.activate_user),
     url(r'^users/change-password/$', account_view.change_password),
+    url(r'^users/grant-workflow-approve/$', account_view.grant_workflow_approve),
+    url(r'^users/revoke-workflow-approve/$', account_view.revoke_workflow_approve),
+    url(r'^users/workflow-approvers/$', account_view.workflow_approvers),
     url(r'^quotas/$', account_view.QuotaList.as_view()),
     url(r'^quotas/(?P<pk>[0-9]+)/$', account_view.QuotaDetail.as_view()),
     url(r'^quotas/batch-create/$', account_view.create_quotas),

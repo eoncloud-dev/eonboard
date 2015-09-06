@@ -8,7 +8,7 @@ import random
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -66,6 +66,29 @@ class UserProxy(User):
     @property
     def has_udc(self):
         return UserDataCenter.objects.filter(user=self).exists()
+
+    @property
+    def is_approver(self):
+        return settings.WORKFLOW_ENABLED and \
+            self.has_perm('workflow.approve_workflow')
+
+    @classmethod
+    def grant_workflow_approve(cls, user, save=True):
+
+        perm = Permission.objects.get(codename="approve_workflow")
+        user.user_permissions.add(perm)
+
+        if save:
+            user.save()
+
+    @classmethod
+    def revoke_workflow_approve(cls, user, save=True):
+
+        perm = Permission.objects.get(codename="approve_workflow")
+        user.user_permissions.remove(perm)
+
+        if save:
+            user.save()
 
 
 class LivingManager(models.Manager):

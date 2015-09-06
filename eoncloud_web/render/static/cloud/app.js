@@ -68,33 +68,32 @@ CloudApp.controller('AppController', ['$scope', '$rootScope', function ($scope, 
  ***/
 
 /* Setup Layout Part - Header */
-CloudApp.controller('HeaderController', ['$rootScope', '$scope', '$http', '$interval', 'Feed', 'passwordModal',
-    function ($rootScope, $scope, $http, $interval, Feed, passwordModal) {
+CloudApp.controller('HeaderController',
+    ['$rootScope', '$scope', '$http', '$interval', 'Feed', 'passwordModal',
+        function ($rootScope, $scope, $http, $interval, Feed, passwordModal) {
 
-        $scope.$on('$includeContentLoaded', function () {
-            Layout.initHeader(); // init header
-        });
-
-        $scope.passwordModal = passwordModal;
-
-        $http({"method": "GET", "url": "/current_user/"}).success(function (data) {
-            $rootScope.current_user = data;
-        });
-
-        $http({"method": "GET", "url": "/api/settings/data-centers/switch/"}).success(function (data) {
-            $scope.data_center_list = data.DataCenterList;
-        });
-
-        var checkFeeds = function(){
-            Feed.status(function(status){
-                $scope.num = status.num;
+            $scope.$on('$includeContentLoaded', function () {
+                Layout.initHeader(); // init header
             });
-        };
 
-        $interval(checkFeeds, 10000);
+            $scope.passwordModal = passwordModal;
 
-        checkFeeds();
-}]);
+            $http({"method": "GET", "url": "/api/settings/data-centers/switch/"}).success(function (data) {
+                $scope.data_center_list = data.DataCenterList;
+            });
+
+            var checkFeeds = function(){
+                Feed.status(function(status){
+                    $scope.num = status.num;
+                });
+            };
+
+            $interval(checkFeeds, 10000);
+
+            checkFeeds();
+        }
+    ]
+);
 
 /* Setup Layout Part - Sidebar */
 CloudApp.controller('SidebarController', ['$scope', function ($scope) {
@@ -112,9 +111,14 @@ CloudApp.controller('FooterController', ['$scope', function ($scope) {
 
 
 /* Setup Rounting For All Pages */
-CloudApp.config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider, $stateParams) {
-        $urlRouterProvider.otherwise("/overview/");
+CloudApp.config(['$stateProvider', '$urlRouterProvider', 'current_user',
+    function ($stateProvider, $urlRouterProvider, current_user) {
+
+        if(current_user.has_udc){
+            $urlRouterProvider.otherwise("/overview/");
+        } else {
+            $urlRouterProvider.otherwise("/workflow-process/");
+        }
 
         $stateProvider
             // Overview
@@ -528,11 +532,16 @@ CloudApp.config(['$stateProvider', '$urlRouterProvider',
     }]);
 
 /* Init global settings and run the app */
-CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interval", "CommonHttpService",
-    function ($rootScope, settings, $state, $http, $cookies, $interval, CommonHttpService) {
+CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies",
+    "$interval", "CommonHttpService", "current_user", "site_config",
+    function ($rootScope, settings, $state, $http, $cookies,
+              $interval, CommonHttpService, current_user, site_config) {
+
         $http.defaults.headers.common['X-CSRFToken'] = $cookies['csrftoken'];
         $rootScope.$state = $state;
         $rootScope.timer_list = [];
+        $rootScope.current_user = current_user;
+        $rootScope.site_config = site_config;
         var callbacks = [];
 
         $rootScope.executeWhenLeave = function(callback){
@@ -557,9 +566,5 @@ CloudApp.run(["$rootScope", "settings", "$state", "$http", "$cookies", "$interva
             });
 
             callbacks = [];
-        });
-
-        CommonHttpService.get("/api/account/site-config/").then(function(data){
-            $rootScope.site_config = data;
         });
     }]);

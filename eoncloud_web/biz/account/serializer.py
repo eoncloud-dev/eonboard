@@ -39,6 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     has_udc = serializers.ReadOnlyField()
+    is_approver = serializers.ReadOnlyField()
 
     class Meta:
         model = UserProxy

@@ -9,7 +9,7 @@
 	<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200"
         ng-class="{'page-sidebar-menu-closed': settings.layout.pageSidebarClosed}">
 		<!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-        <li class="heading">
+        <li class="heading" data-ng-if-start="current_user.has_udc">
             <h3 class="uppercase">{[{ 'sidebar.cloud' | i18next }]}</h3>
         </li>
         
@@ -101,29 +101,6 @@
                 </span>
             </a>
         </li>
-        <li class="heading" data-ng-if-start="site_config.WORKFLOW_ENABLED">
-            <h3 class="uppercase">
-                {[{ 'sidebar.workflow' | i18next }]}
-            </h3>
-        </li>
-
-        <li id="workflow"
-            data-ng-if="current_user.is_approver">
-            <a href="#/workflow-process/">
-                <i class="fa fa-gavel"></i>
-                <span class="title">
-                    {[{ 'sidebar.workflow_process' | i18next }]}
-                </span>
-            </a>
-        </li>
-        <li id="workflow" data-ng-if-end>
-            <a href="#/my-workflow/">
-                <i class="fa fa-tasks"></i>
-                <span class="title">
-                    {[{ 'sidebar.my_workflow' | i18next }]}
-                </span>
-            </a>
-        </li>
         <li class="heading">
             <h3 class="uppercase">
                 {[{ 'sidebar.monitor' | i18next }]}
@@ -142,7 +119,7 @@
                 {[{ 'sidebar.operation_support' | i18next }]}
             </h3>
         </li>
-        <li id="forum">
+        <li id="forum" data-ng-if-end>
             <a href="#/forum/">
                 <i class="fa fa-file-text-o"></i>
                 <span class="title">
@@ -150,6 +127,28 @@
                 </span>
             </a>
         </li>
+        <li class="heading" data-ng-if-start="site_config.WORKFLOW_ENABLED">
+            <h3 class="uppercase">
+                {[{ 'sidebar.workflow' | i18next }]}
+            </h3>
+        </li>
+        <li id="workflow"
+            data-ng-if="current_user.is_approver">
+            <a href="#/workflow-process/">
+                <i class="fa fa-gavel"></i>
+                <span class="title">
+                    {[{ 'sidebar.workflow_process' | i18next }]}
+                </span>
+            </a>
+        </li>
+        <li id="workflow" data-ng-if-end data-ng-if="current_user.has_udc">
+            <a href="#/my-workflow/">
+                <i class="fa fa-tasks"></i>
+                <span class="title">
+                    {[{ 'sidebar.my_workflow' | i18next }]}
+                </span>
+            </a>
+        </li>
     </ul>
 	<!-- END SIDEBAR MENU -->
-</div>	
+</div>

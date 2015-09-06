@@ -3,14 +3,21 @@
 
 __author__ = 'bluven'
 
-
+import json
 import logging
 
+from django.conf import settings
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
 from biz.instance import settings as instance_settings
 from biz.floating import settings as floating_settings
 from biz.network import settings as network_settings
 from biz.volume import settings as volume_settings
+from biz.account.models import UserProxy
+from biz.idc.models import UserDataCenter, DataCenter
+from cloud.api import neutron
+from cloud.cloud_utils import create_rc_by_dc
 
 LOG = logging.getLogger(__name__)
 
@@ -41,7 +48,8 @@ def state_service(request):
 
     modules = [gen_module(*args) for args in params]
 
-    return render(request, 'state_service.html', {'modules': modules})
+    return render(request, 'state_service.html', {'modules': modules},
+                  content_type='application/javascript')
 
 
 def gen_module(settings, value_labels, stable_dict,
@@ -79,3 +87,33 @@ def gen_module(settings, value_labels, stable_dict,
         'unstable_states': unstable_states
     }
 
+
+@login_required
+def site_config(request):
+
+    user = request.user
+    current_user = {'username': user.username}
+
+    if not user.is_superuser:
+        # Retrieve user to use some methods of UserProxy
+        user = UserProxy.objects.get(pk=user.pk)
+
+        if user.has_udc:
+            udc_id = request.session["UDC_ID"]
+            data_center = DataCenter.objects.get(userdatacenter__pk=udc_id)
+            data_center_name = data_center.name
+            rc = create_rc_by_dc(data_center)
+            sdn_enabled = neutron.is_neutron_enabled(rc)
+        else:
+            data_center_name = u'N/A'
+            sdn_enabled = False
+
+        current_user['datacenter'] = data_center_name
+        current_user['sdn_enabled'] = sdn_enabled
+        current_user['has_udc'] = user.has_udc
+        current_user['is_approver'] = user.is_approver
+
+    return render(request, 'site_config.js',
+                  {'current_user': json.dumps(current_user),
+                   'site_config': json.dumps(settings.SITE_CONFIG)},
+                  content_type='application/javascript')

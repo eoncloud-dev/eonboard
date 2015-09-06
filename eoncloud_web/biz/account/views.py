@@ -22,10 +22,13 @@ from biz.account.serializer import (ContractSerializer, OperationSerializer,
                                     FeedSerializer, DetailedUserSerializer,
                                     NotificationSerializer)
 from biz.account.utils import get_quota_usage
-from biz.idc.models import DataCenter
+from biz.idc.models import DataCenter, UserDataCenter
 from biz.common.pagination import PagePagination
 from biz.common.decorators import require_POST, require_GET
 from biz.common.utils import retrieve_params
+from biz.workflow.models import Step
+from cloud.api import neutron
+from cloud.cloud_utils import create_rc_by_dc
 from cloud.tasks import (link_user_to_dc_task, send_notifications,
                          send_notifications_by_data_center)
 from frontend.forms import CloudUserCreateFormWithoutCapatcha
@@ -207,6 +210,14 @@ def active_users(request):
     return Response(serializer.data)
 
 
+@require_GET
+def workflow_approvers(request):
+    queryset = UserProxy.normal_users.filter(
+        is_active=True, user_permissions__codename='approve_workflow')
+    serializer = UserSerializer(queryset.all(), many=True)
+    return Response(serializer.data)
+
+
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProxy.normal_users.all()
     serializer_class = DetailedUserSerializer
@@ -362,11 +373,6 @@ def delete_quota(request):
         )
 
 
-@api_view(["GET"])
-def get_config_view(request):
-    return Response(settings.SITE_CONFIG)
-
-
 @require_GET
 def notification_options(request):
     return Response(NotificationLevel.OPTIONS)
@@ -465,20 +471,61 @@ def initialize_user(request):
 
 @require_POST
 def create_user(request):
-
     user = User()
     form = CloudUserCreateFormWithoutCapatcha(data=request.POST, instance=user)
 
     if not form.is_valid():
-        return Response({
-            "success": False,
-            "msg": _("Data is not valid")
-        })
+        return Response({"success": False, "msg": _("Data is not valid")})
 
-    form.save()
-    link_user_to_dc_task(user, DataCenter.get_default())
+    user = form.save()
+
+    # If workflow is disabled, then only resrouce user can be created,
+    # otherwise admin can create resource user and workflow approver user.
+    if not settings.WORKFLOW_ENABLED:
+        link_user_to_dc_task(user, DataCenter.get_default())
+    else:
+
+        if 'is_resource_user' in request.data and \
+                request.data['is_resource_user'] == 'true':
+            link_user_to_dc_task(user, DataCenter.get_default())
+
+        if 'is_approver' in request.data and \
+                request.data['is_approver'] == 'true':
+            UserProxy.grant_workflow_approve(user)
+
     return Response({"success": True,
                      "msg": _("User is created successfully!")})
+
+
+@require_POST
+def grant_workflow_approve(request):
+    user_id = request.data['user_id']
+    user = UserProxy.objects.get(pk=user_id)
+
+    UserProxy.grant_workflow_approve(user)
+
+    msg = _("User %(name)s can approve workflow now!")
+    return Response({"success": True,
+                     "msg": msg % {'name': user.username}})
+
+
+@require_POST
+def revoke_workflow_approve(request):
+    user_id = request.data['user_id']
+    user = UserProxy.objects.get(pk=user_id)
+
+    if Step.objects.filter(approver=user).exists():
+        msg = _("Cannot revoke workflow approve permission from %(name)s, "
+                "this user is now an approver of some workflows.")
+
+        return Response({"success": False,
+                         "msg": msg % {'name': user.username}})
+
+    UserProxy.revoke_workflow_approve(user)
+
+    msg = _("User %(name)s cannot approve workflow any more!")
+    return Response({"success": True,
+                     "msg": msg % {'name': user.username}})
 
 
 @require_GET

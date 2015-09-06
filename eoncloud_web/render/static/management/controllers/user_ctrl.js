@@ -7,7 +7,7 @@
 CloudApp.controller('UserController',
     function($rootScope, $scope, $filter, $modal, $i18next, $ngBootbox,
              CommonHttpService, ToastrService, ngTableParams,
-             CheckboxGroup, ngTableHelper, User){
+             CheckboxGroup, ngTableHelper, User, DataCenter){
 
         $scope.$on('$viewContentLoaded', function(){
                 Metronic.initAjax();
@@ -140,7 +140,7 @@ CloudApp.controller('UserController',
             });
         };
 
-        $scope.initialize = function(user){
+        $scope.assignDataCenter = function(user){
 
             $ngBootbox.confirm($i18next("user.confirm_initialize")).then(function(){
                 user.isUpdating = true;
@@ -157,12 +157,39 @@ CloudApp.controller('UserController',
             });
         };
 
+        $scope.grantWorkflowApprove = function(user){
+            CommonHttpService.post("/api/users/grant-workflow-approve/", {user_id: user.id}).then(function(data){
+                if (data.success) {
+                    ToastrService.success(data.msg, $i18next("success"));
+                    $scope.user_table.reload();
+                } else {
+                    ToastrService.error(data.msg, $i18next("op_failed"));
+                }
+            });
+        };
+
+        $scope.revokeWorkflowApprove = function(user){
+            CommonHttpService.post("/api/users/revoke-workflow-approve/", {user_id: user.id}).then(function(data){
+                if (data.success) {
+                    ToastrService.success(data.msg, $i18next("success"));
+                    $scope.user_table.reload();
+                } else {
+                    ToastrService.error(data.msg, $i18next("op_failed"));
+                }
+            });
+        };
+
         $scope.openNewUserModal = function(){
             $modal.open({
                 templateUrl: 'new-user.html',
                 backdrop: "static",
                 controller: 'NewUserController',
-                size: 'lg'
+                size: 'lg',
+                resolve: {
+                    dataCenters: function(){
+                        return DataCenter.query().$promise;
+                    }
+                }
             }).result.then(function(){
                 $scope.user_table.reload();
             });
@@ -314,14 +341,15 @@ CloudApp.controller('UserController',
 
     .controller('NewUserController',
         function($scope, $modalInstance, $i18next,
-                 CommonHttpService, ToastrService, UserForm){
+                 CommonHttpService, ToastrService, UserForm, dataCenters){
 
             var form = null;
             $modalInstance.rendered.then(function(){
-                form = UserForm.init();
+                form = UserForm.init($scope.site_config.WORKFLOW_ENABLED);
             });
 
-            $scope.user = {};
+            $scope.dataCenters = dataCenters;
+            $scope.user = {is_resource_user: false, is_approver: false};
             $scope.is_submitting = false;
             $scope.cancel = $modalInstance.dismiss;
             $scope.create = function(){
@@ -345,68 +373,79 @@ CloudApp.controller('UserController',
             };
         }
     )
-    .factory('UserForm', ['ValidationTool', '$i18next', function(ValidationTool, $i18next) {
-        return {
-            init: function(){
+    .factory('UserForm', ['ValidationTool', '$i18next',
+        function(ValidationTool, $i18next){
+            return {
+                init: function(){
 
-                var config = {
+                    var config = {
 
-                    rules: {
-                        username: {
-                            required: true,
-                            remote: {
-                                url: "/api/account/is-name-unique/",
-                                data: {
-                                    username: $("#username").val()
-                                },
-                                async: false
+                        rules: {
+                            username: {
+                                required: true,
+                                remote: {
+                                    url: "/api/account/is-name-unique/",
+                                    data: {
+                                        username: $("#username").val()
+                                    },
+                                    async: false
+                                }
+                            },
+                            email: {
+                                required: true,
+                                email: true,
+                                remote: {
+                                    url: "/api/account/is-email-unique/",
+                                    data: {
+                                        email: $("#email").val()
+                                    },
+                                    async: false
+                                }
+                            },
+                            mobile: {
+                                required: true,
+                                digits: true,
+                                minlength:11,
+                                maxlength:11,
+                                remote: {
+                                    url: "/api/account/is-mobile-unique/",
+                                    data: {
+                                        mobile: $("#mobile").val()
+                                    },
+                                    async: false
+                                }
+                            },
+                            password1: {
+                                required: true,
+                                complexPassword: true
+                            },
+                            password2: {
+                                required: true,
+                                equalTo: "#password1"
+                            },
+                            user_type: 'required'
+                        },
+                        messages: {
+                            username: {
+                                remote: $i18next('user.name_is_used')
+                            },
+                            email: {
+                                remote: $i18next('user.email_is_used')
+                            },
+                            mobile: {
+                                remote: $i18next('user.mobile_is_used')
                             }
                         },
-                        email: {
-                            required: true,
-                            email: true,
-                            remote: {
-                                url: "/api/account/is-email-unique/",
-                                data: {
-                                    email: $("#email").val()
-                                },
-                                async: false
+                        errorPlacement: function (error, element) {
+
+                            var name = angular.element(element).attr('name');
+                            if(name != 'user_type'){
+                                error.insertAfter(element);
                             }
-                        },
-                        mobile: {
-                            required: true,
-                            digits: true,
-                            minlength:11,
-                            maxlength:11,
-                            remote: {
-                                url: "/api/account/is-mobile-unique/",
-                                data: {
-                                    mobile: $("#mobile").val()
-                                },
-                                async: false
-                            }
-                        },
-                        password1: {
-                            required: true,
-                            complexPassword: true
-                        },
-                        password2: {
-                            required: true,
-                            equalTo: "#password1"
                         }
-                    },
-                    messages: {
-                        username: {
-                            remote: $i18next('user.name_is_used')
-                        },
-                        email: {
-                            remote: $i18next('user.email_is_used')
-                        },
-                        mobile: {
-                            remote: $i18next('user.mobile_is_used')
-                        }
-                    }
-                };
-                return ValidationTool.init('#userForm', config);
+                    };
+
+                    return ValidationTool.init('#userForm', config);
+                }
             }
-        }}]);
+        }]);

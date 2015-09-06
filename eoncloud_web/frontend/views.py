@@ -20,14 +20,11 @@ from django.core.urlresolvers import reverse
 from django.template.loader import get_template
 from django.template import Context
 
-from biz.account.models import Notification, ActivateUrl
-from frontend.forms import CloudUserCreateForm
-from biz.idc.models import DataCenter, UserDataCenter as UDC
-from biz.workflow.models import Step
-from biz.common.decorators import superuser_required
 from cloud.tasks import link_user_to_dc_task, send_mail
-from cloud.api import neutron
-from cloud.cloud_utils import create_rc_by_dc
+from biz.account.models import Notification, ActivateUrl, UserProxy
+from biz.idc.models import DataCenter, UserDataCenter as UDC
+from biz.common.decorators import superuser_required
+from frontend.forms import CloudUserCreateForm
 
 LOG = logging.getLogger(__name__)
 
@@ -81,9 +78,10 @@ class LoginView(View):
             return self.response(request, form)
 
         user = form.get_user()
-
         auth_login(request, user)
 
+        # Retrieve user to use some methods of UserProxy
+        user = UserProxy.objects.get(pk=user.pk)
         if user.is_superuser:
             return redirect('management')
 
@@ -91,6 +89,8 @@ class LoginView(View):
 
         if udc_set.exists():
             request.session["UDC_ID"] = udc_set[0].id
+        elif user.is_approver:
+            request.session["UDC_ID"] = -1
         else:
             return redirect('no_udc')
 
@@ -115,27 +115,6 @@ class LoginView(View):
 def logout(request):
     auth_logout(request)
     return HttpResponseRedirect(reverse("index"))
-
-
-def current_user(request):
-    if request.user.is_authenticated():
-
-        if request.user.is_superuser:
-            return JsonResponse({'result': {'logged': True}, 'user': request.user.username})
-
-        udc_id = request.session["UDC_ID"]
-        data_center_names = DataCenter.objects.filter(userdatacenter__pk=udc_id)
-        cc_name = data_center_names[0].name if data_center_names else u'N/A'
-        is_approver = Step.objects.filter(approver__pk=request.user.pk).exists()
-
-        return JsonResponse({'result': {'logged': True},
-                            'user': request.user.username,
-                            'datacenter': cc_name,
-                            'sdn_enabled': neutron.is_neutron_enabled(
-                                    create_rc_by_dc(data_center_names[0])),
-                            'is_approver': is_approver})
-    else:
-        return JsonResponse({'result': {'logged': False}})
 
 
 class SignupView(View):
@@ -290,3 +269,5 @@ def server_error(request):
                             status=500)
 
     return render(request, '500.html')
+
+
